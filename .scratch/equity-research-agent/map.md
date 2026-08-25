@@ -40,6 +40,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - [14 — Chart-reading prototype](issues/14-chart-reading-prototype.md) — vision `qwen3.7-flash` read 24/24 gold walk bars for $0.0006; text-layer extraction not viable; `glm-5.3` needs a reasoning-aware client; presentation walks need a looser sum tolerance.
 - [03 — Context management](issues/03-context-management-architecture.md) — local hybrid retrieval → cheap-model evidence records → vision for chart pages → deterministic checks; minimal caching (PDFs, page text, vectors). ADR-0002.
 - [04 — Memory design](issues/04-memory-design.md) — memory is a versioned per-bank registry (no financial numbers, structurally), read-only at runtime with suggested-patch learning; eval runs pin the registry and the unseen-bank case deletes its entry. ADR-0003.
+- [06 — Output contract](issues/06-output-contract.md) — one JSON document is the whole output (drivers with canonical+verbatim labels, nullable contributions, per-driver confidence and checks, disagreements first-class, provenance with checksums); citations carry printed+PDF page and ≤50-word verbatim quotes; the report is a deterministic template over the JSON, never a second model pass.
 
 ## Not yet specified
 

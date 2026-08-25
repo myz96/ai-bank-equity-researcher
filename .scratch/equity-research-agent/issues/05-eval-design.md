@@ -1,7 +1,7 @@
 # 05 — Eval design: gold cases, judges, sources of truth
 
 Type: grilling
-Status: open
+Status: claimed
 Blocked by: 01, 02, 08
 
 ## Question
