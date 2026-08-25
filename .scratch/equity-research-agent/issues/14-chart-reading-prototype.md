@@ -21,3 +21,26 @@ Arms:
 - **(c)** A hosted PDF-parsing service — only if (a) and (b) both prove unreliable.
 
 Score: bar-level value match rate against gold, deterministic sum-check pass rate, cost per page. Output: a reliability table the user reacts to before ticket 03 closes.
+
+## Results (2026-08-25, prototypes/chart_reading.py)
+
+Four hand-verified gold walks, 24 gold bars total. Score = bars matched within ±0.5bp, in chart order.
+
+| Arm | Bars matched | Cost | Note |
+|---|---|---|---|
+| **vision: `qwen3.7-flash`** | **24/24** | $0.0006 (8 calls incl. text arm) | Perfect, cheapest |
+| vision: `ox-alpha` | 24/24 | $0 | Perfect but rate-limited; 3 of its text-arm calls died on 429 |
+| vision: `kimi-k3` | 22/24 | $0.0432 | Missed two PA-chart bars |
+| vision: `deepseek-v4-flash-vision-exp` | 14/24 | $0.0016 | Unreliable on the dense PA chart |
+| text: `qwen3.7-flash` | 5/24 | — | Text layer scatters chart values; pairing fails |
+| text: `ox-alpha` | 3/24 | — | Rate-limited + weak |
+| text: `glm-5.3` | 0/24 | $0.1609 | Ignored the reasoning-off flag, burned 32k reasoning tokens, returned empty content every call |
+
+Findings:
+1. **Vision reading of rendered chart pages is essentially solved at trivial cost** — the cheapest vision model scored perfectly. Route chart pages to vision `qwen3.7-flash`; the deterministic sum check guards the rare failure.
+2. **Text-layer chart extraction is not viable** (values present but bar-label pairing fails).
+3. **CET1 slide:** every vision arm got 4/4 bars and the self-sum check *correctly* failed — the slide's own bars do not sum to its headline (rounding footnote). Presentation walks need a documented sum tolerance.
+4. **`glm-5.3` operational caveat:** it ignores `reasoning: {enabled: false}` and needs a reasoning-aware client (large max_tokens, read content after reasoning) — matters for its author role in ticket 07.
+5. `ox-alpha` confirmed as experiment-only: nothing on the critical path should wait on its rate limiter.
+
+Pending user reaction.
