@@ -87,3 +87,7 @@ A deterministic test in code that an extracted figure must pass: walk bars sum t
 **Evidence record**:
 A typed extract from a source page: document, printed and PDF page, verbatim quote or table, parsed numbers with units and basis tags. The reasoning model reads only evidence records.
 _Avoid_: chunk, snippet
+
+**Registry**:
+The per-bank versioned memory file: financial calendar, document names, label mappings, measure vocabulary. It holds no financial numbers.
+_Avoid_: knowledge base, profile

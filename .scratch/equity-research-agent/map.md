@@ -39,6 +39,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - [13 — Retrieval bake-off](issues/13-retrieval-bakeoff-prototype.md) — local dense (bge-small) 10/10 and BM25 9/10 beat LLM navigation (4–8/10) at zero cost; retrieval is local hybrid, no LLM in the page-finding loop.
 - [14 — Chart-reading prototype](issues/14-chart-reading-prototype.md) — vision `qwen3.7-flash` read 24/24 gold walk bars for $0.0006; text-layer extraction not viable; `glm-5.3` needs a reasoning-aware client; presentation walks need a looser sum tolerance.
 - [03 — Context management](issues/03-context-management-architecture.md) — local hybrid retrieval → cheap-model evidence records → vision for chart pages → deterministic checks; minimal caching (PDFs, page text, vectors). ADR-0002.
+- [04 — Memory design](issues/04-memory-design.md) — memory is a versioned per-bank registry (no financial numbers, structurally), read-only at runtime with suggested-patch learning; eval runs pin the registry and the unseen-bank case deletes its entry. ADR-0003.
 
 ## Not yet specified
 
