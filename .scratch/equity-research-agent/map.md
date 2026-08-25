@@ -20,6 +20,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - Unseen-case posture: no hard-coded banks. A bank registry plus generic document discovery; honest uncertainty in output when disclosure is thin.
 - Skills: grilling tickets use /grilling + /domain-modeling (that pair is /grill-with-docs). Research tickets use /research background subagents. The glossary lives in `CONTEXT.md`; qualifying decisions get ADRs in `docs/adr/`.
 - Prose shown to the user follows ASD-STE100 (user's global CLAUDE.md).
+- Pace note (user, 2026-08-25): work tickets back-to-back in the current conversation until a first CBA POC produces inspectable results. No steps are skipped: grilling tickets stay HITL, and every resolution still gets the user's confirmation before the ticket closes.
 
 ## Decisions so far
 
@@ -30,6 +31,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - [08 — CBA disclosure inventory](issues/08-cba-disclosure-inventory.md) — FY26 results published 12 Aug 2026 (freshest possible POC period); no Excel P&L pack, so PDF parsing is unavoidable; NIM walk at Profit Announcement printed p12 (printed page = PDF page − 16); cash-vs-statutory reconciliation at Appendix 6.3; FY20/21 PDFs are AES-encrypted; division changes since FY20 break time series; scrape links, never template URLs.
 - [12 — Scaffold the repo](issues/12-scaffold-repo.md) — repo live at https://github.com/myz96/ai-bank-equity-researcher (private, `main`); uv library layout, pytest + ruff, MIT; map and tickets are committed as part of the deliverable.
 - [11 — Decomposition conventions](issues/11-decomposition-conventions.md) — NIM walks share one stable driver set across the four majors (labels differ per bank); core-profit vocabulary diverges hardest (cash earnings / cash profit / cash NPAT / ex-Notables); CET1 walk convention is standard with IRRBB as a separate volatile bar; a cross-bank canonical driver taxonomy with per-bank label mappings is viable.
+- [01 — Driver taxonomy and decomposition](issues/01-driver-taxonomy-and-decomposition.md) — canonical cross-bank taxonomy with per-bank label maps; walk-first layered method (extract walks → derive ROE/CTI arithmetically → narrative marked unquantified) plus deterministic validation in code; explicit residuals; notable items first-class; basis always tagged. Artifact: docs/design/driver-taxonomy.md; ADR-0001.
 
 ## Not yet specified
 

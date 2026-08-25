@@ -59,3 +59,27 @@ A bank-published bridge that attributes the movement in net interest margin to n
 
 **Earnings bridge**:
 A bank-published bridge that attributes the movement in cash earnings to named drivers.
+
+**Canonical driver**:
+A bank-agnostic driver concept in the fixed taxonomy. Each bank's verbatim walk label maps to one canonical driver.
+_Avoid_: normalised driver, generic driver
+
+**Basis**:
+The profit measurement a figure belongs to: cash, statutory, or ex-Notables. Every figure is tagged with its basis.
+
+**Notable items**:
+Large separately disclosed items a bank strips from its underlying result. ANZ says "significant items".
+_Avoid_: one-offs
+
+**Residual**:
+The unexplained remainder after quantified drivers are summed against a movement. Always reported, never force-fitted.
+_Avoid_: plug, balancing item
+
+**Loss rate**:
+The credit impairment charge as basis points of average gross loans, annualised for half-years. The bank's denominator is always named.
+
+**Jaws**:
+Income growth minus expense growth versus the comparator. Positive jaws lowers the cost-to-income ratio.
+
+**Validation check**:
+A deterministic test in code that an extracted figure must pass: walk bars sum to the movement, identities hold, documents agree.
