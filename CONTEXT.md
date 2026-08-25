@@ -1,0 +1,61 @@
+# Bank Equity Research
+
+First-pass equity research on Australian banks: explaining how a headline metric moved between reporting periods, and attributing the movement to drivers with cited evidence.
+
+## Language
+
+**Bank**:
+An ASX-listed Australian deposit-taking institution under analysis.
+_Avoid_: institution, company, ticker
+
+**Headline metric**:
+One of six: net interest margin, cash earnings, return on equity, CET1 ratio, credit impairment charge, cost-to-income ratio.
+_Avoid_: KPI, measure, figure
+
+**Reporting period**:
+A half-year or full-year in the bank's own financial calendar.
+_Avoid_: quarter
+
+**Comparator**:
+The prior period a movement is measured against. The agent always names its comparator.
+_Avoid_: baseline, benchmark
+
+**PCP**:
+The prior corresponding period: the same period one year earlier. Default comparator for a half-year input.
+
+**Prior half**:
+The immediately preceding half-year. A comparison against it is HoH.
+
+**Period type**:
+Whether a case targets a half-year result, a full-year result, or an older period whose disclosure format differs.
+_Avoid_: time span
+
+**Movement**:
+The change in a headline metric from the comparator to the reporting period.
+_Avoid_: delta, variance, change
+
+**Driver**:
+A named cause that contributed to a movement, with a direction and, where evidence allows, a magnitude.
+_Avoid_: factor, lever, contributor
+
+**Attribution**:
+The set of drivers, with contributions and confidence ratings, that explains a movement.
+_Avoid_: explanation, breakdown
+
+**Confidence rating**:
+The agent's stated degree of belief in a driver's contribution, backed by cited evidence.
+_Avoid_: certainty, score
+
+**Cash earnings**:
+The bank-defined profit measure that excludes items the bank treats as non-recurring or non-cash. Defined per bank; not statutory. Westpac dropped this measure at 1H23 and now headlines net profit excluding Notable Items.
+_Avoid_: underlying profit, adjusted profit
+
+**Statutory profit**:
+Net profit after tax under accounting standards, as reported in the audited financial statements.
+_Avoid_: reported profit
+
+**NIM walk**:
+A bank-published bridge that attributes the movement in net interest margin to named drivers.
+
+**Earnings bridge**:
+A bank-published bridge that attributes the movement in cash earnings to named drivers.

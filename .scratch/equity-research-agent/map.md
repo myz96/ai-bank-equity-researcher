@@ -1,0 +1,47 @@
+# Map: equity-research-agent
+
+Label: wayfinder:map
+
+## Destination
+
+A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working banking-sector equity-research agent, an eval harness with recorded results, a README, a design doc with the rationale for the four owned decisions (tools, context management, memory, evals), and the saved coding-agent session transcript. Banks: CBA (POC), then NAB and Westpac.
+
+## Notes
+
+- Execution is carried into this map (agreed at charting): build steps are `task` tickets, and the map is done when the deliverable ships.
+- Deadline: 2026-09-01. Quality beats speed; cut from iteration first if time runs short.
+- Stack: Python 3.12+, `uv`, `pytest`. Model gateway: OpenRouter (`OPENROUTER_API_KEY`), chosen so cheap OSS models can be swapped in.
+- Spend policy: under AUD 50 total for model runs. Develop and iterate on cheap models; run the normal model late and only when needed.
+- Repo: private under `myz96`, MIT license. Reviewers get access at the end; transcript attached at the end.
+- Documents: never commit PDFs. Commit a manifest (URLs, checksums, metadata) plus a fetch script that fills a gitignored `data/` cache. The agent may fetch live on a cache miss. Evals run from the cache.
+- Comparison defaults: full-year input compares against the prior full year; half-year input compares against the PCP (same half, one year earlier). The agent always names its comparator.
+- Eval axes are period-types, not lengths: a half-year result, a full-year result, and at least one older period (format drift is the robustness test and a stand-in for the unseen case).
+- Named eval case: the cash-vs-statutory earnings disagreement.
+- Unseen-case posture: no hard-coded banks. A bank registry plus generic document discovery; honest uncertainty in output when disclosure is thin.
+- Skills: grilling tickets use /grilling + /domain-modeling (that pair is /grill-with-docs). Research tickets use /research background subagents. The glossary lives in `CONTEXT.md`; qualifying decisions get ADRs in `docs/adr/`.
+- Prose shown to the user follows ASD-STE100 (user's global CLAUDE.md).
+
+## Decisions so far
+
+<!-- one line per closed ticket: gist + link -->
+
+- [09 — NAB disclosure inventory](issues/09-nab-disclosure-inventory.md) — the half-year results book is the master document (NIM walk printed p22; cash-to-statutory reconciliation printed pp100–101); no Excel P&L pack since FY20, so P&L comes from PDFs; cash earnings is the primary basis; full-year format broke at FY21; scrape the results landing page, do not construct URLs.
+- [10 — Westpac disclosure inventory](issues/10-westpac-disclosure-inventory.md) — Westpac dropped cash earnings at 1H23 (now statutory net profit + "excluding Notable Items"), which sharpens the cash-vs-statutory eval case; a "Key Financial Information" Excel pack exists since 1H23; NIM walk in IDP slide 24 and announcement p7 (1H26); format breaks at 1H23 and 1H25; scrape landing pages, filenames drift.
+- [08 — CBA disclosure inventory](issues/08-cba-disclosure-inventory.md) — FY26 results published 12 Aug 2026 (freshest possible POC period); no Excel P&L pack, so PDF parsing is unavoidable; NIM walk at Profit Announcement printed p12 (printed page = PDF page − 16); cash-vs-statutory reconciliation at Appendix 6.3; FY20/21 PDFs are AES-encrypted; division changes since FY20 break time series; scrape links, never template URLs.
+
+## Not yet specified
+
+- Corpus acquisition per bank and period (which documents, which periods) — sharpens after the disclosure inventories (08–10) and eval design (05).
+- Generalisation of the CBA pipeline to NAB and Westpac — sharpens after the POC exists.
+- Unseen-bank hardening (a dry run on ANZ, Macquarie, or a regional bank) — after generalisation.
+- Model-combination selection per pipeline stage — after the harness exists.
+- The full eval matrix run and the results write-up — after ticket 05 and the build.
+- Iteration priorities — after the first eval results.
+- Final report: README, design doc, transcript attachment, reviewer access.
+
+## Out of scope
+
+- Investment advice: recommendations, price targets, forecasts. The agent explains movement; it does not predict.
+- Banks outside Australia; figures in currencies other than AUD.
+- Real-time market data, consensus estimates, paid data feeds.
+- Any UI beyond a CLI and library surface.
