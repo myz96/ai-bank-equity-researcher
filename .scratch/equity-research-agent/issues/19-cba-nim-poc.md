@@ -1,7 +1,7 @@
 # 19 — CBA NIM POC: tool layer + orchestration comparison
 
 Type: prototype
-Status: open
+Status: claimed
 
 ## Question
 
