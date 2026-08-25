@@ -43,7 +43,7 @@ The set of drivers, with contributions and confidence ratings, that explains a m
 _Avoid_: explanation, breakdown
 
 **Confidence rating**:
-The agent's stated degree of belief in a driver's contribution, backed by cited evidence.
+The agent's self-stated number from 0 to 100: the probability that the claim would be judged correct against gold evidence. One per driver, one per attribution.
 _Avoid_: certainty, score
 
 **Cash earnings**:
