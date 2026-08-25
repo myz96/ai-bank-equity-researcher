@@ -1,7 +1,7 @@
 # 13 — Prototype: retrieval bake-off (section maps vs embeddings)
 
 Type: prototype
-Status: open
+Status: claimed
 Blocked by: 15, 16
 
 ## Question

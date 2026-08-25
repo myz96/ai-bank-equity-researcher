@@ -1,8 +1,15 @@
 # 14 — Prototype: chart-reading reliability
 
 Type: prototype
-Status: open
+Status: claimed
 Blocked by: 15, 16
+
+## Gold (hand-verified from rendered pages, 2026-08-25)
+
+- FY26 PA p28 (printed 12) "NIM Movement since June 2025": 208 → Liquids (3), Asset pricing (5), Funding costs 0, Portfolio mix +2, Basis risk 0, Capital/Replicating/Other +5, Treasury & Markets (2) → 205. Note: research 08's record of this walk was incomplete — corrected here from the page image.
+- FY26 Presentation slide 60 "Group margin – 12 months": 208 → Liquids & repos (4), Asset pricing (5), Funding costs 0, Portfolio mix +2, Interest rate risk hedging +5, Treasury & Markets (1) → 205. Same movement, different bar framing than the PA — a live example of the two-framings mapping problem.
+- FY26 Presentation slide 32 CET1: Dec 25 12.3% → 1H26 dividend (76), Cash NPAT +106, RWA (46) [Credit (38), IRRBB (16), Market +8, Op 0], Other (8) → Jun 26 12.0%. Bars sum to −24 vs headline −30: the slide footnotes that numbers "may not sum precisely" (rounding) — validation checks need a tolerance rule for presentation walks.
+- FY25 PA p28 "NIM Movement since June 2024": 199 → Liquids & Pooled +7, Asset pricing 0, Funding (7), Mix 0, Basis risk (1), Capital/Replicating/Other +9, Treasury & Markets +1 → 208. Matches research 11.
 
 ## Question
 

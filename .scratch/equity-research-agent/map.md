@@ -12,6 +12,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - Deadline: 2026-09-01. Quality beats speed; cut from iteration first if time runs short.
 - Stack: Python 3.12+, `uv`, `pytest`. Model gateway: OpenRouter (`OPENROUTER_API_KEY`), chosen so cheap OSS models can be swapped in.
 - Spend policy: under AUD 50 total for model runs. Develop and iterate on cheap models; run the normal model late and only when needed.
+- Model slate (2026-08-25, from the live OpenRouter catalogue): cheap `qwen/qwen3.7-flash`; normal author `z-ai/glm-5.3`; cross-family judge `deepseek/deepseek-v4-pro-0813`; `stealth/ox-alpha` (free alpha, strong on recent evals) featured in every prototype arm with glm-5.3 as stable fallback; `moonshotai/kimi-k3` as vision ceiling reference. Final combinations are eval-decided.
 - Repo: private under `myz96`, MIT license. Reviewers get access at the end; transcript attached at the end.
 - Documents: never commit PDFs. Commit a manifest (URLs, checksums, metadata) plus a fetch script that fills a gitignored `data/` cache. The agent may fetch live on a cache miss. Evals run from the cache.
 - Comparison defaults: full-year input compares against the prior full year; half-year input compares against the PCP (same half, one year earlier). The agent always names its comparator.
