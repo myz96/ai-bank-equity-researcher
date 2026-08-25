@@ -41,10 +41,10 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - [03 — Context management](issues/03-context-management-architecture.md) — local hybrid retrieval → cheap-model evidence records → vision for chart pages → deterministic checks; minimal caching (PDFs, page text, vectors). ADR-0002.
 - [04 — Memory design](issues/04-memory-design.md) — memory is a versioned per-bank registry (no financial numbers, structurally), read-only at runtime with suggested-patch learning; eval runs pin the registry and the unseen-bank case deletes its entry. ADR-0003.
 - [06 — Output contract](issues/06-output-contract.md) — one JSON document is the whole output (drivers with canonical+verbatim labels, nullable contributions, per-driver confidence and checks, disagreements first-class, provenance with checksums); citations carry printed+PDF page and ≤50-word verbatim quotes; the report is a deterministic template over the JSON, never a second model pass.
+- [05 — Eval design](issues/05-eval-design.md) — ~42-case matrix (3 banks, 7 bank-periods, 6 metrics) × combos (all-cheap; cheap+normal author; experimental ox-alpha); provenance-carrying gold with dev/holdout split (tickets 17/18); per-stage scorecard with driver precision/recall, calibration (Brier, confidently-wrong rate), cross-family citation judging; commented tolerance constants; four named adversarial cases; extraction micro-eval runs first.
 
 ## Not yet specified
 
-- Corpus acquisition for NAB and Westpac (CBA graduated to ticket 15) — sharpens after eval design (05) fixes the case list.
 - Generalisation of the CBA pipeline to NAB and Westpac — sharpens after the POC exists.
 - Unseen-bank hardening (a dry run on ANZ, Macquarie, or a regional bank) — after generalisation.
 - Model-combination selection per pipeline stage — after the harness exists.
