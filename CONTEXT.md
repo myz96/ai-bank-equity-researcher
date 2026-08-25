@@ -83,3 +83,7 @@ Income growth minus expense growth versus the comparator. Positive jaws lowers t
 
 **Validation check**:
 A deterministic test in code that an extracted figure must pass: walk bars sum to the movement, identities hold, documents agree.
+
+**Evidence record**:
+A typed extract from a source page: document, printed and PDF page, verbatim quote or table, parsed numbers with units and basis tags. The reasoning model reads only evidence records.
+_Avoid_: chunk, snippet

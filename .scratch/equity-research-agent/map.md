@@ -35,6 +35,10 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - [01 — Driver taxonomy and decomposition](issues/01-driver-taxonomy-and-decomposition.md) — canonical cross-bank taxonomy with per-bank label maps; walk-first layered method (extract walks → derive ROE/CTI arithmetically → narrative marked unquantified) plus deterministic validation in code; explicit residuals; notable items first-class; basis always tagged. Artifact: docs/design/driver-taxonomy.md; ADR-0001.
 - [02 — Confidence and calibration](issues/02-confidence-and-calibration.md) — one self-reported 0–100 confidence per driver and per attribution, sources and check results attached, fixed truth-condition meaning; no rubric; calibration measured only against objective gold (hand-recorded walks + identity checks); narrative claims quarantined behind citation grounding; headline stat is the confidently-wrong rate.
 - [15 — Acquire the CBA corpus](issues/15-acquire-cba-corpus.md) — manifest + idempotent fetch script live; CBA FY26 suite and FY25 Profit Announcement fetched and checksum-pinned; page counts and the +16 printed-page offset verified against ticket 08.
+- [16 — Provide the OpenRouter key](issues/16-provide-openrouter-key.md) — key live (USD 100 limit); model slate chosen from the live catalogue.
+- [13 — Retrieval bake-off](issues/13-retrieval-bakeoff-prototype.md) — local dense (bge-small) 10/10 and BM25 9/10 beat LLM navigation (4–8/10) at zero cost; retrieval is local hybrid, no LLM in the page-finding loop.
+- [14 — Chart-reading prototype](issues/14-chart-reading-prototype.md) — vision `qwen3.7-flash` read 24/24 gold walk bars for $0.0006; text-layer extraction not viable; `glm-5.3` needs a reasoning-aware client; presentation walks need a looser sum tolerance.
+- [03 — Context management](issues/03-context-management-architecture.md) — local hybrid retrieval → cheap-model evidence records → vision for chart pages → deterministic checks; minimal caching (PDFs, page text, vectors). ADR-0002.
 
 ## Not yet specified
 

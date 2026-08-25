@@ -1,7 +1,7 @@
 # 13 — Prototype: retrieval bake-off (section maps vs embeddings)
 
 Type: prototype
-Status: claimed
+Status: resolved
 Blocked by: 15, 16
 
 ## Question
@@ -28,4 +28,4 @@ Ten targets, gold pages located by marker search (not hardcoded). Hit = a gold p
 
 The only BM25 miss was the chart-heavy slide with almost no body text ("Group margin – 12 months"), which dense embeddings still caught. LLM navigation was slower, costlier, and less accurate than local retrieval on these well-structured documents.
 
-**Recommendation:** retrieval = local hybrid (dense bge-small top-k unioned with BM25), no LLM in the page-finding loop. This contradicts the original section-map lean in ticket 03's grilling — the prototype settles it. Pending user reaction.
+**Recommendation:** retrieval = local hybrid (dense bge-small top-k unioned with BM25), no LLM in the page-finding loop. This contradicts the original section-map lean in ticket 03's grilling — the prototype settles it. User accepted 2026-08-25.

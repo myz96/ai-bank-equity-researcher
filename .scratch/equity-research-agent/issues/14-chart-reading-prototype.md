@@ -1,7 +1,7 @@
 # 14 — Prototype: chart-reading reliability
 
 Type: prototype
-Status: claimed
+Status: resolved
 Blocked by: 15, 16
 
 ## Gold (hand-verified from rendered pages, 2026-08-25)
@@ -43,4 +43,4 @@ Findings:
 4. **`glm-5.3` operational caveat:** it ignores `reasoning: {enabled: false}` and needs a reasoning-aware client (large max_tokens, read content after reasoning) — matters for its author role in ticket 07.
 5. `ox-alpha` confirmed as experiment-only: nothing on the critical path should wait on its rate limiter.
 
-Pending user reaction.
+User accepted 2026-08-25: chart pages route to vision `qwen3.7-flash` with the deterministic sum check.
