@@ -33,10 +33,11 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - [11 — Decomposition conventions](issues/11-decomposition-conventions.md) — NIM walks share one stable driver set across the four majors (labels differ per bank); core-profit vocabulary diverges hardest (cash earnings / cash profit / cash NPAT / ex-Notables); CET1 walk convention is standard with IRRBB as a separate volatile bar; a cross-bank canonical driver taxonomy with per-bank label mappings is viable.
 - [01 — Driver taxonomy and decomposition](issues/01-driver-taxonomy-and-decomposition.md) — canonical cross-bank taxonomy with per-bank label maps; walk-first layered method (extract walks → derive ROE/CTI arithmetically → narrative marked unquantified) plus deterministic validation in code; explicit residuals; notable items first-class; basis always tagged. Artifact: docs/design/driver-taxonomy.md; ADR-0001.
 - [02 — Confidence and calibration](issues/02-confidence-and-calibration.md) — one self-reported 0–100 confidence per driver and per attribution, sources and check results attached, fixed truth-condition meaning; no rubric; calibration measured only against objective gold (hand-recorded walks + identity checks); narrative claims quarantined behind citation grounding; headline stat is the confidently-wrong rate.
+- [15 — Acquire the CBA corpus](issues/15-acquire-cba-corpus.md) — manifest + idempotent fetch script live; CBA FY26 suite and FY25 Profit Announcement fetched and checksum-pinned; page counts and the +16 printed-page offset verified against ticket 08.
 
 ## Not yet specified
 
-- Corpus acquisition per bank and period (which documents, which periods) — sharpens after the disclosure inventories (08–10) and eval design (05).
+- Corpus acquisition for NAB and Westpac (CBA graduated to ticket 15) — sharpens after eval design (05) fixes the case list.
 - Generalisation of the CBA pipeline to NAB and Westpac — sharpens after the POC exists.
 - Unseen-bank hardening (a dry run on ANZ, Macquarie, or a regional bank) — after generalisation.
 - Model-combination selection per pipeline stage — after the harness exists.
