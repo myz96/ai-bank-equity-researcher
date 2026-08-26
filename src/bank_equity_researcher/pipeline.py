@@ -19,7 +19,7 @@ from .schema import Attribution
 from .taxonomy import METRIC_ALIASES, TAXONOMY
 from .validate import check_drivers_reconcile, check_movement, check_walk, corroborate, cross_source_view
 
-MAX_TEXT_PAGES = 8
+MAX_TEXT_PAGES = 10
 # Per document, so the Profit Announcement cannot crowd out the presentation's
 # walk — cross-document corroboration needs both framings extracted.
 MAX_WALK_PAGES_PER_DOC = 2
@@ -83,8 +83,15 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     # walks corroborate. Books first, so the author reads them first.
     book_types = ("profit_announcement", "results_announcement", "results_book")
     walk_pages.sort(key=lambda dp: 0 if doc_by_id[dp[0]].doc_type in book_types else 1)
+    # Current-period documents first: a plain alphabetical sort starved the
+    # author of current-period evidence (FY25 < FY26 lexically), which sank
+    # five of seven cases on the first scorecard.
+    def page_order(dp: tuple[str, int]):
+        doc = doc_by_id[dp[0]]
+        return (0 if doc.period == period else 1, dp[0], dp[1])
+
     text_pages = [
-        (doc_id, page) for doc_id, page in sorted(candidates) if (doc_id, page) not in set(walk_pages)
+        dp for dp in sorted(candidates, key=page_order) if dp not in set(walk_pages)
     ][:MAX_TEXT_PAGES]
 
     # 3. Extract evidence.

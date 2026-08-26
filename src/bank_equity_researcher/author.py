@@ -64,6 +64,12 @@ ABSOLUTE RULES — never break these:
    Slide walks corroborate and annotate; where their framing differs, say so
    in a disagreement, but do not adopt the slide framing as primary.
 
+UNITS: express from_value, to_value, delta, and every contribution ALL in
+"{unit}". Convert percentages when the unit is bps (2.08% = 208; a -3 bps move
+is from 208 to 205, delta -3) and quote ratio metrics in points when the unit
+is ppt (45.7% -> 45.7, a 20 bpts improvement is delta -0.2). Never mix units
+inside the movement object.
+
 Reply with JSON only, in this exact shape:
 {{"movement": {{"from_value": float, "to_value": float, "delta": float, "unit": "{unit}"}},
   "basis": "cash|statutory|ex_notables",

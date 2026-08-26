@@ -37,8 +37,9 @@ TAXONOMY: dict[str, dict] = {
             "cash earnings statutory net profit reconciliation non-cash items",
             "group performance summary net interest income operating expenses impairment",
             "operating income waterfall cash net profit after tax",
+            "net profit after tax cash basis continuing operations movement prior year",
         ],
-        "walk_markers": ["Statutory vs cash", "result"],
+        "walk_markers": ["Statutory vs cash NPAT", "cash earnings bridge"],
         "drivers": {
             "nii.volume": "Net interest income: volume (AIEA growth)",
             "nii.margin": "Net interest income: margin (NIM movement)",
@@ -74,8 +75,9 @@ TAXONOMY: dict[str, dict] = {
         "retrieval_queries": [
             "CET1 capital ratio movement basis points dividend RWA",
             "capital adequacy ratios common equity tier 1",
+            "risk weighted assets movement credit market operational IRRBB",
         ],
-        "walk_markers": ["Capital", "CET1"],
+        "walk_markers": ["Movements in bpts", "capital ratio movement", "CET1 ratio movement"],
         "drivers": {
             "earnings_generation": "Capital generated from earnings",
             "dividend_net_drp": "Dividends net of DRP",
