@@ -1,0 +1,38 @@
+{
+  "bank": "CBA",
+  "period": "FY21",
+  "comparator": "FY20",
+  "basis": "cash",
+  "verified": "Hand-verified from the rendered FY21 results presentation slide 63 (PDF p63), 2026-08-26. The older-period format-drift case: the PA of this era has no labelled waterfall (drivers are prose, printed pp12-13 = PDF pp32-33); the walk lives in the presentation, with era-specific bar framings.",
+  "cases": [
+    {
+      "metric": "nim",
+      "split": "dev",
+      "holdout_candidate": true,
+      "movement": {
+        "from": 207, "to": 203, "delta": -4, "unit": "bps",
+        "provenance": "FY21 presentation slide 63: FY20 207 -> FY21 203, '(4)bpts', continuing operations basis"
+      },
+      "gold_drivers": {
+        "tier": "walk",
+        "provenance": "FY21 presentation slide 63 'Group margin', read from the rendered page; sums -4 = movement. Era framings preserved: 'Deposit Pricing & Funding' folds deposits, wholesale and replicating-portfolio effects; 'Basis Risk (incl RP)' includes replicating portfolio.",
+        "drivers": {
+          "liquids": -4, "asset_pricing": -2, "funding": -3,
+          "capital_replicating": -2, "mix": 2, "basis_risk": 3, "markets_treasury": 2
+        },
+        "era_labels": {
+          "Higher Liquids": "liquids", "Asset Pricing": "asset_pricing",
+          "Deposit Pricing & Funding": "funding", "Capital & Other": "capital_replicating",
+          "Portfolio Mix": "mix", "Basis Risk (incl RP)": "basis_risk", "Treasury & Markets": "markets_treasury"
+        }
+      },
+      "narrative_checklist": [
+        "liquids bar has minimal impact on NII (slide 63 annotation)",
+        "deposit pricing & funding -3: cash rate cut -8, investment +1, replicating portfolio +2, wholesale +2 (slide 63 annotations)",
+        "asset pricing -2: home loans net flat (pricing +9, switching -5, discounting -4), business lending -1, consumer finance -1 (slide 63)",
+        "low-rate environment and TFF cited as the FY22 considerations (slide 63)",
+        "the Profit Announcement of this era carries the drivers as prose, not a chart (printed pp12-13)"
+      ]
+    }
+  ]
+}

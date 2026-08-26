@@ -1,58 +1,63 @@
 # CBA — cash_earnings — FY26 vs FY25
 
-**Movement (cash basis):** 10252$m → 13590$m (+3338$m) | **Attribution confidence:** 40/100
+**Movement (cash basis):** 10252$m → 10982$m (+730$m) | **Attribution confidence:** 40/100
 
-CBA cash earnings grew $3,338m (+32.6%) to $13,590m in FY26 vs FY25 ($10,252m). The results presentation walk chart attributes a +$210m movement to core drivers (NII, PCL, OOI, OpEx, Tax), implying a significant unquantified residual of ~$3,128m. While the Profit Announcement cites 7% growth (implying ~$11,000m), this contradicts the detailed walk chart endpoint of $13,590m. We prioritize the walk chart's explicit dollar endpoints for the delta calculation but flag the severe discrepancy with the PA narrative.
+CBA's cash NPAT from continuing operations increased $730 million (7%) to $10,982 million in FY26 compared to FY25 ($10,252 million). This growth was driven by lending volume expansion and a 3 basis point improvement in Net Interest Margin (NIM) to 2.05%. These positives were partially offset by higher operating expenses ($13,755 million, +6%) due to inflation and technology investments, as well as an increase in loan impairment expense ($788 million, +9%). Pre-provision profit grew 6% to $16.5 billion.
+
+## Drivers
+
+| Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
+|---|---|---|---|---|---|
+| `operating_expenses` | Operating expenses | -784 $m | 85 | 1 (single_source) | ev-11, ev-13 |
+| `credit_impairment_charge` | Loan impairment expense | -64 $m | 85 | 1 (single_source) | ev-12, ev-3 |
+| *residual (unexplained)* | — | +1578 $m | — | — |
 
 ### nii.volume
-*unquantified | confidence 80/100*
+*unquantified | confidence 60/100*
 
-Net Interest Revenue contributed +450bps per the walk chart (ev-3). This is an unallocated mix of volume and margin effects; specific volume attribution is not provided in the evidence.
-> [ev-3] CBA/FY26/results_presentation, printed p2: "[walk chart] CBA cash earnings in FY26 vs FY25: FY25 Cash Earnings 13800.0 -> FY26 Cash Earnings 13590.0"
+Narrative confirms lending volume growth in core businesses supported earnings. No specific dollar contribution provided in source.
+> [ev-3] CBA/FY26/asx_announcement, PDF p1: "Net profit after tax (NPAT) was supported by lending volume growth in our core businesses... This was partly offset by higher operating expenses primarily due to inflation and technology investments, and a higher loan impairment expense"
 
-### credit_impairment_charge — "Provision for Credit Losses"
-*unquantified | confidence 80/100*
+### nii.margin — "Net interest margin"
+*unquantified | confidence 60/100*
 
-PCL contributed -280bps per the walk chart (ev-3). No absolute dollar value or GLAA denominator is provided to convert bps to $m.
-> [ev-3] CBA/FY26/results_presentation, printed p2: "[walk chart] CBA cash earnings in FY26 vs FY25: FY25 Cash Earnings 13800.0 -> FY26 Cash Earnings 13590.0"
+NIM improved by 3 basis points to 2.05% in FY26. While positive for income, the specific dollar impact is not isolated from volume effects in the provided text.
+> [ev-10] CBA/FY26/asx_announcement, PDF p2: "Net interest margin 2.05% 3bpts on FY25"
 
-### other_operating_income — "Other Operating Income"
-*unquantified | confidence 80/100*
+### operating_expenses — "Operating expenses"
+*-784 $m | confidence 85/100*
 
-OOI contributed +120bps per the walk chart (ev-3). Specific fee/trading/insurance breakdowns are not quantified in the evidence.
-> [ev-3] CBA/FY26/results_presentation, printed p2: "[walk chart] CBA cash earnings in FY26 vs FY25: FY25 Cash Earnings 13800.0 -> FY26 Cash Earnings 13590.0"
+Operating expenses increased by $784 million (6%) to $13,755 million, primarily due to inflation and technology investments. This negatively impacted cash earnings.
+> [ev-11] CBA/FY26/asx_announcement, PDF p2: "Operating expenses $13,755m 6% on FY25"
+> [ev-13] CBA/FY26/asx_announcement, PDF p2: "Investment spend of $2,428 million was up 6% on FY25"
 
-### operating_expenses — "Operating Expenses"
-*unquantified | confidence 80/100*
+### credit_impairment_charge — "Loan impairment expense"
+*-64 $m | confidence 85/100*
 
-OpEx contributed -310bps per the walk chart (ev-3). No absolute dollar value is provided.
-> [ev-3] CBA/FY26/results_presentation, printed p2: "[walk chart] CBA cash earnings in FY26 vs FY25: FY25 Cash Earnings 13800.0 -> FY26 Cash Earnings 13590.0"
+Loan impairment expense increased by $64 million (9%) to $788 million, reducing net profit. This was cited as a headwind against volume and margin growth.
+> [ev-12] CBA/FY26/asx_announcement, PDF p2: "Credit quality – loan impairment expense $788m 9% on FY25"
+> [ev-3] CBA/FY26/asx_announcement, PDF p1: "Net profit after tax (NPAT) was supported by lending volume growth in our core businesses... This was partly offset by higher operating expenses primarily due to inflation and technology investments, and a higher loan impairment expense"
 
-### tax_and_other — "Tax Expense"
-*unquantified | confidence 80/100*
-
-Tax contributed -190bps per the walk chart (ev-3). No effective tax rate or absolute dollar value is provided.
-> [ev-3] CBA/FY26/results_presentation, printed p2: "[walk chart] CBA cash earnings in FY26 vs FY25: FY25 Cash Earnings 13800.0 -> FY26 Cash Earnings 13590.0"
+## Notable items
+- Transaction costs and gains/(losses) on disposals: $15.5m (positive)
+- Hedging and IFRS volatility: -$10.7m (negative)
 
 ## Source disagreements
-- **FY26 Cash Earnings Absolute Value** (definitional): 13590.0 — CBA/FY26/results_presentation PDF p2 (ev-3) vs ~11000.0 — CBA/FY26/profit_announcement PDF p2 (ev-12, ev-13)
-  Preferred: 13590.0. The Walk Chart (ev-3) explicitly states FY26 Cash Earnings as $13,590m. However, the Profit Announcement (ev-12, ev-13) states profit growth was 7%. Applying 7% growth to the FY25 base of $10,252m yields ~$10,970m. The $13,590m figure implies ~32.6% growth. The PA narrative (ev-11) also cites 7% revenue growth. There is a material conflict between the detailed walk chart numbers and the high-level PA percentages.
-- **Walk Chart Summation** (rounding): +210.0 bps sum of bars — CBA/FY26/results_presentation PDF p2 (ev-3) vs -210.0 bps implied by start/end if interpreted differently — Validation Error
-  Preferred: +210.0 bps. The validation error noted 'walk_extraction_error'. The bars sum to +450 - 280 + 120 - 310 - 190 = -210 bps. The start point is 13,800 bps (likely $13,800m mislabeled as bps or a scaling error in the extraction). If the start is $13,800m and end is $13,590m, the delta is -$210m. However, the task requires comparing FY26 ($13,590m) to FY25 ($10,252m). The walk chart appears to be a reconciliation from a *different* starting point (perhaps FY26 prior year adjusted or a different metric) rather than a direct FY25-to-FY26 bridge. The 'start_bps' of 13800 matches the FY26 end label of the previous period? No, FY25 is 10252. The walk chart source (ev-3) has start_label 'FY25 Cash Earnings' but value 13800. This is a definitional mismatch: the label says FY25, the number says 13800. 13800 does not match FY25 Cash Earnings (10252). Thus, the walk chart does not actually bridge FY25 to FY26 as labeled.
+- **Walk Chart Summation** (error): Start 1,025,200 bps + Bars (+4,800 bps) = 1,030,000 bps != End 1,098,200 bps vs Source: CBA/FY26/results_presentation PDF p23 (ev-1)
+  Preferred: Profit Announcement Table (ev-14/ev-21). The walk chart extracted from the results presentation fails the sum check significantly. The bars provided (Transaction costs + Hedging) only account for a small fraction of the total movement. The Profit Announcement table provides the definitive absolute values for Cash NPAT.
 
 ## Limitations
-- The primary walk chart (ev-3) contains a critical data integrity error: it labels the start point as 'FY25 Cash Earnings' but assigns it a value of 13,800, whereas FY25 Cash Earnings is confirmed as 10,252 (ev-4, ev-6, ev-9). Consequently, the bars in ev-3 do not reconcile the actual FY25 to FY26 movement.
-- The Profit Announcement (ev-12, ev-13) claims 7% growth, which contradicts the $13,590m figure in the walk chart. Without a reconciled table showing the full bridge from $10,252m to the final FY26 number, we cannot attribute the $3,338m delta to specific canonical drivers with high confidence.
-- Driver contributions are only available in basis points (ev-3) and cannot be converted to dollars without the correct average balance sheet denominators (GLAAs) and tax rates, which are not provided in the evidence records.
-- Failed check: no_quantified_drivers
-- Failed check: walk_extraction_error p2: walk endpoints unreadable on CBA/FY26/profit_announcement p2
+- No quantified breakdown of NII volume vs margin contributions is available in the evidence records; attribution relies on narrative confirmation of volume growth and margin improvement.
+- The residual of $1,578m represents the unquantified portion of the $730m delta after accounting for known expense and impairment increases. This likely includes the positive impact of NII growth (volume + margin) and other operating income, but these are not explicitly separated in dollars.
+- Confidence is capped at 60 for drivers lacking explicit dollar quantification in the source documents.
+- Failed check: walk_sum (start 1025200 + bars +4800.0 = 1030000.0 != end 1098200, tol 10.0)
 
 ## Provenance
 - combo: cheap
 - models: extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash
 - documents: CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)
-- generated: 2026-08-26T05:59:44+00:00
-- seconds: 76.4
-- cost_usd: 0.0015
-- tokens: 29255 in / 4578 out
+- generated: 2026-08-26T06:17:55+00:00
+- seconds: 75.0
+- cost_usd: 0.0011
+- tokens: 18269 in / 3958 out
 - orchestration: pipeline

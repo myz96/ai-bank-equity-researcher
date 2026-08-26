@@ -5,21 +5,35 @@
   "comparator": "FY25",
   "basis": "cash",
   "movement": {
-    "from_value": 13.6,
-    "to_value": 13.5,
-    "delta": -0.1,
+    "from_value": 13.5,
+    "to_value": 14.0,
+    "delta": 50.0,
     "unit": "ppt"
   },
-  "headline": "CBA's cash ROE declined by 10 basis points to 13.5% in FY25 (vs FY24). The statutory ROE rose by 30 bps to 13.4%. Due to the absence of a validated walk chart for FY25 vs FY24, specific driver attribution is not possible; the movement reflects the net result of earnings and equity changes.",
+  "headline": "CBA's cash ROE increased by 50 bps to 14.0% in FY26 (FY25: 13.5%). The improvement was driven primarily by a 7% increase in cash NPAT ($11bn), supported by lending volume growth and stable underlying NIM. While pre-provision profit grew 6%, the earnings effect is partially offset by an equity effect from balance sheet expansion. No detailed walk chart is available to quantify the specific split between earnings and equity effects.",
   "drivers": [
     {
-      "canonical": "other_unmapped",
+      "canonical": "earnings_effect",
+      "bank_label": "core_profit",
+      "contribution": null,
+      "narrative": "Cash NPAT increased 7% to $11bn, providing a positive contribution to ROE. This was supported by lending volume growth and broadly stable underlying net interest margin.",
+      "confidence": 80,
+      "evidence": [
+        "ev-2",
+        "ev-5"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "equity_effect",
       "bank_label": null,
       "contribution": null,
-      "narrative": "No validated walk chart exists for the FY25 vs FY24 period. Therefore, quantified drivers cannot be attributed. The decline in cash ROE implies either lower core profit or higher average equity relative to the prior year, but exact contributions are unknown.",
-      "confidence": 40,
+      "narrative": "Average equity likely increased due to retained earnings and loan growth, exerting a downward pressure on ROE. Without average equity figures, the magnitude cannot be quantified.",
+      "confidence": 60,
       "evidence": [
-        "ev-2"
+        "ev-3",
+        "ev-9"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -27,109 +41,178 @@
   ],
   "residual": null,
   "notable_items": [],
-  "disagreements": [
-    {
-      "topic": "ROE Basis Movement",
-      "values": [
-        "Cash: -10 bps (ev-2)",
-        "Statutory: +30 bps (ev-1)"
-      ],
-      "preferred": "Cash",
-      "reason": "definitional",
-      "explanation": "Cash and statutory ROE moved in opposite directions. Cash basis is preferred for operational performance analysis as it excludes non-cash items."
-    }
-  ],
+  "disagreements": [],
   "attribution_confidence": 40,
   "limitations": [
-    "The task requests FY26 vs FY25 analysis, but evidence records only cover FY25 vs FY24. Analysis performed on available data (FY25 vs FY24).",
-    "No walk charts were provided for the relevant period, preventing quantified driver attribution per validation rules.",
-    "Confidence is capped due to lack of granular driver data.",
+    "No validated walk chart is provided to decompose the ROE movement into precise earnings and equity contributions.",
+    "Average equity balances for FY25 and FY26 are not explicitly stated in the evidence records, preventing calculation of the equity effect.",
+    "Confidence is capped at 60 because key quantitative drivers (equity levels) are missing.",
+    "Failed check: movement_arithmetic (13.5 + 50.0 != 14.0)",
     "Failed check: no_quantified_drivers"
   ],
   "evidence_records": [
     {
       "id": "ev-1",
-      "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 19,
-      "printed_page": 3,
-      "kind": "table",
-      "quote": "Return on equity (ROE) (%) Statutory basis 13.4 13.1 30 bpts",
+      "doc_id": "CBA/FY26/asx_announcement",
+      "pdf_page": 1,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "return on equity rose to 14.0%.",
       "numbers": [
         {
-          "label": "FY25 ROE Statutory",
-          "value": 13.4,
+          "label": "Return on Equity",
+          "value": 14.0,
           "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "FY24 ROE Statutory",
-          "value": 13.1,
-          "unit": "%",
-          "basis": "statutory"
+          "basis": null
         }
       ]
     },
     {
       "id": "ev-2",
-      "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 19,
-      "printed_page": 3,
-      "kind": "table",
-      "quote": "Return on equity (ROE) (%) Cash basis 13.5 13.6 (10)bpts",
+      "doc_id": "CBA/FY26/asx_announcement",
+      "pdf_page": 1,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Cash net profit after tax increased 7% to $11bn",
       "numbers": [
         {
-          "label": "FY25 ROE Cash",
-          "value": 13.5,
+          "label": "Cash NPAT Growth",
+          "value": 7.0,
           "unit": "%",
-          "basis": "cash"
+          "basis": null
         },
         {
-          "label": "FY24 ROE Cash",
-          "value": 13.6,
-          "unit": "%",
+          "label": "Cash NPAT",
+          "value": 11000.0,
+          "unit": "$m",
           "basis": "cash"
         }
       ]
     },
     {
       "id": "ev-3",
-      "doc_id": "CBA/FY25/profit_announcement",
+      "doc_id": "CBA/FY26/asx_announcement",
+      "pdf_page": 1,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "pre-provision profit increased 6% to $16.5bn",
+      "numbers": [
+        {
+          "label": "Pre-provision Profit Growth",
+          "value": 6.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Pre-provision Profit",
+          "value": 16500.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY26/asx_announcement",
+      "pdf_page": 1,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Operating income increased 6%",
+      "numbers": [
+        {
+          "label": "Operating Income Growth",
+          "value": 6.0,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/FY26/asx_announcement",
+      "pdf_page": 1,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Net profit after tax (NPAT) was supported by lending volume growth in our core businesses, with underlying net interest margin broadly stable.",
+      "numbers": []
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY26/asx_announcement",
+      "pdf_page": 1,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The full year dividend payout ratio is 77% of cash NPAT",
+      "numbers": [
+        {
+          "label": "Dividend Payout Ratio",
+          "value": 77.0,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY26/asx_announcement",
+      "pdf_page": 2,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The Bank’s ROE increased 50bpts to 14.0% and remains peer leading.",
+      "numbers": [
+        {
+          "label": "Return on equity",
+          "value": 14.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "ROE change vs FY25",
+          "value": 50.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 19,
       "printed_page": 3,
       "kind": "table",
-      "quote": "Return on equity (ROE) (%) Statutory basis 13.4 13.0 40 bpts",
+      "quote": "Return on equity (ROE) (%) Statutory basis 13.9 13.4 50 bpts",
       "numbers": [
         {
-          "label": "FY25 ROE Statutory incl disc",
-          "value": 13.4,
+          "label": "FY26 ROE Statutory",
+          "value": 13.9,
           "unit": "%",
           "basis": "statutory"
         },
         {
-          "label": "FY24 ROE Statutory incl disc",
-          "value": 13.0,
+          "label": "FY25 ROE Statutory",
+          "value": 13.4,
           "unit": "%",
           "basis": "statutory"
         }
       ]
     },
     {
-      "id": "ev-4",
-      "doc_id": "CBA/FY25/profit_announcement",
+      "id": "ev-9",
+      "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 19,
       "printed_page": 3,
       "kind": "table",
-      "quote": "Return on equity (ROE) (%) Cash basis 13.5 13.6 (10)bpts",
+      "quote": "Cash basis 14.0 13.5 50 bpts",
       "numbers": [
         {
-          "label": "FY25 ROE Cash incl disc",
-          "value": 13.5,
+          "label": "FY26 ROE Cash",
+          "value": 14.0,
           "unit": "%",
           "basis": "cash"
         },
         {
-          "label": "FY24 ROE Cash incl disc",
-          "value": 13.6,
+          "label": "FY25 ROE Cash",
+          "value": 13.5,
           "unit": "%",
           "basis": "cash"
         }
@@ -141,10 +224,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-26T06:00:16+00:00",
-    "seconds": 31.7,
-    "cost_usd": 0.0006,
-    "tokens": "12746 in / 1685 out",
+    "generated": "2026-08-26T06:18:27+00:00",
+    "seconds": 32.5,
+    "cost_usd": 0.0007,
+    "tokens": "15569 in / 2002 out",
     "orchestration": "pipeline"
   }
 }

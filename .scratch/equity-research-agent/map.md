@@ -22,6 +22,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - Skills: grilling tickets use /grilling + /domain-modeling (that pair is /grill-with-docs). Research tickets use /research background subagents. The glossary lives in `CONTEXT.md`; qualifying decisions get ADRs in `docs/adr/`.
 - Prose shown to the user follows ASD-STE100 (user's global CLAUDE.md).
 - Pace note (user, 2026-08-25): work tickets back-to-back in the current conversation until a first CBA POC produces inspectable results. No steps are skipped: grilling tickets stay HITL, and every resolution still gets the user's confirmation before the ticket closes.
+- Depth-first note (user, 2026-08-26): complete CBA across the full metric matrix and its period types (FY26, 1H26, FY21 older) until robust, BEFORE iterating NAB/Westpac cases. Generalise from one solid bank. NAB/WBC gold already recorded is kept for the later phase.
 
 ## Decisions so far
 
