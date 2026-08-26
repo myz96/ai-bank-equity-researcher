@@ -53,6 +53,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - Model-combination selection per pipeline stage — after the harness exists.
 - The full eval matrix run and the results write-up — after ticket 05 and the build.
 - Iteration priorities — after the first eval results.
+- Rerun of the Fable frontier benchmark against the completed pipeline; a human-expert scoring pass as the tier above it (aspirational).
 - Final report: README, design doc, transcript attachment, reviewer access.
 
 ## Out of scope

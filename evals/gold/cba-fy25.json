@@ -1,0 +1,30 @@
+{
+  "bank": "CBA",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "cash",
+  "verified": "NIM walk hand-verified from the rendered FY25 PA page (ticket 14) and research 11's verbatim record, 2026-08-26.",
+  "cases": [
+    {
+      "metric": "nim",
+      "split": "dev",
+      "movement": {
+        "from": 199, "to": 208, "delta": 9, "unit": "bps",
+        "provenance": "FY25 PA PDF p28 table: 'Net interest margin (%) 2.08 | 1.99 | 9bpts'"
+      },
+      "gold_drivers": {
+        "tier": "walk",
+        "provenance": "FY25 PA PDF p28 chart 'NIM Movement since June 2024', read from the rendered page; sums +9 = movement.",
+        "drivers": {
+          "liquids": 7, "asset_pricing": 0, "funding": -7, "mix": 0,
+          "basis_risk": -1, "capital_replicating": 9, "markets_treasury": 1
+        }
+      },
+      "narrative_checklist": [
+        "excluding the 7bps from lower liquids/pooled facilities, underlying NIM up 2bps (PA p28 text)",
+        "funding costs -7bps driven by deposit price competition (PA p28 text)",
+        "replicating portfolio and capital hedge earnings within +9bps (PA p12-13 text; research 11)"
+      ]
+    }
+  ]
+}

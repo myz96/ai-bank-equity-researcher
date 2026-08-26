@@ -1,0 +1,156 @@
+{
+  "bank": "CBA",
+  "period": "FY26",
+  "comparator": "FY25",
+  "basis": "cash",
+  "verified": "Hand-verified from the cached primary documents (checksums in manifest/cba.json) by reading rendered pages and page text, 2026-08-26. Method per ticket 17.",
+  "cases": [
+    {
+      "metric": "nim",
+      "split": "dev",
+      "movement": {
+        "from": 208, "to": 205, "delta": -3, "unit": "bps",
+        "provenance": "FY26 PA PDF p28 table: 'Net interest margin (%) 2.05 | 2.08 | (3)bpts'"
+      },
+      "gold_drivers": {
+        "tier": "walk",
+        "provenance": "FY26 PA PDF p28 chart 'NIM Movement since June 2025', read from the rendered page (ticket 14); sums -3 = movement.",
+        "drivers": {
+          "liquids": -3, "asset_pricing": -5, "funding": 0, "mix": 2,
+          "basis_risk": 0, "capital_replicating": 5, "markets_treasury": -2
+        }
+      },
+      "alt_framings": [
+        {
+          "source": "FY26 presentation slide 60 'Group margin – 12 months' (PDF p60), read from the rendered page",
+          "drivers": {
+            "liquids": -4, "asset_pricing": -5, "funding": 0, "mix": 2,
+            "capital_replicating": 5, "markets_treasury": -1
+          },
+          "note": "Slide folds repo drag into liquids and splits IRR hedging out of capital; reconciles exactly with the PA framing."
+        }
+      ],
+      "narrative_checklist": [
+        "home lending pricing competition (-4 bps within asset pricing; PA p28 text)",
+        "business and institutional lending pricing (-1 bp within asset pricing; PA p28 text)",
+        "liquids growth has broadly neutral impact on net interest income (PA p28 text)",
+        "portfolio mix from business lending growth and favourable deposit mix (PA p28 text)"
+      ]
+    },
+    {
+      "metric": "cash_earnings",
+      "split": "dev",
+      "movement": {
+        "from": 10252, "to": 10982, "delta": 730, "unit": "$m",
+        "provenance": "FY26 PA PDF p16 Group Performance Summary: 'Net profit after tax from continuing operations – cash basis 10,982 | 10,252 | 7'"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "Component movements as disclosed; reconciliation not force-fitted (tax and minor items form the residual).",
+        "drivers": {
+          "nii": {"value": 1563, "provenance": "PA PDF p28: 'Net interest income was $25,586 million, an increase of $1,563 million or 7%'"},
+          "other_operating_income": {"value": 196, "provenance": "PA PDF p30: 'Other operating income was $4,638 million, an increase of $196 million or 4%'"},
+          "operating_expenses": {"value": -719, "provenance": "Presentation slide 27 (PDF p27): underlying expenses 12,866 -> 13,585 (+5.6%); increase reduces earnings"},
+          "credit_impairment_charge": {"value": -62, "provenance": "PA PDF p34: 'Loan impairment expense was $788 million, an increase of $62 million or 9%'"}
+        },
+        "notable_items_level": {"value": 170, "provenance": "Presentation slide 24 (PDF p24): 'Restructuring and notable items2 | 170' (NZ legal settlement, ASIC Better Banking goodwill payment, remediation)"}
+      },
+      "narrative_checklist": [
+        "operating income growth +6.2% (slide 24)",
+        "operating performance $16,469m, +6.5% (slide 24)",
+        "statutory NPAT 10,866 vs cash 10,982; non-cash items are hedging/IFRS volatility and disposals (PA p16/p17)"
+      ]
+    },
+    {
+      "metric": "roe",
+      "split": "dev",
+      "movement": {
+        "from": 13.5, "to": 14.0, "delta": 0.5, "unit": "ppt",
+        "provenance": "FY26 PA PDF p19 KPIs (continuing operations): 'Return on equity (ROE) (%) Cash basis 14.0 | 13.5 | 50 bpts'"
+      },
+      "gold_drivers": {
+        "tier": "arithmetic",
+        "provenance": "Level-1 identity: cash NPAT +7.1% outgrew average equity; level-2 is checklist-graded.",
+        "drivers": {
+          "earnings_effect": {"direction": "positive", "note": "cash NPAT +$730m / +7.1%"},
+          "equity_effect": {"direction": "negative_or_small", "note": "average equity grew slower than earnings; buyback-neutralised DRP ($530m on-market, PA p48) limited share issuance"}
+        }
+      },
+      "narrative_checklist": [
+        "statutory ROE 13.9 vs 13.4, +50bpts (PA p19)",
+        "DRP satisfied by on-market purchase, no new shares (PA p48)"
+      ]
+    },
+    {
+      "metric": "cet1",
+      "split": "dev",
+      "movement": {
+        "from": 1230, "to": 1200, "delta": -30, "unit": "bps",
+        "provenance": "FY26 PA PDF p48: 'Common Equity Tier 1 (CET1) 12.0 | 12.3 | 12.3 | (30)bpts' — 12.0% at Jun 26 vs 12.3% at Jun 25 (and Dec 25)"
+      },
+      "gold_drivers": {
+        "tier": "walk",
+        "provenance": "HoH walk (Dec 25 -> Jun 26), presentation slide 32 (PDF p32), read from the rendered page (ticket 14). Bars sum to -24 vs -30 headline; the slide footnotes rounding — the tolerance case.",
+        "comparison": "2H26 vs 1H26 (Dec 25 -> Jun 26), not FY-on-FY",
+        "drivers": {
+          "dividend_net_drp": -76, "earnings_generation": 106,
+          "rwa": -46, "deductions_other": -8
+        },
+        "rwa_children": {"rwa.credit": -38, "rwa.irrbb": -16, "rwa.market": 8, "rwa.operational": 0}
+      },
+      "narrative_checklist": [
+        "FY drivers: capital generated from earnings; 1H26 dividend; higher Credit Risk and IRRBB RWA, partly offset by lower Traded Market Risk RWA (PA p48)",
+        "2026 interim dividend included $530m on-market purchase, CET1 impact -10bpts (PA p48 footnote)",
+        "Level 1 ratio 12.1% (slide 32)"
+      ]
+    },
+    {
+      "metric": "impairment",
+      "split": "dev",
+      "movement": {
+        "from": 726, "to": 788, "delta": 62, "unit": "$m",
+        "provenance": "FY26 PA PDF p34: 'Loan impairment expense/(benefit) 788 | 726 | 9' and text '+$62 million or 9%'"
+      },
+      "loss_rate": {
+        "from": 7, "to": 8, "delta": 1, "unit": "bps of average GLAA",
+        "provenance": "PA PDF p34: 'Loan impairment expense as a percentage of average gross loans and acceptances (GLAA) increased 1 basis point to 8 basis points'"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "Divisional/driver bullets, PA PDF p34. PARTIAL: only the RBS bullet is recorded; remaining divisional bullets to be added on a second pass before scoring this case.",
+        "drivers": {
+          "collective.asset_quality": {"direction": "up", "note": "RBS +$106m to $378m, geopolitical risk cited (PA p34)"}
+        }
+      },
+      "narrative_checklist": [
+        "half-year: 2H26 $469m, +$150m or +47% on prior half, Business Banking +$128m on collective provision charges (PA p34)",
+        "half-year loss rate annualised 9bps (PA p34)"
+      ]
+    },
+    {
+      "metric": "cti",
+      "split": "dev",
+      "movement": {
+        "from": 45.7, "to": 45.5, "delta": -0.2, "unit": "ppt",
+        "provenance": "FY26 PA PDF p18 KPIs: 'Operating expenses to total operating income (%) 45.5 | 45.7 | (20)bpts'"
+      },
+      "gold_drivers": {
+        "tier": "arithmetic",
+        "provenance": "Level-1 jaws from disclosed growth rates; level-2 expense bars from slide 27 (endpoints verified in page text; bar values recorded in research 11/08 and arithmetically consistent: sum +719 = 13,585 - 12,866).",
+        "drivers": {
+          "income_growth": {"value_pct": 6.2, "provenance": "slide 24: operating income 30,224, +6.2%"},
+          "expense_growth": {"value_pct": 5.6, "provenance": "slide 27: underlying expenses +5.6% (headline +5.8% incl. $170m notable items)"}
+        },
+        "expense_bars": {
+          "inflation": 455, "technology_investment": 444, "frontline": 128,
+          "other": 96, "productivity": -404
+        }
+      },
+      "narrative_checklist": [
+        "positive underlying jaws (income growth above expense growth)",
+        "wage inflation and vendor IT inflation cited (slide 27)",
+        "investment spend: FY26 $2,472m vs FY25 $2,068m (slide 27)"
+      ]
+    }
+  ]
+}

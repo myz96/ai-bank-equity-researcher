@@ -1,7 +1,7 @@
 # 17 — Build the gold set
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 18
 
 ## Question
