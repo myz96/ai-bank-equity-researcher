@@ -38,6 +38,108 @@
         "excluding liquid asset growth (broadly revenue neutral), NIM decreased 1 basis point (PA p28 text)",
         "NII cash basis $12,695m, +$761m or +6% on PCP (PA p28 table/text)"
       ]
+    },
+    {
+      "metric": "cash_earnings",
+      "split": "dev",
+      "movement": {
+        "from": 5132, "to": 5445, "delta": 313, "unit": "$m",
+        "provenance": "1H26 PA PDF p16 GPS: 'Net profit after tax from continuing operations – cash basis 5,445 | 5,120 | 5,132 | 6 | 6' (Dec 25 vs Dec 24 +6%)"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "Component movements from the GPS table and NII section; reconciliation not force-fitted.",
+        "drivers": {
+          "nii": {"value": 761, "provenance": "PA PDF p28: 'Net interest income was $12,695 million, an increase of $761 million or 6% on the prior comparative period'"},
+          "operating_expenses": {"value": -518, "provenance": "PA PDF p16 GPS: cash operating expenses 6,890 (Dec 25) vs 6,372 (Dec 24); increase reduces earnings"},
+          "credit_impairment_charge": {"value": 1, "provenance": "PA PDF p34: LIE $319m vs $320m PCP, a $1 million decrease"}
+        }
+      },
+      "narrative_checklist": [
+        "total operating income 15,021 vs 14,097, +6.6% PCP (GPS p16)",
+        "statutory NPAT 5,367 vs statutory basis columns shown beside cash (GPS p16)"
+      ]
+    },
+    {
+      "metric": "roe",
+      "split": "dev",
+      "movement": {
+        "from": 13.7, "to": 13.8, "delta": 0.1, "unit": "ppt",
+        "provenance": "1H26 PA PDF p19 KPIs (continuing): 'Cash basis 13.8 | 13.4 | 13.7 | 40 bpts | 10 bpts' — Dec 25 13.8 vs Dec 24 13.7, +10bpts"
+      },
+      "gold_drivers": {
+        "tier": "arithmetic",
+        "provenance": "Level-1 identity; level-2 checklist-graded.",
+        "drivers": {
+          "earnings_effect": {"direction": "positive", "note": "cash NPAT +6% PCP"},
+          "equity_effect": {"direction": "negative_or_small", "note": "equity grew with retained earnings; DRP satisfied on-market (no new shares)"}
+        }
+      },
+      "narrative_checklist": [
+        "statutory ROE 13.8 vs 13.8 flat / continuing statutory 13.8 vs 13.7 per table layout (PA p19)",
+        "2025 final DRP satisfied by $643m on-market purchase (PA p48)"
+      ]
+    },
+    {
+      "metric": "cet1",
+      "split": "dev",
+      "movement": {
+        "from": 1220, "to": 1230, "delta": 10, "unit": "bps",
+        "provenance": "1H26 PA PDF p48: 'Common Equity Tier 1 (CET1) 12.3 | 12.3 | 12.2' — Dec 25 12.3% vs Dec 24 12.2%"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "HoH drivers text, PA PDF p48 (the published walk is HoH Jun 25 -> Dec 25, flat at 12.3%). PCP driver decomposition is not published; checklist-graded.",
+        "drivers": {
+          "regulatory_model_changes": {"value": 24, "provenance": "PA p48 footnote: APS 117 revised framework from 1 Oct 2025 reduced IRRBB RWA ~$10bn, CET1 impact +24 bpts"},
+          "dividend_net_drp": {"direction": "negative", "note": "2025 final dividend; $643m on-market DRP purchase, -13 bpts (PA p48)"}
+        }
+      },
+      "narrative_checklist": [
+        "HoH: capital generated from earnings and other regulatory adjustments, partly offset by the 2025 final dividend (PA p48)",
+        "the capital section footnotes that numbers may not sum precisely due to rounding (PA p48)"
+      ]
+    },
+    {
+      "metric": "impairment",
+      "split": "dev",
+      "movement": {
+        "from": 320, "to": 319, "delta": -1, "unit": "$m",
+        "provenance": "1H26 PA PDF p34: 'Loan impairment expense/(benefit) 319 | 406 | 320' and text 'a decrease of $1 million on the prior comparative period'"
+      },
+      "loss_rate": {
+        "from": 7, "to": 6, "delta": -1, "unit": "bps of average GLAA",
+        "provenance": "PA PDF p34: 'annualised as a percentage of average GLAAs decreased 1 basis point to 6 basis points'"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "Divisional bullets, PA PDF p34. PARTIAL: Business Banking bullet recorded; offsetting increases to be added on a second pass before scoring.",
+        "drivers": {
+          "collective.asset_quality": {"direction": "down", "note": "Business Banking -$129m to $91m, lower collective provision charges (PA p34)"}
+        }
+      },
+      "narrative_checklist": [
+        "HoH: down $87m on the prior half, IB&M -$48m on lower individually assessed provisions (PA p34)"
+      ]
+    },
+    {
+      "metric": "cti",
+      "split": "dev",
+      "movement": {
+        "from": 45.2, "to": 45.9, "delta": 0.7, "unit": "ppt",
+        "provenance": "1H26 PA PDF p18 KPIs: 'Operating expenses to total operating income (%) 45.9 | 46.1 | 45.2 | (20)bpts | 70 bpts' — Dec 25 45.9 vs Dec 24 45.2"
+      },
+      "gold_drivers": {
+        "tier": "arithmetic",
+        "provenance": "Level-1 jaws computed from disclosed GPS values (negative jaws PCP).",
+        "drivers": {
+          "income_growth": {"value_pct": 6.6, "provenance": "GPS p16: total operating income 15,021 vs 14,097"},
+          "expense_growth": {"value_pct": 8.1, "provenance": "GPS p16: cash operating expenses 6,890 vs 6,372"}
+        }
+      },
+      "narrative_checklist": [
+        "negative jaws PCP (expenses grew faster than income); HoH CTI improved 20bpts (KPI p18)"
+      ]
     }
   ]
 }
