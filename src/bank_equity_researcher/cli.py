@@ -21,7 +21,20 @@ def main() -> int:
     discover_cmd.add_argument("--bank", required=True)
     discover_cmd.add_argument("--periods", required=True, help="comma-separated, e.g. 1H26,1H25")
     discover_cmd.add_argument("--seed", required=True, help="the bank's homepage or IR page URL")
+
+    evals_cmd = sub.add_parser("evals", help="run the eval harness")
+    evals_cmd.add_argument("action", choices=["run"])
+    evals_cmd.add_argument("--suite", default="dev", help="dev | holdout")
+    evals_cmd.add_argument("--combo", default="cheap")
+    evals_cmd.add_argument("--bank", default=None)
     args = parser.parse_args()
+
+    if args.command == "evals":
+        from .evals import run_suite
+
+        card = run_suite(args.suite, args.combo, args.bank)
+        print("\n" + card.read_text())
+        return 0
 
     if args.command == "discover":
         from datetime import date

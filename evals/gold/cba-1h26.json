@@ -1,0 +1,33 @@
+{
+  "bank": "CBA",
+  "period": "1H26",
+  "comparator": "1H25",
+  "basis": "cash",
+  "verified": "Hand-verified from the rendered 1H26 PA page (PDF p28) and page text, 2026-08-26. CBA halves: 1H26 = half ended 31 Dec 2025, reported 11 Feb 2026; PCP = half ended 31 Dec 2024.",
+  "cases": [
+    {
+      "metric": "nim",
+      "split": "dev",
+      "movement": {
+        "from": 208, "to": 204, "delta": -4, "unit": "bps",
+        "provenance": "1H26 PA PDF p28 table: 'Net interest margin (%) 2.04 | 2.08 | 2.08 | (4)bpts | (4)bpts' (PCP and HoH both -4)"
+      },
+      "gold_drivers": {
+        "tier": "walk",
+        "provenance": "1H26 PA PDF p28 chart 'NIM movement since December 2024', read from the rendered page; sums -4 = movement.",
+        "drivers": {
+          "liquids": -3, "asset_pricing": -2, "funding": -3, "mix": 1,
+          "basis_risk": 0, "capital_replicating": 6, "markets_treasury": -3
+        }
+      },
+      "narrative_checklist": [
+        "asset pricing: home lending -2, business lending -1, consumer finance +1 (PA p28 text)",
+        "funding costs -3: declining interest rates, unfavourable deposit mix, deposit price competition (PA p28 text)",
+        "portfolio mix +1 from at-call deposit growth (PA p28 text)",
+        "capital/replicating +6: replicating portfolio +5, capital hedges +1 (PA p28 text)",
+        "excluding liquid asset growth (broadly revenue neutral), NIM decreased 1 basis point (PA p28 text)",
+        "NII cash basis $12,695m, +$761m or +6% on PCP (PA p28 table/text)"
+      ]
+    }
+  ]
+}

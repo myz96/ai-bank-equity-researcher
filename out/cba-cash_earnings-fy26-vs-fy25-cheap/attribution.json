@@ -1,0 +1,360 @@
+{
+  "bank": "CBA",
+  "metric": "cash_earnings",
+  "period": "FY26",
+  "comparator": "FY25",
+  "basis": "cash",
+  "movement": {
+    "from_value": 10252.0,
+    "to_value": 13590.0,
+    "delta": 3338.0,
+    "unit": "$m"
+  },
+  "headline": "CBA cash earnings grew $3,338m (+32.6%) to $13,590m in FY26 vs FY25 ($10,252m). The results presentation walk chart attributes a +$210m movement to core drivers (NII, PCL, OOI, OpEx, Tax), implying a significant unquantified residual of ~$3,128m. While the Profit Announcement cites 7% growth (implying ~$11,000m), this contradicts the detailed walk chart endpoint of $13,590m. We prioritize the walk chart's explicit dollar endpoints for the delta calculation but flag the severe discrepancy with the PA narrative.",
+  "drivers": [
+    {
+      "canonical": "nii.volume",
+      "bank_label": null,
+      "contribution": null,
+      "narrative": "Net Interest Revenue contributed +450bps per the walk chart (ev-3). This is an unallocated mix of volume and margin effects; specific volume attribution is not provided in the evidence.",
+      "confidence": 80,
+      "evidence": [
+        "ev-3"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "credit_impairment_charge",
+      "bank_label": "Provision for Credit Losses",
+      "contribution": null,
+      "narrative": "PCL contributed -280bps per the walk chart (ev-3). No absolute dollar value or GLAA denominator is provided to convert bps to $m.",
+      "confidence": 80,
+      "evidence": [
+        "ev-3"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "other_operating_income",
+      "bank_label": "Other Operating Income",
+      "contribution": null,
+      "narrative": "OOI contributed +120bps per the walk chart (ev-3). Specific fee/trading/insurance breakdowns are not quantified in the evidence.",
+      "confidence": 80,
+      "evidence": [
+        "ev-3"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "operating_expenses",
+      "bank_label": "Operating Expenses",
+      "contribution": null,
+      "narrative": "OpEx contributed -310bps per the walk chart (ev-3). No absolute dollar value is provided.",
+      "confidence": 80,
+      "evidence": [
+        "ev-3"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "tax_and_other",
+      "bank_label": "Tax Expense",
+      "contribution": null,
+      "narrative": "Tax contributed -190bps per the walk chart (ev-3). No effective tax rate or absolute dollar value is provided.",
+      "confidence": 80,
+      "evidence": [
+        "ev-3"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 3128.0,
+    "unit": "$m"
+  },
+  "notable_items": [],
+  "disagreements": [
+    {
+      "topic": "FY26 Cash Earnings Absolute Value",
+      "values": [
+        "13590.0 — CBA/FY26/results_presentation PDF p2 (ev-3)",
+        "~11000.0 — CBA/FY26/profit_announcement PDF p2 (ev-12, ev-13)"
+      ],
+      "preferred": "13590.0",
+      "reason": "definitional",
+      "explanation": "The Walk Chart (ev-3) explicitly states FY26 Cash Earnings as $13,590m. However, the Profit Announcement (ev-12, ev-13) states profit growth was 7%. Applying 7% growth to the FY25 base of $10,252m yields ~$10,970m. The $13,590m figure implies ~32.6% growth. The PA narrative (ev-11) also cites 7% revenue growth. There is a material conflict between the detailed walk chart numbers and the high-level PA percentages."
+    },
+    {
+      "topic": "Walk Chart Summation",
+      "values": [
+        "+210.0 bps sum of bars — CBA/FY26/results_presentation PDF p2 (ev-3)",
+        "-210.0 bps implied by start/end if interpreted differently — Validation Error"
+      ],
+      "preferred": "+210.0 bps",
+      "reason": "rounding",
+      "explanation": "The validation error noted 'walk_extraction_error'. The bars sum to +450 - 280 + 120 - 310 - 190 = -210 bps. The start point is 13,800 bps (likely $13,800m mislabeled as bps or a scaling error in the extraction). If the start is $13,800m and end is $13,590m, the delta is -$210m. However, the task requires comparing FY26 ($13,590m) to FY25 ($10,252m). The walk chart appears to be a reconciliation from a *different* starting point (perhaps FY26 prior year adjusted or a different metric) rather than a direct FY25-to-FY26 bridge. The 'start_bps' of 13800 matches the FY26 end label of the previous period? No, FY25 is 10252. The walk chart source (ev-3) has start_label 'FY25 Cash Earnings' but value 13800. This is a definitional mismatch: the label says FY25, the number says 13800. 13800 does not match FY25 Cash Earnings (10252). Thus, the walk chart does not actually bridge FY25 to FY26 as labeled."
+    }
+  ],
+  "attribution_confidence": 40,
+  "limitations": [
+    "The primary walk chart (ev-3) contains a critical data integrity error: it labels the start point as 'FY25 Cash Earnings' but assigns it a value of 13,800, whereas FY25 Cash Earnings is confirmed as 10,252 (ev-4, ev-6, ev-9). Consequently, the bars in ev-3 do not reconcile the actual FY25 to FY26 movement.",
+    "The Profit Announcement (ev-12, ev-13) claims 7% growth, which contradicts the $13,590m figure in the walk chart. Without a reconciled table showing the full bridge from $10,252m to the final FY26 number, we cannot attribute the $3,338m delta to specific canonical drivers with high confidence.",
+    "Driver contributions are only available in basis points (ev-3) and cannot be converted to dollars without the correct average balance sheet denominators (GLAAs) and tax rates, which are not provided in the evidence records.",
+    "Failed check: no_quantified_drivers",
+    "Failed check: walk_extraction_error p2: walk endpoints unreadable on CBA/FY26/profit_announcement p2"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 3,
+      "printed_page": 1,
+      "kind": "walk_vision",
+      "quote": "[walk chart] CBA cash earnings in FY26 vs FY25: FY25 0.0 -> FY26 0.0",
+      "numbers": []
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 1,
+      "printed_page": 1,
+      "kind": "walk_vision",
+      "quote": "[walk chart] CBA cash earnings in FY26 vs FY25: FY25 0.0 -> FY26 0.0",
+      "numbers": []
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 2,
+      "printed_page": 2,
+      "kind": "walk_vision",
+      "quote": "[walk chart] CBA cash earnings in FY26 vs FY25: FY25 Cash Earnings 13800.0 -> FY26 Cash Earnings 13590.0",
+      "numbers": [
+        {
+          "label": "Net Interest Revenue",
+          "value": 450.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Provision for Credit Losses",
+          "value": -280.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Other Operating Income",
+          "value": 120.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Operating Expenses",
+          "value": -310.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Tax Expense",
+          "value": -190.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 16,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Net profit after tax from continuing operations",
+      "numbers": [
+        {
+          "label": "Cash Net Profit After Tax (FY25)",
+          "value": 10252.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash Net Profit After Tax (FY24)",
+          "value": 9836.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 16,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Group Performance Summary ... Net profit after tax from continuing operations",
+      "numbers": [
+        {
+          "label": "Cash NPA Tax Growth FY25 vs FY24",
+          "value": 4.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Net profit after tax from continuing operations – \"cash basis\" ... 10,252",
+      "numbers": [
+        {
+          "label": "FY25 Cash Net Profit After Tax (Continuing)",
+          "value": 10252.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Net profit after tax – \"statutory basis\" ... 10,116",
+      "numbers": [
+        {
+          "label": "FY25 Statutory Net Profit After Tax",
+          "value": 10116.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Relates to remediation provisions for domestic ($52 million) and NZ ($33 million) notable items as well as a Bankwest restructuring provision of $45 million in FY25",
+      "numbers": [
+        {
+          "label": "Domestic Remediation Provision",
+          "value": 52.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "NZ Remediation Provision",
+          "value": 33.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Bankwest Restructuring Provision",
+          "value": 45.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        }
+      ]
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 60,
+      "printed_page": 38,
+      "kind": "table",
+      "quote": "Net profit/(loss) after tax from continuing operations – \"cash basis\" Total $10,252M for Full Year Ended 30 June 2025",
+      "numbers": [
+        {
+          "label": "Cash earnings FY25",
+          "value": 10252.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 60,
+      "printed_page": 38,
+      "kind": "text",
+      "quote": "Net profit after tax from continuing operations – \"cash basis\" growth 4% in Total for Full Year Ended 30 June 2025 vs Full Year Ended 30 June 2024",
+      "numbers": [
+        {
+          "label": "Cash earnings growth FY25 vs FY24",
+          "value": 4.0,
+          "unit": "%",
+          "basis": "null"
+        }
+      ]
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 2,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Revenue from ordinary activities up 7%",
+      "numbers": [
+        {
+          "label": "Revenue growth",
+          "value": 7.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 2,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Profit/(loss) from ordinary activities after tax attributable to Equity holders up 7%",
+      "numbers": [
+        {
+          "label": "Profit growth",
+          "value": 7.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 2,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit/(loss) for the year attributable to Equity holders up 7%",
+      "numbers": [
+        {
+          "label": "Net profit growth",
+          "value": 7.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
+    "generated": "2026-08-26T05:59:44+00:00",
+    "seconds": 76.4,
+    "cost_usd": 0.0015,
+    "tokens": "29255 in / 4578 out",
+    "orchestration": "pipeline"
+  }
+}

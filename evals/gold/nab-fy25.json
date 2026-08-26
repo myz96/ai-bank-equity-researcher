@@ -1,0 +1,32 @@
+{
+  "bank": "NAB",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "cash",
+  "verified": "Hand-verified from the rendered FY25 results book page (PDF p17, printed 15), 2026-08-26. NAB FY ends 30 September.",
+  "cases": [
+    {
+      "metric": "nim",
+      "split": "dev",
+      "movement": {
+        "from": 171, "to": 174, "delta": 3, "unit": "bps",
+        "provenance": "FY25 results book PDF p17 table: 'Group net interest margin (%) 1.74 | 1.71 | 3 bps'"
+      },
+      "gold_drivers": {
+        "tier": "walk",
+        "provenance": "FY25 results book PDF p17, 'September 2025 v September 2024' text bullets (the YoY decomposition is textual; the chart on the same page is the HoH walk). Sums +3 = movement.",
+        "drivers": {
+          "capital_replicating": 9, "liquids": 2, "markets_treasury": 2,
+          "funding.deposits": -7, "funding.wholesale": -2, "asset_pricing": -1
+        }
+      },
+      "narrative_checklist": [
+        "deposit costs include competitive pressures and deposit mix impacts (book p17)",
+        "liquids benefit is a lower mix of lower-yielding HQLA (book p17)",
+        "lending margin: competitive pressures in housing and business lending, partly offset by NZ housing margin and favourable business-lending mix (book p17)",
+        "NII $17,398m vs $16,754m, +3.8%; underlying +$718m or +4.3% excluding a $74m economic-hedge movement (book p17)",
+        "HoH walk (Mar 25 1.70 -> Sep 25 1.78): lending 0, funding +1, deposits -1, replicating+other +4, liquids +2, M&T +2 (book p17 chart)"
+      ]
+    }
+  ]
+}
