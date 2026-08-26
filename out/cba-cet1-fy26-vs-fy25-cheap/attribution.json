@@ -1,0 +1,279 @@
+{
+  "bank": "CBA",
+  "metric": "cet1",
+  "period": "FY26",
+  "comparator": "FY25",
+  "basis": "statutory",
+  "movement": {
+    "from_value": 14.5,
+    "to_value": 15.55,
+    "delta": 105.0,
+    "unit": "bps"
+  },
+  "headline": "CBA's CET1 ratio increased by 105 bps from 14.5% in FY25 to 15.55% in FY26. The primary driver was earnings generation (Net Profit), contributing +120 bps. This was partially offset by dividend distributions (-45 bps) and tax impacts (-25 bps). Other factors included OCI (+35 bps), share-based payments (-10 bps), and other items (+15 bps). Note: The starting value of 14.5% in the walk chart differs from the statutory 12.3% reported in FY25 filings; this discrepancy is flagged as a disagreement.",
+  "drivers": [
+    {
+      "canonical": "earnings_generation",
+      "bank_label": "Net profit",
+      "contribution": {
+        "value": 120.0,
+        "unit": "bps"
+      },
+      "narrative": "Cash NPAT contributed +120 bps to CET1, representing the core capital generation from FY26 operations.",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "dividend_net_drp",
+      "bank_label": "Dividends",
+      "contribution": {
+        "value": -45.0,
+        "unit": "bps"
+      },
+      "narrative": "Dividends paid during the period reduced CET1 by 45 bps. The label implies net of DRP or standard distribution impact.",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "deductions_other",
+      "bank_label": "Other comprehensive income",
+      "contribution": {
+        "value": 35.0,
+        "unit": "bps"
+      },
+      "narrative": "OCI movements, likely driven by interest rate or equity valuation changes, added 35 bps to capital.",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "deductions_other",
+      "bank_label": "Tax impact",
+      "contribution": {
+        "value": -25.0,
+        "unit": "bps"
+      },
+      "narrative": "Tax adjustments related to earnings or other comprehensive income reduced CET1 by 25 bps.",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "deductions_other",
+      "bank_label": "Share-based payments",
+      "contribution": {
+        "value": -10.0,
+        "unit": "bps"
+      },
+      "narrative": "Equity-settled share-based payment expenses reduced CET1 by 10 bps.",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "deductions_other",
+      "bank_label": "Other",
+      "contribution": {
+        "value": 15.0,
+        "unit": "bps"
+      },
+      "narrative": "Miscellaneous capital movements not explicitly categorized contributed +15 bps.",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": null,
+  "notable_items": [],
+  "disagreements": [
+    {
+      "topic": "Starting CET1 Value for FY25 Walk",
+      "values": [
+        "14.5% — CBA/FY26/results_presentation PDF p2 (ev-1)",
+        "12.3% — CBA/FY25/profit_announcement (ev-2, ev-3, ev-4)"
+      ],
+      "preferred": "12.3%",
+      "reason": "definitional",
+      "explanation": "The walk chart in ev-1 uses a starting value of 14.5%, which contradicts the audited statutory CET1 of 12.3% reported in the FY25 Profit Announcement (ev-2, ev-3, ev-4). Per source hierarchy, the Profit Announcement is authoritative. The 14.5% figure may represent a different metric (e.g., cash basis or pro-forma) or an error in the presentation slide."
+    },
+    {
+      "topic": "Walk Summation Check",
+      "values": [
+        "Calculated End: 15.4% (14.5 + 120 - 45 + 35 - 10 - 25 + 15 = 15.4)",
+        "Reported End: 15.55%"
+      ],
+      "preferred": "15.55%",
+      "reason": "rounding",
+      "explanation": "The sum of the bars (+90 bps) applied to the start value (14.5%) yields 15.4%, which differs from the reported end value of 15.55%. This 15 bps difference is attributed to rounding in the disclosed bps figures or minor unlisted adjustments."
+    }
+  ],
+  "attribution_confidence": 40,
+  "limitations": [
+    "The starting point of the attribution walk (14.5%) is inconsistent with the official FY25 statutory CET1 (12.3%). Confidence is lowered because the base for the delta calculation is disputed.",
+    "The walk summation check failed (tolerance exceeded), indicating potential rounding errors or unmapped minor items in the presentation slide.",
+    "No RWA movement drivers are explicitly quantified in the provided evidence records for FY26 vs FY25; they are assumed to be negligible or embedded in 'Other' or the residual.",
+    "Failed check: movement_arithmetic (14.5 + 105.0 != 15.55)",
+    "Failed check: drivers_reconcile (drivers +90.0 + residual +0.0 != delta +105.0)",
+    "Failed check: walk_sum (start 14.5 + bars +90.0 = 104.5 != end 15.55, tol 10.0)",
+    "Failed check: walk_extraction_error p2: walk endpoints unreadable on CBA/FY26/profit_announcement p2",
+    "Failed check: walk_extraction_error p5: walk endpoints unreadable on CBA/FY26/profit_announcement p5",
+    "Failed check: walk_extraction_error p3: walk endpoints unreadable on CBA/FY26/results_presentation p3"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 2,
+      "printed_page": 2,
+      "kind": "walk_vision",
+      "quote": "[walk chart] CBA CET1 ratio in FY26 vs FY25: FY25 14.5 -> FY26 15.55",
+      "numbers": [
+        {
+          "label": "Net profit",
+          "value": 120.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Dividends",
+          "value": -45.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Other comprehensive income",
+          "value": 35.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Share-based payments",
+          "value": -10.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Tax impact",
+          "value": -25.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Other",
+          "value": 15.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 3,
+      "kind": "text",
+      "quote": "CET1 was 12.3% as at 30 June 2025, compared to 12.2% at 31 December 2024",
+      "numbers": [
+        {
+          "label": "CET1 Ratio FY25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "CET1 Ratio Dec 2024",
+          "value": 12.2,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "The Group’s CET1 ratio (APRA) was 12.3% as at 30 June 2025, an increase of 10 basis points from 31 December 2024 and in line with 30 June 2024.",
+      "numbers": [
+        {
+          "label": "CET1 Ratio",
+          "value": 12.3,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "CET1 Change vs Dec 24",
+          "value": 10.0,
+          "unit": "bps",
+          "basis": "null"
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "table",
+      "quote": "Summary Group Capital Adequacy Ratios ... Common Equity Tier 1 (CET1) ... 30 Jun 25: 12.3 ... 31 Dec 24: 12.2",
+      "numbers": [
+        {
+          "label": "CET1 Ratio FY25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "CET1 Ratio FY24 (Dec)",
+          "value": 12.2,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
+    "generated": "2026-08-26T06:01:42+00:00",
+    "seconds": 85.8,
+    "cost_usd": 0.0013,
+    "tokens": "28541 in / 3683 out",
+    "orchestration": "pipeline"
+  }
+}

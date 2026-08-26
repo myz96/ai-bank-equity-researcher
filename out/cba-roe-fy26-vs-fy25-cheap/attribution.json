@@ -1,0 +1,150 @@
+{
+  "bank": "CBA",
+  "metric": "roe",
+  "period": "FY26",
+  "comparator": "FY25",
+  "basis": "cash",
+  "movement": {
+    "from_value": 13.6,
+    "to_value": 13.5,
+    "delta": -0.1,
+    "unit": "ppt"
+  },
+  "headline": "CBA's cash ROE declined by 10 basis points to 13.5% in FY25 (vs FY24). The statutory ROE rose by 30 bps to 13.4%. Due to the absence of a validated walk chart for FY25 vs FY24, specific driver attribution is not possible; the movement reflects the net result of earnings and equity changes.",
+  "drivers": [
+    {
+      "canonical": "other_unmapped",
+      "bank_label": null,
+      "contribution": null,
+      "narrative": "No validated walk chart exists for the FY25 vs FY24 period. Therefore, quantified drivers cannot be attributed. The decline in cash ROE implies either lower core profit or higher average equity relative to the prior year, but exact contributions are unknown.",
+      "confidence": 40,
+      "evidence": [
+        "ev-2"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    }
+  ],
+  "residual": null,
+  "notable_items": [],
+  "disagreements": [
+    {
+      "topic": "ROE Basis Movement",
+      "values": [
+        "Cash: -10 bps (ev-2)",
+        "Statutory: +30 bps (ev-1)"
+      ],
+      "preferred": "Cash",
+      "reason": "definitional",
+      "explanation": "Cash and statutory ROE moved in opposite directions. Cash basis is preferred for operational performance analysis as it excludes non-cash items."
+    }
+  ],
+  "attribution_confidence": 40,
+  "limitations": [
+    "The task requests FY26 vs FY25 analysis, but evidence records only cover FY25 vs FY24. Analysis performed on available data (FY25 vs FY24).",
+    "No walk charts were provided for the relevant period, preventing quantified driver attribution per validation rules.",
+    "Confidence is capped due to lack of granular driver data.",
+    "Failed check: no_quantified_drivers"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) Statutory basis 13.4 13.1 30 bpts",
+      "numbers": [
+        {
+          "label": "FY25 ROE Statutory",
+          "value": 13.4,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "FY24 ROE Statutory",
+          "value": 13.1,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) Cash basis 13.5 13.6 (10)bpts",
+      "numbers": [
+        {
+          "label": "FY25 ROE Cash",
+          "value": 13.5,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "FY24 ROE Cash",
+          "value": 13.6,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) Statutory basis 13.4 13.0 40 bpts",
+      "numbers": [
+        {
+          "label": "FY25 ROE Statutory incl disc",
+          "value": 13.4,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "FY24 ROE Statutory incl disc",
+          "value": 13.0,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) Cash basis 13.5 13.6 (10)bpts",
+      "numbers": [
+        {
+          "label": "FY25 ROE Cash incl disc",
+          "value": 13.5,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "FY24 ROE Cash incl disc",
+          "value": 13.6,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
+    "generated": "2026-08-26T06:00:16+00:00",
+    "seconds": 31.7,
+    "cost_usd": 0.0006,
+    "tokens": "12746 in / 1685 out",
+    "orchestration": "pipeline"
+  }
+}
