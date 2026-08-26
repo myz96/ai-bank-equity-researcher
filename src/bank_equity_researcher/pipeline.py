@@ -100,7 +100,10 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         validation["failed"] += failed
         walks.append(walk)
         records.append(record)
-    for doc_id, page in text_pages:
+    # Walk pages also get text extraction: the narrative beside a walk carries
+    # the explanations and caveats (defect 22), and some banks (ANZ) publish
+    # the driver decomposition as bulleted text rather than a chart.
+    for doc_id, page in text_pages + walk_pages:
         records.extend(
             extract_text_evidence(llm, combo.extract, doc_by_id[doc_id], page, case_desc, next_id)
         )

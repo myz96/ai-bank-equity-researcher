@@ -15,7 +15,7 @@ TAXONOMY: dict[str, dict] = {
             "net interest income average interest earning assets margin",
             "group margin walk deposits funding liquids replicating portfolio",
         ],
-        "walk_markers": ["NIM Movement since", "Group margin"],
+        "walk_markers": ["NIM Movement since", "Group margin", "Net interest margin movement", "margin movement", "Net interest margin -", "Net interest margin –"],
         "drivers": {
             "asset_pricing": "Lending margin / asset pricing / competition",
             "funding": "Funding costs (parent of deposits and wholesale)",

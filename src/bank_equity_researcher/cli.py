@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 
 
 def main() -> int:
@@ -15,7 +16,21 @@ def main() -> int:
     analyse.add_argument("--period", required=True, help="e.g. FY26, 1H26")
     analyse.add_argument("--comparator", default=None, help="defaults: FY->prior FY, half->PCP")
     analyse.add_argument("--combo", default="cheap", help="model combo: cheap | normal")
+
+    discover_cmd = sub.add_parser("discover", help="agentically build a manifest for a bank")
+    discover_cmd.add_argument("--bank", required=True)
+    discover_cmd.add_argument("--periods", required=True, help="comma-separated, e.g. 1H26,1H25")
+    discover_cmd.add_argument("--seed", required=True, help="the bank's homepage or IR page URL")
     args = parser.parse_args()
+
+    if args.command == "discover":
+        from datetime import date
+
+        from .discover import discover
+
+        manifest = discover(args.bank, args.periods.split(","), args.seed, date.today().isoformat())
+        print(json.dumps(manifest, indent=2))
+        return 0
 
     from .pipeline import run_case
 

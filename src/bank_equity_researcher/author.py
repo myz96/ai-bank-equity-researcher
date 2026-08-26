@@ -116,6 +116,22 @@ def author_attribution(
             new_records = fetch_more(reply["request_evidence"])
             records.extend(new_records)
             continue
+        # Honest-partial sanitisation: a movement or contribution the model
+        # could not establish arrives as nulls; that is a valid partial
+        # answer (never-guess), not a schema violation.
+        movement = reply.get("movement")
+        if isinstance(movement, dict) and any(
+            movement.get(k) is None for k in ("from_value", "to_value", "delta")
+        ):
+            movement = None
+            reply.setdefault("limitations", []).append(
+                "The movement could not be established from the evidence."
+            )
+        reply["movement"] = movement
+        for driver in reply.get("drivers", []):
+            contribution = driver.get("contribution")
+            if isinstance(contribution, dict) and contribution.get("value") is None:
+                driver["contribution"] = None
         attribution = Attribution(
             bank=case["bank"],
             metric=case["metric"],
