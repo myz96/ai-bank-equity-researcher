@@ -10,23 +10,8 @@
     "delta": -3.0,
     "unit": "bps"
   },
-  "headline": "CBA's cash NIM declined by 3 bps to 205 bps in FY26 (FY25: 208 bps). The decline was primarily driven by a 5 bps headwind from asset pricing and a 3 bps drag from liquids/pooled facilities. These were partially offset by a 5 bps tailwind from capital/replicating portfolios and a 2 bps benefit from portfolio mix. Funding costs, basis risk, and other items had no net impact on the full-year movement.",
+  "headline": "CBA's cash NIM declined by 3 bps to 205 bps in FY26 (FY25: 208 bps). The decline was driven primarily by asset pricing pressures (-5 bps) and a reduction in liquid assets drag (-4 bps), partially offset by favorable portfolio mix (+2 bps) and higher capital/replicating earnings (+5 bps). Funding costs were flat on a full-year basis.",
   "drivers": [
-    {
-      "canonical": "liquids",
-      "bank_label": "Liquids",
-      "contribution": {
-        "value": -3.0,
-        "unit": "bps"
-      },
-      "narrative": "A 3 bps negative contribution from liquid assets and pooled facilities.",
-      "confidence": 100,
-      "evidence": [
-        "ev-1"
-      ],
-      "checks_passed": [],
-      "checks_failed": []
-    },
     {
       "canonical": "asset_pricing",
       "bank_label": "Asset pricing",
@@ -34,27 +19,51 @@
         "value": -5.0,
         "unit": "bps"
       },
-      "narrative": "A 5 bps negative contribution from lending margin and asset pricing.",
+      "narrative": "Consistent negative pressure across all periods, reflecting elevated competition in lending markets.",
       "confidence": 100,
       "evidence": [
-        "ev-1"
+        "ev-1",
+        "ev-2",
+        "ev-3",
+        "ev-4"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "corroborated_2_sources"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "liquids",
+      "bank_label": "Liquids & repos",
+      "contribution": {
+        "value": -4.0,
+        "unit": "bps"
+      },
+      "narrative": "A net negative contribution in the full year, contrasting with positive or neutral contributions in half-years, indicating a shift in liquid asset levels or yields over the annual period.",
+      "confidence": 90,
+      "evidence": [
+        "ev-4"
+      ],
+      "checks_passed": [
+        "cross_source_divergence_surfaced"
+      ],
       "checks_failed": []
     },
     {
       "canonical": "capital_replicating",
-      "bank_label": "Capital, Replicating",
+      "bank_label": "Interest rate risk hedging",
       "contribution": {
         "value": 5.0,
         "unit": "bps"
       },
-      "narrative": "A 5 bps positive contribution from capital, replicating portfolio, and hedge earnings.",
-      "confidence": 100,
+      "narrative": "Significant positive contribution from the replicating portfolio and interest rate risk hedging activities.",
+      "confidence": 90,
       "evidence": [
-        "ev-1"
+        "ev-4"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "cross_source_divergence_surfaced"
+      ],
       "checks_failed": []
     },
     {
@@ -64,12 +73,14 @@
         "value": 2.0,
         "unit": "bps"
       },
-      "narrative": "A 2 bps positive contribution from asset and funding mix.",
-      "confidence": 100,
+      "narrative": "Favorable mix impact, likely driven by growth in higher-yielding loan segments.",
+      "confidence": 90,
       "evidence": [
-        "ev-1"
+        "ev-4"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "corroborated_2_sources"
+      ],
       "checks_failed": []
     },
     {
@@ -79,50 +90,120 @@
         "value": 0.0,
         "unit": "bps"
       },
-      "narrative": "No net impact from funding costs in the full-year comparison.",
-      "confidence": 100,
+      "narrative": "Flat funding costs on a full-year basis, though H2 saw a slight increase of 2 bps.",
+      "confidence": 90,
       "evidence": [
-        "ev-1"
+        "ev-4"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "cross_source_divergence_surfaced"
+      ],
       "checks_failed": []
     },
     {
       "canonical": "markets_treasury",
       "bank_label": "Treasury & Markets",
       "contribution": {
-        "value": -2.0,
+        "value": -1.0,
         "unit": "bps"
       },
-      "narrative": "A 2 bps negative contribution from markets and treasury activities.",
-      "confidence": 100,
+      "narrative": "Slight negative contribution from Treasury and Markets operations.",
+      "confidence": 90,
       "evidence": [
-        "ev-1"
+        "ev-4"
       ],
-      "checks_passed": [],
-      "checks_failed": []
-    },
-    {
-      "canonical": "basis_risk",
-      "bank_label": "Basis risk",
-      "contribution": {
-        "value": 0.0,
-        "unit": "bps"
-      },
-      "narrative": "No net impact from basis risk.",
-      "confidence": 100,
-      "evidence": [
-        "ev-1"
+      "checks_passed": [
+        "cross_source_divergence_surfaced"
       ],
-      "checks_passed": [],
       "checks_failed": []
     }
   ],
   "residual": null,
   "notable_items": [],
-  "disagreements": [],
-  "attribution_confidence": 100,
-  "limitations": [],
+  "disagreements": [
+    {
+      "topic": "Liquids Contribution",
+      "values": [
+        "-3.0 bps — ev-1 (FY26 Full Year)",
+        "-4.0 bps — ev-4 (FY25->FY26)"
+      ],
+      "preferred": "-4.0 bps",
+      "reason": "definitional",
+      "explanation": "ev-1 reports a -3 bps movement for Liquids in the FY26 walk chart, while ev-4 reports -4 bps for the same driver in the FY25-to-FY26 comparison. Both are from FY26 documents. The sum check passes for both walks independently. Given the hierarchy, we prioritize the explicit 'Group margin – 12 months' walk (ev-4) which directly compares FY25 to FY26."
+    },
+    {
+      "topic": "Capital/Replicating vs Hedging Labeling",
+      "values": [
+        "5.0 bps — Capital, Replicating (ev-1)",
+        "5.0 bps — Interest rate risk hedging (ev-4)"
+      ],
+      "preferred": "Interest rate risk hedging",
+      "reason": "definitional",
+      "explanation": "ev-1 labels the bar 'Capital, Replicating', while ev-4 uses 'Interest rate risk hedging'. These map to the same canonical concept 'capital_replicating'. The value is consistent at 5 bps."
+    },
+    {
+      "topic": "Treasury & Markets Contribution",
+      "values": [
+        "-2.0 bps — Treasury & Markets and Other (ev-1)",
+        "-1.0 bps — Treasury & Markets (ev-4)"
+      ],
+      "preferred": "-1.0 bps",
+      "reason": "definitional",
+      "explanation": "ev-1 includes 'Other' in the label and shows -2 bps. ev-4 shows -1 bps for 'Treasury & Markets'. The difference may be due to rounding or reclassification of minor items into 'Other' in the PA document versus the Presentation."
+    },
+    {
+      "topic": "liquids contribution",
+      "values": [
+        "-3 — Liquids (CBA/FY26/profit_announcement PDF p28 (ev-1))",
+        "+0 — Liquids (CBA/FY26/profit_announcement PDF p29 (ev-2))",
+        "+0 — Liquids & repos (CBA/FY26/results_presentation PDF p26 (ev-3))",
+        "-4 — Liquids & repos (CBA/FY26/results_presentation PDF p60 (ev-4))"
+      ],
+      "preferred": "-4 (per the source hierarchy)",
+      "reason": "definitional",
+      "explanation": "The documents use different decompositions of the same movement."
+    },
+    {
+      "topic": "capital_replicating contribution",
+      "values": [
+        "+5 — Capital, Replicating (CBA/FY26/profit_announcement PDF p28 (ev-1))",
+        "+3 — Capital, Replicating and Other (CBA/FY26/profit_announcement PDF p29 (ev-2))",
+        "+5 — Interest rate risk hedging (CBA/FY26/results_presentation PDF p60 (ev-4))"
+      ],
+      "preferred": "+5 (per the source hierarchy)",
+      "reason": "rounding",
+      "explanation": "The documents decompose the same movement with different bar framings; the gap is framing/rounding, not a data conflict."
+    },
+    {
+      "topic": "funding contribution",
+      "values": [
+        "+0 — Funding costs (CBA/FY26/profit_announcement PDF p28 (ev-1))",
+        "+2 — Funding costs (CBA/FY26/profit_announcement PDF p29 (ev-2))",
+        "+2 — Funding costs (CBA/FY26/results_presentation PDF p26 (ev-3))",
+        "+0 — Funding costs (CBA/FY26/results_presentation PDF p60 (ev-4))"
+      ],
+      "preferred": "+0 (per the source hierarchy)",
+      "reason": "rounding",
+      "explanation": "The documents decompose the same movement with different bar framings; the gap is framing/rounding, not a data conflict."
+    },
+    {
+      "topic": "markets_treasury contribution",
+      "values": [
+        "-2 — Treasury & Markets and Other (CBA/FY26/profit_announcement PDF p28 (ev-1))",
+        "+1 — Treasury & Markets (CBA/FY26/profit_announcement PDF p29 (ev-2))",
+        "+1 — Treasury & Markets (CBA/FY26/results_presentation PDF p26 (ev-3))",
+        "-1 — Treasury & Markets (CBA/FY26/results_presentation PDF p60 (ev-4))"
+      ],
+      "preferred": "-1 (per the source hierarchy)",
+      "reason": "rounding",
+      "explanation": "The documents decompose the same movement with different bar framings; the gap is framing/rounding, not a data conflict."
+    }
+  ],
+  "attribution_confidence": 90,
+  "limitations": [
+    "The primary attribution evidence comes from the Results Presentation (ev-4) which explicitly compares FY25 to FY26. The Profit Announcement (ev-1) also covers FY26 but shows slightly different values for Liquids and Treasury, likely due to presentation differences or inclusion of 'Other' items.",
+    "Narrative details for specific drivers (e.g., exact deposit mix shifts) are not fully quantified in the provided text beyond the walk chart bars."
+  ],
   "evidence_records": [
     {
       "id": "ev-1",
@@ -130,7 +211,7 @@
       "pdf_page": 28,
       "printed_page": null,
       "kind": "walk_vision",
-      "quote": "[walk chart] NIM Movement since June 2025: Jun 25 Full Year 208.0 -> Jun 26 Full Year 205.0",
+      "quote": "[walk chart] NIM Movement since June 2025: Jun 25 Full Year 208 -> Jun 26 Full Year 205",
       "numbers": [
         {
           "label": "Liquids",
@@ -169,14 +250,8 @@
           "basis": null
         },
         {
-          "label": "Treasury & Markets",
+          "label": "Treasury & Markets and Other",
           "value": -2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "And Other",
-          "value": 0.0,
           "unit": "bps",
           "basis": null
         }
@@ -282,43 +357,61 @@
     },
     {
       "id": "ev-4",
-      "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 20,
-      "printed_page": 5,
-      "kind": "table",
-      "quote": "Net interest margin (%) 2.50 2.53 (3)bpts",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 60,
+      "printed_page": 1,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Group margin – 12 months: FY25 208.0 -> FY26 205.0",
       "numbers": [
         {
-          "label": "CBA Net Interest Margin FY25",
-          "value": 2.5,
-          "unit": "%",
-          "basis": "cash"
+          "label": "Liquids & repos",
+          "value": -4.0,
+          "unit": "bps",
+          "basis": null
         },
         {
-          "label": "CBA Net Interest Margin FY24",
-          "value": 2.53,
-          "unit": "%",
-          "basis": "cash"
+          "label": "Asset pricing",
+          "value": -5.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Funding costs",
+          "value": 0.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Portfolio mix",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Interest rate risk hedging",
+          "value": 5.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Treasury & Markets",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
         }
       ]
     },
     {
       "id": "ev-5",
       "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 20,
-      "printed_page": 5,
+      "pdf_page": 28,
+      "printed_page": 12,
       "kind": "table",
-      "quote": "Retail Banking Services Net interest margin (%) 2.50 2.53 (3)bpts",
+      "quote": "Net interest margin (%) 2.08",
       "numbers": [
         {
-          "label": "Retail Banking NIM FY25",
-          "value": 2.5,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "Retail Banking NIM FY24",
-          "value": 2.53,
+          "label": "FY25 Net Interest Margin",
+          "value": 2.08,
           "unit": "%",
           "basis": "cash"
         }
@@ -327,20 +420,20 @@
     {
       "id": "ev-6",
       "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 20,
-      "printed_page": 5,
-      "kind": "table",
-      "quote": "Business Banking Net interest margin (%) 3.35 3.39 (4)bpts",
+      "pdf_page": 28,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "The Bank’s net interest margin increased 9 basis points on the prior year to 2.08%.",
       "numbers": [
         {
-          "label": "Business Banking NIM FY25",
-          "value": 3.35,
-          "unit": "%",
-          "basis": "cash"
+          "label": "NIM Increase vs Prior Year",
+          "value": 9.0,
+          "unit": "bps",
+          "basis": null
         },
         {
-          "label": "Business Banking NIM FY24",
-          "value": 3.39,
+          "label": "FY25 Net Interest Margin",
+          "value": 2.08,
           "unit": "%",
           "basis": "cash"
         }
@@ -349,43 +442,31 @@
     {
       "id": "ev-7",
       "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 20,
-      "printed_page": 5,
-      "kind": "table",
-      "quote": "Institutional Banking and Markets Net interest margin (%) 0.92 0.85 7 bpts",
+      "pdf_page": 28,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "Excluding a 7 basis point increase in margin from a reduction in lower yielding liquid assets and institutional pooled facilities... net interest margin increased 2 basis points.",
       "numbers": [
         {
-          "label": "IBM NIM FY25",
-          "value": 0.92,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "IBM NIM FY24",
-          "value": 0.85,
-          "unit": "%",
-          "basis": "cash"
+          "label": "Underlying NIM Increase (excl. liquids/pooled)",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
         }
       ]
     },
     {
       "id": "ev-8",
       "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 20,
-      "printed_page": 5,
-      "kind": "table",
-      "quote": "New Zealand Net interest margin (ASB) (%) 2.27 2.23 4 bpts",
+      "pdf_page": 64,
+      "printed_page": 42,
+      "kind": "text",
+      "quote": "Net interest margin decreased by 3 basis points on the prior year, reflecting: • Lower deposit margins mainly due to competition, unfavourable mix as customers shift to higher yielding deposits and the impact of declining interest rates; • Lower home lending margins principally reflecting elevated competition; and • The impact of higher basis risk arising from an increase in the spread between the 3 month bank bill swap rate and the 3 month overnight index swap rate; partly offset by • Higher earnings on the replicating portfolio; • Favourable portfolio mix primarily due to the benefit of stro",
       "numbers": [
         {
-          "label": "NZ ASB NIM FY25",
-          "value": 2.27,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "NZ ASB NIM FY24",
-          "value": 2.23,
-          "unit": "%",
+          "label": "NIM change vs Jun 24",
+          "value": -3.0,
+          "unit": "bps",
           "basis": "cash"
         }
       ]
@@ -393,20 +474,20 @@
     {
       "id": "ev-9",
       "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": 12,
+      "pdf_page": 64,
+      "printed_page": 42,
       "kind": "text",
-      "quote": "Net interest margin increased 9 basis points on the prior year to 2.08%.",
+      "quote": "This was driven by a 4% increase in average interest earning assets, partly offset by a 3 basis point decrease in net interest margin.",
       "numbers": [
         {
-          "label": "NIM FY25",
-          "value": 2.08,
+          "label": "Avg interest earning assets growth",
+          "value": 4.0,
           "unit": "%",
-          "basis": "cash"
+          "basis": "null"
         },
         {
-          "label": "NIM change vs FY24",
-          "value": 9.0,
+          "label": "NIM change vs Jun 24",
+          "value": -3.0,
           "unit": "bps",
           "basis": "cash"
         }
@@ -415,84 +496,21 @@
     {
       "id": "ev-10",
       "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": 12,
-      "kind": "text",
-      "quote": "The result was driven by a 9 basis point increase in net interest margin to 2.08%",
-      "numbers": [
-        {
-          "label": "NIM FY25",
-          "value": 2.08,
-          "unit": "%",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-11",
-      "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": 12,
-      "kind": "text",
-      "quote": "Excluding a 7 basis point increase in margin from a reduction in lower yielding liquid assets and institutional pooled facilities... net interest margin increased 2 basis points.",
-      "numbers": [
-        {
-          "label": "Underlying NIM change",
-          "value": 2.0,
-          "unit": "bps",
-          "basis": "ex_notables"
-        }
-      ]
-    },
-    {
-      "id": "ev-12",
-      "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": 12,
-      "kind": "text",
-      "quote": "Funding costs: Decreased margin by 7 basis points driven by increased deposit price competition.",
-      "numbers": [
-        {
-          "label": "Funding cost impact on NIM",
-          "value": -7.0,
-          "unit": "bps",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-13",
-      "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": 12,
-      "kind": "text",
-      "quote": "Asset pricing: Flat.",
-      "numbers": []
-    },
-    {
-      "id": "ev-14",
-      "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": 12,
+      "pdf_page": 64,
+      "printed_page": 42,
       "kind": "table",
-      "quote": "Net Interest Margin | 2.08 | 1.99 | 9bpts",
+      "quote": "Key Financial Metrics | Net interest margin (%) | Full Year Ended 30 Jun 25 | 2.50 | Half Year Ended 30 Jun 25 | 2.50",
       "numbers": [
         {
           "label": "NIM FY25",
-          "value": 2.08,
+          "value": 2.5,
           "unit": "%",
           "basis": "cash"
         },
         {
-          "label": "NIM FY24",
-          "value": 1.99,
+          "label": "NIM H1 FY26",
+          "value": 2.5,
           "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "NIM change",
-          "value": 9.0,
-          "unit": "bps",
           "basis": "cash"
         }
       ]
@@ -503,10 +521,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-25T09:46:13+00:00",
-    "seconds": 101.9,
-    "cost_usd": 0.0011,
-    "tokens": "21833 in / 3064 out",
+    "generated": "2026-08-26T05:01:34+00:00",
+    "seconds": 89.5,
+    "cost_usd": 0.0012,
+    "tokens": "25020 in / 3272 out",
     "orchestration": "pipeline"
   }
 }

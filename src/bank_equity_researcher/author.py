@@ -52,6 +52,12 @@ ABSOLUTE RULES — never break these:
    year's movement) is background context ONLY — never present its bars as this
    period's attribution. If no walk matches {period} vs {comparator}, say so in
    limitations and attribute only what period-matching evidence supports.
+7. CORROBORATE. The validation results include a cross_source_view: the same
+   drivers as seen by each document. Cite evidence from every document that
+   supports a claim, not just one. When two documents frame the same movement
+   differently (e.g. one folds hedging into a capital bar, the other splits
+   it), note it in the driver narrative or as a disagreement. A claim seen in
+   only one document must not exceed confidence 85.
 
 Reply with JSON only, in this exact shape:
 {{"movement": {{"from_value": float, "to_value": float, "delta": float, "unit": "{unit}"}},

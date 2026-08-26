@@ -17,10 +17,13 @@ from .render import render_report
 from .retrieve import retrieve
 from .schema import Attribution
 from .taxonomy import METRIC_ALIASES, TAXONOMY
-from .validate import check_drivers_reconcile, check_movement, check_walk
+from .validate import check_drivers_reconcile, check_movement, check_walk, corroborate, cross_source_view
 
 MAX_TEXT_PAGES = 8
-MAX_WALK_PAGES = 3
+# Per document, so the Profit Announcement cannot crowd out the presentation's
+# walk — cross-document corroboration needs both framings extracted.
+MAX_WALK_PAGES_PER_DOC = 2
+MAX_WALK_PAGES = 4
 
 
 def default_comparator(period: str) -> str:
@@ -64,9 +67,13 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         for doc in docs:
             if doc.period != period_filter:
                 continue
+            per_doc = 0
             for i, text in enumerate(doc.page_texts()):
+                if per_doc >= MAX_WALK_PAGES_PER_DOC:
+                    break
                 if any(marker.lower() in text.lower() for marker in metric_cfg["walk_markers"]):
                     found.append((doc.doc_id, i + 1))
+                    per_doc += 1
         return found
 
     walk_pages = scan_walks(period)[:MAX_WALK_PAGES]
@@ -108,6 +115,12 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
                     extra.extend(extract_text_evidence(llm, combo.extract, doc, page, case_desc, next_id))
         return extra
 
+    # 4b. The cross-source view: every walk bar mapped to canonical drivers,
+    # across documents, so the author sees corroboration before writing.
+    label_map = registry.get(f"{metric_key}_walk_labels", {})
+    cross_source = cross_source_view(walks, label_map)
+    validation["cross_source_view"] = cross_source
+
     # 5. Author, with one retry if output-level validation fails: the failure
     # text goes back to the author so it can correct or declare a residual.
     author_validation = dict(validation)
@@ -135,7 +148,8 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             "or declare a residual and lower confidence. Do not force numbers.",
         }
 
-    # 6. Output-level validation, recorded on the final answer.
+    # 6. Corroboration annotation, then output-level validation.
+    corroborate(attribution, cross_source)
     for check in (check_movement(attribution.movement), check_drivers_reconcile(attribution)):
         validation["passed"] += check[0]
         validation["failed"] += check[1]

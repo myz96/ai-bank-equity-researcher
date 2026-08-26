@@ -25,12 +25,18 @@ def render_report(attribution: Attribution) -> str:
     if quantified:
         lines.append("## Drivers")
         lines.append("")
-        lines.append("| Driver | Bank's label | Contribution | Confidence | Evidence |")
-        lines.append("|---|---|---|---|---|")
+        lines.append("| Driver | Bank's label | Contribution | Confidence | Sources | Evidence |")
+        lines.append("|---|---|---|---|---|---|")
         for d in quantified:
+            source_docs = {r.doc_id for r in a.evidence_records if r.id in d.evidence}
+            corroboration = next(
+                (c for c in d.checks_passed if c.startswith(("corroborated", "single_source", "cross_source"))),
+                "",
+            )
             lines.append(
                 f"| `{d.canonical}` | {d.bank_label or '—'} | {d.contribution.value:+g} "
-                f"{d.contribution.unit} | {d.confidence} | {', '.join(d.evidence)} |"
+                f"{d.contribution.unit} | {d.confidence} | {len(source_docs)} ({corroboration}) "
+                f"| {', '.join(d.evidence)} |"
             )
         if a.residual:
             lines.append(f"| *residual (unexplained)* | — | {a.residual.value:+g} {a.residual.unit} | — | — |")

@@ -21,6 +21,11 @@ MONEY_REL_TOL = 0.01
 MONEY_ABS_TOL_M = 10.0
 # Ratio metrics quoted to one decimal of a percent.
 RATIO_TOL_PPT = 0.1
+# Two documents quoting the same driver agree if within this (covers 1bp
+# rounding on each side, e.g. PA "Liquids -3" vs slide "Liquids & repos (4)"
+# is a framing gap, not agreement). Beyond it, the gap is surfaced as a
+# disagreement, never averaged away.
+CORROBORATION_TOL = 1.5
 
 
 def walk_sum_tolerance(doc_type: str) -> float:
@@ -54,6 +59,71 @@ def check_movement(movement) -> tuple[list[str], list[str]]:
             f"movement_arithmetic ({movement.from_value} + {movement.delta} != {movement.to_value})"
         )
     return passed, failed
+
+
+def _normalize_label(label: str) -> str:
+    return "".join(ch for ch in label.lower() if ch.isalnum())
+
+
+def cross_source_view(walks: list[dict], label_map: dict[str, str]) -> dict[str, list[dict]]:
+    """canonical driver -> [{source, label, value}] across all extracted walks.
+    Labels map to canonical ids via the registry's verbatim label map."""
+    normalized_map = {_normalize_label(k): v for k, v in label_map.items()}
+    view: dict[str, list[dict]] = {}
+    for walk in walks:
+        for bar in walk.get("bars", []):
+            norm = _normalize_label(str(bar.get("label", "")))
+            canonical = normalized_map.get(norm)
+            if canonical is None:  # fallback: containment either way
+                canonical = next(
+                    (c for k, c in normalized_map.items() if k and (k in norm or norm in k)),
+                    "other_unmapped",
+                )
+            view.setdefault(canonical, []).append(
+                {"source": walk.get("source", "?"), "label": bar.get("label"), "value": float(bar.get("bps", 0))}
+            )
+    return view
+
+
+def corroborate(attribution, cross_source: dict[str, list[dict]]) -> None:
+    """Annotate each quantified driver with its corroboration status; surface
+    cross-source divergence as a disagreement; cap single-source confidence.
+    Mutates the attribution in place."""
+    from .schema import Disagreement, DisagreementReason
+
+    for driver in attribution.drivers:
+        if driver.contribution is None:
+            continue
+        entries = cross_source.get(driver.canonical, [])
+        cited_docs = {
+            r.doc_id for r in attribution.evidence_records if r.id in driver.evidence
+        }
+        walk_docs = {e["source"].split(" PDF")[0] for e in entries}
+        n_sources = len(cited_docs | walk_docs)
+        if len(entries) >= 2 and len(walk_docs) >= 2:
+            values = [e["value"] for e in entries]
+            if max(values) - min(values) <= CORROBORATION_TOL:
+                driver.checks_passed.append(f"corroborated_{len(walk_docs)}_sources")
+            else:
+                driver.checks_passed.append("cross_source_divergence_surfaced")
+                gap = max(values) - min(values)
+                attribution.disagreements.append(
+                    Disagreement(
+                        topic=f"{driver.canonical} contribution",
+                        values=[f"{e['value']:+g} — {e['label']} ({e['source']})" for e in entries],
+                        preferred=f"{driver.contribution.value:+g} (per the source hierarchy)",
+                        reason=DisagreementReason.rounding if gap <= 3 else DisagreementReason.definitional,
+                        explanation="The documents decompose the same movement with different bar framings; "
+                        "the gap is framing/rounding, not a data conflict."
+                        if gap <= 3
+                        else "The documents use different decompositions of the same movement.",
+                    )
+                )
+        elif n_sources <= 1:
+            # Corroboration dimension (user, 2026-08-26): a quantified claim
+            # seen in only one document cannot claim near-certainty.
+            driver.checks_passed.append("single_source")
+            driver.confidence = min(driver.confidence, 85)
 
 
 def check_drivers_reconcile(attribution) -> tuple[list[str], list[str]]:

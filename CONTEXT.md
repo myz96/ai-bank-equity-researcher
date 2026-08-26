@@ -91,3 +91,7 @@ _Avoid_: chunk, snippet
 **Registry**:
 The per-bank versioned memory file: financial calendar, document names, label mappings, measure vocabulary. It holds no financial numbers.
 _Avoid_: knowledge base, profile
+
+**Corroboration**:
+Agreement of independent documents on the same claim, within tolerance. A single-source claim caps its confidence; a divergent pair raises a disagreement, never an average.
+_Avoid_: cross-check (that word is reserved for validation checks)
