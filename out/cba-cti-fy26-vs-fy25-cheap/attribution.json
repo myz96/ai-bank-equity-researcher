@@ -1,0 +1,233 @@
+{
+  "bank": "CBA",
+  "metric": "cti",
+  "period": "FY26",
+  "comparator": "FY25",
+  "basis": "cash",
+  "movement": {
+    "from_value": 45.0,
+    "to_value": 45.7,
+    "delta": 70.0,
+    "unit": "ppt"
+  },
+  "headline": "CBA's statutory cost-to-income ratio (CTI) increased by 70 basis points to 45.7% in FY25 (vs FY24). This deterioration was driven by operating expense growth outpacing income growth. The underlying CTI also rose by 60 basis points to 45.2%, indicating a structural shift in efficiency metrics despite the exclusion of notable items.",
+  "drivers": [
+    {
+      "canonical": "expense_growth",
+      "bank_label": "Operating expenses growth vs FY24",
+      "contribution": null,
+      "narrative": "Operating expenses grew 6% year-on-year, contributing to the ratio increase as income growth did not fully offset this expense expansion.",
+      "confidence": 80,
+      "evidence": [
+        "ev-2"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "notable_items",
+      "bank_label": "Underlying vs Total CTI",
+      "contribution": null,
+      "narrative": "The total CTI (45.7%) exceeded the underlying CTI (45.2%) by 50 basis points, implying that notable items negatively impacted the headline ratio relative to the core business performance.",
+      "confidence": 90,
+      "evidence": [
+        "ev-1",
+        "ev-4",
+        "ev-5"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
+  "notable_items": [
+    "Notable items contributed to the spread between total and underlying CTI."
+  ],
+  "disagreements": [
+    {
+      "topic": "CTI Value Definition",
+      "values": [
+        "45.7% - ev-1 (Total)",
+        "39.1% - ev-7 (Operating exp to Operating Income)"
+      ],
+      "preferred": "45.7%",
+      "reason": "definitional",
+      "explanation": "ev-1 and ev-5 define CTI as 'Operating expenses to total operating income' yielding 45.7%. ev-7 defines it as 'Operating expenses to operating income' yielding 39.1%. The task asks for the standard banking CTI which typically uses Total Operating Income; furthermore, the delta in ev-7 (60 bpts) matches the underlying delta in ev-6, suggesting ev-7 might be referencing the underlying metric or a different denominator scope. We prioritize the explicit 'Total' label in ev-1/ev-5 for the headline movement."
+    }
+  ],
+  "attribution_confidence": 40,
+  "limitations": [
+    "The task requests FY26 vs FY25 analysis, but all provided evidence records (ev-1 through ev-8) pertain to FY25 vs FY24 comparisons. No FY26 data is available in the source hierarchy.",
+    "Quantified driver contributions (Jaws split) are not explicitly provided in the evidence; only aggregate expense growth (6%) is cited. Therefore, specific contribution values for income vs expense drivers cannot be calculated with certainty.",
+    "Confidence is capped at 80 due to the period mismatch (FY24/FY25 data used for FY25/FY26 query) and lack of granular Jaws decomposition.",
+    "Failed check: movement_arithmetic (45.0 + 70.0 != 45.7)",
+    "Failed check: no_quantified_drivers"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "$12,996m (45.7% cost-to-income)",
+      "numbers": [
+        {
+          "label": "cost-to-income ratio",
+          "value": 45.7,
+          "unit": "%",
+          "basis": "null"
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "6% on FY24",
+      "numbers": [
+        {
+          "label": "operating expenses growth vs FY24",
+          "value": 6.0,
+          "unit": "%",
+          "basis": "null"
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "4% on 1H25 (+2% ex-notables)",
+      "numbers": [
+        {
+          "label": "operating expenses growth vs 1H25",
+          "value": 4.0,
+          "unit": "%",
+          "basis": "null"
+        },
+        {
+          "label": "operating expenses growth ex-notables vs 1H25",
+          "value": 2.0,
+          "unit": "%",
+          "basis": "ex_notables"
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Underlying operating expenses to underlying operating income (%)",
+      "numbers": [
+        {
+          "label": "FY25 Cost-to-Income Ratio (Underlying)",
+          "value": 45.2,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "FY24 Cost-to-Income Ratio (Underlying)",
+          "value": 44.6,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operating expenses to total operating income (%)",
+      "numbers": [
+        {
+          "label": "FY25 Cost-to-Income Ratio (Total)",
+          "value": 45.7,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "FY24 Cost-to-Income Ratio (Total)",
+          "value": 45.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Underlying operating expenses to underlying operating income ratio increased 60 basis points from 44.6% to 45.2%.",
+      "numbers": []
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 64,
+      "printed_page": 42,
+      "kind": "text",
+      "quote": "The operating expenses to operating income ratio was 39.1%, an increase of 60 basis points on the prior year",
+      "numbers": [
+        {
+          "label": "Operating expenses to total operating income (%) FY25",
+          "value": 39.1,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Change in Operating expenses to total operating income (%) vs FY24",
+          "value": 60.0,
+          "unit": "bpts",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 64,
+      "printed_page": 42,
+      "kind": "table",
+      "quote": "Operating expenses to total operating income (%) | 39.1 | 38.5 | 60 bpts",
+      "numbers": [
+        {
+          "label": "Operating expenses to total operating income (%) FY25",
+          "value": 39.1,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating expenses to total operating income (%) FY24",
+          "value": 38.5,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
+    "generated": "2026-08-26T06:02:42+00:00",
+    "seconds": 31.1,
+    "cost_usd": 0.0008,
+    "tokens": "14668 in / 2456 out",
+    "orchestration": "pipeline"
+  }
+}
