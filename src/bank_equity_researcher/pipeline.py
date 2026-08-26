@@ -79,6 +79,10 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     walk_pages = scan_walks(period)[:MAX_WALK_PAGES]
     if len(walk_pages) < MAX_WALK_PAGES:
         walk_pages += scan_walks(comparator)[: MAX_WALK_PAGES - len(walk_pages)]
+    # Source hierarchy (defect 20): the results book's walk is primary; slide
+    # walks corroborate. Books first, so the author reads them first.
+    book_types = ("profit_announcement", "results_announcement", "results_book")
+    walk_pages.sort(key=lambda dp: 0 if doc_by_id[dp[0]].doc_type in book_types else 1)
     text_pages = [
         (doc_id, page) for doc_id, page in sorted(candidates) if (doc_id, page) not in set(walk_pages)
     ][:MAX_TEXT_PAGES]
@@ -153,13 +157,24 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
 
     # 6. Corroboration annotation, then output-level validation.
     corroborate(attribution, cross_source)
+    output_failed: list[str] = []
     for check in (check_movement(attribution.movement), check_drivers_reconcile(attribution)):
         validation["passed"] += check[0]
-        validation["failed"] += check[1]
-    if validation["failed"]:
-        attribution.limitations.extend(f"Failed check: {f}" for f in validation["failed"])
-        # Overconfidence cap: an attribution whose checks fail cannot claim
-        # high confidence, whatever the model said (ticket 02/07).
+        output_failed += check[1]
+    # Graded cap (defect 23): output-level failures are always fatal;
+    # extraction/walk failures are fatal only when nothing else validated —
+    # a broken read of a peripheral page must not sink a validated answer.
+    peripheral = [f for f in validation["failed"] if f.startswith("walk_extraction_error")]
+    fatal = output_failed + [f for f in validation["failed"] if not f.startswith("walk_extraction_error")]
+    if peripheral and "walk_sum" not in validation["passed"]:
+        fatal += peripheral
+        peripheral = []
+    validation["failed"] += output_failed
+    if fatal or peripheral:
+        attribution.limitations.extend(f"Failed check: {f}" for f in fatal + peripheral)
+    if fatal:
+        # Overconfidence cap: an attribution whose load-bearing checks fail
+        # cannot claim high confidence, whatever the model said (ticket 02/07).
         attribution.attribution_confidence = min(attribution.attribution_confidence, 40)
 
     attribution.provenance = {

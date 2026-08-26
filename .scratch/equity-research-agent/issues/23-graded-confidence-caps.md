@@ -1,7 +1,7 @@
 # 23 — Defect: peripheral check failures over-cap confidence; null bars crash walk parsing
 
 Type: task
-Status: open
+Status: resolved
 
 ## Question
 

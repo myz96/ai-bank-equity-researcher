@@ -58,6 +58,11 @@ ABSOLUTE RULES — never break these:
    differently (e.g. one folds hedging into a capital bar, the other splits
    it), note it in the driver narrative or as a disagreement. A claim seen in
    only one document must not exceed confidence 85.
+8. WALK PREFERENCE. When more than one walk describes the SAME comparison,
+   the results book's walk (profit announcement / results announcement) is
+   the primary framing for your driver table — per the source hierarchy.
+   Slide walks corroborate and annotate; where their framing differs, say so
+   in a disagreement, but do not adopt the slide framing as primary.
 
 Reply with JSON only, in this exact shape:
 {{"movement": {{"from_value": float, "to_value": float, "delta": float, "unit": "{unit}"}},

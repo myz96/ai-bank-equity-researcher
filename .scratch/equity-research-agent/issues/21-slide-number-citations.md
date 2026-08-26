@@ -1,7 +1,7 @@
 # 21 — Defect: presentation citations show "printed p1"
 
 Type: task
-Status: open
+Status: resolved
 
 ## Question
 
