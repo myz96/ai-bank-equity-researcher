@@ -25,6 +25,7 @@ TAXONOMY: dict[str, dict] = {
             "capital_replicating": "Capital, replicating portfolio and hedge earnings",
             "mix": "Asset and funding mix",
             "basis_risk": "Basis risk (bills/OIS spread)",
+            "rate_timing": "Timing lag between cash-rate changes and customer repricing (Westpac splits this out)",
             "markets_treasury": "Markets and Treasury contribution",
             "other_unmapped": "Bars that fit no canonical concept",
         },

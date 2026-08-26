@@ -36,6 +36,7 @@ Canonical drivers, with per-bank verbatim labels:
 | `capital_replicating` | "Replicating Portfolios" | "Capital & Other" | "Capital, Replicating and Other" | "Capital and replicating portfolio" |
 | `mix` | (inside other bars) | (inside other bars) | "Portfolio mix" | "Assets and funding mix" |
 | `basis_risk` | — | — | "Basis risk" | — |
+| `rate_timing` | (in lending margin narrative) | "Timing difference" (from 1H26) | — | (in assets pricing narrative) |
 | `markets_treasury` | "M&T" | "Treasury & Markets" | "Treasury and Markets" | "Markets activities" |
 | `other_unmapped` | catch-all for bars that fit no concept above | | | |
 
