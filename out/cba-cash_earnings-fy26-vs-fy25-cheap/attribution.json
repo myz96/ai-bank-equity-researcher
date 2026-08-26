@@ -10,13 +10,13 @@
     "delta": 730.0,
     "unit": "$m"
   },
-  "headline": "CBA's cash NPAT from continuing operations increased $730 million (7%) to $10,982 million in FY26 compared to FY25 ($10,252 million). This growth was driven by lending volume expansion and a 3 basis point improvement in Net Interest Margin (NIM) to 2.05%. These positives were partially offset by higher operating expenses ($13,755 million, +6%) due to inflation and technology investments, as well as an increase in loan impairment expense ($788 million, +9%). Pre-provision profit grew 6% to $16.5 billion.",
+  "headline": "CBA's cash NPAT increased $730 million (7%) to $10,982 million in FY26. This growth was primarily driven by a 6% increase in pre-provision profit, supported by lending volume expansion and a 3 basis point improvement in Net Interest Margin. These gains were partially offset by higher operating expenses (up 6%) due to inflation and technology investments, as well as an increase in loan impairment expense (up 9%).",
   "drivers": [
     {
       "canonical": "nii.volume",
       "bank_label": null,
       "contribution": null,
-      "narrative": "Narrative confirms lending volume growth in core businesses supported earnings. No specific dollar contribution provided in source.",
+      "narrative": "Narrative confirms lending volume growth in core businesses supported earnings. No specific dollar quantification provided for volume vs margin split.",
       "confidence": 60,
       "evidence": [
         "ev-3"
@@ -26,12 +26,12 @@
     },
     {
       "canonical": "nii.margin",
-      "bank_label": "Net interest margin",
+      "bank_label": null,
       "contribution": null,
-      "narrative": "NIM improved by 3 basis points to 2.05% in FY26. While positive for income, the specific dollar impact is not isolated from volume effects in the provided text.",
+      "narrative": "NIM improved by 3 basis points to 2.05%. While positive, the specific dollar contribution of this margin movement is not explicitly quantified separately from volume.",
       "confidence": 60,
       "evidence": [
-        "ev-10"
+        "ev-8"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -43,11 +43,10 @@
         "value": -784.0,
         "unit": "$m"
       },
-      "narrative": "Operating expenses increased by $784 million (6%) to $13,755 million, primarily due to inflation and technology investments. This negatively impacted cash earnings.",
+      "narrative": "Operating expenses increased by 6% to $13,755 million. The negative contribution to earnings is calculated as the absolute increase in costs ($13,755m - $12,971m implied).",
       "confidence": 85,
       "evidence": [
-        "ev-11",
-        "ev-13"
+        "ev-9"
       ],
       "checks_passed": [
         "single_source"
@@ -58,14 +57,13 @@
       "canonical": "credit_impairment_charge",
       "bank_label": "Loan impairment expense",
       "contribution": {
-        "value": -64.0,
+        "value": -65.0,
         "unit": "$m"
       },
-      "narrative": "Loan impairment expense increased by $64 million (9%) to $788 million, reducing net profit. This was cited as a headwind against volume and margin growth.",
+      "narrative": "Loan impairment expense increased by 9% to $788 million. The negative contribution is the absolute increase in the charge ($788m - $723m implied).",
       "confidence": 85,
       "evidence": [
-        "ev-12",
-        "ev-3"
+        "ev-10"
       ],
       "checks_passed": [
         "single_source"
@@ -74,31 +72,29 @@
     }
   ],
   "residual": {
-    "value": 1578.0,
+    "value": 647.0,
     "unit": "$m"
   },
-  "notable_items": [
-    "Transaction costs and gains/(losses) on disposals: $15.5m (positive)",
-    "Hedging and IFRS volatility: -$10.7m (negative)"
-  ],
+  "notable_items": [],
   "disagreements": [
     {
-      "topic": "Walk Chart Summation",
+      "topic": "Walk Chart Reconciliation",
       "values": [
-        "Start 1,025,200 bps + Bars (+4,800 bps) = 1,030,000 bps != End 1,098,200 bps",
-        "Source: CBA/FY26/results_presentation PDF p23 (ev-1)"
+        "Start: 10133, End: 10982, Delta: 849 (implied by walk endpoints)",
+        "Walk Bars Sum: +48 (155 - 107)"
       ],
-      "preferred": "Profit Announcement Table (ev-14/ev-21)",
-      "reason": "error",
-      "explanation": "The walk chart extracted from the results presentation fails the sum check significantly. The bars provided (Transaction costs + Hedging) only account for a small fraction of the total movement. The Profit Announcement table provides the definitive absolute values for Cash NPAT."
+      "preferred": "Profit Announcement Table",
+      "reason": "definitional",
+      "explanation": "The walk chart on p23 (ev-1) uses Statutory FY25 as a start point but Cash FY26 as an end point, creating a definitional mismatch. Furthermore, the bars do not sum to the delta between these mixed bases. We rely on the Profit Announcement table (ev-14/ev-21) which provides consistent Cash NPAT figures for both periods."
     }
   ],
   "attribution_confidence": 40,
   "limitations": [
-    "No quantified breakdown of NII volume vs margin contributions is available in the evidence records; attribution relies on narrative confirmation of volume growth and margin improvement.",
-    "The residual of $1,578m represents the unquantified portion of the $730m delta after accounting for known expense and impairment increases. This likely includes the positive impact of NII growth (volume + margin) and other operating income, but these are not explicitly separated in dollars.",
-    "Confidence is capped at 60 for drivers lacking explicit dollar quantification in the source documents.",
-    "Failed check: walk_sum (start 1025200 + bars +4800.0 = 1030000.0 != end 1098200, tol 10.0)"
+    "The specific dollar contributions of NII volume and margin are not separately quantified in the evidence; they are subsumed within the Pre-Provision Profit growth narrative.",
+    "A significant residual of $647m exists after accounting for OpEx and Impairment increases against the total NPAT growth. This residual likely represents the net impact of NII growth (volume + margin) and other income items, but cannot be precisely allocated without further data.",
+    "Confidence is capped at 60 because key drivers (NII components) are unquantified in dollars.",
+    "Failed check: drivers_reconcile (drivers -849.0 + residual +647.0 != delta +730.0, tol 10.0)",
+    "Failed check: walk_sum (start 10133 + bars +48.0 = 10181.0 != end 10982, tol 10.0)"
   ],
   "evidence_records": [
     {
@@ -107,17 +103,17 @@
       "pdf_page": 23,
       "printed_page": 23,
       "kind": "walk_vision",
-      "quote": "[walk chart] CBA Cash NPAT FY26 vs FY25: Cash NPAT – continuing operations FY25 1025200 -> Cash NPAT – continuing operations FY26 1098200",
+      "quote": "[walk chart] Statutory vs cash NPAT: Statutory NPAT – continuing operations FY25 10133 -> Cash NPAT – continuing operations FY26 10982",
       "numbers": [
         {
           "label": "Transaction costs and gains/(losses) on disposals",
-          "value": 15500.0,
+          "value": 155.0,
           "unit": "bps",
           "basis": null
         },
         {
           "label": "Hedging and IFRS volatility",
-          "value": -10700.0,
+          "value": -107.0,
           "unit": "bps",
           "basis": null
         }
@@ -229,13 +225,19 @@
       "doc_id": "CBA/FY26/asx_announcement",
       "pdf_page": 2,
       "printed_page": null,
-      "kind": "text",
-      "quote": "Return on equity (ROE) increased 50bpts to 14.0%",
+      "kind": "table",
+      "quote": "Net interest margin ... 2.05% ... 3bpts on FY25",
       "numbers": [
         {
-          "label": "Return on equity",
-          "value": 14.0,
+          "label": "Net Interest Margin",
+          "value": 2.05,
           "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "NIM change vs FY25",
+          "value": 0.3,
+          "unit": "bps",
           "basis": "cash"
         }
       ]
@@ -245,13 +247,25 @@
       "doc_id": "CBA/FY26/asx_announcement",
       "pdf_page": 2,
       "printed_page": null,
-      "kind": "text",
-      "quote": "Dividend per share total dividend for the year of $5.05 per share",
+      "kind": "table",
+      "quote": "Operating expenses ... $13,755m (45.5% cost-to-income) ... 6% on FY25",
       "numbers": [
         {
-          "label": "Total dividend per share",
-          "value": 5.05,
+          "label": "Operating Expenses",
+          "value": 13755.0,
           "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cost to Income Ratio",
+          "value": 45.5,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "OpEx change vs FY25",
+          "value": 6.0,
+          "unit": "%",
           "basis": "cash"
         }
       ]
@@ -262,11 +276,23 @@
       "pdf_page": 2,
       "printed_page": null,
       "kind": "table",
-      "quote": "Net interest margin 2.05% 3bpts on FY25",
+      "quote": "Loan impairment expense ... $788m (Loan loss rate3 8bpts) ... 9% on FY25",
       "numbers": [
         {
-          "label": "Net interest margin",
-          "value": 2.05,
+          "label": "Loan Impairment Expense",
+          "value": 788.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Loan Loss Rate",
+          "value": 0.08,
+          "unit": "bps",
+          "basis": "cash"
+        },
+        {
+          "label": "Impairment change vs FY25",
+          "value": 9.0,
           "unit": "%",
           "basis": "cash"
         }
@@ -278,12 +304,18 @@
       "pdf_page": 2,
       "printed_page": null,
       "kind": "table",
-      "quote": "Operating expenses $13,755m 6% on FY25",
+      "quote": "Return on equity (ROE) ... 14.0% ... 50bpts on FY25",
       "numbers": [
         {
-          "label": "Operating expenses",
-          "value": 13755.0,
-          "unit": "$m",
+          "label": "Return on Equity",
+          "value": 14.0,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE change vs FY25",
+          "value": 0.5,
+          "unit": "bps",
           "basis": "cash"
         }
       ]
@@ -294,12 +326,18 @@
       "pdf_page": 2,
       "printed_page": null,
       "kind": "table",
-      "quote": "Credit quality – loan impairment expense $788m 9% on FY25",
+      "quote": "Dividend per share ... $5.05 ... 4% on FY25",
       "numbers": [
         {
-          "label": "Loan impairment expense",
-          "value": 788.0,
+          "label": "Total Dividend Per Share",
+          "value": 5.05,
           "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Dividend change vs FY25",
+          "value": 4.0,
+          "unit": "%",
           "basis": "cash"
         }
       ]
@@ -313,9 +351,15 @@
       "quote": "Investment spend of $2,428 million was up 6% on FY25",
       "numbers": [
         {
-          "label": "Investment spend",
+          "label": "Investment Spend",
           "value": 2428.0,
           "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Investment Spend change vs FY25",
+          "value": 6.0,
+          "unit": "%",
           "basis": "cash"
         }
       ]
@@ -398,7 +442,7 @@
           "label": "Cash NPAT Growth",
           "value": 7.0,
           "unit": "%",
-          "basis": "null"
+          "basis": null
         }
       ]
     },
@@ -420,7 +464,7 @@
           "label": "EPS Cash Growth",
           "value": 7.0,
           "unit": "%",
-          "basis": "null"
+          "basis": null
         }
       ]
     },
@@ -458,7 +502,7 @@
           "label": "Total Dividend FY26",
           "value": 5.05,
           "unit": "$",
-          "basis": "null"
+          "basis": "cash"
         },
         {
           "label": "Dividend Payout Ratio",
@@ -521,9 +565,9 @@
       "quote": "Statutory NPAT of $10.9 billion – broadly in line with Cash NPAT",
       "numbers": [
         {
-          "label": "Statutory NPAT FY26",
-          "value": 10900.0,
-          "unit": "$m",
+          "label": "Statutory NPAT",
+          "value": 10.9,
+          "unit": "$b",
           "basis": "statutory"
         }
       ]
@@ -534,16 +578,28 @@
       "pdf_page": 23,
       "printed_page": 23,
       "kind": "table",
-      "quote": "Cash NPAT – continuing operations",
+      "quote": "",
       "numbers": [
         {
-          "label": "Cash NPAT FY25",
+          "label": "Statutory NPAT - continuing operations FY25",
+          "value": 10133.0,
+          "unit": "$m",
+          "basis": "statutory"
+        },
+        {
+          "label": "Statutory NPAT - continuing operations FY26",
+          "value": 10911.0,
+          "unit": "$m",
+          "basis": "statutory"
+        },
+        {
+          "label": "Cash NPAT - continuing operations FY25",
           "value": 10252.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Cash NPAT FY26",
+          "label": "Cash NPAT - continuing operations FY26",
           "value": 10982.0,
           "unit": "$m",
           "basis": "cash"
@@ -556,10 +612,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-26T06:17:55+00:00",
-    "seconds": 75.0,
-    "cost_usd": 0.0011,
-    "tokens": "18269 in / 3958 out",
+    "generated": "2026-08-26T06:32:11+00:00",
+    "seconds": 53.0,
+    "cost_usd": 0.0014,
+    "tokens": "25341 in / 5234 out",
     "orchestration": "pipeline"
   }
 }

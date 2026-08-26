@@ -3,20 +3,20 @@
   "metric": "impairment",
   "period": "FY26",
   "comparator": "FY25",
-  "basis": "statutory",
+  "basis": "cash",
   "movement": {
     "from_value": 726.0,
     "to_value": 788.0,
     "delta": 62.0,
     "unit": "$m"
   },
-  "headline": "CBA's Loan Impairment Expense (LIE) increased $62 million to $788 million in FY26 (FY25: $726 million), a 9% rise. The impairment rate rose 1 basis point to 8 bps of average GLAA. Growth was driven by Retail Banking (+$106m) and New Zealand (+$11m), partially offset by reductions in Business Banking (-$45m) and Institutional Banking (-$16m). Management attributed the increase to portfolio growth, cost-of-living pressures, and macroeconomic uncertainty.",
+  "headline": "CBA's Loan Impairment Expense (LIE) increased $62 million to $788 million in FY26 (FY25: $726 million), a 9% rise. The impairment ratio rose 1 basis point to 8 bps of average GLAA. Management attributes the increase primarily to portfolio growth and macroeconomic headwinds (cost-of-living, geopolitical risk). While corporate collective provisions grew significantly (+$172m) reflecting these risks, consumer collective provisions decreased (-$48m) due to rising house prices, partially offsetting the corporate increase.",
   "drivers": [
     {
       "canonical": "collective.volume",
       "bank_label": null,
       "contribution": null,
-      "narrative": "Management cited 'portfolio growth' as a primary driver for the overall LIE increase (ev-1) and specifically for Corporate collective provisions which grew $172m (ev-11). This likely drove the RBS increase given its size.",
+      "narrative": "Management explicitly cites 'portfolio growth' as a main driver for the LIE increase (ev-1). This is corroborated by the significant growth in Corporate Collective Provisions (+$172m, ev-11), which are typically driven by volume expansion alongside risk factors.",
       "confidence": 60,
       "evidence": [
         "ev-1",
@@ -29,23 +29,25 @@
       "canonical": "overlays_fla",
       "bank_label": null,
       "contribution": null,
-      "narrative": "Narrative attributes include 'cost-of-living pressures', 'geopolitical risk', and 'macroeconomic uncertainty' (ev-1). Consumer collective provisions decreased despite these headwinds due to 'rising house prices' and 'more targeted forward-looking adjustments' (ev-12), suggesting overlay management.",
+      "narrative": "The narrative highlights 'increased geopolitical risk and macroeconomic uncertainty' (ev-1, ev-11) and 'more targeted forward-looking adjustments' (ev-12). These represent forward-looking overlays or FLA components adjusting for expected future losses beyond current historical trends.",
       "confidence": 60,
       "evidence": [
         "ev-1",
+        "ev-11",
         "ev-12"
       ],
       "checks_passed": [],
       "checks_failed": []
     },
     {
-      "canonical": "write_backs_recoveries",
+      "canonical": "collective.asset_quality",
       "bank_label": null,
       "contribution": null,
-      "narrative": "Corporate individually assessed provisions decreased $6m, explicitly 'driven by write-backs and write-offs' (ev-14). This activity contributed to the lower-than-expected corporate charge relative to the collective provision growth.",
+      "narrative": "Cost-of-living pressures (ev-1) and rising arrears in credit cards (+7bps) and personal loans (+31bps) (ev-23) indicate deteriorating asset quality in specific retail segments, contributing to higher provisions despite falling home loan arrears.",
       "confidence": 60,
       "evidence": [
-        "ev-14"
+        "ev-1",
+        "ev-23"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -59,9 +61,9 @@
   "disagreements": [],
   "attribution_confidence": 40,
   "limitations": [
-    "No quantitative walk chart or bridge table is provided for FY26 vs FY25 LIE drivers. Contributions are inferred from segment-level P&L changes (ev-6 to ev-9) and narrative attributions (ev-1, ev-11-14).",
-    "The sum of segment deltas ($106 + $11 - $45 - $16 = $56m) does not fully reconcile to the total delta ($62m), leaving a $6m unexplained residual potentially due to rounding or other segments.",
-    "Specific attribution of the $62m movement to canonical taxonomy buckets (volume vs asset quality) is qualitative only.",
+    "No quantitative walk chart was provided to decompose the $62m movement into specific driver contributions.",
+    "The bank's narrative attributes the increase to multiple factors (growth, macro, geopolitics) without providing a precise numerical split between them.",
+    "Confidence is capped at 60 for individual drivers because they rely on narrative attribution rather than quantified data points.",
     "Failed check: no_quantified_drivers"
   ],
   "evidence_records": [
@@ -125,13 +127,13 @@
           "label": "FY26 Loan Impairment Expense",
           "value": 788.0,
           "unit": "$m",
-          "basis": "statutory"
+          "basis": "cash"
         },
         {
           "label": "FY25 Loan Impairment Expense",
           "value": 726.0,
           "unit": "$m",
-          "basis": "statutory"
+          "basis": "cash"
         }
       ]
     },
@@ -144,7 +146,7 @@
       "quote": "Loan impairment expense as a percentage of average gross loans and acceptances (GLAA) increased 1 basis point to 8 basis points.",
       "numbers": [
         {
-          "label": "FY26 Loan Impairment % of Avg GLAA",
+          "label": "FY26 Impairment Ratio",
           "value": 8.0,
           "unit": "bps",
           "basis": "null"
@@ -156,20 +158,14 @@
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 34,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Retail Banking Services ... 378 ... 272 ... 39",
+      "kind": "text",
+      "quote": "Retail Banking Services ... expense of $378 million",
       "numbers": [
         {
-          "label": "RBS FY26 Impairment",
+          "label": "FY26 Retail Banking Impairment",
           "value": 378.0,
           "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "RBS FY25 Impairment",
-          "value": 272.0,
-          "unit": "$m",
-          "basis": "statutory"
+          "basis": "cash"
         }
       ]
     },
@@ -178,20 +174,14 @@
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 34,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Business Banking ... 310 ... 355 ... (13)",
+      "kind": "text",
+      "quote": "Business Banking ... expense of $310 million",
       "numbers": [
         {
-          "label": "BB FY26 Impairment",
+          "label": "FY26 Business Banking Impairment",
           "value": 310.0,
           "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "BB FY25 Impairment",
-          "value": 355.0,
-          "unit": "$m",
-          "basis": "statutory"
+          "basis": "cash"
         }
       ]
     },
@@ -200,20 +190,14 @@
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 34,
       "printed_page": null,
-      "kind": "table",
-      "quote": "New Zealand ... 66 ... 55 ... 20",
+      "kind": "text",
+      "quote": "New Zealand ... expense of $66 million",
       "numbers": [
         {
-          "label": "NZ FY26 Impairment",
+          "label": "FY26 NZ Impairment",
           "value": 66.0,
           "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "NZ FY25 Impairment",
-          "value": 55.0,
-          "unit": "$m",
-          "basis": "statutory"
+          "basis": "cash"
         }
       ]
     },
@@ -222,20 +206,14 @@
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 34,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Institutional Banking and Markets ... 33 ... 49 ... (33)",
+      "kind": "text",
+      "quote": "Institutional Banking and Markets ... expense of $33 million",
       "numbers": [
         {
-          "label": "IBM FY26 Impairment",
+          "label": "FY26 IBM Impairment",
           "value": 33.0,
           "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "IBM FY25 Impairment",
-          "value": 49.0,
-          "unit": "$m",
-          "basis": "statutory"
+          "basis": "cash"
         }
       ]
     },
@@ -248,22 +226,22 @@
       "quote": "Total provisions for impairment losses as at 30 June 2026 were $6,476 million, an increase of $99 million or 2% on the prior year.",
       "numbers": [
         {
-          "label": "Total provisions FY26",
+          "label": "Total provisions for impairment losses",
           "value": 6476.0,
           "unit": "$m",
           "basis": "statutory"
         },
         {
-          "label": "Increase vs FY25",
+          "label": "Increase in total provisions",
           "value": 99.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": "null"
         },
         {
-          "label": "Growth rate vs FY25",
+          "label": "YoY growth rate",
           "value": 2.0,
           "unit": "%",
-          "basis": null
+          "basis": "null"
         }
       ]
     },
@@ -282,16 +260,16 @@
           "basis": "statutory"
         },
         {
-          "label": "Increase vs FY25",
+          "label": "Increase in corporate collective provisions",
           "value": 172.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": "null"
         },
         {
-          "label": "Growth rate vs FY25",
+          "label": "YoY growth rate (corporate collective)",
           "value": 7.0,
           "unit": "%",
-          "basis": null
+          "basis": "null"
         }
       ]
     },
@@ -310,16 +288,16 @@
           "basis": "statutory"
         },
         {
-          "label": "Decrease vs FY25",
+          "label": "Decrease in consumer collective provisions",
           "value": -48.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": "null"
         },
         {
-          "label": "Growth rate vs FY25",
+          "label": "YoY change rate (consumer collective)",
           "value": -2.0,
           "unit": "%",
-          "basis": null
+          "basis": "null"
         }
       ]
     },
@@ -338,16 +316,16 @@
           "basis": "statutory"
         },
         {
-          "label": "Decrease vs FY25",
+          "label": "Decrease in consumer individually assessed provisions",
           "value": -19.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": "null"
         },
         {
-          "label": "Growth rate vs FY25",
+          "label": "YoY change rate (consumer individually assessed)",
           "value": -16.0,
           "unit": "%",
-          "basis": null
+          "basis": "null"
         }
       ]
     },
@@ -366,16 +344,16 @@
           "basis": "statutory"
         },
         {
-          "label": "Decrease vs FY25",
+          "label": "Decrease in corporate individually assessed provisions",
           "value": -6.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": "null"
         },
         {
-          "label": "Growth rate vs FY25",
+          "label": "YoY change rate (corporate individually assessed)",
           "value": -1.0,
           "unit": "%",
-          "basis": null
+          "basis": "null"
         }
       ]
     },
@@ -388,16 +366,16 @@
       "quote": "Total provisions for impairment losses increased $141 million or 2% on the prior half.",
       "numbers": [
         {
-          "label": "Increase vs Dec 25",
+          "label": "H1 vs H2 change in total provisions",
           "value": 141.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": "null"
         },
         {
-          "label": "Growth rate vs Dec 25",
+          "label": "Half-on-half growth rate",
           "value": 2.0,
           "unit": "%",
-          "basis": null
+          "basis": "null"
         }
       ]
     },
@@ -438,7 +416,7 @@
           "basis": null
         },
         {
-          "label": "Total provisions as a % of credit RWA change vs prior half",
+          "label": "Change from prior half (bps)",
           "value": -2.0,
           "unit": "bpts",
           "basis": null
@@ -454,13 +432,13 @@
       "quote": "Consumer loan impairment expense (LIE) as a percentage of average gross loans and acceptances was 4 basis points, a decrease of 3 basis points on the prior half",
       "numbers": [
         {
-          "label": "Consumer LIE as % of avg GLAA (Jun 26)",
+          "label": "Consumer LIE as % of avg GLAA (H1 FY26)",
           "value": 4.0,
           "unit": "bpts",
           "basis": null
         },
         {
-          "label": "Consumer LIE change vs prior half",
+          "label": "Change from prior half (bps)",
           "value": -3.0,
           "unit": "bpts",
           "basis": null
@@ -476,13 +454,13 @@
       "quote": "Total provisions for impairment losses as a % of TCE",
       "numbers": [
         {
-          "label": "Total provisions for impairment losses as a % of TCE (Jun 26)",
+          "label": "FY26 Total provisions for impairment losses as a % of TCE",
           "value": 0.4,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Total provisions for impairment losses as a % of TCE (Jun 25)",
+          "label": "FY25 Total provisions for impairment losses as a % of TCE",
           "value": 0.43,
           "unit": "%",
           "basis": null
@@ -542,7 +520,7 @@
       "quote": "Home loan 90+ days arrears were 0.73%, an increase of 10 basis points on the prior half",
       "numbers": [
         {
-          "label": "Home Loan 90+ Arrears Ratio",
+          "label": "Home Loan Arrears Ratio",
           "value": 0.73,
           "unit": "%",
           "basis": "null"
@@ -564,13 +542,13 @@
       "quote": "Credit card and personal loan 90+ days arrears were 0.73% and 1.72% respectively, an increase of 7 basis points and 31 basis points on the prior half",
       "numbers": [
         {
-          "label": "Credit Card 90+ Arrears Ratio",
+          "label": "Credit Card Arrears Ratio",
           "value": 0.73,
           "unit": "%",
           "basis": "null"
         },
         {
-          "label": "Personal Loan 90+ Arrears Ratio",
+          "label": "Personal Loan Arrears Ratio",
           "value": 1.72,
           "unit": "%",
           "basis": "null"
@@ -639,10 +617,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-26T06:21:03+00:00",
-    "seconds": 54.1,
+    "generated": "2026-08-26T06:34:11+00:00",
+    "seconds": 46.9,
     "cost_usd": 0.0014,
-    "tokens": "24917 in / 5394 out",
+    "tokens": "24445 in / 5084 out",
     "orchestration": "pipeline"
   }
 }

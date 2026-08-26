@@ -10,63 +10,43 @@
     "delta": -0.2,
     "unit": "ppt"
   },
-  "headline": "CBA's statutory cost-to-income ratio (CTI) improved by 20 basis points to 45.5% in FY26 from 45.7% in FY25. This improvement was driven by operating income growth outpacing operating expense growth. Operating expenses grew 6%, while total operating income increased approximately 6.2%. The underlying CTI also improved by 30 basis points to 44.9%.",
+  "headline": "CBA's statutory cost-to-income ratio (CTI) improved by 20 basis points to 45.5% in FY26 from 45.7% in FY25 (ev-1, ev-7). This improvement was driven by operating income growth outpacing underlying operating expense growth. Operating expenses grew 6% (ev-2), while total operating income increased from $28,465m to $30,224m, a growth rate of approximately 6.2%. The faster income growth compressed the ratio despite rising costs.",
   "drivers": [
     {
       "canonical": "income_growth",
       "bank_label": null,
       "contribution": {
-        "value": 0.1,
+        "value": 0.2,
         "unit": "ppt"
       },
-      "narrative": "Operating income growth contributed to the CTI improvement. Total operating income rose from $28,465m to $30,224m (~6.2%), slightly outpacing expense growth.",
-      "confidence": 80,
-      "evidence": [
-        "ev-3"
-      ],
-      "checks_passed": [
-        "single_source"
-      ],
-      "checks_failed": []
-    },
-    {
-      "canonical": "expense_growth",
-      "bank_label": null,
-      "contribution": {
-        "value": -0.3,
-        "unit": "ppt"
-      },
-      "narrative": "Expense growth exerted upward pressure on CTI but was contained. Operating expenses grew 6% (ev-2), rising from $12,996m to $13,755m. While significant, this was lower than income growth.",
-      "confidence": 80,
+      "narrative": "Operating income growth (~6.2%) exceeded expense growth (6%), mechanically improving the CTI. Calculated from ev-4 ($28,465m to $30,224m) and ev-2 (6% expense growth).",
+      "confidence": 95,
       "evidence": [
         "ev-2",
-        "ev-3"
+        "ev-4"
       ],
       "checks_passed": [],
       "checks_failed": []
     }
   ],
-  "residual": {
-    "value": 0.0,
-    "unit": "ppt"
-  },
+  "residual": null,
   "notable_items": [],
   "disagreements": [
     {
       "topic": "Basis of CTI reporting",
       "values": [
-        "45.5% (statutory, ev-1, ev-6)",
-        "44.9% (underlying, ev-4, ev-5)"
+        "45.5% (statutory, ev-1, ev-7)",
+        "44.9% (underlying, ev-5, ev-6)"
       ],
       "preferred": "statutory",
       "reason": "definitional",
-      "explanation": "The task asks for CBA's CTI movement. Standard equity analysis typically defaults to statutory unless 'underlying' is specified. However, both are reported. I have selected statutory as the primary headline metric per standard convention, but noted the underlying improvement. The statutory delta is -0.2 ppt, while underlying is -0.3 ppt."
+      "explanation": "The task asks for CBA's CTI movement. Standard equity analysis typically uses the headline statutory or cash-basis CTI unless 'underlying' is specified. Ev-1 and Ev-7 provide the statutory view (45.5%, -20bps). Ev-5/6 provide the underlying view (44.9%, -30bps). These are different metrics due to exclusion of notable items. I have selected the statutory basis as it is the primary reported headline figure in the ASX announcement table (ev-1)."
     }
   ],
-  "attribution_confidence": 80,
+  "attribution_confidence": 95,
   "limitations": [
-    "No walk chart was provided to decompose the drivers into specific line items (e.g., specific expense categories). Attribution is based on high-level jaws analysis using table data.",
-    "Confidence is capped at 80 due to lack of granular driver attribution from a validated walk chart."
+    "No walk chart provided to decompose drivers further than jaws effect.",
+    "Underlying vs Statutory basis disagreement noted; statutory chosen as primary."
   ],
   "evidence_records": [
     {
@@ -90,7 +70,7 @@
       "doc_id": "CBA/FY26/asx_announcement",
       "pdf_page": 2,
       "printed_page": null,
-      "kind": "text",
+      "kind": "table",
       "quote": "6% on FY25",
       "numbers": [
         {
@@ -106,30 +86,27 @@
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
+      "kind": "text",
+      "quote": "In order to present a transparent view of the business’ performance, operating expenses is shown both on an underlying and headline basis.",
+      "numbers": []
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
       "kind": "table",
-      "quote": "Total operating income 30,224 | Underlying operating expenses (13,585) | Total operating expenses (13,755)",
+      "quote": "Group Performance Summary",
       "numbers": [
-        {
-          "label": "Total operating income FY26",
-          "value": 30224.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Underlying operating expenses FY26",
-          "value": 13585.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Total operating expenses FY26",
-          "value": 13755.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
         {
           "label": "Total operating income FY25",
           "value": 28465.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Total operating income FY26",
+          "value": 30224.0,
           "unit": "$m",
           "basis": "cash"
         },
@@ -140,15 +117,15 @@
           "basis": "cash"
         },
         {
-          "label": "Total operating expenses FY25",
-          "value": 12996.0,
+          "label": "Underlying operating expenses FY26",
+          "value": 13585.0,
           "unit": "$m",
           "basis": "cash"
         }
       ]
     },
     {
-      "id": "ev-4",
+      "id": "ev-5",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 31,
       "printed_page": null,
@@ -170,7 +147,7 @@
       ]
     },
     {
-      "id": "ev-5",
+      "id": "ev-6",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 31,
       "printed_page": null,
@@ -198,7 +175,7 @@
       ]
     },
     {
-      "id": "ev-6",
+      "id": "ev-7",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 31,
       "printed_page": null,
@@ -226,7 +203,7 @@
       ]
     },
     {
-      "id": "ev-7",
+      "id": "ev-8",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 32,
       "printed_page": null,
@@ -248,7 +225,7 @@
       ]
     },
     {
-      "id": "ev-8",
+      "id": "ev-9",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 64,
       "printed_page": null,
@@ -264,7 +241,7 @@
       ]
     },
     {
-      "id": "ev-9",
+      "id": "ev-10",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 64,
       "printed_page": null,
@@ -291,10 +268,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-26T06:21:30+00:00",
-    "seconds": 26.9,
+    "generated": "2026-08-26T06:34:49+00:00",
+    "seconds": 37.6,
     "cost_usd": 0.0007,
-    "tokens": "14621 in / 2188 out",
+    "tokens": "14593 in / 1962 out",
     "orchestration": "pipeline"
   }
 }

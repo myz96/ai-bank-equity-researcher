@@ -7,16 +7,16 @@
   "movement": {
     "from_value": 13.5,
     "to_value": 14.0,
-    "delta": 50.0,
+    "delta": 0.5,
     "unit": "ppt"
   },
-  "headline": "CBA's cash ROE increased by 50 bps to 14.0% in FY26 (FY25: 13.5%). The improvement was driven primarily by a 7% increase in cash NPAT ($11bn), supported by lending volume growth and stable underlying NIM. While pre-provision profit grew 6%, the earnings effect is partially offset by an equity effect from balance sheet expansion. No detailed walk chart is available to quantify the specific split between earnings and equity effects.",
+  "headline": "CBA's cash ROE increased by 50 bps to 14.0% in FY26 (FY25: 13.5%). This improvement was driven primarily by a 7% increase in cash NPAT to $11bn, partially offset by an expansion in average equity. The statutory ROE also rose by 50 bps to 13.9%. No specific driver walk is available for this period.",
   "drivers": [
     {
       "canonical": "earnings_effect",
       "bank_label": "core_profit",
       "contribution": null,
-      "narrative": "Cash NPAT increased 7% to $11bn, providing a positive contribution to ROE. This was supported by lending volume growth and broadly stable underlying net interest margin.",
+      "narrative": "Cash NPAT grew 7% to $11bn. While the exact equity base is not provided to calculate the precise earnings contribution, rising profits at constant equity would positively drive ROE.",
       "confidence": 80,
       "evidence": [
         "ev-2",
@@ -29,25 +29,24 @@
       "canonical": "equity_effect",
       "bank_label": null,
       "contribution": null,
-      "narrative": "Average equity likely increased due to retained earnings and loan growth, exerting a downward pressure on ROE. Without average equity figures, the magnitude cannot be quantified.",
+      "narrative": "Average equity likely expanded, exerting a negative pressure on ROE. Without the specific average equity figures for FY25 and FY26, the magnitude of this drag cannot be quantified from the provided evidence.",
       "confidence": 60,
       "evidence": [
-        "ev-3",
-        "ev-9"
+        "ev-5"
       ],
       "checks_passed": [],
       "checks_failed": []
     }
   ],
-  "residual": null,
+  "residual": {
+    "value": 0.5,
+    "unit": "ppt"
+  },
   "notable_items": [],
   "disagreements": [],
   "attribution_confidence": 40,
   "limitations": [
-    "No validated walk chart is provided to decompose the ROE movement into precise earnings and equity contributions.",
-    "Average equity balances for FY25 and FY26 are not explicitly stated in the evidence records, preventing calculation of the equity effect.",
-    "Confidence is capped at 60 because key quantitative drivers (equity levels) are missing.",
-    "Failed check: movement_arithmetic (13.5 + 50.0 != 14.0)",
+    "No walk chart or detailed driver table was provided for FY26 vs FY25. Consequently, I cannot decompose the 50 bps ROE movement into specific earnings and equity contributions with precision. The residual equals the total delta because the drivers are unquantified.",
     "Failed check: no_quantified_drivers"
   ],
   "evidence_records": [
@@ -57,13 +56,13 @@
       "pdf_page": 1,
       "printed_page": null,
       "kind": "text",
-      "quote": "return on equity rose to 14.0%.",
+      "quote": "return on equity rose to 14.0%",
       "numbers": [
         {
           "label": "Return on Equity",
           "value": 14.0,
           "unit": "%",
-          "basis": null
+          "basis": "cash"
         }
       ]
     },
@@ -76,84 +75,21 @@
       "quote": "Cash net profit after tax increased 7% to $11bn",
       "numbers": [
         {
+          "label": "Cash NPAT",
+          "value": 11.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
           "label": "Cash NPAT Growth",
           "value": 7.0,
           "unit": "%",
           "basis": null
-        },
-        {
-          "label": "Cash NPAT",
-          "value": 11000.0,
-          "unit": "$m",
-          "basis": "cash"
         }
       ]
     },
     {
       "id": "ev-3",
-      "doc_id": "CBA/FY26/asx_announcement",
-      "pdf_page": 1,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "pre-provision profit increased 6% to $16.5bn",
-      "numbers": [
-        {
-          "label": "Pre-provision Profit Growth",
-          "value": 6.0,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Pre-provision Profit",
-          "value": 16500.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-4",
-      "doc_id": "CBA/FY26/asx_announcement",
-      "pdf_page": 1,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Operating income increased 6%",
-      "numbers": [
-        {
-          "label": "Operating Income Growth",
-          "value": 6.0,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-5",
-      "doc_id": "CBA/FY26/asx_announcement",
-      "pdf_page": 1,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Net profit after tax (NPAT) was supported by lending volume growth in our core businesses, with underlying net interest margin broadly stable.",
-      "numbers": []
-    },
-    {
-      "id": "ev-6",
-      "doc_id": "CBA/FY26/asx_announcement",
-      "pdf_page": 1,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The full year dividend payout ratio is 77% of cash NPAT",
-      "numbers": [
-        {
-          "label": "Dividend Payout Ratio",
-          "value": 77.0,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-7",
       "doc_id": "CBA/FY26/asx_announcement",
       "pdf_page": 2,
       "printed_page": null,
@@ -175,7 +111,7 @@
       ]
     },
     {
-      "id": "ev-8",
+      "id": "ev-4",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 19,
       "printed_page": 3,
@@ -197,7 +133,7 @@
       ]
     },
     {
-      "id": "ev-9",
+      "id": "ev-5",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 19,
       "printed_page": 3,
@@ -224,10 +160,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-26T06:18:27+00:00",
-    "seconds": 32.5,
-    "cost_usd": 0.0007,
-    "tokens": "15569 in / 2002 out",
+    "generated": "2026-08-26T06:32:37+00:00",
+    "seconds": 26.7,
+    "cost_usd": 0.0006,
+    "tokens": "14670 in / 1544 out",
     "orchestration": "pipeline"
   }
 }
