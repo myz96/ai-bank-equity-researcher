@@ -1,0 +1,57 @@
+{
+  "bank": "CBA",
+  "period": "FY26",
+  "comparator": "FY25",
+  "basis": "cash",
+  "case_class": "crossref_consolidation",
+  "verified": "Locations and verbatim footnote texts hand-verified 2026-08-26 (ticket 26). HELD OUT: never used for iteration; scored only at milestones. Pending user review; the user may add cases of their own.",
+  "cases": [
+    {
+      "id": "dividend-drp-web",
+      "split": "holdout",
+      "question": "How did the 2026 interim dividend affect CBA's CET1 ratio during the June 2026 half, and what role did the Dividend Reinvestment Plan play?",
+      "gold_answer_facts": [
+        "The dividend reduced CET1 by 76bps on the Dec 25 -> Jun 26 walk, shown 'DRP neutralised'",
+        "The DRP was satisfied IN FULL by on-market share purchases — no new shares were issued",
+        "The interim-dividend DRP purchase was $530m, itself costing 10bps of CET1 (inside the 76)",
+        "DRP participation rates: 14.8% (2025 final) and 13.5% (2026 interim)"
+      ],
+      "required_locations": [
+        {"doc": "CBA/FY26/results_presentation", "pdf_page": 32, "holds": "the -76bps dividend bar and footnote 2 ($530m on-market, -10bps)"},
+        {"doc": "CBA/FY26/profit_announcement", "pdf_page": 48, "holds": "DRP satisfied in full on-market; participation rates"}
+      ],
+      "trap": "Reading only the walk yields '-76bps' and misses that the bank spent capital to neutralise the DRP and that no shares were issued — the footnote and the PA text change the interpretation."
+    },
+    {
+      "id": "mortgage-offset-footnote",
+      "split": "holdout",
+      "question": "CBA's reported NIM is calculated net of mortgage offset account balances. Quantify those balances for FY26 and FY25 and explain how they affect average interest earning assets and NIM.",
+      "gold_answer_facts": [
+        "Average mortgage offset balances: $94,892m FY26; $84,123m FY25; $97,371m for the Jun 26 half vs $92,454m for the Dec 25 half",
+        "The balances are grossed up under accounting standards but netted down for calculating customer interest payments and the Group's NIM",
+        "Home loan average interest earning assets are therefore shown net of offsets"
+      ],
+      "required_locations": [
+        {"doc": "CBA/FY26/profit_announcement", "pdf_page": 28, "holds": "footnote 1 under the NII table — the only place the offset figures exist"}
+      ],
+      "trap": "The answer lives entirely in a table footnote that page-level extraction typically skips; there is no chart or section heading pointing at it."
+    },
+    {
+      "id": "notables-cti-web",
+      "split": "holdout",
+      "question": "Name CBA's FY26 notable and restructuring items, quantify them in total, and state their effect on operating expense growth and the cost-to-income ratio (headline vs underlying).",
+      "gold_answer_facts": [
+        "Total restructuring and notable items: $170m (FY25 comparable framing: $130m implied by the benchmark's delta; FY25 items were domestic/NZ remediation and a Bankwest restructuring provision)",
+        "FY26 items: provisions for the settlement of legal proceedings in NZ; an additional goodwill payment to certain customers from ASIC's Better Banking review; domestic customer remediation",
+        "Underlying expense growth +5.6% vs headline +5.8% including these items",
+        "Headline CTI 45.5% (vs 45.7% FY25); the underlying CTI framing appears on the expense slide"
+      ],
+      "required_locations": [
+        {"doc": "CBA/FY26/results_presentation", "pdf_page": 24, "holds": "the $170m line and footnote 2 naming the items"},
+        {"doc": "CBA/FY26/results_presentation", "pdf_page": 27, "holds": "footnote 1: underlying vs headline (+5.6% vs +5.8%) framing"},
+        {"doc": "CBA/FY26/profit_announcement", "pdf_page": 18, "holds": "the KPI table's CTI row (45.5 vs 45.7)"}
+      ],
+      "trap": "The value, the item names, the growth-rate framing, and the ratio effect live on three different pages across two documents; each alone gives an incomplete or misleading answer."
+    }
+  ]
+}

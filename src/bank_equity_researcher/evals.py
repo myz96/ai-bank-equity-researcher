@@ -29,6 +29,10 @@ def load_gold(suite: str, bank: str | None = None) -> list[dict]:
                 continue
             if bank and gold_file["bank"].upper() != bank.upper():
                 continue
+            if "movement" not in case:
+                # Cross-reference consolidation cases (ticket 26) run through
+                # the ask entry point, not the metric pipeline; skip here.
+                continue
             cases.append({**case, "bank": gold_file["bank"], "period": gold_file["period"],
                           "comparator": gold_file["comparator"], "basis": gold_file["basis"]})
     return cases

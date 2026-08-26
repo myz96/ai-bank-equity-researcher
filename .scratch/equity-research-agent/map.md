@@ -55,6 +55,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - The full eval matrix run and the results write-up — after ticket 05 and the build.
 - Iteration priorities — after the first eval results.
 - Rerun of the Fable frontier benchmark against the completed pipeline; a human-expert scoring pass as the tier above it (aspirational).
+- Exit criterion (user, 2026-08-26): the system is not "done" until it passes held-out cross-reference consolidation cases (ticket 26) — answers that require stitching footnotes and tables from many parts of a report.
 - Final report: README, design doc, transcript attachment, reviewer access.
 
 ## Out of scope
