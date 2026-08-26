@@ -138,6 +138,17 @@ def author_attribution(
             reply.setdefault("limitations", []).append(
                 "The movement could not be established from the evidence."
             )
+        if isinstance(movement, dict):
+            # Delta harmoniser: endpoints are the primary facts; a delta that
+            # contradicts them is a unit slip (e.g. "50 bpts" against ppt
+            # endpoints). Recompute and record.
+            implied = round(movement["to_value"] - movement["from_value"], 2)
+            if abs(movement["delta"] - implied) > 0.51 and implied != 0:
+                reply.setdefault("limitations", []).append(
+                    f"Movement delta normalised from {movement['delta']} to {implied} "
+                    "(unit slip against the endpoints)."
+                )
+                movement["delta"] = implied
         reply["movement"] = movement
         for driver in reply.get("drivers", []):
             contribution = driver.get("contribution")

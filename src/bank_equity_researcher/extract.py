@@ -30,13 +30,15 @@ Rules:
 PAGE TEXT:
 {page_text}"""
 
-WALK_PROMPT = """This bank results page contains a waterfall (walk) chart relevant to: {case}.
+WALK_PROMPT = """This bank results page contains a waterfall (walk/bridge) chart relevant to: {case}.
 Extract the walk as JSON only:
 {{"title": "<chart title>", "start_label": str, "start_bps": float,
   "bars": [{{"label": str, "bps": float}}], "end_label": str, "end_bps": float}}
-Rules: values in basis points (2.08% = 208 bps; a chart labelled bpts is already
-bps). Bars in parentheses are negative. A dash bar is 0. Keep the chart's bar
-order. Use only what is on this page."""
+Rules: ALL values in {unit}. When the unit is bps, convert percentages fully
+(2.08% = 208 bps, 12.3% = 1230 bps; a chart labelled bpts is already bps).
+When the unit is $m, keep dollar-million values as printed. Bars in
+parentheses are negative. A dash bar is 0. Keep the chart's bar order. Use
+only what is on this page."""
 
 
 PRESENTATION_DOC_TYPES = ("results_presentation", "investor_presentation", "investor_discussion_pack")
@@ -89,14 +91,15 @@ def extract_text_evidence(
     return records
 
 
-def extract_walk(llm: LLM, model: str, doc: Document, page_no: int, case: str, next_id):
+def extract_walk(llm: LLM, model: str, doc: Document, page_no: int, case: str, next_id, unit: str = "bps"):
     """Vision read of a walk chart page. Returns (walk_dict, EvidenceRecord)."""
     png = doc.render_page(page_no)
+    prompt = WALK_PROMPT.format(case=case, unit=unit)
     try:
-        walk = llm.chat_json(model, WALK_PROMPT.format(case=case), image_png=png, max_tokens=3000)
+        walk = llm.chat_json(model, prompt, image_png=png, max_tokens=3000)
     except ValueError:
         # One retry: vision replies occasionally truncate or mangle JSON.
-        walk = llm.chat_json(model, WALK_PROMPT.format(case=case), image_png=png, max_tokens=3000)
+        walk = llm.chat_json(model, prompt, image_png=png, max_tokens=3000)
     # A null bar value is a partial read, not a crash (defect 23): drop the
     # bar and record the gap on the walk.
     bars = walk.get("bars", [])
@@ -106,6 +109,17 @@ def extract_walk(llm: LLM, model: str, doc: Document, page_no: int, case: str, n
     for key in ("start_bps", "end_bps"):
         if walk.get(key) is None:
             raise ValueError(f"walk endpoints unreadable on {doc.doc_id} p{page_no}")
+    # Endpoint scale harmoniser: vision sometimes converts endpoints and bars
+    # at different scales (12.3% -> 123 with bars in true bps). If one scale
+    # factor on the endpoints makes the walk sum, apply and record it.
+    bar_sum = sum(b["bps"] for b in walk["bars"])
+    if abs(walk["start_bps"] + bar_sum - walk["end_bps"]) > 10:
+        for factor in (10.0, 100.0, 0.1, 0.01):
+            s, e = walk["start_bps"] * factor, walk["end_bps"] * factor
+            if abs(s + bar_sum - e) <= 10:
+                walk["start_bps"], walk["end_bps"] = s, e
+                walk["scale_adjusted"] = f"endpoints x{factor}"
+                break
     text = doc.page_texts()[page_no - 1]
     record = EvidenceRecord(
         id=next_id(),

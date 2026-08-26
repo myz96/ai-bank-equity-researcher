@@ -42,6 +42,7 @@ TAXONOMY: dict[str, dict] = {
         ],
         "walk_markers": ["Statutory vs cash NPAT", "cash earnings bridge"],
         "drivers": {
+            "nii": "Net interest income total (claim this when volume/margin are not separately quantified in dollars)",
             "nii.volume": "Net interest income: volume (AIEA growth)",
             "nii.margin": "Net interest income: margin (NIM movement)",
             "other_operating_income": "Fees, trading, insurance and other income",

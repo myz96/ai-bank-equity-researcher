@@ -127,20 +127,27 @@ def corroborate(attribution, cross_source: dict[str, list[dict]]) -> None:
 
 
 def check_drivers_reconcile(attribution) -> tuple[list[str], list[str]]:
-    """Quantified drivers + residual should sum to the movement delta."""
+    """Quantified drivers + residual should sum to the movement delta.
+    Tolerance follows the evidence: drivers sourced from a presentation walk
+    inherit its endpoint-rounding slack (the CBA CET1 slide case)."""
     passed, failed = [], []
     if attribution.movement is None:
         return passed, failed
     quantified = [d.contribution.value for d in attribution.drivers if d.contribution]
     if not quantified:
         return passed, ["no_quantified_drivers"]
+    presentation_walk = any(
+        r.kind == "walk_vision" and ("presentation" in r.doc_id or "discussion" in r.doc_id)
+        for r in attribution.evidence_records
+    )
+    tolerance = WALK_SUM_TOL_PRESENTATION if presentation_walk else 1.0
     residual = attribution.residual.value if attribution.residual else 0.0
     total = sum(quantified) + residual
-    if abs(total - attribution.movement.delta) <= 1.0:
+    if abs(total - attribution.movement.delta) <= tolerance:
         passed.append("drivers_reconcile")
     else:
         failed.append(
             f"drivers_reconcile (drivers {sum(quantified):+.1f} + residual {residual:+.1f} "
-            f"!= delta {attribution.movement.delta:+.1f})"
+            f"!= delta {attribution.movement.delta:+.1f}, tol {tolerance})"
         )
     return passed, failed

@@ -100,7 +100,10 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     records, walks, validation = [], [], {"passed": [], "failed": []}
     for doc_id, page in walk_pages:
         try:
-            walk, record = extract_walk(llm, combo.vision, doc_by_id[doc_id], page, case_desc, next_id)
+            walk, record = extract_walk(
+                llm, combo.vision, doc_by_id[doc_id], page, case_desc, next_id,
+                unit=metric_cfg["unit"],
+            )
         except Exception as exc:  # noqa: BLE001
             validation["failed"].append(f"walk_extraction_error p{page}: {exc}")
             continue

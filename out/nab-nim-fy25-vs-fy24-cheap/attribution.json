@@ -1,0 +1,370 @@
+{
+  "bank": "NAB",
+  "metric": "nim",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "statutory",
+  "movement": {
+    "from_value": 171.0,
+    "to_value": 174.0,
+    "delta": 3.0,
+    "unit": "bps"
+  },
+  "headline": "NAB's statutory Net Interest Margin (NIM) increased by 3 basis points in FY25 compared to FY24, rising from 171 bps to 174 bps. This improvement was primarily driven by a positive benefit from net free liabilities, provisions, and equity (+5 bps), which more than offset a decline in the net interest spread (-2 bps). While cash NIM declined slightly due to different accounting treatments of volatile items, the statutory view highlights the core operational resilience.",
+  "drivers": [
+    {
+      "canonical": "other_unmapped",
+      "bank_label": "Benefit of net free liabilities, provisions and equity",
+      "contribution": {
+        "value": 5.0,
+        "unit": "bps"
+      },
+      "narrative": "A positive contribution of 5 bps attributed to the benefit of net free liabilities, provisions, and equity. This is a residual category in the statutory walk that captures non-core or structural benefits not classified as pure lending or funding margins.",
+      "confidence": 85,
+      "evidence": [
+        "ev-2"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "other_unmapped",
+      "bank_label": "Net interest spread",
+      "contribution": {
+        "value": -2.0,
+        "unit": "bps"
+      },
+      "narrative": "A negative contribution of 2 bps from the net interest spread. This reflects the difference between asset yields and funding costs before specific mix or pricing adjustments captured elsewhere.",
+      "confidence": 85,
+      "evidence": [
+        "ev-2"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": null,
+  "notable_items": [],
+  "disagreements": [
+    {
+      "topic": "Cash vs Statutory NIM Movement",
+      "values": [
+        "Statutory: +3 bps (171 -> 174) - ev-6, ev-7",
+        "Cash: -4 bps (311 -> 307) - ev-3"
+      ],
+      "preferred": "Statutory",
+      "reason": "definitional",
+      "explanation": "The task asks for NAB's NIM movement. The statutory basis (+3 bps) is the primary reported metric in the Profit Announcement results book (ev-6, ev-7) and aligns with the detailed statutory walk chart (ev-2). The cash basis (-4 bps) excludes certain volatile items (Markets & Treasury) and represents a different performance view. We prioritize the statutory basis as it is the headline statutory profit driver."
+    }
+  ],
+  "attribution_confidence": 95,
+  "limitations": [
+    "The primary attribution evidence (ev-2) uses a simplified two-bar walk ('Net interest spread' and 'Benefit of net free liabilities...') rather than the granular canonical drivers (Lending margin, Funding, etc.) found in the H1 walk (ev-1). Therefore, we cannot attribute the movement to specific canonical IDs like 'asset_pricing' or 'funding.deposits' with high confidence for the full year.",
+    "The H1 walk (ev-1) provides granular canonical drivers but covers Mar 25 to Sep 25, not the full FY24 vs FY25 comparison required. It is used only for context if needed, but the FY25 vs FY24 statutory delta is strictly defined by ev-2."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 17,
+      "printed_page": null,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Group net interest margin movement: Mar 25 170.0 -> Sep 25 178.0",
+      "numbers": [
+        {
+          "label": "Lending margin",
+          "value": 0.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Funding costs",
+          "value": 1.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Deposits",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Replicating portfolios and other",
+          "value": 4.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Liquid assets",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Markets & Treasury (M&T)",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 66,
+      "printed_page": 64,
+      "kind": "walk_vision",
+      "quote": "[walk chart] NAB net interest margin in FY25 vs FY24: Sep 24 171.0 -> Sep 25 174.0",
+      "numbers": [
+        {
+          "label": "Net interest spread",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Benefit of net free liabilities, provisions and equity",
+          "value": 5.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 49,
+      "printed_page": 49,
+      "kind": "table",
+      "quote": "Net interest margin",
+      "numbers": [
+        {
+          "label": "FY24 NIM",
+          "value": 3.11,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "FY25 NIM",
+          "value": 3.07,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 58,
+      "printed_page": 58,
+      "kind": "table",
+      "quote": "NIM ex Markets (%)",
+      "numbers": [
+        {
+          "label": "FY24 NIM ex Markets",
+          "value": 2.08,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "FY25 NIM ex Markets",
+          "value": 2.14,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 58,
+      "printed_page": 58,
+      "kind": "table",
+      "quote": "Net interest margin ($m)",
+      "numbers": [
+        {
+          "label": "FY24 Net Interest Margin",
+          "value": 3153.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "FY25 Net Interest Margin",
+          "value": 3369.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 17,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Group net interest margin (%)",
+      "numbers": [
+        {
+          "label": "FY25 Group NIM",
+          "value": 1.74,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "FY24 Group NIM",
+          "value": 1.71,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 17,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The Group's net interest margin increased by 3 basis points due to:",
+      "numbers": [
+        {
+          "label": "NIM movement FY25 vs FY24",
+          "value": 0.03,
+          "unit": "ppt",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 17,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net interest margin by division (%) - Business and Private Banking(1)",
+      "numbers": [
+        {
+          "label": "B&PB NIM FY25",
+          "value": 3.01,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "B&PB NIM FY24",
+          "value": 3.09,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 17,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net interest margin by division (%) - Personal Banking(1)",
+      "numbers": [
+        {
+          "label": "PB NIM FY25",
+          "value": 1.75,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "PB NIM FY24",
+          "value": 1.72,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 17,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net interest margin by division (%) - Corporate and Institutional Banking",
+      "numbers": [
+        {
+          "label": "CIB NIM FY25",
+          "value": 1.09,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "CIB NIM FY24",
+          "value": 1.05,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 17,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net interest margin by division (%) - New Zealand Banking",
+      "numbers": [
+        {
+          "label": "NZB NIM FY25",
+          "value": 2.41,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "NZB NIM FY24",
+          "value": 2.35,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 66,
+      "printed_page": 64,
+      "kind": "table",
+      "quote": "Net interest margin - statutory basis",
+      "numbers": [
+        {
+          "label": "NIM FY25 (Half Year ended Sep 25)",
+          "value": 1.74,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "NIM FY24 (Half Year ended Sep 24)",
+          "value": 1.71,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "NIM H1 FY25 (Half Year ended Mar 25)",
+          "value": 1.78,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
+    "generated": "2026-08-26T06:22:22+00:00",
+    "seconds": 52.0,
+    "cost_usd": 0.0009,
+    "tokens": "18699 in / 2589 out",
+    "orchestration": "pipeline"
+  }
+}
