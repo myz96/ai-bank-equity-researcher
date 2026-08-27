@@ -17,6 +17,8 @@ attribute the movement to drivers, and rate your confidence.
 THE CANONICAL DRIVER TAXONOMY for {metric_name} (use these canonical ids):
 {taxonomy}
 
+METHOD FOR THIS METRIC: {method_hint}
+
 BANK VOCABULARY AND LABEL MAP (from the bank registry):
 {registry}
 
@@ -63,6 +65,10 @@ ABSOLUTE RULES — never break these:
    the primary framing for your driver table — per the source hierarchy.
    Slide walks corroborate and annotate; where their framing differs, say so
    in a disagreement, but do not adopt the slide framing as primary.
+9. CLAIM THE WHOLE WALK. Claim every bar of the walk you adopt as primary —
+   including bars whose value is 0 and small +-1 bars. A published zero bar is
+   the bank's explicit statement that the driver contributed nothing this
+   period; leaving it unclaimed is a recall failure, not caution.
 
 UNITS: express from_value, to_value, delta, and every contribution ALL in
 "{unit}". Convert percentages when the unit is bps (2.08% = 208; a -3 bps move
@@ -114,6 +120,7 @@ def author_attribution(
             comparator=case["comparator"],
             unit=taxonomy["unit"],
             taxonomy=json.dumps(taxonomy["drivers"], indent=1),
+            method_hint=taxonomy.get("method_hint", "Follow the walk-first layered method."),
             registry=json.dumps(registry.get("measures", {}), indent=1)
             + "\n"
             + json.dumps(registry.get(f"{case['metric']}_walk_labels", registry.get("nim_walk_labels", {})), indent=1),

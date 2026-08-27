@@ -46,6 +46,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - [07 — Agent architecture](issues/07-agent-architecture.md) — shared deterministic tool layer with orchestration shells compared empirically in the POC (pipeline-with-bounded-loop vs single tool-calling agent; subagents deferred); source hierarchy with recency rule and a disagreement-reason enum; combo configs with a reasoning-aware glm-5.3 author (ox-alpha out of combos while rate-limited); never-guess enforced by schema validation, not prompt.
 - [18 — NAB and Westpac corpus](issues/18-acquire-nab-wbc-corpus.md) — all ten eval documents fetched and checksum-pinned by a background agent, incl. Westpac's Key Financial Information Excel packs.
 - [19 — CBA NIM POC](issues/19-cba-nim-poc.md) — pipeline POC 7/7 vs gold at $0.0011; ANZ cold start (agentic discovery + unregistered pipeline) 7/7 vs disclosure; Fable frontier benchmark sets the ceiling (framing reconciliation, walk-hides insight, calibrated 85–95 confidences) and the iteration agenda (tickets 20/22/24). ADR-0004 is the orchestration philosophy.
+- [25 — Cash-earnings bridge iteration](issues/25-cash-earnings-bridge-iteration.md) — delegated round hit the target: 4/4 components (single-case: full six-component bridge, residual zero, conf 95). Root causes were page starvation and a bogus walk marker, both fixed. glm-5.3 on the old evidence failed identically → the bottleneck was evidence coverage, not author tier; no per-metric tier built. Residual defects moved to ticket 27.
 
 ## Not yet specified
 

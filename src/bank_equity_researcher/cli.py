@@ -17,23 +17,44 @@ def main() -> int:
     analyse.add_argument("--comparator", default=None, help="defaults: FY->prior FY, half->PCP")
     analyse.add_argument("--combo", default="cheap", help="model combo: cheap | normal")
 
+    ask = sub.add_parser("ask", help="answer a free-form question from the corpus")
+    ask.add_argument("--bank", required=True, help="e.g. CBA, NAB, WBC")
+    ask.add_argument("--periods", required=True, help="comma-separated, e.g. FY26,FY25")
+    ask.add_argument("--question", required=True, help="the question to answer")
+    ask.add_argument("--combo", default="cheap", help="model combo: cheap | normal")
+
     discover_cmd = sub.add_parser("discover", help="agentically build a manifest for a bank")
     discover_cmd.add_argument("--bank", required=True)
     discover_cmd.add_argument("--periods", required=True, help="comma-separated, e.g. 1H26,1H25")
     discover_cmd.add_argument("--seed", required=True, help="the bank's homepage or IR page URL")
 
     evals_cmd = sub.add_parser("evals", help="run the eval harness")
-    evals_cmd.add_argument("action", choices=["run"])
+    evals_cmd.add_argument("action", choices=["run", "crossref"])
     evals_cmd.add_argument("--suite", default="dev", help="dev | holdout")
     evals_cmd.add_argument("--combo", default="cheap")
     evals_cmd.add_argument("--bank", default=None)
     args = parser.parse_args()
 
     if args.command == "evals":
-        from .evals import run_suite
+        if args.action == "crossref":
+            from .evals import run_crossref_suite
 
-        card = run_suite(args.suite, args.combo, args.bank)
+            card = run_crossref_suite(args.combo, args.bank)
+        else:
+            from .evals import run_suite
+
+            card = run_suite(args.suite, args.combo, args.bank)
         print("\n" + card.read_text())
+        return 0
+
+    if args.command == "ask":
+        from .ask import run_ask
+
+        _, out_dir = run_ask(
+            args.bank.upper(), args.periods.split(","), args.question, args.combo
+        )
+        print((out_dir / "answer.md").read_text())
+        print(f"\n[saved to {out_dir}]")
         return 0
 
     if args.command == "discover":

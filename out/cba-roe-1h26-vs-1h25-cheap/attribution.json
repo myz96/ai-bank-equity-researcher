@@ -1,0 +1,479 @@
+{
+  "bank": "CBA",
+  "metric": "roe",
+  "period": "1H26",
+  "comparator": "1H25",
+  "basis": "cash",
+  "movement": {
+    "from_value": 13.4,
+    "to_value": 13.8,
+    "delta": 0.4,
+    "unit": "ppt"
+  },
+  "headline": "CBA's cash ROE increased by 40 basis points to 13.8% in 1H26 (ev-1). This movement is driven by a positive earnings effect of approximately 35 basis points, derived from 6% growth in cash NPAT (ev-2), partially offset by a negative equity effect of approximately 5 basis points due to the increase in average net assets (ev-3). The bank confirms higher cash NPAT was partly offset by higher net assets.",
+  "drivers": [
+    {
+      "canonical": "earnings_effect",
+      "bank_label": null,
+      "contribution": {
+        "value": 0.35,
+        "unit": "ppt"
+      },
+      "narrative": "Derived contribution: Prior-period ROE (13.4%) multiplied by cash NPAT growth rate (6%, ev-2). Represents the lift at constant equity. Value is derived, not disclosed.",
+      "confidence": 85,
+      "evidence": [
+        "ev-1",
+        "ev-2",
+        "ev-6"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "equity_effect",
+      "bank_label": null,
+      "contribution": {
+        "value": 0.05,
+        "unit": "ppt"
+      },
+      "narrative": "Residual contribution: Total delta (0.4 ppt) minus earnings effect (0.35 ppt). Reflects the drag from higher average equity (78,004 vs 77,020, ev-3), likely driven by retained earnings and capital buffers.",
+      "confidence": 85,
+      "evidence": [
+        "ev-1",
+        "ev-3",
+        "ev-6"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
+  "notable_items": [],
+  "disagreements": [],
+  "attribution_confidence": 95,
+  "limitations": [
+    "The split between earnings and equity effects is an arithmetic derivation based on the canonical taxonomy, not a direct disclosure from the bank."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Return on equity (“cash basis”) increased 10 basis points to 13.8% due to higher cash NPAT being partly offset by higher net assets.",
+      "numbers": [
+        {
+          "label": "ROE 1H26",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE movement",
+          "value": 0.1,
+          "unit": "ppt",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Cash net profit after tax (“cash NPAT” or “cash profit”) from continuing operations increased $313 million or 6% on the prior comparative period to $5,445 million.",
+      "numbers": [
+        {
+          "label": "Cash NPAT 1H26",
+          "value": 5445.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash NPAT growth",
+          "value": 313.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash NPAT growth rate",
+          "value": 6.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 169,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Average net assets 78,004 77,020 74,176",
+      "numbers": [
+        {
+          "label": "Average net assets 31 Dec 25",
+          "value": 78004.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average net assets 30 Jun 25",
+          "value": 77020.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 169,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net average equity 78,004 77,020 74,176",
+      "numbers": [
+        {
+          "label": "Net average equity 31 Dec 25",
+          "value": 78004.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net average equity 30 Jun 25",
+          "value": 77020.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 169,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit after tax - \"cash basis\" 5,445 5,120 5,133",
+      "numbers": [
+        {
+          "label": "Cash profit 31 Dec 25",
+          "value": 5445.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash profit 30 Jun 25",
+          "value": 5120.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 169,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "ROE - \"cash basis\" (%) 13.8 13.4 13.7",
+      "numbers": [
+        {
+          "label": "ROE cash 31 Dec 25",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE cash 30 Jun 25",
+          "value": 13.4,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) Statutory basis 13.8 13.1",
+      "numbers": [
+        {
+          "label": "ROE Statutory 1H26",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE Statutory 1H25",
+          "value": 13.1,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) Cash basis 13.8 13.4",
+      "numbers": [
+        {
+          "label": "ROE Cash 1H26",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE Cash 1H25",
+          "value": 13.4,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Cash basis - basic EPS 325.7 306.2",
+      "numbers": [
+        {
+          "label": "Cash EPS 1H26",
+          "value": 325.7,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash EPS 1H25",
+          "value": 306.2,
+          "unit": "cents",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Dividend cover - \"cash basis\" (times) 1.4 1.2",
+      "numbers": [
+        {
+          "label": "Div Cover Cash 1H26",
+          "value": 1.4,
+          "unit": "ratio",
+          "basis": "cash"
+        },
+        {
+          "label": "Div Cover Cash 1H25",
+          "value": 1.2,
+          "unit": "ratio",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Average net assets 78,004 77,020 74,176",
+      "numbers": [
+        {
+          "label": "Average net assets 31 Dec 25",
+          "value": 78004.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average net assets 30 Jun 25",
+          "value": 77020.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net average equity 78,004 77,020 74,176",
+      "numbers": [
+        {
+          "label": "Net average equity 31 Dec 25",
+          "value": 78004.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net average equity 30 Jun 25",
+          "value": 77020.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit after tax - \"cash basis\" 5,445 5,120 5,132",
+      "numbers": [
+        {
+          "label": "Cash profit 31 Dec 25",
+          "value": 5445.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash profit 30 Jun 25",
+          "value": 5120.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "ROE - \"cash basis\" (%) 13.8 13.4 13.7",
+      "numbers": [
+        {
+          "label": "ROE cash 31 Dec 25",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE cash 30 Jun 25",
+          "value": 13.4,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit after tax - \"statutory basis\" 5,412 4,991 5,142",
+      "numbers": [
+        {
+          "label": "Statutory profit 31 Dec 25",
+          "value": 5412.0,
+          "unit": "$m",
+          "basis": "statutory"
+        },
+        {
+          "label": "Statutory profit 30 Jun 25",
+          "value": 4991.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "ROE - \"statutory basis\" (%) 13.8 13.1 13.8",
+      "numbers": [
+        {
+          "label": "ROE statutory 31 Dec 25",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE statutory 30 Jun 25",
+          "value": 13.1,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 53,
+      "printed_page": 53,
+      "kind": "text",
+      "quote": "Cash NPAT ($m) 5,445 +6.1%",
+      "numbers": [
+        {
+          "label": "Cash NPAT 1H26",
+          "value": 5445.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash NPAT growth",
+          "value": 6.1,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 53,
+      "printed_page": 53,
+      "kind": "text",
+      "quote": "ROE (cash) 13.8% +10bpts",
+      "numbers": [
+        {
+          "label": "ROE cash 1H26",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE cash movement",
+          "value": 0.1,
+          "unit": "ppt",
+          "basis": "cash"
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
+    "generated": "2026-08-27T07:39:57+00:00",
+    "seconds": 55.9,
+    "cost_usd": 0.0012,
+    "tokens": "24353 in / 3367 out",
+    "orchestration": "pipeline"
+  }
+}

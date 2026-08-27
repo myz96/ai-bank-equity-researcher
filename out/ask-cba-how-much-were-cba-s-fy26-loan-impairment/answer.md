@@ -1,0 +1,254 @@
+# Q: How much were CBA's FY26 loan impairment expenses and how did they compare to FY25?
+
+*CBA, periods FY26, FY25 — confidence 95/100*
+
+CBA's FY26 loan impairment expense was $788m, an increase from $726m in FY25. This represents a year-on-year rise of approximately 8.5% (ev-7). The figures are consistent across both statutory and cash bases as reported in the Profit Announcement (ev-1, ev-2).
+
+## Key facts
+
+- FY26 loan impairment expense was $788m.
+  > [ev-1] CBA/FY26/profit_announcement, PDF p88: "Loan impairment expense"
+  > [ev-2] CBA/FY26/profit_announcement, printed p2: "Loan impairment expense"
+- FY25 loan impairment expense was $726m.
+  > [ev-1] CBA/FY26/profit_announcement, PDF p88: "Loan impairment expense"
+  > [ev-2] CBA/FY26/profit_announcement, printed p2: "Loan impairment expense"
+- The expense increased by ~8.5% from FY25 to FY26.
+  > [ev-7] CBA/FY26/results_presentation, printed p24: "Loan impairment expense"
+
+## Limitations
+- T
+- h
+- e
+-  
+- e
+- v
+- i
+- d
+- e
+- n
+- c
+- e
+-  
+- p
+- r
+- o
+- v
+- i
+- d
+- e
+- s
+-  
+- t
+- o
+- t
+- a
+- l
+-  
+- c
+- o
+- n
+- s
+- o
+- l
+- i
+- d
+- a
+- t
+- e
+- d
+-  
+- f
+- i
+- g
+- u
+- r
+- e
+- s
+- .
+-  
+- S
+- e
+- g
+- m
+- e
+- n
+- t
+- -
+- l
+- e
+- v
+- e
+- l
+-  
+- v
+- a
+- r
+- i
+- a
+- n
+- c
+- e
+- s
+-  
+- (
+- R
+- B
+- S
+- ,
+-  
+- B
+- B
+- ,
+-  
+- I
+- B
+- &
+- M
+- ,
+-  
+- N
+- Z
+- )
+-  
+- a
+- r
+- e
+-  
+- p
+- r
+- o
+- v
+- i
+- d
+- e
+- d
+-  
+- i
+- n
+-  
+- e
+- v
+- -
+- 3
+-  
+- t
+- h
+- r
+- o
+- u
+- g
+- h
+-  
+- e
+- v
+- -
+- 6
+-  
+- b
+- u
+- t
+-  
+- d
+- o
+-  
+- n
+- o
+- t
+-  
+- s
+- u
+- m
+-  
+- c
+- l
+- e
+- a
+- n
+- l
+- y
+-  
+- t
+- o
+-  
+- t
+- h
+- e
+-  
+- t
+- o
+- t
+- a
+- l
+-  
+- c
+- h
+- a
+- n
+- g
+- e
+-  
+- d
+- u
+- e
+-  
+- t
+- o
+-  
+- p
+- o
+- t
+- e
+- n
+- t
+- i
+- a
+- l
+-  
+- F
+- X
+-  
+- o
+- r
+-  
+- o
+- t
+- h
+- e
+- r
+-  
+- a
+- d
+- j
+- u
+- s
+- t
+- m
+- e
+- n
+- t
+- s
+-  
+- n
+- o
+- t
+-  
+- d
+- e
+- t
+- a
+- i
+- l
+- e
+- d
+- .
+
+## Provenance
+- combo: cheap
+- models: extract=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash
+- documents: CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)
+- queries: ["How much were CBA's FY26 loan impairment expenses and how did they compare to FY25?", 'CBA FY26 loan impairment expense', 'Commonwealth Bank profit statement credit loss expense FY25 vs FY26', 'note on expected credit losses CBA annual report']
+- pages_read: ['CBA/FY26/profit_announcement p11', 'CBA/FY26/profit_announcement p8', 'CBA/FY26/profit_announcement p88', 'CBA/FY26/profit_announcement p99', 'CBA/FY26/profit_announcement p129', 'CBA/FY26/profit_announcement p27', 'CBA/FY26/results_presentation p56', 'CBA/FY26/results_presentation p69', 'CBA/FY26/results_presentation p24', 'CBA/FY26/results_presentation p78', 'CBA/FY26/results_presentation p138', 'CBA/FY26/results_presentation p18']
+- generated: 2026-08-27T07:11:00+00:00
+- seconds: 73.8
+- cost_usd: 0.0005
+- tokens: 12220 in / 1055 out

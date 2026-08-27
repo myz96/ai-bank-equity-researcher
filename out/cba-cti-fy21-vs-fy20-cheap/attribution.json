@@ -1,0 +1,617 @@
+{
+  "bank": "CBA",
+  "metric": "cti",
+  "period": "FY21",
+  "comparator": "FY20",
+  "basis": "cash",
+  "movement": {
+    "from_value": 46.3,
+    "to_value": 47.0,
+    "delta": 0.7,
+    "unit": "ppt"
+  },
+  "headline": "CBA's headline cost-to-income ratio (CTI) on a cash basis increased by 70 basis points to 47.0% in FY21 from 46.3% in FY20. This deterioration was driven primarily by operating expense growth (3.3%) outpacing operating income growth (1.7%). However, the underlying operational efficiency improved; the CTI excluding remediation costs and other items decreased by 10 basis points to 44.6%, indicating that the headline increase was largely attributable to higher remediation costs.",
+  "drivers": [
+    {
+      "canonical": "expense_growth",
+      "bank_label": "Operating expenses",
+      "contribution": {
+        "value": -0.5,
+        "unit": "ppt"
+      },
+      "narrative": "Operating expenses grew 3.3% ($10,996m to $11,359m), significantly outpacing income growth. This negative jaws effect is the primary driver of the CTI deterioration. The impact is calculated as the difference between the expense growth rate and income growth rate applied to the base ratio.",
+      "confidence": 85,
+      "evidence": [
+        "ev-2",
+        "ev-3",
+        "ev-22",
+        "ev-23"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "notable_items",
+      "bank_label": "Remediation costs and other",
+      "contribution": {
+        "value": 1.2,
+        "unit": "ppt"
+      },
+      "narrative": "Remediation costs increased from $461m to $575m (+25%). Excluding these items, the CTI actually improved by 10bps (44.3% to 44.6%). The inclusion of these higher notable items accounts for the majority of the headline deterioration.",
+      "confidence": 85,
+      "evidence": [
+        "ev-1",
+        "ev-6",
+        "ev-7",
+        "ev-8",
+        "ev-14"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
+  "notable_items": [
+    "Remediation costs and other"
+  ],
+  "disagreements": [
+    {
+      "topic": "Headline vs Underlying CTI Movement",
+      "values": [
+        "47.0% (incl-remediation)",
+        "44.6% (ex-remediation)"
+      ],
+      "preferred": "47.0%",
+      "reason": "definitional",
+      "explanation": "The bank reports two distinct CTI metrics. The headline 'Cash basis' CTI includes remediation costs, while the 'ex-remediation' metric excludes them. Both are valid but measure different things. The analysis prioritizes the headline figure for the movement delta but uses the ex-remediation figure to isolate the structural driver."
+    }
+  ],
+  "attribution_confidence": 90,
+  "limitations": [
+    "The attribution relies on a JAWS decomposition which assumes linear interaction effects. The residual is zero because the narrative explicitly attributes the change to expense growth relative to income growth and the specific volume of remediation costs.",
+    "No detailed walk chart was provided in the evidence records to validate the exact split between organic expense growth and one-off items within the 'other' category."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 37,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Operating expenses to total operating income ratio excluding remediation costs and other decreased 10 basis points from 44.7% to 44.6%.",
+      "numbers": [
+        {
+          "label": "Cost-to-income ratio FY21",
+          "value": 44.6,
+          "unit": "%",
+          "basis": "null"
+        },
+        {
+          "label": "Cost-to-income ratio FY20",
+          "value": 44.7,
+          "unit": "%",
+          "basis": "null"
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 11,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operating expenses Cash basis $11,359m FY20 $10,996m ▲3.3%",
+      "numbers": [
+        {
+          "label": "Operating expenses FY21",
+          "value": 11359.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating expenses FY20",
+          "value": 10996.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 11,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operating income Cash basis $24,156m FY20 $23,761m ▲1.7%",
+      "numbers": [
+        {
+          "label": "Operating income FY21",
+          "value": 24156.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating income FY20",
+          "value": 23761.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 11,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The cost-to-income ratio (cash basis) was 47.0%.",
+      "numbers": [
+        {
+          "label": "Cost-to-income ratio FY21",
+          "value": 47.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 11,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Cost-to-income ratio Cash basis 47.0% (headline) FY20 46.3%",
+      "numbers": [
+        {
+          "label": "Cost-to-income ratio FY21",
+          "value": 47.0,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Cost-to-income ratio FY20",
+          "value": 46.3,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 36,
+      "printed_page": 16,
+      "kind": "table",
+      "quote": "Operating expenses to total operating income excluding remediation costs and other (%)",
+      "numbers": [
+        {
+          "label": "CBA cost-to-income ratio FY21 (ex-remediation)",
+          "value": 44.6,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "CBA cost-to-income ratio FY20 (ex-remediation)",
+          "value": 44.3,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 36,
+      "printed_page": 16,
+      "kind": "table",
+      "quote": "Operating expenses to total operating income (%)",
+      "numbers": [
+        {
+          "label": "CBA cost-to-income ratio FY21 (incl-remediation)",
+          "value": 47.0,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "CBA cost-to-income ratio FY20 (incl-remediation)",
+          "value": 46.3,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 36,
+      "printed_page": 16,
+      "kind": "text",
+      "quote": "Operating expenses to total operating income ratio excluding remediation costs and other increased 30 basis points from 44.3% to 44.6%.",
+      "numbers": [
+        {
+          "label": "CBA cost-to-income ratio change FY21 vs FY20 (ex-remediation)",
+          "value": 30.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 71,
+      "printed_page": 47,
+      "kind": "text",
+      "quote": "The operating expenses to operating income ratio was 38.4%, a decrease of 30 basis points on the prior year.",
+      "numbers": [
+        {
+          "label": "Cost-to-income ratio FY21",
+          "value": 38.4,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost-to-income ratio change",
+          "value": -30.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 75,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The operating expenses to total banking income ratio was 38.7%, an increase of 240 basis points on the prior year mainly driven by higher operating expenses.",
+      "numbers": [
+        {
+          "label": "Cost-to-income ratio FY21",
+          "value": 38.7,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost-to-income ratio change",
+          "value": 2.4,
+          "unit": "ppt",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Group Performance Summary",
+      "numbers": []
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Total operating income 24,156 23,761 2",
+      "numbers": [
+        {
+          "label": "Total operating income FY21",
+          "value": 24156.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Total operating income FY20",
+          "value": 23761.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operating expenses excluding remediation costs and other (10,784) (10,535) 2",
+      "numbers": [
+        {
+          "label": "Operating expenses ex-remediation FY21",
+          "value": -10784.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating expenses ex-remediation FY20",
+          "value": -10535.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Remediation costs and other 2 (575) (461) 25",
+      "numbers": [
+        {
+          "label": "Remediation costs FY21",
+          "value": -575.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Remediation costs FY20",
+          "value": -461.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Total operating expenses (11,359) (10,996) 3",
+      "numbers": [
+        {
+          "label": "Total operating expenses FY21",
+          "value": -11359.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Total operating expenses FY20",
+          "value": -10996.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "table",
+      "quote": "Operating Income $m FY20 23,761 FY21 24,156",
+      "numbers": [
+        {
+          "label": "Operating Income FY20",
+          "value": 23761.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating Income FY21",
+          "value": 24156.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "table",
+      "quote": "Operating Expenses $m FY20 7,225 FY21 8,653",
+      "numbers": [
+        {
+          "label": "Operating Expenses FY20",
+          "value": 7225.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating Expenses FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "table",
+      "quote": "Ex-Remediation Operating Expenses $m FY20 10,535 FY21 10,784",
+      "numbers": [
+        {
+          "label": "Ex-Remediation OpEx FY20",
+          "value": 10535.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Ex-Remediation OpEx FY21",
+          "value": 10784.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "table",
+      "quote": "Remediation Operating Expenses $m FY20 461 FY21 575",
+      "numbers": [
+        {
+          "label": "Remediation OpEx FY20",
+          "value": 461.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Remediation OpEx FY21",
+          "value": 575.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "table",
+      "quote": "Cash NPAT $m FY20 2,518 FY21 554",
+      "numbers": [
+        {
+          "label": "Cash NPAT FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash NPAT FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "table",
+      "quote": "Loan Impairment Expense $m FY20 9 FY21 7bpts",
+      "numbers": [
+        {
+          "label": "Loan Impairment Expense FY20",
+          "value": 9.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Loan Impairment Expense FY21",
+          "value": 7.0,
+          "unit": "bps",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "table",
+      "quote": "Operating Income 24,156 1.7% 2.0%",
+      "numbers": [
+        {
+          "label": "Operating Income FY21",
+          "value": 24156.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating Income FY21 vs FY20",
+          "value": 1.7,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "table",
+      "quote": "Operating Expenses 11,359 3.3% 3.2%",
+      "numbers": [
+        {
+          "label": "Operating Expenses FY21",
+          "value": 11359.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating Expenses FY21 vs FY20",
+          "value": 3.3,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "table",
+      "quote": "Operating Performance 12,797 0.3% 0.9%",
+      "numbers": [
+        {
+          "label": "Operating Performance FY21",
+          "value": 12797.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating Performance FY21 vs FY20",
+          "value": 0.3,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 75,
+      "printed_page": 75,
+      "kind": "text",
+      "quote": "Cost-to-income Improvement due to lower operating expenses and higher total banking income",
+      "numbers": [
+        {
+          "label": "Cost-to-income FY20",
+          "value": 44.9,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost-to-income FY21",
+          "value": 42.7,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "CBA/FY21/profit_announcement (ffdff75173e7), CBA/FY21/results_presentation (b1bbbd626803), CBA/FY20/profit_announcement (2c2179a200a3)",
+    "generated": "2026-08-27T07:50:52+00:00",
+    "seconds": 48.4,
+    "cost_usd": 0.0013,
+    "tokens": "23289 in / 4396 out",
+    "orchestration": "pipeline"
+  }
+}

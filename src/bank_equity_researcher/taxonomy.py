@@ -34,13 +34,43 @@ TAXONOMY: dict[str, dict] = {
         "name": "cash earnings",
         "unit": "$m",
         "method": "bridge_extraction",
+        # One query per bridge component (the P&L section titles every bank's
+        # results book uses), so retrieval covers each component's own page
+        # rather than only summary/reconciliation pages (ticket 25).
         "retrieval_queries": [
             "cash earnings statutory net profit reconciliation non-cash items",
-            "group performance summary net interest income operating expenses impairment",
-            "operating income waterfall cash net profit after tax",
-            "net profit after tax cash basis continuing operations movement prior year",
+            "total operating income operating performance net profit after tax cash basis",
+            "net interest income increase average interest earning assets growth",
+            "other operating income commissions lending fees trading income",
+            "underlying operating expenses staff information technology restructuring notable items",
+            "operating expenses waterfall inflation investment technology productivity",
+            "loan impairment expense retail banking business banking new zealand movement",
+            "income tax expense effective tax rate",
         ],
-        "walk_markers": ["Statutory vs cash NPAT", "cash earnings bridge"],
+        # "Statutory vs cash NPAT" was removed as a walk marker (ticket 25):
+        # it marks a two-column LEVELS reconciliation table, not a movement
+        # bridge. The vision walk reader turned its comparator column into
+        # "bars", and the inevitable walk_sum failure fatally capped
+        # confidence. The reconciliation still reaches the author as
+        # text/table evidence via the first retrieval query.
+        "walk_markers": ["cash earnings bridge", "cash earnings walk"],
+        "method_hint": (
+            "Build the bridge from component MOVEMENTS in $m: net interest income, other "
+            "operating income, UNDERLYING operating expenses (state notable/restructuring "
+            "items separately, never inside the underlying number), credit impairment, and "
+            "tax. When a table shows both periods' levels, compute the delta yourself and "
+            "cite the table (e.g. expenses and tax are usually disclosed as levels for both "
+            "periods). Claim tax_and_other as a quantified component from the tax expense "
+            "movement, and claim the notable/restructuring items DELTA as its own "
+            "notable_items component; declare a residual only for what genuinely remains. "
+            "Say explicitly whether an expense figure is underlying or headline. "
+            "NEVER claim statutory-to-cash reconciliation items (hedging/IFRS volatility, "
+            "disposal gains and losses) as bridge drivers: they explain why statutory "
+            "differs from cash in the SAME period, not why cash earnings moved year on "
+            "year. When the reconciliation is in evidence, the headline MUST also give the "
+            "statutory movement next to the cash movement and name the non-cash items that "
+            "separate them."
+        ),
         "drivers": {
             "nii": "Net interest income total (claim this when volume/margin are not separately quantified in dollars)",
             "nii.volume": "Net interest income: volume (AIEA growth)",
@@ -62,8 +92,30 @@ TAXONOMY: dict[str, dict] = {
             "return on equity cash basis average shareholders equity",
             "key performance indicators return on equity",
             "shareholders equity dividends buyback capital",
+            # The level-1 derivation needs the earnings movement itself.
+            "net profit after tax cash basis increase prior year",
         ],
+        "extract_focus": (
+            "also extract the cash profit levels for both periods and the profit growth "
+            "rate, plus any average equity figures — the ROE numerator and denominator"
+        ),
         "walk_markers": [],
+        "method_hint": (
+            "Quantify the movement from the KPI table (both periods, in ppt). Level 1 is an "
+            "ARITHMETIC DERIVATION, not a disclosure hunt: with the ROE endpoints and the "
+            "earnings growth rate in evidence, compute earnings_effect = prior-period ROE x "
+            "earnings growth (the ppt lift at constant equity), and equity_effect = total "
+            "delta minus earnings_effect (equity growth and the interaction term). Claim "
+            "both as quantified contributions, citing the KPI-table and earnings-movement "
+            "records, and say in each narrative that the value is derived, not disclosed. "
+            "The earnings growth rate must come from an evidence record (the profit "
+            "movement in $m or %); NEVER infer it from the ROE endpoints themselves and "
+            "NEVER assume the equity effect is zero — if the earnings movement is missing, "
+            "request it as evidence. Support equity_effect's direction with cited "
+            "reasoning (retained earnings, buybacks, DRP treatment). Only leave the split "
+            "unquantified when the ROE endpoints or the earnings movement are genuinely "
+            "missing from evidence."
+        ),
         "drivers": {
             "earnings_effect": "Movement in cash earnings at constant equity",
             "equity_effect": "Movement in average equity at constant earnings",
@@ -105,6 +157,19 @@ TAXONOMY: dict[str, dict] = {
             "provisions for impairment asset quality",
         ],
         "walk_markers": [],
+        "method_hint": (
+            "Quantify the movement components in $m. The results book discloses the "
+            "impairment line PER DIVISION for both periods (a table and/or bullets like "
+            "'Retail +106 to 378'): when the bullets omit the delta, COMPUTE each "
+            "division's delta from the two period columns and cite the table. Attribute "
+            "each divisional delta to collective vs individually assessed provision "
+            "drivers as the text states, sum them, and declare the small remainder (e.g. "
+            "a corporate-centre division) as the residual — never force-fit. Decompose the "
+            "P&L impairment CHARGE line itself: movements in provision BALANCES on the "
+            "balance sheet are context for the narrative, never the quantified bridge (a "
+            "provision-stock delta is not the period's charge). Always quote the loss "
+            "rate in bps with the bank's denominator named."
+        ),
         "drivers": {
             "individual_provisions": "Individually assessed / single-name provisions",
             "collective.volume": "Collective provisions: portfolio growth",

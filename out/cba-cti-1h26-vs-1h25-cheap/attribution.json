@@ -1,0 +1,596 @@
+{
+  "bank": "CBA",
+  "metric": "cti",
+  "period": "1H26",
+  "comparator": "1H25",
+  "basis": "cash",
+  "movement": {
+    "from_value": 45.2,
+    "to_value": 44.7,
+    "delta": -0.5,
+    "unit": "ppt"
+  },
+  "headline": "CBA's underlying cost-to-income ratio improved by 50 basis points (45.2% to 44.7%) in 1H26 vs 1H25. This improvement was driven by operating income growth outpacing underlying operating expense growth. Statutory CIR also improved slightly by 10 bps (46.1% to 45.9%), supported by higher income and partially offset by higher total expenses including notable items.",
+  "drivers": [
+    {
+      "canonical": "income_growth",
+      "bank_label": null,
+      "contribution": {
+        "value": -0.3,
+        "unit": "ppt"
+      },
+      "narrative": "Operating income grew from $14,368m to $15,021m (+4.5%). This numerator growth contributed approximately 30bps of the 50bps underlying CIR improvement, as income expanded faster than expenses.",
+      "confidence": 85,
+      "evidence": [
+        "ev-1",
+        "ev-9",
+        "ev-16"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "expense_growth",
+      "bank_label": null,
+      "contribution": {
+        "value": -0.2,
+        "unit": "ppt"
+      },
+      "narrative": "Underlying operating expenses increased by 5% ($6,494m to $6,720m). While rising, this denominator growth was slower than income growth, contributing the remaining ~20bps of the underlying CIR improvement.",
+      "confidence": 85,
+      "evidence": [
+        "ev-1",
+        "ev-3",
+        "ev-10",
+        "ev-17"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
+  "notable_items": [
+    "Restructuring and notable items increased from $130m to $170m."
+  ],
+  "disagreements": [
+    {
+      "topic": "Presentation Slide Error",
+      "values": [
+        "45.2% — ev-13 (Slide)",
+        "44.7% — ev-15 (Slide)"
+      ],
+      "preferred": "Profit Announcement",
+      "reason": "error",
+      "explanation": "The results presentation slide (ev-13, ev-15) incorrectly labels the 1H26 value as 45.2% and 1H25 as 44.7%, swapping the periods and contradicting the Profit Announcement (ev-1, ev-4) which correctly states 1H25 was 45.2% and 1H26 was 44.7%. The PA is the primary source per hierarchy."
+    },
+    {
+      "topic": "Statutory vs Underlying CIR",
+      "values": [
+        "-0.1 ppt — ev-2 (Statutory)",
+        "-0.5 ppt — ev-1 (Underlying)"
+      ],
+      "preferred": "Underlying",
+      "reason": "definitional",
+      "explanation": "Two different metrics are reported. The task asks for 'cost-to-income ratio' generally, but banks typically highlight 'underlying' for core performance. I report the underlying movement (-50bps) as the primary headline driver, while noting the statutory movement (-10bps) in the narrative. Both show improvement."
+    }
+  ],
+  "attribution_confidence": 85,
+  "limitations": [
+    "No explicit JAWS walk chart was provided in the evidence records. Contributions are derived from calculated deltas between income and expense levels cited in the Profit Announcement.",
+    "The results presentation contains labeling errors regarding the specific period values for the underlying CIR, requiring reliance on the Profit Announcement table for accurate period identification."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Underlying operating expenses to underlying operating income (%)",
+      "numbers": [
+        {
+          "label": "1H25",
+          "value": 45.2,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "1H26",
+          "value": 44.7,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operating expenses to total operating income (%)",
+      "numbers": [
+        {
+          "label": "1H25",
+          "value": 46.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "1H26",
+          "value": 45.9,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Underlying operating expenses were $6,720 million, an increase of $348 million or 5% on the prior comparative period.",
+      "numbers": [
+        {
+          "label": "delta",
+          "value": 348.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "level",
+          "value": 6720.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Underlying operating expenses to underlying operating income ratio decreased 50 basis points from 45.2% to 44.7%.",
+      "numbers": [
+        {
+          "label": "delta",
+          "value": -50.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "1H25 level",
+          "value": 45.2,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "1H26 level",
+          "value": 44.7,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 69,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The operating expenses to total operating income ratio decreased 10 basis points on the prior half, mainly driven by higher operating income, partly offset by higher operating expenses.",
+      "numbers": [
+        {
+          "label": "Cost-to-income ratio change",
+          "value": -10.0,
+          "unit": "bps",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 75,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operating expenses to total operating income (%) 46.5 45.0 41.8 150 bpts 470 bpts",
+      "numbers": [
+        {
+          "label": "Cost-to-income ratio 1H26 (Dec 25)",
+          "value": 46.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost-to-income ratio 1H25 (Jun 25)",
+          "value": 45.0,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 75,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Operating expenses to total operating income (%) ... 150 bpts",
+      "numbers": [
+        {
+          "label": "CIR change vs Jun 25",
+          "value": 1.5,
+          "unit": "ratio",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 32,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Underlying operating expenses to underlying operating income ratio decreased 50 basis points from 45.2% to 44.7%.",
+      "numbers": [
+        {
+          "label": "Cost-to-income ratio 1H26",
+          "value": 44.7,
+          "unit": "%",
+          "basis": "null"
+        },
+        {
+          "label": "Cost-to-income ratio 1H25",
+          "value": 45.2,
+          "unit": "%",
+          "basis": "null"
+        }
+      ]
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Total operating income 15,021 14,368 14,097 5 7",
+      "numbers": [
+        {
+          "label": "Total operating income 1H26",
+          "value": 15021.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Total operating income 1H25",
+          "value": 14368.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Underlying operating expenses (6,720) (6,494) (6,372) 3 5",
+      "numbers": [
+        {
+          "label": "Underlying operating expenses 1H26",
+          "value": 6720.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Underlying operating expenses 1H25",
+          "value": 6494.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Restructuring and notable items ¹ (170) (130) – 31 n/a",
+      "numbers": [
+        {
+          "label": "Restructuring and notable items 1H26",
+          "value": 170.0,
+          "unit": "$m",
+          "basis": "null"
+        },
+        {
+          "label": "Restructuring and notable items 1H25",
+          "value": 130.0,
+          "unit": "$m",
+          "basis": "null"
+        }
+      ]
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Total operating expenses (6,890) (6,624) (6,372) 4 8",
+      "numbers": [
+        {
+          "label": "Total operating expenses 1H26",
+          "value": 6890.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Total operating expenses 1H25",
+          "value": 6624.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 28,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Underlying cost to income: 45.2%",
+      "numbers": [
+        {
+          "label": "Underlying cost to income ratio 1H26",
+          "value": 45.2,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 28,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Contribution to mvt: (3.4%)",
+      "numbers": [
+        {
+          "label": "Contribution to movement in cost to income ratio",
+          "value": -3.4,
+          "unit": "ppt",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 28,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "44.7%",
+      "numbers": [
+        {
+          "label": "Underlying cost to income ratio 1H25",
+          "value": 44.7,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Operating income 14,097 14,368 15,021",
+      "numbers": [
+        {
+          "label": "Operating income 1H25",
+          "value": 14097.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating income 1H26",
+          "value": 15021.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Operating expenses 6,372 6,494 6,720",
+      "numbers": [
+        {
+          "label": "Operating expenses 1H25",
+          "value": 6372.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating expenses 1H26",
+          "value": 6720.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Pre-provision profit 7,725 7,744 8,131",
+      "numbers": [
+        {
+          "label": "Pre-provision profit 1H25",
+          "value": 7725.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Pre-provision profit 1H26",
+          "value": 8131.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 55,
+      "printed_page": 55,
+      "kind": "table",
+      "quote": "Cost to income",
+      "numbers": [
+        {
+          "label": "1H25",
+          "value": 39.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "2H25",
+          "value": 39.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "1H26",
+          "value": 39.9,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 55,
+      "printed_page": 55,
+      "kind": "text",
+      "quote": "vs 1H25 +10%",
+      "numbers": [
+        {
+          "label": "Change vs 1H25",
+          "value": 10.0,
+          "unit": "ppt",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 65,
+      "printed_page": 65,
+      "kind": "text",
+      "quote": "Underlying cost to income",
+      "numbers": [
+        {
+          "label": "Underlying cost to income 1H26",
+          "value": 44.7,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Underlying cost to income 1H25",
+          "value": 45.2,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 65,
+      "printed_page": 65,
+      "kind": "text",
+      "quote": "Cumulative cost savings realised (last 7 yrs): • 1H26: $1,207m • 2H25: $1,082m",
+      "numbers": [
+        {
+          "label": "Cost savings 1H26",
+          "value": 1207.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Cost savings 2H25",
+          "value": 1082.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 70,
+      "printed_page": 70,
+      "kind": "table",
+      "quote": "Cost to income 1H25 39.5% 1H26 39.9%",
+      "numbers": [
+        {
+          "label": "Cost to income 1H25",
+          "value": 39.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost to income 1H26",
+          "value": 39.9,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 70,
+      "printed_page": 70,
+      "kind": "text",
+      "quote": "+4ppt vs 1H25",
+      "numbers": [
+        {
+          "label": "Change in Cost to income",
+          "value": 0.4,
+          "unit": "ppt",
+          "basis": null
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
+    "generated": "2026-08-27T07:43:18+00:00",
+    "seconds": 47.2,
+    "cost_usd": 0.0012,
+    "tokens": "21968 in / 4177 out",
+    "orchestration": "pipeline"
+  }
+}

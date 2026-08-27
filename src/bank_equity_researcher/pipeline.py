@@ -19,7 +19,14 @@ from .schema import Attribution
 from .taxonomy import METRIC_ALIASES, TAXONOMY
 from .validate import check_drivers_reconcile, check_movement, check_walk, corroborate, cross_source_view
 
-MAX_TEXT_PAGES = 10
+MAX_TEXT_PAGES = 14
+# Text pages are also capped per document (ticket 25): the doc-type-ranked
+# ordering let the FY26 Profit Announcement's ~20 candidate pages fill every
+# slot, so the presentation's income and expense waterfall slides — the only
+# pages carrying the bridge quantification — were never extracted. The cap
+# keeps the source hierarchy (books still read first) while guaranteeing the
+# lower-ranked documents a share of the budget.
+MAX_TEXT_PAGES_PER_DOC = 7
 # Per document, so the Profit Announcement cannot crowd out the presentation's
 # walk — cross-document corroboration needs both framings extracted.
 MAX_WALK_PAGES_PER_DOC = 2
@@ -43,6 +50,11 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     comparator = comparator or default_comparator(period)
     case = {"bank": bank, "metric": metric_key, "period": period, "comparator": comparator}
     case_desc = f"{bank} {metric_cfg['name']} in {period} vs {comparator}"
+    # Derived metrics (ROE, CTI) need their identity INPUTS extracted too; a
+    # literal-minded extractor otherwise drops profit/equity rows as
+    # irrelevant to "return on equity" (ticket 25 follow-up).
+    if metric_cfg.get("extract_focus"):
+        case_desc += f" ({metric_cfg['extract_focus']})"
 
     registry_path = REGISTRY_DIR / f"{bank.lower()}.json"
     registry = json.loads(registry_path.read_text()) if registry_path.exists() else {}
@@ -51,13 +63,14 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     if not docs:
         raise RuntimeError(f"no documents in corpus for {bank} {period}/{comparator}")
 
-    # 1. Retrieve candidate pages per query, per document.
-    candidates: set[tuple[str, int]] = set()
+    # 1. Retrieve candidate pages per query, per document, keeping scores.
+    candidates: dict[tuple[str, int], float] = {}
     doc_by_id: dict[str, Document] = {d.doc_id: d for d in docs}
     for query in metric_cfg["retrieval_queries"]:
         for doc in docs:
-            for page in retrieve(doc, query, top_k=4):
-                candidates.add((doc.doc_id, page))
+            for page, score in retrieve(doc, query, top_k=4):
+                key = (doc.doc_id, page)
+                candidates[key] = max(candidates.get(key, 0.0), score)
 
     # 2. Walk pages come from a deterministic marker scan over the
     # current-period documents (retrieval luck must not decide walk coverage);
@@ -83,16 +96,34 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     # walks corroborate. Books first, so the author reads them first.
     book_types = ("profit_announcement", "results_announcement", "results_book")
     walk_pages.sort(key=lambda dp: 0 if doc_by_id[dp[0]].doc_type in book_types else 1)
-    # Current-period documents first: a plain alphabetical sort starved the
-    # author of current-period evidence (FY25 < FY26 lexically), which sank
-    # five of seven cases on the first scorecard.
+    # Page priority = (current period first, then the source hierarchy).
+    # Alphabetical ordering starved authors twice: FY25 < FY26 lexically
+    # (scorecard 1), then asx_announcement < profit_announcement put the
+    # 4-page media release ahead of the results book (ticket 25).
+    DOC_TYPE_RANK = {
+        "profit_announcement": 0, "results_announcement": 0, "results_book": 0,
+        "results_presentation": 1, "investor_presentation": 1, "investor_discussion_pack": 1,
+        "asx_announcement": 2,
+    }
+
     def page_order(dp: tuple[str, int]):
         doc = doc_by_id[dp[0]]
-        return (0 if doc.period == period else 1, dp[0], dp[1])
+        return (
+            0 if doc.period == period else 1,
+            DOC_TYPE_RANK.get(doc.doc_type, 3),
+            -candidates.get(dp, 0.0),
+            dp[1],
+        )
 
-    text_pages = [
-        dp for dp in sorted(candidates, key=page_order) if dp not in set(walk_pages)
-    ][:MAX_TEXT_PAGES]
+    text_pages: list[tuple[str, int]] = []
+    pages_per_doc: dict[str, int] = {}
+    for dp in sorted(candidates, key=page_order):
+        if dp in set(walk_pages) or pages_per_doc.get(dp[0], 0) >= MAX_TEXT_PAGES_PER_DOC:
+            continue
+        text_pages.append(dp)
+        pages_per_doc[dp[0]] = pages_per_doc.get(dp[0], 0) + 1
+        if len(text_pages) >= MAX_TEXT_PAGES:
+            break
 
     # 3. Extract evidence.
     counter = iter(range(1, 1000))
@@ -126,9 +157,9 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     def fetch_more(query: str):
         extra = []
         for doc in docs:
-            for page in retrieve(doc, query, top_k=2):
+            for page, score in retrieve(doc, query, top_k=2):
                 if (doc.doc_id, page) not in candidates:
-                    candidates.add((doc.doc_id, page))
+                    candidates[(doc.doc_id, page)] = score
                     extra.extend(extract_text_evidence(llm, combo.extract, doc, page, case_desc, next_id))
         return extra
 
@@ -176,6 +207,12 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     # a broken read of a peripheral page must not sink a validated answer.
     peripheral = [f for f in validation["failed"] if f.startswith("walk_extraction_error")]
     fatal = output_failed + [f for f in validation["failed"] if not f.startswith("walk_extraction_error")]
+    # For arithmetic-derivation metrics (ROE, CTI) full driver quantification
+    # is often genuinely undisclosed; an honest unquantified attribution is
+    # not a fatal failure there (it stays visible as a limitation).
+    if metric_cfg["method"] == "two_level_arithmetic":
+        fatal = [f for f in fatal if f != "no_quantified_drivers"]
+        peripheral += [f for f in output_failed if f == "no_quantified_drivers"]
     if peripheral and "walk_sum" not in validation["passed"]:
         fatal += peripheral
         peripheral = []

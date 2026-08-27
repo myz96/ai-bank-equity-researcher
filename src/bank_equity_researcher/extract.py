@@ -22,10 +22,23 @@ relevant to the task as JSON only:
 
 Rules:
 - Quotes must be VERBATIM from the page text. Never paraphrase inside "quote".
+- TABLES: emit one record per relevant row. quote = the row label with its
+  printed values (e.g. "Net interest income 25,586 24,023 7"). numbers = one
+  entry per period column with the period in the label (e.g. "NII FY26",
+  "NII FY25"). A heading alone is NOT a record.
+- A performance-summary table (income, expenses, impairment, tax, profit rows)
+  is the highest-value content: cover EVERY line row with both period columns,
+  before anything else on the page.
+- MOVEMENT STATEMENTS: when the text states a change (e.g. "increased $62
+  million or 9% to $788 million"), keep the full statement in the quote and
+  emit BOTH the signed delta (e.g. +62) and the level (788) as numbers.
+- DIVISIONAL DETAIL: rows or bullets that break the task's metric down by
+  division, segment, or product are core evidence, not background — extract
+  each one with both period columns (and any stated change).
 - Extract only what is on this page. If nothing is relevant, return [].
 - Percentages: keep the unit "%" and the printed value (2.05% -> value 2.05).
 - Negative values in parentheses are negative numbers.
-- At most 6 records for this page; prefer tables and quantified statements.
+- At most 10 records for this page; prefer table rows and quantified statements.
 
 PAGE TEXT:
 {page_text}"""
@@ -99,7 +112,15 @@ def extract_walk(llm: LLM, model: str, doc: Document, page_no: int, case: str, n
         walk = llm.chat_json(model, prompt, image_png=png, max_tokens=3000)
     except ValueError:
         # One retry: vision replies occasionally truncate or mangle JSON.
-        walk = llm.chat_json(model, prompt, image_png=png, max_tokens=3000)
+        # At temperature 0 an identical retry tends to fail identically
+        # (the nim-FY26 p28 walk failed twice on an unterminated string), so
+        # the retry nudges the format and raises the output budget.
+        walk = llm.chat_json(
+            model,
+            prompt + "\nReply with COMPLETE terminated JSON only - no prose, no trailing text.",
+            image_png=png,
+            max_tokens=4000,
+        )
     # A null bar value is a partial read, not a crash (defect 23): drop the
     # bar and record the gap on the walk.
     bars = walk.get("bars", [])

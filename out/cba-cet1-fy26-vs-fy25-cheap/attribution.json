@@ -10,26 +10,8 @@
     "delta": -30.0,
     "unit": "bps"
   },
-  "headline": "CBA's APRA Level 2 CET1 ratio declined by 30 bps in FY26, settling at 12.0% (ev-7, ev-15). This movement is primarily driven by cash NPAT generation of +106 bps, partially offset by dividend distributions net of DRP (-76 bps), credit RWA growth (-46 bps), and other deductions (-8 bps) as detailed in the results presentation walk charts (ev-1, ev-2).",
+  "headline": "CBA's CET1 ratio declined by 30 bps to 12.0% in FY26 (Level 2). The primary detractor was dividends net of DRP (-76 bps), partially offset by earnings generation (+106 bps) and RWA reductions (-46 bps). Other deductions contributed a minor drag of -8 bps.",
   "drivers": [
-    {
-      "canonical": "earnings_generation",
-      "bank_label": "Cash NPAT",
-      "contribution": {
-        "value": 106.0,
-        "unit": "bps"
-      },
-      "narrative": "Cash NPAT contributed +106 bps to the CET1 ratio, representing the primary source of capital generation during the period.",
-      "confidence": 85,
-      "evidence": [
-        "ev-1",
-        "ev-2"
-      ],
-      "checks_passed": [
-        "single_source"
-      ],
-      "checks_failed": []
-    },
     {
       "canonical": "dividend_net_drp",
       "bank_label": "1H26 dividend (DRP neutralised)",
@@ -37,12 +19,30 @@
         "value": -76.0,
         "unit": "bps"
       },
-      "narrative": "Dividends net of DRP reduced the ratio by 76 bps. The interim dividend included a $530m on-market purchase impacting CET1 by -10 bps (ev-12).",
-      "confidence": 85,
+      "narrative": "Dividends paid net of the Dividend Reinvestment Plan reduced capital. This includes on-market share purchases related to the DRP.",
+      "confidence": 95,
       "evidence": [
         "ev-1",
         "ev-2",
-        "ev-12"
+        "ev-5",
+        "ev-12",
+        "ev-23"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "earnings_generation",
+      "bank_label": "Cash NPAT",
+      "contribution": {
+        "value": 106.0,
+        "unit": "bps"
+      },
+      "narrative": "Capital generated from cash net profit after tax provided the largest positive contribution to the CET1 ratio.",
+      "confidence": 85,
+      "evidence": [
+        "ev-1",
+        "ev-2"
       ],
       "checks_passed": [
         "single_source"
@@ -56,12 +56,15 @@
         "value": -46.0,
         "unit": "bps"
       },
-      "narrative": "Credit risk RWA movements resulted in a -46 bps impact, consistent with the AS announcement noting deployment of 72 bpts of capital into credit RWA (ev-4).",
-      "confidence": 95,
+      "narrative": "Reductions in Risk-Weighted Assets supported the ratio. While the PA table breaks this into credit/IRRBB/market components, the walk aggregates them as 'RWA'.",
+      "confidence": 90,
       "evidence": [
         "ev-1",
         "ev-2",
-        "ev-4"
+        "ev-7",
+        "ev-13",
+        "ev-14",
+        "ev-15"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -73,7 +76,7 @@
         "value": -8.0,
         "unit": "bps"
       },
-      "narrative": "Other factors, including capital deductions and reserves, contributed a net -8 bps to the CET1 ratio movement.",
+      "narrative": "Minor negative impact from other capital deductions or reserves not captured in the main drivers.",
       "confidence": 85,
       "evidence": [
         "ev-1",
@@ -87,7 +90,18 @@
   ],
   "residual": null,
   "notable_items": [],
-  "disagreements": [],
+  "disagreements": [
+    {
+      "topic": "RWA Driver Granularity",
+      "values": [
+        "-46 bps — CBA/FY26/results_presentation (ev-1, ev-2)",
+        "-16 bps Credit + 8 bps IRRBB + 2 bps Operational — CBA/FY26/profit_announcement (ev-7)"
+      ],
+      "preferred": "Walk Chart Aggregation",
+      "reason": "definitional",
+      "explanation": "The results presentation walk aggregates all risk-weighted asset movements into a single '-46 bps' bar labeled 'RWA'. The Profit Announcement table disaggregates this into specific risk types (Credit, IRRBB, Operational). Both are consistent (summing to -46 bps), but the walk is the primary source for the requested taxonomy."
+    }
+  ],
   "attribution_confidence": 95,
   "limitations": [],
   "evidence_records": [
@@ -131,7 +145,7 @@
       "pdf_page": 106,
       "printed_page": 106,
       "kind": "walk_vision",
-      "quote": "[walk chart] CET1 capital ratio movements: Dec 25 Level 2 1230 -> Jun 26 Level 2 1200",
+      "quote": "[walk chart] CET1 capital ratio movements: Dec 25 Level 2 1230.0 -> Jun 26 Level 2 1200.0",
       "numbers": [
         {
           "label": "1H26 dividend (DRP neutralised)",
@@ -161,114 +175,34 @@
     },
     {
       "id": "ev-3",
-      "doc_id": "CBA/FY26/asx_announcement",
-      "pdf_page": 2,
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 48,
       "printed_page": null,
       "kind": "table",
-      "quote": "Common Equity Tier 1 Capital ratio 12.0% (APRA Level 2) 30bpts on Jun 25",
+      "quote": "Common Equity Tier 1 (CET1) 12.0 12.3 12.3 (30)bpts (30)bpts",
       "numbers": [
         {
-          "label": "CET1 Ratio FY26",
+          "label": "CET1 FY26",
           "value": 12.0,
           "unit": "%",
-          "basis": "statutory"
+          "basis": null
+        },
+        {
+          "label": "CET1 Dec 25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 Jun 25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
         }
       ]
     },
     {
       "id": "ev-4",
-      "doc_id": "CBA/FY26/asx_announcement",
-      "pdf_page": 2,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The Group’s Common Equity Tier 1 (CET1) ratio of 12.0% was well above APRA’s minimum regulatory requirement of 10.25%. Across the year we deployed 72bpts of capital into credit risk weighted assets",
-      "numbers": [
-        {
-          "label": "CET1 Ratio FY26",
-          "value": 12.0,
-          "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "Capital Deployment",
-          "value": 0.72,
-          "unit": "ratio",
-          "basis": "null"
-        }
-      ]
-    },
-    {
-      "id": "ev-5",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 9,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Common Equity Tier 1 (CET1) ratio of 12.0% was well above APRA’s minimum regulatory requirement of 10.25%.",
-      "numbers": [
-        {
-          "label": "CET1 ratio",
-          "value": 12.0,
-          "unit": "%",
-          "basis": "null"
-        }
-      ]
-    },
-    {
-      "id": "ev-6",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 9,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "30bpts on Jun 25",
-      "numbers": [
-        {
-          "label": "CET1 change from Jun 25",
-          "value": 0.3,
-          "unit": "ppt",
-          "basis": "null"
-        }
-      ]
-    },
-    {
-      "id": "ev-7",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 26,
-      "printed_page": 3,
-      "kind": "text",
-      "quote": "CET1 was 12.0% as at 30 June 2026, compared to 12.3% as at 31 December 2025",
-      "numbers": [
-        {
-          "label": "CET1 Ratio FY26",
-          "value": 12.0,
-          "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "CET1 Ratio Dec 2025",
-          "value": 12.3,
-          "unit": "%",
-          "basis": "statutory"
-        }
-      ]
-    },
-    {
-      "id": "ev-8",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 26,
-      "printed_page": 3,
-      "kind": "text",
-      "quote": "Excluding the impact of the payment of the 2026 interim dividend, CET1 increased 52 basis points",
-      "numbers": [
-        {
-          "label": "CET1 Increase Ex-Dividend",
-          "value": 0.52,
-          "unit": "ppt",
-          "basis": "ex_notables"
-        }
-      ]
-    },
-    {
-      "id": "ev-9",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 48,
       "printed_page": null,
@@ -276,44 +210,177 @@
       "quote": "The Group’s CET1 Capital ratio was 12.0% as at 30 June 2026, a decrease of 30 basis points from 31 December 2025 and 30 June 2025.",
       "numbers": [
         {
-          "label": "CET1 Ratio FY26",
+          "label": "CET1 Level Jun 26",
           "value": 12.0,
           "unit": "%",
-          "basis": "null"
+          "basis": null
         },
         {
-          "label": "CET1 Ratio FY25 (Jun)",
-          "value": 12.3,
-          "unit": "%",
-          "basis": "null"
+          "label": "CET1 Delta vs Dec 25",
+          "value": -30.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "CET1 Delta vs Jun 25",
+          "value": -30.0,
+          "unit": "bps",
+          "basis": null
         }
       ]
     },
     {
-      "id": "ev-10",
+      "id": "ev-5",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The 2026 interim dividend included the on-market purchase of $530 million of shares (CET1 impact of -10 bpts)",
+      "numbers": [
+        {
+          "label": "DRP Share Buyback Value",
+          "value": 530.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "CET1 Impact DRP",
+          "value": -10.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "As at 30 June 2026, the Group has completed $300 million of the $1 billion on-market share buy-back previously announced on 9 August 2023",
+      "numbers": [
+        {
+          "label": "Buyback Completed",
+          "value": 300.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Buyback Total Announced",
+          "value": 1000.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 48,
       "printed_page": null,
       "kind": "table",
-      "quote": "Common Equity Tier 1 (CET1) | 12.0 | 12.3 | 12.3 | (30)bpts | (30)bpts",
+      "quote": "Dec 25 Level 2 1H26 Dividend Cash NPAT RWA Other Jun 26 Level 2 5 (38) Credit 4 (16) IRRBB 8 Market - Operational 2 3",
+      "numbers": [
+        {
+          "label": "CET1 Level Dec 25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Dividend Impact",
+          "value": -38.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "NPAT Impact",
+          "value": 5.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "RWA Impact",
+          "value": -16.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Credit Risk Impact",
+          "value": -38.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "IRRBB Impact",
+          "value": 8.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Operational Risk Impact",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Other Impact",
+          "value": 3.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "CET1 Level Jun 26",
+          "value": 12.0,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 120,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Common Equity Tier 1",
+      "numbers": [
+        {
+          "label": "CET1 Ratio FY26",
+          "value": 12.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 Ratio FY25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 32,
+      "printed_page": 32,
+      "kind": "text",
+      "quote": "Strong capital position maintained, supporting franchise growth and dividends",
+      "numbers": []
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 32,
+      "printed_page": 32,
+      "kind": "table",
+      "quote": "12.3%",
       "numbers": [
         {
           "label": "CET1 Ratio Jun 26",
-          "value": 12.0,
-          "unit": "%",
-          "basis": "null"
-        },
-        {
-          "label": "CET1 Ratio Dec 25",
           "value": 12.3,
           "unit": "%",
-          "basis": "null"
-        },
-        {
-          "label": "CET1 Ratio Jun 25",
-          "value": 12.3,
-          "unit": "%",
-          "basis": "null"
+          "basis": "statutory"
         }
       ]
     },
@@ -322,9 +389,16 @@
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 32,
       "printed_page": 32,
-      "kind": "text",
-      "quote": "Strong capital position maintained, supporting franchise growth and dividends",
-      "numbers": []
+      "kind": "table",
+      "quote": "10.25% APRA minimum",
+      "numbers": [
+        {
+          "label": "APRA Minimum CET1",
+          "value": 10.25,
+          "unit": "%",
+          "basis": "null"
+        }
+      ]
     },
     {
       "id": "ev-12",
@@ -335,9 +409,15 @@
       "quote": "The 2026 interim dividend included the on-market purchase of $530 million of shares (CET1 impact of -10bpts) in respect of the Dividend Reinvestment Plan.",
       "numbers": [
         {
-          "label": "CET1 impact from DRP share buyback",
-          "value": -0.1,
-          "unit": "ratio",
+          "label": "Share Purchase Amount",
+          "value": 530.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "CET1 Impact from DRP Buyback",
+          "value": -10.0,
+          "unit": "bps",
           "basis": "statutory"
         }
       ]
@@ -348,12 +428,12 @@
       "pdf_page": 32,
       "printed_page": 32,
       "kind": "table",
-      "quote": "Level 1 CET1 Ratio Jun 26: 12.1%",
+      "quote": "Movements in bpts Credit Risk (38)",
       "numbers": [
         {
-          "label": "CET1 Ratio",
-          "value": 12.1,
-          "unit": "%",
+          "label": "Credit Risk Movement",
+          "value": -38.0,
+          "unit": "bps",
           "basis": "statutory"
         }
       ]
@@ -364,12 +444,12 @@
       "pdf_page": 32,
       "printed_page": 32,
       "kind": "table",
-      "quote": "Level 1 CET1 Ratio Jun 25: 12.0%",
+      "quote": "IRRBB (16)",
       "numbers": [
         {
-          "label": "CET1 Ratio",
-          "value": 12.0,
-          "unit": "%",
+          "label": "IRRBB Movement",
+          "value": -16.0,
+          "unit": "bps",
           "basis": "statutory"
         }
       ]
@@ -377,25 +457,92 @@
     {
       "id": "ev-15",
       "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 32,
+      "printed_page": 32,
+      "kind": "table",
+      "quote": "Market Risk 8",
+      "numbers": [
+        {
+          "label": "Market Risk Movement",
+          "value": 8.0,
+          "unit": "bps",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 32,
+      "printed_page": 32,
+      "kind": "table",
+      "quote": "Operational Risk -",
+      "numbers": [
+        {
+          "label": "Operational Risk Movement",
+          "value": 0.0,
+          "unit": "bps",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 32,
+      "printed_page": 32,
+      "kind": "table",
+      "quote": "Underlying movement 40",
+      "numbers": [
+        {
+          "label": "Underlying CET1 Movement",
+          "value": 40.0,
+          "unit": "bps",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 32,
+      "printed_page": 32,
+      "kind": "table",
+      "quote": "Other (76)",
+      "numbers": [
+        {
+          "label": "Other CET1 Movement",
+          "value": -76.0,
+          "unit": "bps",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 106,
+      "printed_page": 106,
+      "kind": "text",
+      "quote": "Key capital ratios (%)1",
+      "numbers": []
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 106,
       "printed_page": 106,
       "kind": "table",
-      "quote": "Key capital ratios (%)1",
+      "quote": "CET1 capital ratio Jun 25 12.3 Dec 25 12.3 Jun 26 12.0",
       "numbers": [
         {
-          "label": "CET1 capital ratio Jun 25",
+          "label": "CET1 capital ratio FY25 (Dec)",
           "value": 12.3,
           "unit": "%",
           "basis": "Level 2"
         },
         {
-          "label": "CET1 capital ratio Dec 25",
-          "value": 12.3,
-          "unit": "%",
-          "basis": "Level 2"
-        },
-        {
-          "label": "CET1 capital ratio Jun 26",
+          "label": "CET1 capital ratio FY26 (Jun)",
           "value": 12.0,
           "unit": "%",
           "basis": "Level 2"
@@ -403,15 +550,75 @@
       ]
     },
     {
-      "id": "ev-16",
+      "id": "ev-21",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 106,
+      "printed_page": 106,
+      "kind": "table",
+      "quote": "Level 1 CET1 ratio Jun 25 12.4 Dec 25 12.2 Jun 26 12.1",
+      "numbers": [
+        {
+          "label": "Level 1 CET1 ratio FY25 (Dec)",
+          "value": 12.2,
+          "unit": "%",
+          "basis": "null"
+        },
+        {
+          "label": "Level 1 CET1 ratio FY26 (Jun)",
+          "value": 12.1,
+          "unit": "%",
+          "basis": "null"
+        }
+      ]
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 106,
+      "printed_page": 106,
+      "kind": "table",
+      "quote": "International ratios CET1 capital ratio Jun 25 18.7 Dec 25 18.3 Jun 26 18.3",
+      "numbers": [
+        {
+          "label": "International CET1 ratio FY25 (Dec)",
+          "value": 18.3,
+          "unit": "%",
+          "basis": "null"
+        },
+        {
+          "label": "International CET1 ratio FY26 (Jun)",
+          "value": 18.3,
+          "unit": "%",
+          "basis": "null"
+        }
+      ]
+    },
+    {
+      "id": "ev-23",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 106,
       "printed_page": 106,
       "kind": "text",
-      "quote": "• Level 2 CET1 capital ratio of 12.0%",
+      "quote": "The 2026 interim dividend included the on-market purchase of $530 million of shares (CET1 impact of -10bpts) in respect of the Dividend Reinvestment Plan.",
       "numbers": [
         {
-          "label": "Level 2 CET1 capital ratio",
+          "label": "Dividend DRP CET1 Impact",
+          "value": -10.0,
+          "unit": "bps",
+          "basis": "null"
+        }
+      ]
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 106,
+      "printed_page": 106,
+      "kind": "text",
+      "quote": "CET1 capital ratio movements1 • Level 2 CET1 capital ratio of 12.0%",
+      "numbers": [
+        {
+          "label": "Level 2 CET1 capital ratio FY26",
           "value": 12.0,
           "unit": "%",
           "basis": "Level 2"
@@ -423,11 +630,11 @@
   "provenance": {
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
-    "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-26T06:33:24+00:00",
-    "seconds": 46.9,
-    "cost_usd": 0.001,
-    "tokens": "22849 in / 2718 out",
+    "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
+    "generated": "2026-08-27T07:58:29+00:00",
+    "seconds": 78.4,
+    "cost_usd": 0.0015,
+    "tokens": "31112 in / 4185 out",
     "orchestration": "pipeline"
   }
 }

@@ -38,6 +38,103 @@ def load_gold(suite: str, bank: str | None = None) -> list[dict]:
     return cases
 
 
+def load_crossref_gold(bank: str | None = None) -> list[dict]:
+    """Cross-reference consolidation cases (ticket 26): cases carrying
+    required_locations instead of a movement. HOLDOUT: run only at milestones."""
+    cases = []
+    for path in sorted(GOLD_DIR.glob("*.json")):
+        gold_file = json.loads(path.read_text())
+        if gold_file.get("case_class") != "crossref_consolidation":
+            continue
+        if bank and gold_file["bank"].upper() != bank.upper():
+            continue
+        for case in gold_file["cases"]:
+            cases.append({**case, "bank": gold_file["bank"], "period": gold_file["period"],
+                          "comparator": gold_file["comparator"]})
+    return cases
+
+
+def score_crossref(gold_case: dict, ask_output: dict) -> dict:
+    """Location coverage: the fraction of gold required_locations whose
+    (doc substring, pdf_page) appears among the evidence records cited by
+    the answer's key_facts."""
+    cited_ids = {e for fact in ask_output.get("key_facts", []) for e in fact.get("evidence", [])}
+    cited = [r for r in ask_output.get("evidence_records", []) if r["id"] in cited_ids]
+
+    locations = []
+    hits = 0
+    for loc in gold_case.get("required_locations", []):
+        hit_ids = [r["id"] for r in cited
+                   if loc["doc"] in r["doc_id"] and r["pdf_page"] == loc["pdf_page"]]
+        hits += bool(hit_ids)
+        locations.append({"doc": loc["doc"], "pdf_page": loc["pdf_page"],
+                          "holds": loc.get("holds", ""), "hit": bool(hit_ids),
+                          "cited_by": hit_ids})
+    total = len(locations)
+    return {
+        "case": gold_case["id"],
+        "location_coverage": f"{hits}/{total}",
+        "coverage_fraction": round(hits / total, 3) if total else None,
+        "locations": locations,
+        "cited_evidence_ids": sorted(cited_ids),
+        "confidence": ask_output.get("confidence"),
+        "limitations": len(ask_output.get("limitations", [])),
+        # Stub for judge-based fact checking (not yet implemented): the gold
+        # facts a judge must verify against the answer text.
+        "fact_check": {
+            "status": "not_implemented",
+            "gold_answer_facts": gold_case.get("gold_answer_facts", []),
+            "answer": ask_output.get("answer", ""),
+        },
+        "cost_usd": ask_output.get("provenance", {}).get("cost_usd"),
+        "seconds": ask_output.get("provenance", {}).get("seconds"),
+    }
+
+
+def run_crossref_suite(combo: str, bank: str | None = None) -> Path:
+    """Run every crossref HOLDOUT case through ask and report location
+    coverage. Discipline: run at most once per milestone; never iterate on it."""
+    from .ask import run_ask
+
+    rows = []
+    for gold in load_crossref_gold(bank):
+        label = f"{gold['bank']} {gold['id']}"
+        try:
+            output, _ = run_ask(
+                gold["bank"], [gold["period"], gold["comparator"]], gold["question"], combo
+            )
+            row = score_crossref(gold, output)
+        except Exception as exc:  # noqa: BLE001 - a crashed case is a scored failure
+            row = {"case": label, "error": str(exc)[:300]}
+        print(f"scored {label}: {json.dumps({k: v for k, v in row.items() if k not in ('locations', 'fact_check')})[:250]}")
+        rows.append(row)
+
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    raw_path = RESULTS_DIR / f"{stamp}-{combo}-crossref.jsonl"
+    raw_path.write_text("\n".join(json.dumps(r) for r in rows))
+
+    lines = [f"# Crossref scorecard — combo {combo}, {stamp}", ""]
+    lines.append("| Case | Location coverage | Missed locations | Conf | Cost |")
+    lines.append("|---|---|---|---|---|")
+    for r in rows:
+        if "error" in r:
+            lines.append(f"| {r['case']} | ERROR: {r['error'][:80]} | | | |")
+            continue
+        missed = "; ".join(
+            f"{loc['doc']} p{loc['pdf_page']}" for loc in r["locations"] if not loc["hit"]
+        ) or "—"
+        lines.append(
+            f"| {r['case']} | {r['location_coverage']} | {missed} "
+            f"| {r['confidence']} | ${r.get('cost_usd', 0)} |"
+        )
+    lines += ["", "Judge-based fact checking against gold_answer_facts: not implemented",
+              "(the gold facts are recorded per case in the .jsonl for a later judge)."]
+    card_path = RESULTS_DIR / f"{stamp}-{combo}-crossref.md"
+    card_path.write_text("\n".join(lines) + "\n")
+    return card_path
+
+
 def _gold_driver_values(gold_drivers: dict) -> dict[str, float]:
     """Normalise the two gold shapes ({canonical: value} and
     {canonical: {value, provenance}}) into {canonical: float}."""

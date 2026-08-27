@@ -50,8 +50,10 @@ def _doc_index(doc_path: str):
 _DOCS: dict[str, Document] = {}
 
 
-def retrieve(doc: Document, query: str, top_k: int = 6) -> list[int]:
-    """Return 1-based page numbers: union of BM25 top-k and dense top-k."""
+def retrieve(doc: Document, query: str, top_k: int = 6) -> list[tuple[int, float]]:
+    """Return (1-based page, score): union of BM25 top-k and dense top-k.
+    Score = reciprocal-rank fusion, so downstream page caps keep the most
+    relevant pages instead of the lowest-numbered ones."""
     _DOCS[str(doc.path)] = doc
     bm25, embeddings, n_pages = _doc_index(str(doc.path))
 
@@ -62,5 +64,9 @@ def retrieve(doc: Document, query: str, top_k: int = 6) -> list[int]:
     sims = (embeddings @ q.T).ravel()
     dense_top = np.argsort(-sims)[:top_k].tolist()
 
-    pages = sorted({i + 1 for i in bm25_top} | {i + 1 for i in dense_top})
-    return pages
+    fused: dict[int, float] = {}
+    for rank, i in enumerate(bm25_top):
+        fused[i + 1] = fused.get(i + 1, 0.0) + 1.0 / (rank + 1)
+    for rank, i in enumerate(dense_top):
+        fused[i + 1] = fused.get(i + 1, 0.0) + 1.0 / (rank + 1)
+    return sorted(fused.items(), key=lambda kv: -kv[1])
