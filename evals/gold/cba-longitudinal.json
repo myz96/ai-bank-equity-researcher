@@ -1,0 +1,33 @@
+{
+  "bank": "CBA",
+  "period": "FY26",
+  "comparator": "FY21",
+  "case_class": "crossref_consolidation",
+  "verified": "Hand-verified from rendered walk pages across six results events, 2026-08-28 (ticket 31). HELD OUT: never used for iteration; scored only at milestones.",
+  "cases": [
+    {
+      "id": "nim-longitudinal-fy21-fy26",
+      "split": "holdout",
+      "question": "How did CBA's net interest margin evolve from FY21 to FY26, and what drove each phase of the journey?",
+      "gold_answer_facts": [
+        "The path (full-year group NIM, bps): FY21 203 -> FY22 190 -> FY23 207 -> FY24 199 -> FY25 208 -> FY26 205",
+        "Basis trap: the FY22 deck restates the FY21 comparative to 208 (continuing operations re-presentation) versus the 203 the FY21-era documents published; a coherent narrative must note the restated basis",
+        "Phase 1, FY21-FY22 (-18 on the restated basis): the low-rate squeeze - swap/cash rates on home loan pricing -5, fixed-rate switching -6, SVR price competition -6, partly offset by funding +6; liquid asset growth -8 with minimal NII impact",
+        "Phase 2, FY23 (+17): the rising-rate recovery - funding costs +29 and replicated products/capital +12, against lending competition -21",
+        "Phase 3, FY24 (-8): deposit price competition and switching - asset pricing -6, funding costs -7, partly offset by replicating portfolio +6",
+        "Phase 4, FY25 (+9): liquids/pooled facilities unwind +7 (broadly revenue neutral) and capital/replicating +9, against deposit competition -7",
+        "Phase 5, FY26 (-3): liquids and repo growth -3 and asset pricing -5, offset by interest rate risk hedging +5; underlying NIM broadly stable",
+        "A through-line a good note names: the replicating portfolio/hedging swings from headwind (FY22) to the dominant tailwind (FY23 onward) as the cash rate cycle turned; competition is a persistent negative in every single year"
+      ],
+      "required_locations": [
+        {"doc": "CBA/FY21/results_presentation", "pdf_page": 63, "holds": "FY21 walk (207 -> 203, era framings)"},
+        {"doc": "CBA/FY22/results_presentation", "pdf_page": 66, "holds": "FY22 12-month walk (restated 208 -> 190) and the restatement footnote"},
+        {"doc": "CBA/FY23/results_presentation", "pdf_page": 63, "holds": "FY23 12-month walk (190 -> 207)"},
+        {"doc": "CBA/FY24/results_presentation", "pdf_page": 62, "holds": "FY24 12-month walk (207 -> 199)"},
+        {"doc": "CBA/FY25/profit_announcement", "pdf_page": 28, "holds": "FY25 walk (199 -> 208)"},
+        {"doc": "CBA/FY26/profit_announcement", "pdf_page": 28, "holds": "FY26 walk (208 -> 205)"}
+      ],
+      "trap": "Six documents across three disclosure-format eras; the FY22 deck silently restates the FY21 starting point (203 vs 208); each era frames its bars differently (SVR/fixed-switching era labels vs the modern canonical set). Single-document reading yields a wrong or incoherent path; the test is consolidation into one narrative with the basis change acknowledged."
+    }
+  ]
+}

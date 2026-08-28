@@ -3,6 +3,17 @@
 Type: task
 Status: open
 
+## Progress 2026-08-28
+
+Corpus extended (FY22-FY24 fetched, FY20-FY26 continuous) and the NIM
+longitudinal case is authored and hand-verified: `evals/gold/cba-longitudinal.json`
+(holdout). Every year's walk read from the rendered page and summing exactly.
+Bonus trap discovered during verification: the FY22 deck RESTATES the FY21
+comparative NIM to 208 vs the 203 published in FY21's own documents — the
+spine's basis shifts across eras, and the gold requires the narrative to
+acknowledge it. Remaining: the impairment credit-cycle arc as a second case;
+6-period-width testing of the ask entry point.
+
 ## Question
 
 User requirement (2026-08-28, eval review): the existing crossref cases test consolidation within one results event; the harder — and more realistic — analyst task spans YEARS: "how did CBA's NIM evolve from FY21 to FY26 and what drove each phase?" That demands pulling the right evidence from every era's documents (five-plus PDFs, three disclosure-format eras), holding it together, and constructing a coherent narrative — not finding one fact in one file.
