@@ -52,6 +52,24 @@
         {"doc": "CBA/FY26/profit_announcement", "pdf_page": 18, "holds": "the KPI table's CTI row (45.5 vs 45.7)"}
       ],
       "trap": "The value, the item names, the growth-rate framing, and the ratio effect live on three different pages across two documents; each alone gives an incomplete or misleading answer."
+    },
+    {
+      "id": "restatement-web",
+      "split": "holdout",
+      "question": "CBA's FY26 reporting shows higher early-stage home loan arrears for December 2025 than CBA previously published. Why, and does this indicate credit deterioration?",
+      "gold_answer_facts": [
+        "On 4 August 2026, one week before results, CBA restated the 2H25 and 1H26 loans-past-due comparatives (Media Release 229/2026, 'Items impacting CBA's financial reporting')",
+        "The cause is a methodology alignment of home loan arrears across the Group: consistent inclusion of unpaid fees and removal of low-materiality thresholds",
+        "The change increased reported EARLY-STAGE arrears only; it did not impact 90+ day arrears, non-performing exposures, provisioning, or regulatory capital — definitional, not credit deterioration",
+        "Restated Dec 25 totals per Attachment A: total loans past due $25,304m, of which past due 1-29 days $14,696m",
+        "The FY26 Profit Announcement presents its credit-quality comparatives on the restated basis ('Comparative information has been restated to conform to presentation in the current period')"
+      ],
+      "required_locations": [
+        {"doc": "CBA/FY26/pre_results_note", "pdf_page": 1, "holds": "the restatement explanation: methodology alignment, what is and is not impacted"},
+        {"doc": "CBA/FY26/pre_results_note", "pdf_page": 2, "holds": "Attachment A: the restated Dec 25 / Jun 25 loans-past-due tables"},
+        {"doc": "CBA/FY26/profit_announcement", "pdf_page": 46, "holds": "the credit-quality section carrying comparatives on the restated basis"}
+      ],
+      "trap": "An agent reading only the PA sees higher early-stage arrears versus previously published figures and may call it credit deterioration; the pre-results note — a separate 3-page document published a week earlier — is the only place the definitional cause lives. Tests the recency rule (restated comparatives win) and cross-document consolidation."
     }
   ]
 }
