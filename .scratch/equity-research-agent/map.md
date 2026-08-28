@@ -9,7 +9,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 ## Notes
 
 - Execution is carried into this map (agreed at charting): build steps are `task` tickets, and the map is done when the deliverable ships.
-- Deadline: 2026-09-01. Quality beats speed; cut from iteration first if time runs short.
+- Deadline: hard due 2026-09-03; internal target 2026-09-01 (user, 2026-08-28). The two buffer days are for polish, the benchmark rerun, and contingency — not for new scope. Quality beats speed; cut from iteration first if time runs short.
 - Stack: Python 3.12+, `uv`, `pytest`. Model gateway: OpenRouter (`OPENROUTER_API_KEY`), chosen so cheap OSS models can be swapped in.
 - Spend policy: under AUD 50 total for model runs. Develop and iterate on cheap models; run the normal model late and only when needed.
 - Model slate (2026-08-25, from the live OpenRouter catalogue): cheap `qwen/qwen3.7-flash`; normal author `z-ai/glm-5.3`; cross-family judge `deepseek/deepseek-v4-pro-0813`; `stealth/ox-alpha` (free alpha, strong on recent evals) featured in every prototype arm with glm-5.3 as stable fallback; `moonshotai/kimi-k3` as vision ceiling reference. Final combinations are eval-decided.
