@@ -5,19 +5,32 @@ Ground truth for the eval harness (ticket 05/17). Every value carries provenance
 sum checks the agent's extractions face — gold that does not reconcile is a
 defect in the gold, never a tolerance to widen.
 
-Tiers per metric, mirroring the evidence ladder (ticket 01):
+Tiers per metric. The tier names WHERE the truth comes from, which decides how
+strictly a claim can be scored:
 
-- `walk` — bar values hand-recorded from the bank's published walk, read from
-  the rendered page image and cross-checked against the page text/narrative.
-- `components` — component movements as disclosed in tables/text (bridge
-  metrics). Reconciliation to the headline movement is NOT force-fitted;
-  agents are scored per component plus honest residual handling.
-- `arithmetic` — the movement is exact; level-1 decomposition is checked by
-  identity; level-2 is a documented driver checklist (narrative claims are
-  citation-graded, not value-graded).
+- `walk` — **the bank itself published the decomposition**, as one chart or
+  one bulleted list on one page (a NIM walk, a CET1 waterfall). Gold is a
+  transcription of that artifact. Strictest scoring: every bar has an exact
+  published value, and a walk is exhaustive — the bars ARE the whole movement.
+  Example: CBA FY26 NIM, PA p28.
+- `components` — **the bank published the pieces, but never assembled them**.
+  The NII movement sits on one page, expenses on a slide, tax in a note; gold
+  records each piece with its own provenance. Scoring is per component, and
+  the set is NOT exhaustive — a claim outside the recorded components is
+  unscored, not wrong, and reconciliation is never force-fitted.
+  Example: CBA FY26 cash earnings.
+- `arithmetic` (read: **derived**) — **the bank never decomposes this metric
+  at all**. ROE and CTI are ratios; the only decomposition possible is derived
+  from the identity (ROE = profit / average equity; CTI = expenses / income).
+  Gold fixes the movement exactly and the level-1 split by that identity;
+  everything deeper is checklist material. Example: CBA FY26 ROE.
 
-`narrative_checklist` items are things a good first-pass note should mention;
-they are scored by citation-grounding, never by exact wording.
+`narrative_checklist` is the "why" layer, on every tier: the reasons a good
+first-pass note should MENTION — "funding costs fell because the TFF matured",
+"the liquids drag is broadly revenue-neutral". Checklist items are never
+value-scored; they are graded by citation-grounding (does the note say it, and
+does the cited page support it). Numbers live in the tiers; reasons live in
+the checklist.
 
 `split` is `dev` or `holdout`. The holdout assignment (~8 cases) happens once
 the full matrix exists, spread across banks, metrics, and period types; until
