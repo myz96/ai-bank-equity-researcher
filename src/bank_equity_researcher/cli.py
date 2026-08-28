@@ -29,10 +29,19 @@ def main() -> int:
     discover_cmd.add_argument("--seed", required=True, help="the bank's homepage or IR page URL")
 
     evals_cmd = sub.add_parser("evals", help="run the eval harness")
-    evals_cmd.add_argument("action", choices=["run", "crossref"])
+    evals_cmd.add_argument("action", choices=["run", "crossref", "rescore"])
     evals_cmd.add_argument("--suite", default="dev", help="dev | holdout")
     evals_cmd.add_argument("--combo", default="cheap")
     evals_cmd.add_argument("--bank", default=None)
+    # rescore: score saved out/*/attribution.json artifacts again, no model calls.
+    evals_cmd.add_argument("--since", default=None,
+                           help="rescore: skip artifacts generated before this ISO timestamp")
+    evals_cmd.add_argument("--until", default=None,
+                           help="rescore: skip artifacts generated after this ISO timestamp")
+    evals_cmd.add_argument("--baseline", default=None,
+                           help="rescore: a previous run's .jsonl to compare against")
+    evals_cmd.add_argument("--label", default=None,
+                           help="rescore: output file stem under evals/results/")
     args = parser.parse_args()
 
     if args.command == "evals":
@@ -40,6 +49,11 @@ def main() -> int:
             from .evals import run_crossref_suite
 
             card = run_crossref_suite(args.combo, args.bank)
+        elif args.action == "rescore":
+            from .evals import rescore
+
+            card = rescore(args.suite, args.combo, args.bank, args.since, args.until,
+                           args.baseline, args.label)
         else:
             from .evals import run_suite
 
