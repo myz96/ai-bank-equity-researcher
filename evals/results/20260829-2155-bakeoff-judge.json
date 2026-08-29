@@ -1,0 +1,307 @@
+{
+ "stamp": "20260829-2155",
+ "judges": [
+  "deepseek/deepseek-v4-pro-0813",
+  "qwen/qwen3.7-flash"
+ ],
+ "max_answer_chars": 20000,
+ "arms": {
+  "sonnet": {
+   "cba-cash-earnings-fy26": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 3,
+    "passed": 0,
+    "failed": 2,
+    "flagged": 1,
+    "flagged_split": 1,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 0,
+    "not_stated": 2,
+    "fact_accuracy": "0/3",
+    "accuracy_fraction": 0.0,
+    "answer_truncated": false,
+    "quotes_used": 24,
+    "facts": [
+     {
+      "fact": "operating income growth +6.2% (slide 24)",
+      "verdict": "fail",
+      "stated": "absent",
+      "entailed": "not-entailed",
+      "reason": "stated=absent; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "absent",
+        "why": "The note discusses operating income components but never states operating income growth of +6.2%.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "No quote mentions operating income growth or +6.2%; only net interest income and other income figures appear.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "absent",
+        "why": "Note reports cash NPAT growth, not operating income growth.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes do not mention operating income or the +6.2% growth figure.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "operating performance $16,469m, +6.5% (slide 24)",
+      "verdict": "fail",
+      "stated": "absent",
+      "entailed": "not-entailed",
+      "reason": "stated=absent; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "absent",
+        "why": "The note does not mention operating performance of $16,469m or +6.5% anywhere.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "The quotes do not mention operating performance of $16,469m or a 6.5% increase.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "absent",
+        "why": "The note reports cash NPAT of $10,982m, not operating performance of $16,469m.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes do not contain the figure $16,469m or the +6.5% growth rate.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "statutory NPAT 10,866 vs cash 10,982; non-cash items are hedging/IFRS volatility and disposals (PA p16/p17)",
+      "verdict": "flagged_for_human",
+      "stated": null,
+      "entailed": null,
+      "reason": "judges disagree \u2014 stated: judges answered ['partial', 'stated']; entailed: judges answered ['entailed', 'not-entailed']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note states statutory NPAT including discontinued operations of 10,866 and cash 10,982, with non-cash items being hedging/IFRS volatility and disposals.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show statutory NPAT 10,866 and cash 10,982, but do not state non-cash items are hedging/IFRS volatility and disposals.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states cash NPAT 10,982 but statutory NPAT is 10,866 including discontinued ops, not the continuing ops figure implied.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 2 explicitly states Statutory NPAT 10,866 and Cash NPAT 10,982.",
+        "error": ""
+       }
+      ]
+     }
+    ],
+    "movement_reported": {
+     "from": 10252,
+     "to": 10982,
+     "delta": 730,
+     "unit": "AUD millions"
+    },
+    "movement_gold": {
+     "from": 10252,
+     "to": 10982,
+     "delta": 730,
+     "unit": "$m",
+     "provenance": "FY26 PA PDF p16 Group Performance Summary: 'Net profit after tax from continuing operations \u2013 cash basis 10,982 | 10,252 | 7'"
+    },
+    "artifact_dir": "out/baseline-sonnet/cba-cash-earnings-fy26"
+   }
+  },
+  "fable": {
+   "cba-cash-earnings-fy26": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 3,
+    "passed": 0,
+    "failed": 3,
+    "flagged": 0,
+    "flagged_split": 0,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 0,
+    "not_stated": 3,
+    "fact_accuracy": "0/3",
+    "accuracy_fraction": 0.0,
+    "answer_truncated": false,
+    "quotes_used": 24,
+    "facts": [
+     {
+      "fact": "operating income growth +6.2% (slide 24)",
+      "verdict": "fail",
+      "stated": "absent",
+      "entailed": "not-entailed",
+      "reason": "stated=absent; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "absent",
+        "why": "The note does not mention operating income growth of +6.2% or slide 24.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "No quote mentions operating income growth or +6.2%; only expenses, NII, and other income figures appear.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "absent",
+        "why": "The note reports cash NPAT growth, not operating income growth.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes do not mention operating income growth or the specific +6.2% figure.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "operating performance $16,469m, +6.5% (slide 24)",
+      "verdict": "fail",
+      "stated": "absent",
+      "entailed": "not-entailed",
+      "reason": "stated=absent; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "absent",
+        "why": "The note does not mention operating performance of $16,469m or +6.5%.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack operating performance figure $16,469m and +6.5%; no quote states or supports these numbers.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "absent",
+        "why": "Note reports cash NPAT of $10,982m, not operating performance of $16,469m.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes do not contain the $16,469m figure or the +6.5% growth rate.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "statutory NPAT 10,866 vs cash 10,982; non-cash items are hedging/IFRS volatility and disposals (PA p16/p17)",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note gives statutory NPAT 10,866 and cash 10,982, but non-cash items listed are hedging/IFRS volatility and disposals, not exactly as fact states.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack exact statutory NPAT 10,866 and cash 10,982 figures; only $10.9 billion appears.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states statutory NPAT 10,866 and non-cash items, but omits cash NPAT 10,982.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack specific NPAT figures 10,866 and 10,982 required by the fact.",
+        "error": ""
+       }
+      ]
+     }
+    ],
+    "movement_reported": {
+     "from": 10252,
+     "to": 10982,
+     "delta": 730,
+     "unit": "AUD millions"
+    },
+    "movement_gold": {
+     "from": 10252,
+     "to": 10982,
+     "delta": 730,
+     "unit": "$m",
+     "provenance": "FY26 PA PDF p16 Group Performance Summary: 'Net profit after tax from continuing operations \u2013 cash basis 10,982 | 10,252 | 7'"
+    },
+    "artifact_dir": "out/baseline-fable/cba-cash-earnings-fy26"
+   }
+  }
+ },
+ "judge_cost_usd": 0.0271
+}
