@@ -32,6 +32,9 @@ def main() -> int:
     evals_cmd.add_argument("action", choices=["run", "crossref", "rescore", "judge"])
     evals_cmd.add_argument("--suite", default="dev", help="dev | holdout")
     evals_cmd.add_argument("--combo", default="cheap")
+    evals_cmd.add_argument("--only", default=None,
+                           help="run: subset filter for fast loops, comma-separated matches "
+                                "against BANK-metric-PERIOD (e.g. 'cash_earnings' or 'nim-1H26')")
     evals_cmd.add_argument("--bank", default=None)
     # rescore: score saved out/*/attribution.json artifacts again, no model calls.
     evals_cmd.add_argument("--since", default=None,
@@ -63,7 +66,7 @@ def main() -> int:
         else:
             from .evals import run_suite
 
-            card = run_suite(args.suite, args.combo, args.bank)
+            card = run_suite(args.suite, args.combo, args.bank, args.only)
         print("\n" + card.read_text())
         return 0
 

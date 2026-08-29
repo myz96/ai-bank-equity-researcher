@@ -799,10 +799,20 @@ def calibration(rows: list[dict]) -> dict:
     }
 
 
-def run_suite(suite: str, combo: str, bank: str | None = None) -> Path:
+def run_suite(suite: str, combo: str, bank: str | None = None, only: str | None = None) -> Path:
+    """`only` filters cases for fast iteration loops: a comma-separated list of
+    metric names and/or bank-metric-period fragments, matched case-insensitively
+    against "BANK-metric-PERIOD" (e.g. "cash_earnings", "nim-1H26",
+    "NAB,WBC-cti"). Full suites remain the gate at the end of a round."""
     from .pipeline import run_case
 
     gold_cases = load_gold(suite, bank)
+    if only:
+        wanted = [w.strip().lower() for w in only.split(",") if w.strip()]
+        gold_cases = [
+            g for g in gold_cases
+            if any(w in f"{g['bank']}-{g['metric']}-{g['period']}".lower() for w in wanted)
+        ]
     rows = []
     for gold in gold_cases:
         label = f"{gold['bank']} {gold['metric']} {gold['period']}"
