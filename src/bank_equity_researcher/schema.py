@@ -24,6 +24,11 @@ class EvidenceRecord(BaseModel):
     kind: str = "text"  # text | table | walk_vision
     quote: str = Field(max_length=600)  # verbatim, <=50 words by prompt contract
     numbers: list[NumberFact] = []
+    # How the page reached the evidence pool when retrieval did not rank it
+    # there on its own: "reference_follow:<doc> p<source> -> <target>" for a
+    # page the deterministic follower turned to (ticket 22). None means the
+    # page came from the ordinary page budget.
+    provenance: str | None = None
 
 
 class Contribution(BaseModel):

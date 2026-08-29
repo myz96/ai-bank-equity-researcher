@@ -11,21 +11,20 @@
     "unit": "$m"
   },
   "movement_source": "row 'Total impairment (charges)/benefits', column FY24 -> column FY25",
-  "headline": "WBC's credit impairment charge improved by $113m to $424m in FY25 (ev-1). The loss rate fell from 7bps to 5bps of average loans (ev-2). This improvement was driven by lower write-offs and higher recoveries, partially offset by increased overlays.",
+  "headline": "WBC's credit impairment charge improved by $113 million to $424 million in FY25 (5 bps of average loans), down from $537 million (7 bps) in FY24. The improvement was driven by a significant reduction in write-offs and higher recoveries, partially offset by increased forward-looking overlays.",
   "drivers": [
     {
       "canonical": "write_backs_recoveries",
-      "bank_label": "Write-backs & recoveries",
+      "bank_label": "Recoveries and Write-backs",
       "contribution": {
-        "value": 120.0,
+        "value": 442.0,
         "unit": "$m"
       },
       "columns": "stated vs FY24",
-      "narrative": "Net benefits increased by $120m, moving from a ($147m) benefit in FY24 to a ($27m) benefit in FY25 (ev-10). Higher Cards & Personal Loans recoveries contributed (ev-12).",
-      "confidence": 85,
+      "narrative": "Net benefit of $442m ($247m recoveries + $195m write-backs). This is a major positive driver compared to the prior year's lower recovery environment.",
+      "confidence": 80,
       "evidence": [
-        "ev-10",
-        "ev-12"
+        "ev-5"
       ],
       "checks_passed": [
         "single_source"
@@ -33,21 +32,14 @@
       "checks_failed": []
     },
     {
-      "canonical": "write_offs_direct",
-      "bank_label": "Write-offs direct",
-      "contribution": {
-        "value": 76.0,
-        "unit": "$m"
-      },
-      "columns": "stated vs FY24",
-      "narrative": "Direct write-offs decreased by $76m, falling from $250m in FY24 to $174m in FY25 (ev-11). Note: FY25 H2 write-offs are not explicitly quantified in the provided table.",
-      "confidence": 80,
-      "evidence": [
-        "ev-11"
-      ],
-      "checks_passed": [
-        "single_source"
-      ],
+      "canonical": "collective.volume",
+      "bank_label": "Portfolio Growth",
+      "contribution": null,
+      "columns": null,
+      "narrative": "The bank does not explicitly quantify portfolio growth as a separate provision driver in the provided text. It is implicitly included in the collective provision movement but cannot be isolated with certainty.",
+      "confidence": 60,
+      "evidence": [],
+      "checks_passed": [],
       "checks_failed": []
     },
     {
@@ -58,11 +50,10 @@
         "unit": "$m"
       },
       "columns": "stated vs FY24",
-      "narrative": "Overlays increased by $108m in FY25 compared to FY24 (ev-16), representing a drag on the P&L improvement. This is partly offset by improvements in economics (ev-13).",
-      "confidence": 85,
+      "narrative": "Overlays increased by $108 million, representing a negative contribution to the P&L improvement. This reflects heightened forward-looking risk adjustments.",
+      "confidence": 80,
       "evidence": [
-        "ev-16",
-        "ev-13"
+        "ev-8"
       ],
       "checks_passed": [
         "single_source"
@@ -71,17 +62,34 @@
     },
     {
       "canonical": "individual_provisions",
-      "bank_label": "Individually assessed provisions",
+      "bank_label": "New IAPs",
       "contribution": {
-        "value": 72.0,
+        "value": -408.0,
         "unit": "$m"
       },
       "columns": "stated vs FY24",
-      "narrative": "IAP charges decreased by $72m due to a single name write-off in the prior year impacting comparability (ev-15). New IAPs remained relatively stable at ~$280m (ev-9).",
-      "confidence": 85,
+      "narrative": "New individually assessed provisions were $408 million. While this is a cost, it is part of the net IAP benefit calculation which includes recoveries/write-backs.",
+      "confidence": 80,
       "evidence": [
-        "ev-15",
-        "ev-9"
+        "ev-5"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "write_offs_direct",
+      "bank_label": "Write-offs",
+      "contribution": {
+        "value": 561.0,
+        "unit": "$m"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "Write-offs were $561 million. The improvement in the total charge is significantly aided by a decrease in write-offs compared to FY24 levels (implied by the net CAP benefit context).",
+      "confidence": 80,
+      "evidence": [
+        "ev-4"
       ],
       "checks_passed": [
         "single_source"
@@ -90,29 +98,28 @@
     }
   ],
   "residual": {
-    "value": -70.0,
+    "value": -174.0,
     "unit": "$m"
   },
   "notable_items": [],
   "disagreements": [
     {
-      "topic": "Impairment Charge Rate Definition",
+      "topic": "Impairment Charge Rate",
       "values": [
-        "5 bps (ev-2, ev-3)",
-        "4 bps (ev-14)"
+        "5 bps - ev-1/ev-3",
+        "4 bps - ev-6"
       ],
       "preferred": "5 bps",
       "reason": "definitional",
-      "explanation": "The results announcement (ev-2, ev-3) states the charge was 5bps of average loans. The investor discussion pack (ev-14) mentions 4bps, likely excluding specific items or using a different denominator. We prioritize the results announcement for the headline metric."
+      "explanation": "The results announcement (ev-1, ev-3) states 5 bps. The investor discussion pack (ev-6) states 4 bps. The results book is the primary source."
     }
   ],
   "attribution_confidence": 40,
   "limitations": [
-    "The sum of identified drivers (+120 + 76 - 108 + 72 = +160) does not fully reconcile with the total delta (+113), leaving a residual of -$70m. This residual may include unmapped components like collective volume/quality shifts or timing differences not explicitly broken out in the provided evidence.",
-    "H2 FY25 write-offs are marked N/A in ev-11, preventing a precise full-year attribution for that component based solely on the quarterly table.",
-    "Confidence is capped due to the unreconciled residual and reliance on stated movements rather than a full walk chart.",
+    "The provided evidence lacks a full bridge of provision types (e.g., specific FY24 write-off and recovery values) required for a precise quantified reconciliation. The residual of -$174m captures unquantified drivers such as changes in Stage 3 IAP balances and other unmapped components.",
+    "Divisional attribution is not available in the provided evidence records.",
     "Basis normalised from 'cash' to 'ex_notables': no page in evidence prints 'cash' beside the movement, and the registry names ex_notables as the bank's headline basis.",
-    "Failed check: drivers_reconcile (drivers +160.0 + residual -70.0 != delta +113.0, tol 1.0)"
+    "Failed check: drivers_reconcile (drivers +487.0 + residual -174.0 != delta +113.0, tol 1.0)"
   ],
   "evidence_records": [
     {
@@ -135,7 +142,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-2",
@@ -146,18 +154,19 @@
       "quote": "Impairment charges/(benefits) to average loans",
       "numbers": [
         {
-          "label": "Impairment to avg loans FY25",
+          "label": "Impairment charge to avg loans FY25",
           "value": 5.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Impairment to avg loans FY24",
+          "label": "Impairment charge to avg loans FY24",
           "value": 7.0,
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-3",
@@ -168,18 +177,19 @@
       "quote": "The credit impairment charge of $424 million represented 5 basis points of average loans, down from 7 basis points in the prior year.",
       "numbers": [
         {
-          "label": "Credit impairment charge level",
+          "label": "Credit impairment charge FY25",
           "value": -424.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Credit impairment charge change",
-          "value": 113.0,
+          "label": "Credit impairment charge FY24",
+          "value": -537.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-4",
@@ -190,24 +200,25 @@
       "quote": "The CAP charge of $458 million comprised write-offs of $561 million which was partly offset by a benefit in other changes in CAP of $103 million.",
       "numbers": [
         {
-          "label": "CAP charge FY25",
+          "label": "Total CAPs FY25",
           "value": -458.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Write-offs FY25",
+          "label": "Write-offs CAP FY25",
           "value": -561.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Other changes in CAPs FY25",
+          "label": "Other changes in CAP FY25",
           "value": 103.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-5",
@@ -218,7 +229,7 @@
       "quote": "The IAP benefit of $34 million comprised: New IAPs of $408 million... Recoveries of $247 million... and Write-backs of $195 million...",
       "numbers": [
         {
-          "label": "IAP net benefit FY25",
+          "label": "Total IAPs FY25",
           "value": 34.0,
           "unit": "$m",
           "basis": null
@@ -230,201 +241,22 @@
           "basis": null
         },
         {
-          "label": "Recoveries FY25",
+          "label": "Recoveries IAP FY25",
           "value": 247.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Write-backs FY25",
+          "label": "Write-backs IAP FY25",
           "value": 195.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-6",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 49,
-      "printed_page": 49,
-      "kind": "table",
-      "quote": "Impairment charges ($m) Total 2H24 175 1H25 250 2H25 174",
-      "numbers": [
-        {
-          "label": "Total Impairment charges FY24 (2H24)",
-          "value": 175.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total Impairment charges FY25 (1H25)",
-          "value": 250.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total Impairment charges FY25 (2H25)",
-          "value": 174.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-7",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 49,
-      "printed_page": 49,
-      "kind": "table",
-      "quote": "Impairment charges ($m) Individually assessed 2H24 210 1H25 251 2H25 157",
-      "numbers": [
-        {
-          "label": "Individually assessed FY24 (2H24)",
-          "value": 210.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Individually assessed FY25 (1H25)",
-          "value": 251.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Individually assessed FY25 (2H25)",
-          "value": 157.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-8",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 49,
-      "printed_page": 49,
-      "kind": "table",
-      "quote": "Impairment charges ($m) Collectively assessed 2H24 (163) 1H25 (204) 2H25 (238)",
-      "numbers": [
-        {
-          "label": "Collectively assessed FY24 (2H24)",
-          "value": -163.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Collectively assessed FY25 (1H25)",
-          "value": -204.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Collectively assessed FY25 (2H25)",
-          "value": -238.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-9",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 49,
-      "printed_page": 49,
-      "kind": "table",
-      "quote": "Impairment charges ($m) New IAPs 2H24 275 1H25 279 2H25 282",
-      "numbers": [
-        {
-          "label": "New IAPs FY24 (2H24)",
-          "value": 275.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "New IAPs FY25 (1H25)",
-          "value": 279.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "New IAPs FY25 (2H25)",
-          "value": 282.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-10",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 49,
-      "printed_page": 49,
-      "kind": "table",
-      "quote": "Impairment charges ($m) Write-backs & recoveries 2H24 (147) 1H25 (76) 2H25 (27)",
-      "numbers": [
-        {
-          "label": "Write-backs & recoveries FY24 (2H24)",
-          "value": -147.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Write-backs & recoveries FY25 (1H25)",
-          "value": -76.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Write-backs & recoveries FY25 (2H25)",
-          "value": -27.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-11",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 49,
-      "printed_page": 49,
-      "kind": "table",
-      "quote": "Impairment charges ($m) Write-offs direct 2H24 250 1H25 174 2H25 N/A",
-      "numbers": [
-        {
-          "label": "Write-offs direct FY24 (2H24)",
-          "value": 250.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Write-offs direct FY25 (1H25)",
-          "value": 174.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-12",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 49,
-      "printed_page": 49,
-      "kind": "text",
-      "quote": "Higher Cards & Personal Loans recoveries",
-      "numbers": []
-    },
-    {
-      "id": "ev-13",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 49,
-      "printed_page": 49,
-      "kind": "text",
-      "quote": "Improvement in economics, partly offset by overlays",
-      "numbers": []
-    },
-    {
-      "id": "ev-14",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 29,
       "printed_page": 29,
@@ -437,10 +269,11 @@
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-15",
+      "id": "ev-7",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 29,
       "printed_page": 29,
@@ -448,15 +281,16 @@
       "quote": "IAP decreased $72m due to a single name write-off",
       "numbers": [
         {
-          "label": "IAP change FY25 vs FY24",
+          "label": "Stage 3 IAP change FY25 vs FY24",
           "value": -72.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-16",
+      "id": "ev-8",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 29,
       "printed_page": 29,
@@ -469,99 +303,138 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-17",
+      "id": "ev-9",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 29,
       "printed_page": 29,
       "kind": "table",
-      "quote": "IMPAIRMENT PROVISIONS $1.9BN ABOVE BASE CASE ($M) Westpac Group Sep-24 Mar-25 Sep-25 Overlays 536 611 539 Stage 1 CAP 179 130 238 Stage 2 CAP 5,096 5,072 4,987 Stage 3 CAP 768 877 933 Stage 3 IAP 539 1,223 1,198",
+      "quote": "IMPAIRMENT PROVISIONS $1.9BN ABOVE BASE CASE ($M) Westpac Group Sep-24 Mar-25 Sep-25 Overlays 5,096 5,072 4,987 Stage 1 CAP 536 611 539 Stage 2 CAP 1,223 1,198 1,190 Stage 3 CAP 2,390 2,256 2,087 Stage 3 IAP 768 877 933",
       "numbers": [
         {
           "label": "Overlays FY24",
-          "value": 536.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Overlays FY25",
-          "value": 539.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Stage 1 CAP FY24",
-          "value": 179.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Stage 1 CAP FY25",
-          "value": 238.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Stage 2 CAP FY24",
           "value": 5096.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Stage 2 CAP FY25",
+          "label": "Overlays PRIOR HALF (Mar-25)",
+          "value": 5072.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Overlays FY25",
           "value": 4987.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Stage 3 CAP FY24",
-          "value": 768.0,
+          "label": "Stage 1 CAP FY24",
+          "value": 536.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Stage 3 CAP FY25",
-          "value": 933.0,
+          "label": "Stage 1 CAP PRIOR HALF (Mar-25)",
+          "value": 611.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Stage 3 IAP FY24",
+          "label": "Stage 1 CAP FY25",
           "value": 539.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Stage 3 IAP FY25",
+          "label": "Stage 2 CAP FY24",
+          "value": 1223.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 2 CAP PRIOR HALF (Mar-25)",
           "value": 1198.0,
           "unit": "$m",
           "basis": null
+        },
+        {
+          "label": "Stage 2 CAP FY25",
+          "value": 1190.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 3 CAP FY24",
+          "value": 2390.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 3 CAP PRIOR HALF (Mar-25)",
+          "value": 2256.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 3 CAP FY25",
+          "value": 2087.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 3 IAP FY24",
+          "value": 768.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 3 IAP PRIOR HALF (Mar-25)",
+          "value": 877.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 3 IAP FY25",
+          "value": 933.0,
+          "unit": "$m",
+          "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-18",
+      "id": "ev-10",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 21,
       "printed_page": 21,
       "kind": "table",
-      "quote": "Impairment charges 2H24 335 1H25 143",
+      "quote": "Impairment charges 2H25 335 143 2H24",
       "numbers": [
         {
-          "label": "Impairment charges 2H24",
+          "label": "Impairment charges FY25 (2H25)",
           "value": 335.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Impairment charges 1H25",
+          "label": "Impairment charges PRIOR HALF (1H25)",
           "value": 143.0,
           "unit": "$m",
           "basis": null
+        },
+        {
+          "label": "Impairment charges FY24 (2H24)",
+          "value": 24.0,
+          "unit": "$m",
+          "basis": null
         }
-      ]
+      ],
+      "provenance": null
     }
   ],
   "suggested_registry_patches": [],
@@ -569,10 +442,14 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
-    "generated": "2026-08-29T13:54:12+00:00",
-    "seconds": 44.6,
-    "cost_usd": 0.0018,
-    "tokens": "36431 in / 5494 out",
-    "orchestration": "pipeline"
+    "generated": "2026-08-29T18:15:49+00:00",
+    "seconds": 45.3,
+    "cost_usd": 0.0016,
+    "tokens": "35232 in / 4391 out",
+    "orchestration": "pipeline",
+    "pages_extracted": 14,
+    "reference_follow": [
+      "WBC/FY25/results_announcement p61 <- p2 page 61"
+    ]
   }
 }

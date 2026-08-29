@@ -2,77 +2,80 @@
 
 **Movement (cash basis):** 199bps → 208bps (+9bps) | **Attribution confidence:** 95/100
 
-*Read from: row 'Net interest margin', column FY24 Total Group -> column FY25 Total Group*
+*Read from: row 'Net interest margin (%)', column FY24 Total Group -> column FY25 Total Group*
 
-CBA's Group NIM (cash basis) increased 9 bps to 208 bps in FY25 from 199 bps in FY24. The improvement was driven by a 7 bps benefit from reduced liquid assets and pooled facilities drag, and a 9 bps contribution from capital and replicating portfolio earnings. These were partially offset by a 7 bps increase in funding costs and a 1 bps adverse impact from basis risk.
+CBA's Group NIM (cash basis) increased 9 bps to 208 bps in FY25 from 199 bps in FY24. The improvement was driven by a 7 bps benefit from reduced liquid assets and pooled facilities, and a 9 bps gain from capital and replicating portfolio earnings. These were partially offset by a 7 bps headwind from funding costs due to deposit competition, a 1 bps drag from basis risk, and a 1 bps negative from Treasury and Markets. Asset pricing and portfolio mix were flat.
 
 ## Drivers
 
 | Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
 |---|---|---|---|---|---|
-| `liquids` | Liquids & Pooled Facilities | +7 bps | 85 | 1 (single_source) | ev-1, ev-5, ev-6, ev-22 |
-| `asset_pricing` | Asset pricing | +0 bps | 85 | 1 (single_source) | ev-1 |
-| `funding` | Funding costs | -7 bps | 85 | 1 (single_source) | ev-1 |
-| `mix` | Portfolio mix | +0 bps | 85 | 1 (single_source) | ev-1 |
-| `basis_risk` | Basis risk | -1 bps | 85 | 1 (single_source) | ev-1 |
-| `capital_replicating` | Capital, Replicating and Other | +9 bps | 85 | 1 (single_source) | ev-1 |
-| `markets_treasury` | Treasury and Markets | +1 bps | 85 | 1 (single_source) | ev-1 |
+| `liquids` | Liquids & Pooled Facilities | +7 bps | 85 | 1 (single_source) | ev-1, ev-22, ev-25 |
+| `asset_pricing` | Asset pricing | +0 bps | 85 | 1 (single_source) | ev-1, ev-23 |
+| `funding` | Funding costs | -7 bps | 85 | 1 (single_source) | ev-1, ev-24 |
+| `mix` | Portfolio mix | +0 bps | 85 | 1 (single_source) | ev-1, ev-22 |
+| `basis_risk` | Basis risk | -1 bps | 85 | 1 (single_source) | ev-1, ev-26 |
+| `capital_replicating` | Capital, Replicating and Other | +9 bps | 85 | 1 (single_source) | ev-1, ev-27 |
+| `markets_treasury` | Treasury and Markets | +1 bps | 85 | 1 (single_source) | ev-1, ev-28 |
 
 ### liquids — "Liquids & Pooled Facilities"
 *+7 bps | confidence 85/100*
 
-A 7 bps positive contribution from the reduction in lower-yielding liquid assets and institutional pooled facilities.
+
 > [ev-1] CBA/FY25/profit_announcement, printed p12: "[walk chart] NIM Movement since June 2024: Jun 24 Full Year 199 -> Jun 25 Full Year 208"
-> [ev-5] CBA/FY25/profit_announcement, PDF p9: "Net interest margin 2.08% 9bpts on FY24 (+2bpts underlying basis)"
-> [ev-6] CBA/FY25/profit_announcement, PDF p9: "Excluding the mix effect of lower liquid assets and institutional pooled facilities, margins improved by 2bpts."
-> [ev-22] CBA/FY25/profit_announcement, printed p12: "Excluding a 7 basis point increase in margin from a reduction in lower yielding liquid assets and institutional pooled facilities... net interest margin increased 2 basis points."
+> [ev-22] CBA/FY25/profit_announcement, printed p12: "Excluding a 7 basis point increase in margin from a reduction in lower yielding liquid assets and institutional pooled facilities, which have a broadly neutral impact on net interest income, net interest margin increased 2 basis points."
+> [ev-25] CBA/FY25/profit_announcement, printed p12: "Reduction in lower yielding liquid assets and institutional pooled lending facilities drove a 5 basis point and 2 basis point increase in margin respectively."
 
 ### asset_pricing — "Asset pricing"
 *+0 bps | confidence 85/100*
 
-No net contribution from asset pricing drivers in the primary walk.
+The bank reported asset pricing as flat for the period.
 > [ev-1] CBA/FY25/profit_announcement, printed p12: "[walk chart] NIM Movement since June 2024: Jun 24 Full Year 199 -> Jun 25 Full Year 208"
+> [ev-23] CBA/FY25/profit_announcement, printed p12: "Asset pricing: Flat."
 
 ### funding — "Funding costs"
 *-7 bps | confidence 85/100*
 
-A 7 bps negative impact from higher funding costs, reflecting competition and mix shifts.
+Margin decreased by 7 bps, primarily driven by increased deposit price competition.
 > [ev-1] CBA/FY25/profit_announcement, printed p12: "[walk chart] NIM Movement since June 2024: Jun 24 Full Year 199 -> Jun 25 Full Year 208"
+> [ev-24] CBA/FY25/profit_announcement, printed p12: "Funding costs: Decreased margin by 7 basis points driven by increased deposit price competition."
 
 ### mix — "Portfolio mix"
 *+0 bps | confidence 85/100*
 
-No net contribution from portfolio mix in the primary walk.
+The bank reported portfolio mix as having no net impact on the margin movement.
 > [ev-1] CBA/FY25/profit_announcement, printed p12: "[walk chart] NIM Movement since June 2024: Jun 24 Full Year 199 -> Jun 25 Full Year 208"
+> [ev-22] CBA/FY25/profit_announcement, printed p12: "Excluding a 7 basis point increase in margin from a reduction in lower yielding liquid assets and institutional pooled facilities, which have a broadly neutral impact on net interest income, net interest margin increased 2 basis points."
 
 ### basis_risk — "Basis risk"
 *-1 bps | confidence 85/100*
 
-A 1 bps negative impact from basis risk (bills/OIS spread).
+Margin decreased by 1 bps reflecting an increase in the average spread between the 3-month bank bill swap rate and the 3-month overnight index swap rate.
 > [ev-1] CBA/FY25/profit_announcement, printed p12: "[walk chart] NIM Movement since June 2024: Jun 24 Full Year 199 -> Jun 25 Full Year 208"
+> [ev-26] CBA/FY25/profit_announcement, PDF p29: "The Bank’s margin decreased 1 basis point reflecting an increase in the average spread."
 
 ### capital_replicating — "Capital, Replicating and Other"
 *+9 bps | confidence 85/100*
 
-A 9 bps positive contribution from capital, replicating portfolio, and other items.
+Increased margin by 9 bps driven by the net impact of the replicating portfolio due to changes in portfolio rate and volume (up 5 bps) and higher earnings on capital hedges (up 4 bps).
 > [ev-1] CBA/FY25/profit_announcement, printed p12: "[walk chart] NIM Movement since June 2024: Jun 24 Full Year 199 -> Jun 25 Full Year 208"
+> [ev-27] CBA/FY25/profit_announcement, PDF p29: "Increased margin by 9 basis points driven by the net impact of the replicating portfolio due to changes in portfolio rate and volume (up 5 basis points) and higher earnings on capital hedges (up 4 basis points)."
 
 ### markets_treasury — "Treasury and Markets"
 *+1 bps | confidence 85/100*
 
-A 1 bps positive contribution from Treasury and Markets.
+Treasury and Markets increased margin by 1 basis point.
 > [ev-1] CBA/FY25/profit_announcement, printed p12: "[walk chart] NIM Movement since June 2024: Jun 24 Full Year 199 -> Jun 25 Full Year 208"
-
-## Source disagreements
-- **NIM Movement Magnitude** (definitional): 9 bps (Group Cash Basis, ev-5, ev-7, ev-20) vs -3 bps (Cash NPAT Segment, ev-13, ev-14) vs -4 bps (Cash NII Segment, ev-16, ev-17)
-  Preferred: 9 bps (Group Cash Basis). The task requires the Group Net Interest Margin. The -3 bps and -4 bps figures refer to specific segments (likely Business Banking or similar cash-basis sub-metrics) within the Profit Announcement narrative, not the consolidated Group NIM reported in the KPI table.
+> [ev-28] CBA/FY25/profit_announcement, PDF p29: "Treasury and Markets: Increased margin by 1 basis point."
 
 ## Provenance
 - combo: cheap
 - models: extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash
 - documents: CBA/FY25/profit_announcement (e2e911ab4fed), CBA/FY24/profit_announcement (1ab9332c8371), CBA/FY24/results_presentation (168e3835d44c)
-- generated: 2026-08-29T13:15:31+00:00
-- seconds: 77.1
-- cost_usd: 0.0023
-- tokens: 54493 in / 5073 out
+- generated: 2026-08-29T17:56:28+00:00
+- seconds: 144.1
+- cost_usd: 0.0029
+- tokens: 63652 in / 7281 out
 - orchestration: pipeline
+- pages_extracted: 20
+- reference_follow: ['CBA/FY24/profit_announcement p36 <- p29 page 20 [added]', 'CBA/FY25/profit_announcement p36 <- p29 page 20 [added]']

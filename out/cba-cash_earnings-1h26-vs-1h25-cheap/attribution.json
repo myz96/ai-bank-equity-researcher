@@ -11,7 +11,7 @@
     "unit": "$m"
   },
   "movement_source": "row 'Net profit after tax from continuing operations (\"cash basis\")', column 31 Dec 24 -> column 31 Dec 25",
-  "headline": "CBA's cash earnings increased $313 million (+6%) to $5,445 million in 1H26, driven by a $761 million rise in Net Interest Income and a $163 million increase in Other Operating Income. These were partially offset by higher Underlying Operating Expenses ($348 million) and Tax ($94 million), while Credit Impairment remained broadly flat.",
+  "headline": "CBA's cash NPAT rose $313 million (+6%) to $5,445 million in 1H26 (ended Dec 2025) versus $5,132 million in 1H25 (ended Dec 2024). Statutory NPAT was $5,367 million. Total operating income grew $924 million (+7%) to $15,021 million, driven by a $761 million increase in NII and a $163 million rise in other operating income. Operating performance increased $406 million (+5%) to $8,131 million. Loan impairment expense decreased marginally by $1 million to $319 million. Corporate tax expense increased $94 million to $2,367 million.",
   "drivers": [
     {
       "canonical": "nii",
@@ -21,7 +21,7 @@
         "unit": "$m"
       },
       "columns": "31 Dec 24 -> 31 Dec 25",
-      "narrative": "NII increased $761 million (6%), driven by an $96 billion (8%) growth in average IEA volumes, partly offset by a 4 bps decline in NIM.",
+      "narrative": "NII increased $761 million (+6%) to $12,695 million. The bank attributes this to an $96 billion (+8%) increase in average interest earning assets, partly offset by a 4 basis point decrease in net interest margin to 2.04% (ev-3, ev-4).",
       "confidence": 85,
       "evidence": [
         "ev-1",
@@ -41,14 +41,16 @@
         "unit": "$m"
       },
       "columns": "31 Dec 24 -> 31 Dec 25",
-      "narrative": "Other operating income rose $163 million (8%), supported by increases in commissions ($61m), trading income ($84m), and lending fees ($16m).",
+      "narrative": "Other operating income increased $163 million (+8%) to $2,326 million. Growth was driven by commissions (+$61m), trading income (+$84m), and lending fees (+$16m), partially offset by funds management (+$7m) and other income (-$5m) movements (ev-57, ev-58, ev-59, ev-60, ev-61, ev-62).",
       "confidence": 85,
       "evidence": [
-        "ev-54",
-        "ev-55",
-        "ev-56",
         "ev-57",
-        "ev-60"
+        "ev-58",
+        "ev-59",
+        "ev-60",
+        "ev-61",
+        "ev-62",
+        "ev-63"
       ],
       "checks_passed": [
         "single_source"
@@ -63,12 +65,14 @@
         "unit": "$m"
       },
       "columns": "31 Dec 24 -> 31 Dec 25",
-      "narrative": "Underlying operating expenses increased $348 million (5%), reflecting higher staff costs ($169m) and IT services ($134m). Restructuring items are reported separately.",
+      "narrative": "Underlying operating expenses increased $348 million (+5%) to $6,720 million. This is a negative contribution to earnings. Staff expenses rose $169 million, IT services rose $134 million, and other expenses rose $40 million, while occupancy fell $5 million (ev-12, ev-13, ev-14, ev-15, ev-16).",
       "confidence": 80,
       "evidence": [
-        "ev-16",
         "ev-12",
-        "ev-14"
+        "ev-13",
+        "ev-14",
+        "ev-15",
+        "ev-16"
       ],
       "checks_passed": [
         "single_source",
@@ -84,11 +88,11 @@
         "unit": "$m"
       },
       "columns": "31 Dec 24 -> 31 Dec 25",
-      "narrative": "Restructuring and notable items of $170 million were incurred in 1H26, compared to nil in the prior period.",
+      "narrative": "Restructuring and notable items were $170 million in 1H26, compared to nil in 1H25. This represents a negative contribution of $170 million to cash earnings (ev-17, ev-49).",
       "confidence": 80,
       "evidence": [
         "ev-17",
-        "ev-46"
+        "ev-49"
       ],
       "checks_passed": [
         "single_source"
@@ -99,19 +103,20 @@
       "canonical": "credit_impairment_charge",
       "bank_label": "Loan impairment expense/(benefit)",
       "contribution": {
-        "value": -1.0,
+        "value": 1.0,
         "unit": "$m"
       },
       "columns": "31 Dec 24 -> 31 Dec 25",
-      "narrative": "Loan impairment expense decreased by $1 million to $319 million, remaining broadly stable year-on-year despite retail headwinds offset by business improvements.",
-      "confidence": 85,
+      "narrative": "Loan impairment expense decreased by $1 million to $319 million. This decrease in expense is a positive contribution of $1 million to earnings. Business Banking impairment fell $129 million, while Retail Banking Services impairment rose $153 million (ev-21, ev-27, ev-28, ev-80, ev-81).",
+      "confidence": 90,
       "evidence": [
         "ev-21",
-        "ev-27"
+        "ev-27",
+        "ev-28",
+        "ev-80",
+        "ev-81"
       ],
-      "checks_passed": [
-        "single_source"
-      ],
+      "checks_passed": [],
       "checks_failed": []
     },
     {
@@ -122,11 +127,13 @@
         "unit": "$m"
       },
       "columns": "31 Dec 24 -> 31 Dec 25",
-      "narrative": "",
+      "narrative": "Corporate tax expense increased $94 million (+4%) to $2,367 million. The effective tax rate decreased slightly from 30.7% to 30.3%, primarily due to a decrease in non-deductible expenses. The higher tax expense is a negative contribution to earnings (ev-31, ev-32, ev-33, ev-34).",
       "confidence": 85,
       "evidence": [
         "ev-31",
-        "ev-33"
+        "ev-32",
+        "ev-33",
+        "ev-34"
       ],
       "checks_passed": [
         "single_source"
@@ -134,17 +141,13 @@
       "checks_failed": []
     }
   ],
-  "residual": {
-    "value": 2.0,
-    "unit": "$m"
-  },
+  "residual": null,
   "notable_items": [
-    "Restructuring and notable items: $170 million (1H26) vs $0 million (1H25)."
+    "Restructuring and notable items: $170 million (1H26) vs $0 million (1H25)"
   ],
   "disagreements": [],
-  "attribution_confidence": 90,
+  "attribution_confidence": 95,
   "limitations": [
-    "The sum of quantified drivers is +$311 million against a total delta of +$313 million. A residual of +$2 million remains unexplained, likely due to rounding or minor unmapped components.",
     "Expenses are claimed on the underlying/notable split; the bank equally publishes the combined headline framing, so both claims are capped at 80."
   ],
   "evidence_records": [
@@ -174,7 +177,8 @@
           "unit": "$m",
           "basis": "cash"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-2",
@@ -202,7 +206,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-3",
@@ -224,7 +229,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-4",
@@ -251,8 +257,15 @@
           "value": -4.0,
           "unit": "bps",
           "basis": null
+        },
+        {
+          "label": "NIM level 31 Dec 25",
+          "value": 2.04,
+          "unit": "%",
+          "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-5",
@@ -263,18 +276,19 @@
       "quote": "Home loan average balances increased $31 billion or 5% on the prior comparative period to $622 billion.",
       "numbers": [
         {
-          "label": "Home loans avg balance change 31 Dec 25 vs 31 Dec 24",
+          "label": "Home loan avg balance change 31 Dec 25 vs 31 Dec 24",
           "value": 31000.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Home loans avg balance level 31 Dec 25",
+          "label": "Home loan avg balance level 31 Dec 25",
           "value": 622000.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-6",
@@ -296,7 +310,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-7",
@@ -307,18 +322,19 @@
       "quote": "Business and corporate loan average balances increased $29 billion or 11% on the prior comparative period to $293 billion",
       "numbers": [
         {
-          "label": "Biz & Corp loans avg balance change 31 Dec 25 vs 31 Dec 24",
+          "label": "Biz/Corp loan avg balance change 31 Dec 25 vs 31 Dec 24",
           "value": 28977.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Biz & Corp loans avg balance level 31 Dec 25",
+          "label": "Biz/Corp loan avg balance level 31 Dec 25",
           "value": 293300.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-8",
@@ -340,7 +356,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-9",
@@ -351,18 +368,19 @@
       "quote": "Liquid asset average balances increased $20 billion or 12% on the prior comparative period to $189 billion.",
       "numbers": [
         {
-          "label": "Liquid assets avg balance change 31 Dec 25 vs 31 Dec 24",
+          "label": "Liquid asset avg balance change 31 Dec 25 vs 31 Dec 24",
           "value": 20336.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Liquid assets avg balance level 31 Dec 25",
+          "label": "Liquid asset avg balance level 31 Dec 25",
           "value": 188771.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-10",
@@ -379,21 +397,29 @@
           "basis": null
         },
         {
-          "label": "NIM change ex liquids 31 Dec 25 vs 31 Dec 24",
+          "label": "NIM level excl liquids 31 Dec 25",
+          "value": 2.05,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "NIM change excl liquids 31 Dec 25 vs 31 Dec 24",
           "value": -1.0,
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-11",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 31,
       "printed_page": null,
-      "kind": "table",
+      "kind": "text",
       "quote": "Operating Expenses (continuing operations basis)",
-      "numbers": []
+      "numbers": [],
+      "provenance": null
     },
     {
       "id": "ev-12",
@@ -421,7 +447,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-13",
@@ -449,7 +476,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-14",
@@ -477,7 +505,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-15",
@@ -505,7 +534,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-16",
@@ -533,7 +563,8 @@
           "unit": "$m",
           "basis": "underlying"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-17",
@@ -547,21 +578,22 @@
           "label": "Restructuring and notable items 31 Dec 25",
           "value": 170.0,
           "unit": "$m",
-          "basis": null
+          "basis": "notable"
         },
         {
           "label": "Restructuring and notable items 30 Jun 25",
           "value": 130.0,
           "unit": "$m",
-          "basis": null
+          "basis": "notable"
         },
         {
           "label": "Restructuring and notable items 31 Dec 24",
           "value": 0.0,
           "unit": "$m",
-          "basis": null
+          "basis": "notable"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-18",
@@ -589,7 +621,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-19",
@@ -617,7 +650,8 @@
           "unit": "%",
           "basis": "underlying"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-20",
@@ -645,7 +679,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-21",
@@ -673,7 +708,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-22",
@@ -684,24 +720,25 @@
       "quote": "Retail Banking Services 232 193 79 20 large",
       "numbers": [
         {
-          "label": "Retail Banking Services Loan impairment expense 31 Dec 25",
+          "label": "Retail Banking Services Loan impairment 31 Dec 25",
           "value": 232.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Retail Banking Services Loan impairment expense 30 Jun 25",
+          "label": "Retail Banking Services Loan impairment 30 Jun 25",
           "value": 193.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Retail Banking Services Loan impairment expense 31 Dec 24",
+          "label": "Retail Banking Services Loan impairment 31 Dec 24",
           "value": 79.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-23",
@@ -712,24 +749,25 @@
       "quote": "Business Banking 91 135 220 (33) (59)",
       "numbers": [
         {
-          "label": "Business Banking Loan impairment expense 31 Dec 25",
+          "label": "Business Banking Loan impairment 31 Dec 25",
           "value": 91.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Business Banking Loan impairment expense 30 Jun 25",
+          "label": "Business Banking Loan impairment 30 Jun 25",
           "value": 135.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Business Banking Loan impairment expense 31 Dec 24",
+          "label": "Business Banking Loan impairment 31 Dec 24",
           "value": 220.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-24",
@@ -740,24 +778,25 @@
       "quote": "Institutional Banking and Markets (8) 40 9 (large) (large)",
       "numbers": [
         {
-          "label": "Institutional Banking and Markets Loan impairment expense 31 Dec 25",
+          "label": "Institutional Banking and Markets Loan impairment 31 Dec 25",
           "value": -8.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Institutional Banking and Markets Loan impairment expense 30 Jun 25",
+          "label": "Institutional Banking and Markets Loan impairment 30 Jun 25",
           "value": 40.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Institutional Banking and Markets Loan impairment expense 31 Dec 24",
+          "label": "Institutional Banking and Markets Loan impairment 31 Dec 24",
           "value": 9.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-25",
@@ -768,24 +807,25 @@
       "quote": "New Zealand 4 39 16 (90) (75)",
       "numbers": [
         {
-          "label": "New Zealand Loan impairment expense 31 Dec 25",
+          "label": "New Zealand Loan impairment 31 Dec 25",
           "value": 4.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "New Zealand Loan impairment expense 30 Jun 25",
+          "label": "New Zealand Loan impairment 30 Jun 25",
           "value": 39.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "New Zealand Loan impairment expense 31 Dec 24",
+          "label": "New Zealand Loan impairment 31 Dec 24",
           "value": 16.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-26",
@@ -796,24 +836,25 @@
       "quote": "Corporate Centre and Other – (1) (4) large large",
       "numbers": [
         {
-          "label": "Corporate Centre and Other Loan impairment expense 31 Dec 25",
+          "label": "Corporate Centre and Other Loan impairment 31 Dec 25",
           "value": 0.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Corporate Centre and Other Loan impairment expense 30 Jun 25",
+          "label": "Corporate Centre and Other Loan impairment 30 Jun 25",
           "value": -1.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Corporate Centre and Other Loan impairment expense 31 Dec 24",
+          "label": "Corporate Centre and Other Loan impairment 31 Dec 24",
           "value": -4.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-27",
@@ -835,7 +876,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-28",
@@ -846,18 +888,19 @@
       "quote": "A decrease in Business Banking of $129 million to an expense of $91 million",
       "numbers": [
         {
-          "label": "Business Banking Loan impairment expense change vs prior year",
+          "label": "Business Banking Loan impairment change vs prior year",
           "value": -129.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Business Banking Loan impairment expense 31 Dec 25",
+          "label": "Business Banking Loan impairment 31 Dec 25",
           "value": 91.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-29",
@@ -865,21 +908,22 @@
       "pdf_page": 34,
       "printed_page": 18,
       "kind": "text",
-      "quote": "An increase in Retail Banking Services of $153 million to an expense of $232 million",
+      "quote": "A decrease in Institutional Banking and Markets of $17 million to a benefit of $8 million",
       "numbers": [
         {
-          "label": "Retail Banking Services Loan impairment expense change vs prior year",
-          "value": 153.0,
+          "label": "Institutional Banking and Markets Loan impairment change vs prior year",
+          "value": -17.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Retail Banking Services Loan impairment expense 31 Dec 25",
-          "value": 232.0,
+          "label": "Institutional Banking and Markets Loan impairment 31 Dec 25",
+          "value": -8.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-30",
@@ -901,7 +945,8 @@
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-31",
@@ -929,7 +974,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-32",
@@ -957,7 +1003,8 @@
           "unit": "%",
           "basis": "cash"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-33",
@@ -979,7 +1026,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-34",
@@ -988,7 +1036,8 @@
       "printed_page": null,
       "kind": "text",
       "quote": "The decrease in effective tax rate from 30.7% to 30.3% was primarily due to a decrease in non-deductible expenses in the half year ended 31 December 2025.",
-      "numbers": []
+      "numbers": [],
+      "provenance": null
     },
     {
       "id": "ev-35",
@@ -1004,7 +1053,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-36",
@@ -1020,7 +1070,8 @@
           "unit": "bps",
           "basis": "cash"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-37",
@@ -1028,21 +1079,16 @@
       "pdf_page": 163,
       "printed_page": null,
       "kind": "table",
-      "quote": "Net interest income 12,695 – – 12,695",
+      "quote": "Net profit after tax \"cash basis\" $M",
       "numbers": [
         {
-          "label": "NII cash 31 Dec 25",
-          "value": 12695.0,
+          "label": "Net profit after tax cash basis 31 Dec 25",
+          "value": 5445.0,
           "unit": "$m",
           "basis": "cash"
-        },
-        {
-          "label": "NII statutory 31 Dec 25",
-          "value": 12695.0,
-          "unit": "$m",
-          "basis": "statutory"
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
     },
     {
       "id": "ev-38",
@@ -1050,21 +1096,16 @@
       "pdf_page": 163,
       "printed_page": null,
       "kind": "table",
-      "quote": "Other operating income 2,326 – (21) 2,305",
+      "quote": "Net profit after tax \"statutory basis\" $M",
       "numbers": [
         {
-          "label": "Other Op Income cash 31 Dec 25",
-          "value": 2326.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Other Op Income statutory 31 Dec 25",
-          "value": 2305.0,
+          "label": "Net profit after tax statutory basis 31 Dec 25",
+          "value": 5367.0,
           "unit": "$m",
           "basis": "statutory"
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
     },
     {
       "id": "ev-39",
@@ -1072,21 +1113,16 @@
       "pdf_page": 163,
       "printed_page": null,
       "kind": "table",
-      "quote": "Total operating income 15,021 – (21) 15,000",
+      "quote": "Interest income 2 32,366) – – 32,366)",
       "numbers": [
         {
-          "label": "Total Op Income cash 31 Dec 25",
-          "value": 15021.0,
+          "label": "Interest income 31 Dec 25",
+          "value": 32366.0,
           "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Total Op Income statutory 31 Dec 25",
-          "value": 15000.0,
-          "unit": "$m",
-          "basis": "statutory"
+          "basis": null
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
     },
     {
       "id": "ev-40",
@@ -1094,21 +1130,16 @@
       "pdf_page": 163,
       "printed_page": null,
       "kind": "table",
-      "quote": "Operating expenses (6,890) (26) – (6,916)",
+      "quote": "Interest expense (19,671) – – (19,671)",
       "numbers": [
         {
-          "label": "Op Ex cash 31 Dec 25",
-          "value": -6890.0,
+          "label": "Interest expense 31 Dec 25",
+          "value": -19671.0,
           "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Op Ex statutory 31 Dec 25",
-          "value": -6916.0,
-          "unit": "$m",
-          "basis": "statutory"
+          "basis": null
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
     },
     {
       "id": "ev-41",
@@ -1116,21 +1147,16 @@
       "pdf_page": 163,
       "printed_page": null,
       "kind": "table",
-      "quote": "Loan impairment expense (319) – – (319)",
+      "quote": "Net interest income 12,695) – – 12,695)",
       "numbers": [
         {
-          "label": "Impairment cash 31 Dec 25",
-          "value": -319.0,
+          "label": "Net interest income 31 Dec 25",
+          "value": 12695.0,
           "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Impairment statutory 31 Dec 25",
-          "value": -319.0,
-          "unit": "$m",
-          "basis": "statutory"
+          "basis": null
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
     },
     {
       "id": "ev-42",
@@ -1138,21 +1164,28 @@
       "pdf_page": 163,
       "printed_page": null,
       "kind": "table",
-      "quote": "Corporate tax expense (2,367) 8 6 (2,353)",
+      "quote": "Other operating income 2,326) – (21) 2,305)",
       "numbers": [
         {
-          "label": "Tax cash 31 Dec 25",
-          "value": -2367.0,
+          "label": "Other operating income 31 Dec 25",
+          "value": 2326.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         },
         {
-          "label": "Tax statutory 31 Dec 25",
-          "value": -2353.0,
+          "label": "Hedging and IFRS volatility impact on Other operating income 31 Dec 25",
+          "value": -21.0,
           "unit": "$m",
-          "basis": "statutory"
+          "basis": null
+        },
+        {
+          "label": "Other operating income statutory 31 Dec 25",
+          "value": 2305.0,
+          "unit": "$m",
+          "basis": null
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
     },
     {
       "id": "ev-43",
@@ -1160,24 +1193,106 @@
       "pdf_page": 163,
       "printed_page": null,
       "kind": "table",
-      "quote": "Net profit/(loss) after income tax 5,445 (63) (15) 5,367",
+      "quote": "Total operating income 15,021) – (21) 15,000)",
       "numbers": [
         {
-          "label": "Profit cash 31 Dec 25",
-          "value": 5445.0,
+          "label": "Total operating income 31 Dec 25",
+          "value": 15021.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         },
         {
-          "label": "Profit statutory 31 Dec 25",
-          "value": 5367.0,
+          "label": "Total operating income statutory 31 Dec 25",
+          "value": 15000.0,
           "unit": "$m",
-          "basis": "statutory"
+          "basis": null
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
     },
     {
       "id": "ev-44",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 163,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operating expenses (6,890) (26) – (6,916)",
+      "numbers": [
+        {
+          "label": "Operating expenses 31 Dec 25",
+          "value": -6890.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Notable items impact on Operating expenses 31 Dec 25",
+          "value": -26.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses statutory 31 Dec 25",
+          "value": -6916.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-45",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 163,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Loan impairment expense (319) – – (319)",
+      "numbers": [
+        {
+          "label": "Loan impairment expense 31 Dec 25",
+          "value": -319.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-46",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 163,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Corporate tax expense (2,367) 8) 6) (2,353)",
+      "numbers": [
+        {
+          "label": "Corporate tax expense 31 Dec 25",
+          "value": -2367.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Tax impact on Gain/(loss) on disposal 31 Dec 25",
+          "value": 8.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Tax impact on Hedging and IFRS volatility 31 Dec 25",
+          "value": 6.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Corporate tax expense statutory 31 Dec 25",
+          "value": -2353.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-47",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -1202,10 +1317,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-45",
+      "id": "ev-48",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -1230,10 +1346,11 @@
           "unit": "$m",
           "basis": "underlying"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-46",
+      "id": "ev-49",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -1258,10 +1375,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-47",
+      "id": "ev-50",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -1286,10 +1404,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-48",
+      "id": "ev-51",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -1314,10 +1433,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-49",
+      "id": "ev-52",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -1342,10 +1462,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-50",
+      "id": "ev-53",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -1370,10 +1491,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-51",
+      "id": "ev-54",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -1398,10 +1520,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-52",
+      "id": "ev-55",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -1426,10 +1549,11 @@
           "unit": "$m",
           "basis": "cash"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-53",
+      "id": "ev-56",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -1454,10 +1578,11 @@
           "unit": "$m",
           "basis": "statutory"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-54",
+      "id": "ev-57",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 30,
       "printed_page": 14,
@@ -1476,10 +1601,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-55",
+      "id": "ev-58",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 30,
       "printed_page": 14,
@@ -1498,10 +1624,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-56",
+      "id": "ev-59",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 30,
       "printed_page": 14,
@@ -1520,10 +1647,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-57",
+      "id": "ev-60",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 30,
       "printed_page": 14,
@@ -1542,10 +1670,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-58",
+      "id": "ev-61",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 30,
       "printed_page": 14,
@@ -1564,10 +1693,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-59",
+      "id": "ev-62",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 30,
       "printed_page": 14,
@@ -1586,10 +1716,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-60",
+      "id": "ev-63",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 30,
       "printed_page": 14,
@@ -1614,10 +1745,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-61",
+      "id": "ev-64",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 30,
       "printed_page": 14,
@@ -1642,10 +1774,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-62",
+      "id": "ev-65",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 30,
       "printed_page": 14,
@@ -1670,10 +1803,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-63",
+      "id": "ev-66",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 30,
       "printed_page": 14,
@@ -1698,91 +1832,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
-    },
-    {
-      "id": "ev-64",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 8,
-      "printed_page": 8,
-      "kind": "table",
-      "quote": "Operating income $m 14,097 14,368 15,021",
-      "numbers": [
-        {
-          "label": "Operating income 31 Dec 24",
-          "value": 14097.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Operating income 30 Jun 25",
-          "value": 14368.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Operating income 31 Dec 25",
-          "value": 15021.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-65",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 8,
-      "printed_page": 8,
-      "kind": "table",
-      "quote": "Operating expenses $m 6,372 6,494 6,720",
-      "numbers": [
-        {
-          "label": "Operating expenses 31 Dec 24",
-          "value": 6372.0,
-          "unit": "$m",
-          "basis": "ex_notables"
-        },
-        {
-          "label": "Operating expenses 30 Jun 25",
-          "value": 6494.0,
-          "unit": "$m",
-          "basis": "ex_notables"
-        },
-        {
-          "label": "Operating expenses 31 Dec 25",
-          "value": 6720.0,
-          "unit": "$m",
-          "basis": "ex_notables"
-        }
-      ]
-    },
-    {
-      "id": "ev-66",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 8,
-      "printed_page": 8,
-      "kind": "table",
-      "quote": "Pre-provision profit $m 7,725 7,744 8,131",
-      "numbers": [
-        {
-          "label": "Pre-provision profit 31 Dec 24",
-          "value": 7725.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Pre-provision profit 30 Jun 25",
-          "value": 7744.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Pre-provision profit 31 Dec 25",
-          "value": 8131.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-67",
@@ -1793,15 +1844,103 @@
       "quote": "Cash NPAT up 6%",
       "numbers": [
         {
-          "label": "Cash NPAT change 31 Dec 25 vs 31 Dec 24",
-          "value": 6.0,
+          "label": "Cash NPAT growth",
+          "value": 6.1,
           "unit": "%",
           "basis": "cash"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-68",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Operating income 14,097 14,368 15,021 1H25 2H25 1H26",
+      "numbers": [
+        {
+          "label": "Operating income 31 Dec 25",
+          "value": 15021.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating income 30 Jun 25",
+          "value": 14368.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating income 31 Dec 24",
+          "value": 14097.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-69",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Operating expenses 6,372 6,494 6,720 1H25 2H25 1H26",
+      "numbers": [
+        {
+          "label": "Operating expenses 31 Dec 25",
+          "value": 6720.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses 30 Jun 25",
+          "value": 6494.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses 31 Dec 24",
+          "value": 6372.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-70",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Pre-provision profit 7,725 7,744 8,131 1H25 2H25 1H26",
+      "numbers": [
+        {
+          "label": "Pre-provision profit 31 Dec 25",
+          "value": 8131.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Pre-provision profit 30 Jun 25",
+          "value": 7744.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Pre-provision profit 31 Dec 24",
+          "value": 7725.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-71",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -1815,21 +1954,22 @@
           "basis": null
         },
         {
-          "label": "Operating income 31 Dec 25 vs 30 Jun 24 %",
+          "label": "Operating income change 31 Dec 25 vs 30 Jun 24",
           "value": 6.6,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Operating income 31 Dec 25 vs 30 Jun 25 %",
+          "label": "Operating income change 31 Dec 25 vs 30 Jun 25",
           "value": 4.5,
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-69",
+      "id": "ev-72",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -1843,21 +1983,22 @@
           "basis": "underlying"
         },
         {
-          "label": "Underlying operating expenses 31 Dec 25 vs 30 Jun 24 %",
+          "label": "Underlying operating expenses change 31 Dec 25 vs 30 Jun 24",
           "value": 5.5,
           "unit": "%",
           "basis": "underlying"
         },
         {
-          "label": "Underlying operating expenses 31 Dec 25 vs 30 Jun 25 %",
+          "label": "Underlying operating expenses change 31 Dec 25 vs 30 Jun 25",
           "value": 3.5,
           "unit": "%",
           "basis": "underlying"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-70",
+      "id": "ev-73",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -1870,10 +2011,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-71",
+      "id": "ev-74",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -1887,21 +2029,22 @@
           "basis": null
         },
         {
-          "label": "Operating performance 31 Dec 25 vs 30 Jun 24 %",
+          "label": "Operating performance change 31 Dec 25 vs 30 Jun 24",
           "value": 5.3,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Operating performance 31 Dec 25 vs 30 Jun 25 %",
+          "label": "Operating performance change 31 Dec 25 vs 30 Jun 25",
           "value": 5.0,
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-72",
+      "id": "ev-75",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -1915,21 +2058,22 @@
           "basis": null
         },
         {
-          "label": "Loan impairment expense 31 Dec 25 vs 30 Jun 24 %",
+          "label": "Loan impairment expense change 31 Dec 25 vs 30 Jun 24",
           "value": -0.3,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Loan impairment expense 31 Dec 25 vs 30 Jun 25 %",
+          "label": "Loan impairment expense change 31 Dec 25 vs 30 Jun 25",
           "value": -21.4,
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-73",
+      "id": "ev-76",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -1943,21 +2087,22 @@
           "basis": "cash"
         },
         {
-          "label": "Cash NPAT 31 Dec 25 vs 30 Jun 24 %",
+          "label": "Cash NPAT change 31 Dec 25 vs 30 Jun 24",
           "value": 6.1,
           "unit": "%",
           "basis": "cash"
         },
         {
-          "label": "Cash NPAT 31 Dec 25 vs 30 Jun 25 %",
+          "label": "Cash NPAT change 31 Dec 25 vs 30 Jun 25",
           "value": 6.3,
           "unit": "%",
           "basis": "cash"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-74",
+      "id": "ev-77",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 23,
       "printed_page": 23,
@@ -1971,21 +2116,16 @@
           "basis": "statutory"
         },
         {
-          "label": "Statutory NPAT 2H25",
-          "value": 4991.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
           "label": "Statutory NPAT 1H26",
           "value": 5412.0,
           "unit": "$m",
           "basis": "statutory"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-75",
+      "id": "ev-78",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 23,
       "printed_page": 23,
@@ -1999,21 +2139,16 @@
           "basis": "cash"
         },
         {
-          "label": "Cash NPAT 2H25",
-          "value": 5120.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
           "label": "Cash NPAT 1H26",
           "value": 5445.0,
           "unit": "$m",
           "basis": "cash"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-76",
+      "id": "ev-79",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 55,
       "printed_page": 55,
@@ -2038,55 +2173,8 @@
           "unit": "$m",
           "basis": "cash"
         }
-      ]
-    },
-    {
-      "id": "ev-77",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 55,
-      "printed_page": 55,
-      "kind": "text",
-      "quote": "RBS vs 1H25 • Income +6% • Expenses +7% • Impairment expense +$153m",
-      "numbers": [
-        {
-          "label": "RBS Impairment Expense Change vs 1H25",
-          "value": 153.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-78",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 55,
-      "printed_page": 55,
-      "kind": "text",
-      "quote": "BB vs 1H25 • Income +8% • Expenses +8% • Impairment expense ($129m)",
-      "numbers": [
-        {
-          "label": "BB Impairment Expense Change vs 1H25",
-          "value": -129.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-79",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 55,
-      "printed_page": 55,
-      "kind": "text",
-      "quote": "IB&M vs 1H25 • Income +9% • Expenses +5% • Impairment expense ($17m)",
-      "numbers": [
-        {
-          "label": "IB&M Impairment Expense Change vs 1H25",
-          "value": -17.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-80",
@@ -2094,23 +2182,75 @@
       "pdf_page": 55,
       "printed_page": 55,
       "kind": "text",
-      "quote": "NZ (NZD) vs 1H25 • Income +8% • Expenses +21% • Impairment expense ($14m)",
+      "quote": "RBS vs 1H25 • Income +6% • Expenses +7% • Impairment expense +$153m",
       "numbers": [
         {
-          "label": "NZ Impairment Expense Change vs 1H25",
-          "value": -14.0,
+          "label": "Impairment expense change RBS 1H26 vs 1H25",
+          "value": 153.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-81",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 55,
       "printed_page": 55,
+      "kind": "text",
+      "quote": "BB vs 1H25 • Income +8% • Expenses +8% • Impairment expense ($129m)",
+      "numbers": [
+        {
+          "label": "Impairment expense change BB 1H26 vs 1H25",
+          "value": -129.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-82",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 55,
+      "printed_page": 55,
+      "kind": "text",
+      "quote": "IB&M vs 1H25 • Income +9% • Expenses +5% • Impairment expense ($17m)",
+      "numbers": [
+        {
+          "label": "Impairment expense change IB&M 1H26 vs 1H25",
+          "value": -17.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-83",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 55,
+      "printed_page": 55,
+      "kind": "text",
+      "quote": "NZ (NZD) vs 1H25 • Income +8% • Expenses +21% • Impairment expense ($14m)",
+      "numbers": [
+        {
+          "label": "Impairment expense change NZ 1H26 vs 1H25",
+          "value": -14.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-84",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 55,
+      "printed_page": 55,
       "kind": "table",
-      "quote": "Cost to income",
+      "quote": "Cost to income $m 39.5% 39.1% 39.9%",
       "numbers": [
         {
           "label": "Cost to income RBS 1H25",
@@ -2130,15 +2270,16 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-82",
+      "id": "ev-85",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 55,
       "printed_page": 55,
       "kind": "table",
-      "quote": "Cost to income BB",
+      "quote": "Cost to income $m 41.8% 45.0% 46.5%",
       "numbers": [
         {
           "label": "Cost to income BB 1H25",
@@ -2158,15 +2299,16 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-83",
+      "id": "ev-86",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 55,
       "printed_page": 55,
       "kind": "table",
-      "quote": "Cost to income IB&M",
+      "quote": "Cost to income $m 42.0% 40.1% 40.2%",
       "numbers": [
         {
           "label": "Cost to income IB&M 1H25",
@@ -2186,15 +2328,16 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-84",
+      "id": "ev-87",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 55,
       "printed_page": 55,
       "kind": "table",
-      "quote": "Cost to income NZ",
+      "quote": "Cost to income $m 32.3% 32.3% 32.2%",
       "numbers": [
         {
           "label": "Cost to income NZ 1H25",
@@ -2214,38 +2357,40 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-85",
+      "id": "ev-88",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 55,
       "printed_page": 55,
       "kind": "table",
-      "quote": "Total Cash NPAT",
+      "quote": "Income $m 2,001 2,091 2,272",
       "numbers": [
         {
-          "label": "Total Cash NPAT 1H25",
+          "label": "Income RBS 1H25",
           "value": 2001.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         },
         {
-          "label": "Total Cash NPAT 2H25",
+          "label": "Income RBS 2H25",
           "value": 2091.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         },
         {
-          "label": "Total Cash NPAT 1H26",
+          "label": "Income RBS 1H26",
           "value": 2272.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-86",
+      "id": "ev-89",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 25,
       "printed_page": 25,
@@ -2264,10 +2409,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-87",
+      "id": "ev-90",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 25,
       "printed_page": 25,
@@ -2286,35 +2432,871 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-88",
+      "id": "ev-91",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 25,
       "printed_page": 25,
-      "kind": "table",
-      "quote": "Operating income 16,058 15,184 +6.6%",
+      "kind": "text",
+      "quote": "Operating income 1H26 1H25 Flat +7.0% +8.4%",
       "numbers": [
         {
-          "label": "Op Income 31 Dec 25",
-          "value": 16058.0,
-          "unit": "$m",
+          "label": "Op Income Change %",
+          "value": 0.0,
+          "unit": "%",
           "basis": null
         },
         {
-          "label": "Op Income 31 Dec 24",
-          "value": 15184.0,
-          "unit": "$m",
+          "label": "Margin excl. liquids & repos Change %",
+          "value": 7.0,
+          "unit": "%",
           "basis": null
         },
         {
-          "label": "Op Income Change 31 Dec 25 vs 31 Dec 24",
-          "value": 6.6,
+          "label": "Avg lending volume growth Change %",
+          "value": 8.4,
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-92",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 164,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net interest income 12,089 – – 12,089",
+      "numbers": [
+        {
+          "label": "NII 30 Jun 25 cash basis",
+          "value": 12089.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "NII 30 Jun 25 statutory basis",
+          "value": 12089.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-93",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 164,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Other operating income 2,279 (249) 73 2,103",
+      "numbers": [
+        {
+          "label": "Other Op Income 30 Jun 25 cash basis",
+          "value": 2279.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/(loss) on disposal 30 Jun 25",
+          "value": -249.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging/IFRS volatility 30 Jun 25",
+          "value": 73.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other Op Income 30 Jun 25 statutory basis",
+          "value": 2103.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-94",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 164,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Total operating income 14,368 (249) 73 14,192",
+      "numbers": [
+        {
+          "label": "Total Op Income 30 Jun 25 cash basis",
+          "value": 14368.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/(loss) on disposal 30 Jun 25",
+          "value": -249.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging/IFRS volatility 30 Jun 25",
+          "value": 73.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total Op Income 30 Jun 25 statutory basis",
+          "value": 14192.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-95",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 164,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operating expenses (6,624) (19) – (6,643)",
+      "numbers": [
+        {
+          "label": "Op Ex 30 Jun 25 cash basis",
+          "value": -6624.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/(loss) on disposal 30 Jun 25",
+          "value": -19.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging/IFRS volatility 30 Jun 25",
+          "value": 0.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Op Ex 30 Jun 25 statutory basis",
+          "value": -6643.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-96",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 164,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Loan impairment expense (406) – – (406)",
+      "numbers": [
+        {
+          "label": "Impairment 30 Jun 25 cash basis",
+          "value": -406.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/(loss) on disposal 30 Jun 25",
+          "value": 0.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging/IFRS volatility 30 Jun 25",
+          "value": 0.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Impairment 30 Jun 25 statutory basis",
+          "value": -406.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-97",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 164,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit/(loss) before tax 7,338 (268) 73 7,143",
+      "numbers": [
+        {
+          "label": "PBT 30 Jun 25 cash basis",
+          "value": 7338.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/(loss) on disposal 30 Jun 25",
+          "value": -268.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging/IFRS volatility 30 Jun 25",
+          "value": 73.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "PBT 30 Jun 25 statutory basis",
+          "value": 7143.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-98",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 164,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Corporate tax expense (2,218) 87 (21) (2,152)",
+      "numbers": [
+        {
+          "label": "Tax 30 Jun 25 cash basis",
+          "value": -2218.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/(loss) on disposal 30 Jun 25",
+          "value": 87.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging/IFRS volatility 30 Jun 25",
+          "value": -21.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Tax 30 Jun 25 statutory basis",
+          "value": -2152.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-99",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 164,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit/(loss) after income tax from continuing operations 5,120 (181) 52 4,991",
+      "numbers": [
+        {
+          "label": "NPAT Cont Ops 30 Jun 25 cash basis",
+          "value": 5120.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/(loss) on disposal 30 Jun 25",
+          "value": -181.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging/IFRS volatility 30 Jun 25",
+          "value": 52.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NPAT Cont Ops 30 Jun 25 statutory basis",
+          "value": 4991.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-100",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 164,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit/(loss) after income tax from discontinued operations – (9) – (9)",
+      "numbers": [
+        {
+          "label": "NPAT Disc Ops 30 Jun 25 cash basis",
+          "value": 0.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/(loss) on disposal 30 Jun 25",
+          "value": -9.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging/IFRS volatility 30 Jun 25",
+          "value": 0.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NPAT Disc Ops 30 Jun 25 statutory basis",
+          "value": -9.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-101",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 164,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit/(loss) after income tax 5,120 (190) 52 4,982",
+      "numbers": [
+        {
+          "label": "NPAT 30 Jun 25 cash basis",
+          "value": 5120.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/(loss) on disposal 30 Jun 25",
+          "value": -190.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging/IFRS volatility 30 Jun 25",
+          "value": 52.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NPAT 30 Jun 25 statutory basis",
+          "value": 4982.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-102",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 165,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net interest income 11,934 – – 11,934",
+      "numbers": [
+        {
+          "label": "NII cash basis 31 Dec 24",
+          "value": 11934.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "NII statutory basis 31 Dec 24",
+          "value": 11934.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-103",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 165,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Other operating income 2,163 5 (4) 2,164",
+      "numbers": [
+        {
+          "label": "Other op inc cash basis 31 Dec 24",
+          "value": 2163.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/loss disposal 31 Dec 24",
+          "value": 5.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging volatility 31 Dec 24",
+          "value": -4.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other op inc statutory basis 31 Dec 24",
+          "value": 2164.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-104",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 165,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Total operating income 14,097 5 (4) 14,098",
+      "numbers": [
+        {
+          "label": "Total op inc cash basis 31 Dec 24",
+          "value": 14097.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/loss disposal 31 Dec 24",
+          "value": 5.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging volatility 31 Dec 24",
+          "value": -4.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total op inc statutory basis 31 Dec 24",
+          "value": 14098.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-105",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 165,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operating expenses (6,372) – – (6,372)",
+      "numbers": [
+        {
+          "label": "Op exp cash basis 31 Dec 24",
+          "value": -6372.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Op exp statutory basis 31 Dec 24",
+          "value": -6372.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-106",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 165,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Loan impairment expense (320) – – (320)",
+      "numbers": [
+        {
+          "label": "Impairment cash basis 31 Dec 24",
+          "value": -320.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Impairment statutory basis 31 Dec 24",
+          "value": -320.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-107",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 165,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit/(loss) before tax 7,405 5 (4) 7,406",
+      "numbers": [
+        {
+          "label": "PBT cash basis 31 Dec 24",
+          "value": 7405.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Gain/loss disposal 31 Dec 24",
+          "value": 5.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging volatility 31 Dec 24",
+          "value": -4.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "PBT statutory basis 31 Dec 24",
+          "value": 7406.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-108",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 165,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Corporate tax expense (2,273) 4 5 (2,264)",
+      "numbers": [
+        {
+          "label": "Tax cash basis 31 Dec 24",
+          "value": -2273.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Tax adjustment disposal 31 Dec 24",
+          "value": 4.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Tax adjustment hedging 31 Dec 24",
+          "value": 5.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Tax statutory basis 31 Dec 24",
+          "value": -2264.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-109",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 165,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit/(loss) after income tax from continuing operations 5,132 9 1 5,142",
+      "numbers": [
+        {
+          "label": "NPAT cont ops cash basis 31 Dec 24",
+          "value": 5132.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Adjustments disposal 31 Dec 24",
+          "value": 9.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Adjustments hedging 31 Dec 24",
+          "value": 1.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NPAT cont ops statutory basis 31 Dec 24",
+          "value": 5142.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-110",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 165,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit/(loss) after income tax from discontinued operations 1 (9) – (8)",
+      "numbers": [
+        {
+          "label": "NPAT disc ops cash basis 31 Dec 24",
+          "value": 1.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Adjustments disposal 31 Dec 24",
+          "value": -9.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NPAT disc ops statutory basis 31 Dec 24",
+          "value": -8.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-111",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 165,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit/(loss) after income tax 5,133 – 1 5,134",
+      "numbers": [
+        {
+          "label": "NPAT cash basis 31 Dec 24",
+          "value": 5133.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Adjustments hedging 31 Dec 24",
+          "value": 1.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NPAT statutory basis 31 Dec 24",
+          "value": 5134.0,
+          "unit": "$m",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p163 -> Note 4.3 Profit Reconciliation"
+    },
+    {
+      "id": "ev-112",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 17,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "The Profit Announcement discloses the net profit after tax on both a statutory and cash basis.",
+      "numbers": [],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p27 -> page 3"
+    },
+    {
+      "id": "ev-113",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 17,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Non-Cash Items Included in Statutory Profit Loss on acquisition, disposal, closure and demerger of businesses (63) (190) – 67 n/a Hedging and IFRS volatility (15) 52 1 (large) (large) Total non-cash items (after tax) (78) (138) 1 43 (large)",
+      "numbers": [
+        {
+          "label": "Loss on acquisition, disposal, closure and demerger of businesses 31 Dec 25",
+          "value": -63.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Loss on acquisition, disposal, closure and demerger of businesses 30 Jun 25",
+          "value": -190.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Loss on acquisition, disposal, closure and demerger of businesses 31 Dec 24",
+          "value": 0.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging and IFRS volatility 31 Dec 25",
+          "value": -15.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging and IFRS volatility 30 Jun 25",
+          "value": 52.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging and IFRS volatility 31 Dec 24",
+          "value": 1.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total non-cash items (after tax) 31 Dec 25",
+          "value": -78.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total non-cash items (after tax) 30 Jun 25",
+          "value": -138.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total non-cash items (after tax) 31 Dec 24",
+          "value": 1.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p27 -> page 3"
+    },
+    {
+      "id": "ev-114",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 17,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Non-cash items attributable to continuing and discontinued operations are set out below: (Loss)/gain on acquisition, disposal, closure and demerger of businesses ¹ (18) (181) 9 90 (large) Hedging and IFRS volatility (15) 52 1 (large) (large) Non-cash items (after tax) from continuing operations (33) (129) 10 74 (large) Loss on acquisition, disposal, closure and demerger of businesses ² (45) (9) (9) (large) (large) Non-cash items (after tax) from discontinued operations (45) (9) (9) (large) (large) Total non-cash items (after tax) (78) (138) 1 43 (large)",
+      "numbers": [
+        {
+          "label": "(Loss)/gain on acquisition, disposal, closure and demerger of businesses 31 Dec 25",
+          "value": -18.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "(Loss)/gain on acquisition, disposal, closure and demerger of businesses 30 Jun 25",
+          "value": -181.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "(Loss)/gain on acquisition, disposal, closure and demerger of businesses 31 Dec 24",
+          "value": 9.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging and IFRS volatility 31 Dec 25",
+          "value": -15.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging and IFRS volatility 30 Jun 25",
+          "value": 52.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Hedging and IFRS volatility 31 Dec 24",
+          "value": 1.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non-cash items (after tax) from continuing operations 31 Dec 25",
+          "value": -33.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non-cash items (after tax) from continuing operations 30 Jun 25",
+          "value": -129.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non-cash items (after tax) from continuing operations 31 Dec 24",
+          "value": 10.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Loss on acquisition, disposal, closure and demerger of businesses 31 Dec 25",
+          "value": -45.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Loss on acquisition, disposal, closure and demerger of businesses 30 Jun 25",
+          "value": -9.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Loss on acquisition, disposal, closure and demerger of businesses 31 Dec 24",
+          "value": -9.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non-cash items (after tax) from discontinued operations 31 Dec 25",
+          "value": -45.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non-cash items (after tax) from discontinued operations 30 Jun 25",
+          "value": -9.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non-cash items (after tax) from discontinued operations 31 Dec 24",
+          "value": -9.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total non-cash items (after tax) 31 Dec 25",
+          "value": -78.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total non-cash items (after tax) 30 Jun 25",
+          "value": -138.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total non-cash items (after tax) 31 Dec 24",
+          "value": 1.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p27 -> page 3"
     }
   ],
   "suggested_registry_patches": [],
@@ -2322,10 +3304,17 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
-    "generated": "2026-08-29T13:06:13+00:00",
-    "seconds": 125.6,
-    "cost_usd": 0.0044,
-    "tokens": "69009 in / 17874 out",
-    "orchestration": "pipeline"
+    "generated": "2026-08-29T17:46:23+00:00",
+    "seconds": 193.5,
+    "cost_usd": 0.0049,
+    "tokens": "60675 in / 23939 out",
+    "orchestration": "pipeline",
+    "pages_extracted": 17,
+    "reference_follow": [
+      "CBA/1H26/profit_announcement p163 <- p163 Note 4.3 Profit Reconciliation",
+      "CBA/1H26/profit_announcement p164 <- p163 Note 4.3 Profit Reconciliation [added]",
+      "CBA/1H26/profit_announcement p165 <- p163 Note 4.3 Profit Reconciliation [added]",
+      "CBA/1H26/profit_announcement p17 <- p27 page 3 [added]"
+    ]
   }
 }

@@ -11,8 +11,9 @@ from datetime import datetime, timezone
 from .author import author_attribution
 from .config import COMBOS, OUT_DIR, REGISTRY_DIR
 from .corpus import Document, documents_for_period
-from .extract import extract_text_evidence, extract_walk
+from .extract import WALK_PAGE_HINT, extract_text_evidence, extract_walk
 from .llm import LLM
+from .refs import extraction_hint, follow_references
 from .render import render_report
 from .retrieve import retrieve
 from .schema import Attribution
@@ -201,6 +202,20 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         if len(text_pages) >= MAX_TEXT_PAGES:
             break
 
+    # 2b. Reference following (ticket 22). Retrieval ranks a page by how much
+    # it looks like the question, and the why-layer does not: the bank puts it
+    # in an appendix note, on a footnote target, or on the next page of a table
+    # that broke over the page end. A deterministic scan of the pages already
+    # chosen finds the markers that point at those pages and turns to them.
+    followed = follow_references(
+        doc_by_id,
+        [*text_pages, *walk_pages],
+        metric_cfg["retrieval_queries"] + [metric_cfg["name"]],
+    )
+    follow_by_page = {(f.doc_id, f.page): f for f in followed}
+    chosen = set(text_pages) | set(walk_pages)
+    followed_pages = [(f.doc_id, f.page) for f in followed if (f.doc_id, f.page) not in chosen]
+
     # 3. Extract evidence.
     counter = iter(range(1, 1000))
     next_id = lambda: f"ev-{next(counter)}"  # noqa: E731
@@ -235,10 +250,22 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     # pages that did read, and the lost page is declared as a limitation so the
     # gap is visible instead of silent (ticket 27).
     unread_pages = []
-    for doc_id, page in text_pages + walk_pages:
+    walk_page_set = set(walk_pages)
+    for doc_id, page in text_pages + walk_pages + followed_pages:
+        # A followed page is read with the reference that reached it named in
+        # the task, and its records carry that reference as provenance. A walk
+        # page is read for the commentary beside the chart (defect 22).
+        follow = follow_by_page.get((doc_id, page))
+        hints = [WALK_PAGE_HINT] if (doc_id, page) in walk_page_set else []
+        if follow is not None:
+            hints.append(extraction_hint(follow))
+        page_case = "\n".join([text_case_desc, *hints])
         try:
             records.extend(
-                extract_text_evidence(llm, combo.extract, doc_by_id[doc_id], page, text_case_desc, next_id)
+                extract_text_evidence(
+                    llm, combo.extract, doc_by_id[doc_id], page, page_case, next_id,
+                    provenance=None if follow is None else follow.provenance,
+                )
             )
         except Exception as exc:  # noqa: BLE001 - a lost page is a gap, not a crash
             unread_pages.append(f"{doc_id} p{page} ({type(exc).__name__})")
@@ -504,6 +531,12 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         "cost_usd": round(llm.usage.cost_usd, 4),
         "tokens": f"{llm.usage.prompt_tokens} in / {llm.usage.completion_tokens} out",
         "orchestration": "pipeline",
+        "pages_extracted": len(text_pages) + len(walk_pages) + len(followed_pages),
+        "reference_follow": [
+            f"{f.doc_id} p{f.page} <- p{f.source_page} {f.target}"
+            + ("" if (f.doc_id, f.page) in chosen else " [added]")
+            for f in followed
+        ],
     }
 
     # 7. Save.

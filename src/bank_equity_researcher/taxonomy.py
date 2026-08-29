@@ -113,7 +113,12 @@ TAXONOMY: dict[str, dict] = {
             "statutory differs from cash in the SAME period, not why cash earnings moved "
             "year on year. When the reconciliation is in evidence, the headline MUST also "
             "give the statutory movement next to the cash movement and name the non-cash "
-            "items that separate them."
+            "items that separate them. OPEN WITH THE BANK'S OWN SUMMARY of the result "
+            "before the component list: total operating income with its growth rate, "
+            "operating performance (income less operating expenses, before impairment) "
+            "with its growth rate, and the period's statutory profit beside its cash "
+            "profit — each as the bank prints it, from evidence, whichever document "
+            "carries it."
         ),
         "drivers": {
             "nii": "Net interest income total (claim this when volume/margin are not separately quantified in dollars)",
@@ -217,10 +222,22 @@ TAXONOMY: dict[str, dict] = {
         ],
         "walk_markers": [],
         "method_hint": (
-            "Quantify the movement components in $m. The results book discloses the "
-            "impairment line PER DIVISION for both periods (a table and/or bullets like "
-            "'Retail +106 to 378'): when the bullets omit the delta, COMPUTE each "
-            "division's delta from the two period columns and cite the table. Attribute "
+            "Quantify the movement components in $m. PROVISION TYPE FIRST: when the "
+            "impairment note splits the CHARGE into its provision types for both periods "
+            "— net collective provisioning, new and increased individually assessed "
+            "provisioning, write-backs and recoveries — build the quantified bridge from "
+            "those rows, because they are the canonical drivers and they sum to the "
+            "movement. A DIVISION is not a provision type. ALSO NAME WHERE THE MOVEMENT "
+            "AROSE: the results book discloses the impairment EXPENSE per DIVISION for "
+            "both periods — the bank's own segments, retail, business, institutional, the "
+            "offshore bank and the corporate centre — in a table and/or bullets like "
+            "'Retail +106 to 378'. That divisional table is the where-layer, and a "
+            "provision BALANCE split by portfolio is not a substitute for it. State EVERY "
+            "division's movement — the delta AND both period levels — inside the NARRATIVE "
+            "of the driver it belongs to, and cite the divisional table there; when the "
+            "bullets omit the delta, COMPUTE each division's delta from the two period "
+            "columns. When the note publishes no provision-type split, build the bridge "
+            "from the divisional deltas instead: attribute "
             "each divisional delta to collective vs individually assessed provision "
             "drivers as the text states, sum them, and declare the small remainder (e.g. "
             "a corporate-centre division) as the residual — never force-fit. Decompose the "

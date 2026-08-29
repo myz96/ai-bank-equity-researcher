@@ -10,58 +10,9 @@
     "delta": 150.0,
     "unit": "bps"
   },
-  "movement_source": "row 'Common Equity Tier 1', column FY20 -> column FY21",
-  "headline": "CBA's APRA Level 2 CET1 ratio increased by 150 bps from 11.6% in FY20 to 13.1% in FY21. The bank did not publish a formal capital walk for the full year; however, the half-on-half walk (Dec 20 -> Jun 21) quantifies earnings generation (+97 bps), RWA reduction (+8 bps), dividends (-59 bps), and other adjustments (+4 bps). Full-year drivers include significant regulatory releases (+17 bps) and divestment impacts (+44 bps), partially offset by an off-market buyback (-133 bps).",
+  "movement_source": "row 'Common Equity Tier 1 capital ratio', column FY20 (Jun 20) -> column FY21 (Jun 21)",
+  "headline": "CBA's APRA Level 2 CET1 ratio increased by 150 bps from 11.6% in FY20 to 13.1% in FY21. The bank did not publish a formal capital walk for the full year; however, it disclosed specific regulatory and divestment impacts (+17 bps overlay release, +44 bps divestments) and an off-market buyback (-133 bps). The remaining movement is attributed to organic capital generation, which includes cash NPAT and RWA reductions.",
   "drivers": [
-    {
-      "canonical": "earnings_generation",
-      "bank_label": "Cash NPAT",
-      "contribution": {
-        "value": 97.0,
-        "unit": "bps"
-      },
-      "columns": "stated vs FY20",
-      "narrative": "",
-      "confidence": 85,
-      "evidence": [
-        "ev-5"
-      ],
-      "checks_passed": [],
-      "checks_failed": []
-    },
-    {
-      "canonical": "rwa",
-      "bank_label": "RWA",
-      "contribution": {
-        "value": 8.0,
-        "unit": "bps"
-      },
-      "columns": "stated vs FY20",
-      "narrative": "Total risk-weighted assets movement contributed +8 bpts, driven by organic growth and portfolio changes.",
-      "confidence": 85,
-      "evidence": [
-        "ev-5"
-      ],
-      "checks_passed": [],
-      "checks_failed": []
-    },
-    {
-      "canonical": "dividend_net_drp",
-      "bank_label": "Dividends paid",
-      "contribution": {
-        "value": -91.0,
-        "unit": "bps"
-      },
-      "columns": "stated vs FY20",
-      "narrative": "Dividends paid reduced the ratio by 91 bpts over the full year. This includes the interim dividend impact of -59 bpts noted in the half-on-half walk.",
-      "confidence": 85,
-      "evidence": [
-        "ev-2",
-        "ev-5"
-      ],
-      "checks_passed": [],
-      "checks_failed": []
-    },
     {
       "canonical": "regulatory_model_changes",
       "bank_label": "APRA Overlay Release",
@@ -70,7 +21,7 @@
         "unit": "bps"
       },
       "columns": "stated vs FY20",
-      "narrative": "Release of the APRA overlay contributed +17 bpts to the capital position during the year.",
+      "narrative": "The bank explicitly quantified the impact of the APRA overlay release as +17 bps on the CET1 ratio during the period (ev-2).",
       "confidence": 85,
       "evidence": [
         "ev-2"
@@ -88,10 +39,12 @@
         "unit": "bps"
       },
       "columns": "stated vs FY20",
-      "narrative": "Divestment activities contributed +44 bpts to the CET1 ratio.",
+      "narrative": "The bank quantified the expected CET1 uplift from divestments (CFS and CIGI) as +44 bps (ev-2). This aligns with the sum of expected uplifts for Colonial First State (30-40 bps) and CommInsure General Insurance (9 bps) (ev-23, ev-25).",
       "confidence": 85,
       "evidence": [
-        "ev-2"
+        "ev-2",
+        "ev-23",
+        "ev-25"
       ],
       "checks_passed": [
         "single_source"
@@ -106,10 +59,11 @@
         "unit": "bps"
       },
       "columns": "stated vs FY20",
-      "narrative": "An off-market share buyback reduced the CET1 ratio by 133 bpts.",
+      "narrative": "The bank disclosed an off-market share buyback that reduced the CET1 ratio by 133 bps (ev-2, ev-16).",
       "confidence": 85,
       "evidence": [
-        "ev-2"
+        "ev-2",
+        "ev-16"
       ],
       "checks_passed": [
         "single_source"
@@ -117,52 +71,47 @@
       "checks_failed": []
     },
     {
-      "canonical": "deductions_other",
-      "bank_label": "Other",
-      "contribution": {
-        "value": 4.0,
-        "unit": "bps"
-      },
-      "columns": "stated vs FY20",
-      "narrative": "Other regulatory adjustments contributed +4 bpts.",
-      "confidence": 85,
+      "canonical": "earnings_generation",
+      "bank_label": "Organic Capital Generation",
+      "contribution": null,
+      "columns": null,
+      "narrative": "No explicit full-year organic figure is provided. However, the half-on-half walk shows Cash NPAT at +97 bps and RWA at +8 bps (ev-1). The residual movement after accounting for known items suggests strong organic generation.",
+      "confidence": 60,
       "evidence": [
-        "ev-5"
+        "ev-1"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "dividend_net_drp",
+      "bank_label": "Dividends paid",
+      "contribution": null,
+      "columns": null,
+      "narrative": "The half-on-half dividend was -59 bps (ev-1). The full-year dividend impact is not explicitly broken out in a full-year walk, but total dividends are implied in the organic/residual calculation.",
+      "confidence": 60,
+      "evidence": [
+        "ev-1"
       ],
       "checks_passed": [],
       "checks_failed": []
     }
   ],
   "residual": {
-    "value": 124.0,
+    "value": 172.0,
     "unit": "bps"
   },
   "notable_items": [],
-  "disagreements": [
-    {
-      "topic": "Walk Comparison Span",
-      "values": [
-        "Context: Dec 20 -> Jun 21 (ev-1)",
-        "Context: Jun 20 -> Jun 21 Pro-forma (ev-2)"
-      ],
-      "preferred": "Jun 20 -> Jun 21 Actual",
-      "reason": "definitional",
-      "explanation": "The bank published two capital walks: one for the half-year (Dec 20 to Jun 21) and one for the full year but on a pro-forma basis (including the buyback). Neither matches the actual reported movement from Jun 20 to Jun 21 exactly. The pro-forma walk sums to 1215 bpts, while the actual is 1310 bpts."
-    }
-  ],
+  "disagreements": [],
   "attribution_confidence": 40,
   "limitations": [
-    "No official full-year capital walk was provided by CBA for the exact FY20 to FY21 period.",
-    "The residual of +124 bpts represents the difference between the total delta (150 bpts) and the sum of identified drivers (26 bpts). This likely captures unquantified organic growth components or timing differences between the half-on-half and full-year metrics.",
-    "Drivers are sourced from both the half-on-half narrative (ev-5) and the pro-forma full-year slide (ev-2); combining them assumes consistency across periods which may not be perfectly aligned.",
-    "Failed check: drivers_reconcile (drivers -54.0 + residual +124.0 != delta +150.0, tol 10.0)",
-    "Failed check: comparison_leak (earnings_generation claims +97, which is the 'Cash NPAT³' bar of CBA/FY21/results_presentation PDF p35 (ev-1), a walk for a different comparison; no walk covers the task comparison, so this bar cannot be a contribution for it — move the number into the driver narrative and name the span it belongs to)",
-    "Failed check: comparison_leak (rwa claims +8, which is the 'RWA' bar of CBA/FY21/results_presentation PDF p35 (ev-1), a walk for a different comparison; no walk covers the task comparison, so this bar cannot be a contribution for it — move the number into the driver narrative and name the span it belongs to)",
-    "Failed check: comparison_leak (dividend_net_drp claims -91, which is the 'Dividends paid' bar of CBA/FY21/results_presentation PDF p37 (ev-2), a walk for a different comparison; no walk covers the task comparison, so this bar cannot be a contribution for it — move the number into the driver narrative and name the span it belongs to)",
+    "The bank did not publish a formal capital walk for the full year FY20 to FY21. The driver table relies on discrete disclosures (overlay, divestments, buyback) and a residual calculation.",
+    "The 'Organic' and 'Dividend' drivers are unquantified for the full year because the only available walk (ev-1) covers the half-on-half period (Dec 20 to Jun 21), not the full year.",
+    "The residual of +172 bps captures the net effect of earnings, RWA movements, and dividends for the full year, which cannot be further decomposed with high confidence from the provided evidence.",
+    "Failed check: drivers_reconcile (drivers -72.0 + residual +172.0 != delta +150.0, tol 10.0)",
     "Failed check: comparison_leak (regulatory_model_changes claims +17, which is the 'APRA Overlay Release' bar of CBA/FY21/results_presentation PDF p37 (ev-2), a walk for a different comparison; no walk covers the task comparison, so this bar cannot be a contribution for it — move the number into the driver narrative and name the span it belongs to)",
     "Failed check: comparison_leak (divestments_acquisitions claims +44, which is the 'Divestments' bar of CBA/FY21/results_presentation PDF p37 (ev-2), a walk for a different comparison; no walk covers the task comparison, so this bar cannot be a contribution for it — move the number into the driver narrative and name the span it belongs to)",
-    "Failed check: comparison_leak (capital_returns claims -133, which is the 'Off-market buy-back' bar of CBA/FY21/results_presentation PDF p37 (ev-2), a walk for a different comparison; no walk covers the task comparison, so this bar cannot be a contribution for it — move the number into the driver narrative and name the span it belongs to)",
-    "Failed check: comparison_leak (deductions_other claims +4, which is the 'Other⁴' bar of CBA/FY21/results_presentation PDF p35 (ev-1), a walk for a different comparison; no walk covers the task comparison, so this bar cannot be a contribution for it — move the number into the driver narrative and name the span it belongs to)"
+    "Failed check: comparison_leak (capital_returns claims -133, which is the 'Off-market buy-back' bar of CBA/FY21/results_presentation PDF p37 (ev-2), a walk for a different comparison; no walk covers the task comparison, so this bar cannot be a contribution for it — move the number into the driver narrative and name the span it belongs to)"
   ],
   "evidence_records": [
     {
@@ -197,7 +146,8 @@
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-2",
@@ -243,7 +193,8 @@
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-3",
@@ -253,6 +204,12 @@
       "kind": "table",
       "quote": "Common Equity Tier 1 13.1 12.6 11.6 50 bpts 150 bpts",
       "numbers": [
+        {
+          "label": "CET1 ratio Jun 21 vs Dec 20",
+          "value": 0.5,
+          "unit": "bps",
+          "basis": null
+        },
         {
           "label": "CET1 ratio Jun 21",
           "value": 13.1,
@@ -271,7 +228,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-4",
@@ -282,18 +240,25 @@
       "quote": "The Group’s CET1 ratio (APRA) was 13.1% as at 30 June 2021, an increase of 50 basis points from 31 December 2020 and an increase of 150 basis points from 30 June 2020.",
       "numbers": [
         {
-          "label": "CET1 ratio Jun 21 vs Dec 20 change",
-          "value": 50.0,
+          "label": "CET1 ratio Jun 21",
+          "value": 13.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 change Jun 21 vs Dec 20",
+          "value": 0.5,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "CET1 ratio Jun 21 vs Jun 20 change",
-          "value": 150.0,
+          "label": "CET1 change Jun 21 vs Jun 20",
+          "value": 1.5,
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-5",
@@ -305,29 +270,30 @@
       "numbers": [
         {
           "label": "CET1 impact earnings",
-          "value": 97.0,
+          "value": 0.97,
           "unit": "bps",
           "basis": "ex_notables"
         },
         {
           "label": "CET1 impact RWA",
-          "value": 8.0,
+          "value": 0.08,
           "unit": "bps",
           "basis": null
         },
         {
           "label": "CET1 impact regulatory adjustments",
-          "value": 4.0,
+          "value": 0.04,
           "unit": "bps",
           "basis": null
         },
         {
           "label": "CET1 impact dividend",
-          "value": -59.0,
+          "value": -0.59,
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-6",
@@ -355,26 +321,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-7",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 13,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The Group has a strong capital position with a CET1 capital ratio as at 30 June 2021 of 13.1%, well above APRA’s ‘unquestionably strong’ benchmark of 10.5%.",
-      "numbers": [
-        {
-          "label": "CET1 capital ratio Jun 21",
-          "value": 13.1,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-8",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 13,
       "printed_page": null,
@@ -382,7 +333,7 @@
       "quote": "Common Equity Tier 1 capital ratio 13.1% APRA (Level 2) FY20 11.6%",
       "numbers": [
         {
-          "label": "CET1 ratio FY21",
+          "label": "CET1 ratio Jun 21",
           "value": 13.1,
           "unit": "%",
           "basis": null
@@ -393,10 +344,57 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 109,
+      "printed_page": 109,
+      "kind": "table",
+      "quote": "CET1 ratio Jun 21 9.7 | Dec 20 9.7",
+      "numbers": [
+        {
+          "label": "CET1 ratio Jun 21",
+          "value": 9.7,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 ratio Dec 20",
+          "value": 9.7,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
     },
     {
       "id": "ev-9",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 109,
+      "printed_page": 109,
+      "kind": "table",
+      "quote": "Total Risk Weighted Assets (RWA) Jun 21 382 | Dec 20 377",
+      "numbers": [
+        {
+          "label": "RWA Jun 21",
+          "value": 382.0,
+          "unit": "$bn",
+          "basis": null
+        },
+        {
+          "label": "RWA Dec 20",
+          "value": 377.0,
+          "unit": "$bn",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 111,
       "printed_page": 111,
@@ -415,10 +413,11 @@
           "unit": "ppt",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-10",
+      "id": "ev-11",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 111,
       "printed_page": 111,
@@ -443,66 +442,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
-    },
-    {
-      "id": "ev-11",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 111,
-      "printed_page": 111,
-      "kind": "table",
-      "quote": "Level 1 CET1 ratio | 11.9 | 12.8 | 13.3",
-      "numbers": [
-        {
-          "label": "Level 1 CET1 ratio Jun 20",
-          "value": 11.9,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Level 1 CET1 ratio Dec 20",
-          "value": 12.8,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Level 1 CET1 ratio Jun 21",
-          "value": 13.3,
-          "unit": "%",
-          "basis": null
-        }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-12",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 111,
-      "printed_page": 111,
-      "kind": "table",
-      "quote": "CET1 capital ratio (internationally comparable) | 17.4 | 18.7 | 19.4",
-      "numbers": [
-        {
-          "label": "CET1 capital ratio internationally comparable Jun 20",
-          "value": 17.4,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 capital ratio internationally comparable Dec 20",
-          "value": 18.7,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 capital ratio internationally comparable Jun 21",
-          "value": 19.4,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-13",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 112,
       "printed_page": 112,
@@ -510,21 +454,22 @@
       "quote": "Internationally comparable1 CET1",
       "numbers": [
         {
-          "label": "CET1 Int'l 1H20",
+          "label": "CET1 ratio Dec 20 Int'l",
           "value": 18.7,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "CET1 Int'l Jun 21",
+          "label": "CET1 ratio Jun 21 Int'l",
           "value": 19.4,
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-14",
+      "id": "ev-13",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 112,
       "printed_page": 112,
@@ -532,15 +477,16 @@
       "quote": "CET1 APRA",
       "numbers": [
         {
-          "label": "CET1 APRA Jun 21",
+          "label": "CET1 ratio Jun 21 APRA",
           "value": 13.1,
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-15",
+      "id": "ev-14",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 112,
       "printed_page": 112,
@@ -548,124 +494,27 @@
       "quote": "Group’s CET1 ratio of 13.1% translates to 19.4% on an international basis",
       "numbers": [
         {
-          "label": "CET1 APRA Jun 21",
+          "label": "CET1 ratio Jun 21 APRA",
           "value": 13.1,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "CET1 Int'l Jun 21",
+          "label": "CET1 ratio Jun 21 Int'l",
           "value": 19.4,
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-16",
+      "id": "ev-15",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 13,
       "printed_page": 13,
       "kind": "table",
       "quote": "CET1 % Jun 20 11.6% Jun 21 13.1%",
-      "numbers": [
-        {
-          "label": "CET1 ratio FY20",
-          "value": 11.6,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 ratio FY21",
-          "value": 13.1,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-17",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 13,
-      "printed_page": 13,
-      "kind": "text",
-      "quote": "Pro-forma CET1 ratio calculated as Jun 21 CET1 ratio of 13.1% incorporating the impact of the off-market share buy-back (-133bpts)",
-      "numbers": [
-        {
-          "label": "CET1 ratio FY21 pro-forma adjustment",
-          "value": -1.33,
-          "unit": "ratio",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-18",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 35,
-      "printed_page": 35,
-      "kind": "text",
-      "quote": "CET1 of 13.1% - continued strong organic capital generation",
-      "numbers": [
-        {
-          "label": "CET1 Jun 21 Level 2",
-          "value": 13.1,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-19",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 35,
-      "printed_page": 35,
-      "kind": "text",
-      "quote": "Movements in bpts +46bpts Organic Capital Generation (bpts) 35 DRP 3 Other 10",
-      "numbers": [
-        {
-          "label": "Organic Capital Generation FY21",
-          "value": 35.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "DRP Impact FY21",
-          "value": 3.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Other Impact FY21",
-          "value": 10.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-20",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 35,
-      "printed_page": 35,
-      "kind": "text",
-      "quote": "Jun 21 Level 2 13.3% Jun 21 Level 1",
-      "numbers": [
-        {
-          "label": "CET1 Jun 21 Level 1",
-          "value": 13.3,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-21",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 37,
-      "printed_page": 37,
-      "kind": "table",
-      "quote": "11.6% 13.1% 12.1% - 12.2%",
       "numbers": [
         {
           "label": "CET1 ratio Jun 20",
@@ -679,7 +528,236 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 13,
+      "printed_page": 13,
+      "kind": "text",
+      "quote": "Pro-forma CET1 ratio calculated as Jun 21 CET1 ratio of 13.1% incorporating the impact of the off-market share buy-back (-133bpts)",
+      "numbers": [
+        {
+          "label": "CET1 ratio Jun 21",
+          "value": 13.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Impact of share buy-back on CET1",
+          "value": -1.33,
+          "unit": "ratio",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 35,
+      "printed_page": 35,
+      "kind": "text",
+      "quote": "CET1 of 13.1% - continued strong organic capital generation",
+      "numbers": [
+        {
+          "label": "CET1 Jun 21 Level 2",
+          "value": 13.1,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 35,
+      "printed_page": 35,
+      "kind": "text",
+      "quote": "Movements in bpts Credit Risk (14) Market Risk 8 IRRBB 3 Op Risk 11",
+      "numbers": [
+        {
+          "label": "Credit Risk Movement",
+          "value": -14.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Market Risk Movement",
+          "value": 8.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "IRRBB Movement",
+          "value": 3.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Op Risk Movement",
+          "value": 11.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 35,
+      "printed_page": 35,
+      "kind": "text",
+      "quote": "Organic Capital Generation 46",
+      "numbers": [
+        {
+          "label": "Organic Capital Generation",
+          "value": 46.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 35,
+      "printed_page": 35,
+      "kind": "text",
+      "quote": "DRP 10",
+      "numbers": [
+        {
+          "label": "DRP Impact on Organic Capital",
+          "value": 10.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 35,
+      "printed_page": 35,
+      "kind": "text",
+      "quote": "Excludes equity accounting profits from minority investments as it is capital neutral with offsetting increases in capital deductions.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 35,
+      "printed_page": 35,
+      "kind": "text",
+      "quote": "Includes the receipt of the final proceeds from the sale of CommInsure Life (+2bpts).",
+      "numbers": [
+        {
+          "label": "CommInsure Life Sale Proceeds",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 35,
+      "printed_page": 35,
+      "kind": "text",
+      "quote": "Expected CET1 uplift from the previously announced divestments of Colonial First State (Level 2: 30-40bpts, Level 1: 25-35bpts) and CommInsure General Insurance (Level 2: 9bpts, Level 1: 6bpts).",
+      "numbers": [
+        {
+          "label": "CFS Divestment Uplift Level 2",
+          "value": 35.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "CFS Divestment Uplift Level 1",
+          "value": 30.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "CIGI Divestment Uplift Level 2",
+          "value": 9.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "CIGI Divestment Uplift Level 1",
+          "value": 6.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 35,
+      "printed_page": 35,
+      "kind": "text",
+      "quote": "Implementation of the revised final APS 111 from 1 January 2022... Expected 15 to 20 bpts uplift in the Level 1 CET1 ratio as a result of this change.",
+      "numbers": [
+        {
+          "label": "APS 111 Implementation Uplift Level 1",
+          "value": 17.5,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 37,
+      "printed_page": 37,
+      "kind": "text",
+      "quote": "Expected CET1 uplift from the previously announced divestments of Colonial First State (30-40bpts) and CommInsure General Insurance (9bpts).",
+      "numbers": [
+        {
+          "label": "CET1 uplift - Colonial First State",
+          "value": 35.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "CET1 uplift - CommInsure General Insurance",
+          "value": 9.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-26",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 37,
+      "printed_page": 37,
+      "kind": "text",
+      "quote": "Chart movements in bpts ... Organic (net of growth / investment, ex dividends)",
+      "numbers": [
+        {
+          "label": "Organic movement",
+          "value": 37.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
     }
   ],
   "suggested_registry_patches": [],
@@ -687,10 +765,15 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY21/profit_announcement (ffdff75173e7), CBA/FY21/results_presentation (b1bbbd626803), CBA/FY20/profit_announcement (2c2179a200a3)",
-    "generated": "2026-08-29T13:14:14+00:00",
-    "seconds": 69.6,
+    "generated": "2026-08-29T17:54:04+00:00",
+    "seconds": 74.1,
     "cost_usd": 0.0024,
-    "tokens": "49037 in / 6957 out",
-    "orchestration": "pipeline"
+    "tokens": "52271 in / 6597 out",
+    "orchestration": "pipeline",
+    "pages_extracted": 16,
+    "reference_follow": [
+      "CBA/FY21/profit_announcement p54 <- p53 page 32",
+      "CBA/FY21/profit_announcement p55 <- p54 page 33"
+    ]
   }
 }

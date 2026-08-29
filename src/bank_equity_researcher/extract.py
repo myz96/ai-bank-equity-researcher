@@ -75,6 +75,19 @@ endpoints. Never repeat the start or end column as a bar."""
 
 PRESENTATION_DOC_TYPES = ("results_presentation", "investor_presentation", "investor_discussion_pack")
 
+# Added to the task when the page also holds a walk or bridge chart (ticket 22).
+# The bars are read by the vision model; the WHY of each bar is the prose beside
+# the chart, and a table-first extractor spends its record budget on the page's
+# balance table and drops that prose. The commentary is the point of the page.
+WALK_PAGE_HINT = (
+    "- This page carries a movement chart (a walk or bridge) and the commentary that "
+    "explains it. Extract EVERY sentence that names a driver of the movement, one record "
+    "per driver sentence: keep the bank's own label for the driver, its size as printed, "
+    "each sub-part the sentence names with that sub-part's own number, and any statement "
+    "that a movement is neutral, offset, or excluded. Cover the commentary before the "
+    "balance tables on the page."
+)
+
 
 def _label_key(label) -> str:
     """Case- and punctuation-insensitive form of a chart label, for comparing
@@ -100,7 +113,13 @@ def printed_page_of(text: str, pdf_page: int, doc_type: str = "") -> int | None:
 
 
 def extract_text_evidence(
-    llm: LLM, model: str, doc: Document, page_no: int, case: str, next_id
+    llm: LLM,
+    model: str,
+    doc: Document,
+    page_no: int,
+    case: str,
+    next_id,
+    provenance: str | None = None,
 ) -> list[EvidenceRecord]:
     text = doc.page_texts()[page_no - 1]
     if not text.strip():
@@ -127,6 +146,7 @@ def extract_text_evidence(
                     kind=item.get("kind", "text"),
                     quote=str(item.get("quote", ""))[:600],
                     numbers=[NumberFact(**n) for n in item.get("numbers", []) if "value" in n],
+                    provenance=provenance,
                 )
             )
         except Exception:  # noqa: BLE001 - a malformed record is dropped, not fatal

@@ -11,24 +11,20 @@
     "unit": "bps"
   },
   "movement_source": "row 'Capital ratios CET1', column 30 Sep 24 -> column 30 Sep 25",
-  "headline": "NAB's APRA CET1 ratio declined by 65 bps to 11.70% in FY25 (ev-1, ev-12). The movement is driven primarily by credit RWA growth and dividend payments, partially offset by cash earnings generation.",
+  "headline": "NAB's APRA Level 2 Group CET1 ratio declined by 65 bps to 11.70% in FY25 (from 12.35% in FY24). The decline was driven primarily by a 45 bps negative impact from increased credit RWA and a 61 bps negative impact from dividends net of DRP, partially offset by 82 bps of positive contribution from cash earnings generation.",
   "drivers": [
     {
-      "canonical": "rwa.credit",
-      "bank_label": "Credit RWA",
+      "canonical": "earnings_generation",
+      "bank_label": "Cash earnings",
       "contribution": {
-        "value": -45.0,
+        "value": 82.0,
         "unit": "bps"
       },
       "columns": "stated vs FY24",
-      "narrative": "Credit RWA increased, decreasing the CET1 ratio by 45 bps. This includes volume growth (-27 bps), asset quality deterioration (-5 bps), and model/methodology changes (-13 bps) (ev-2, ev-5, ev-6, ev-7, ev-8).",
+      "narrative": "Cash earnings generated an 82 bps increase in the CET1 ratio for the year ended September 2025.",
       "confidence": 85,
       "evidence": [
-        "ev-2",
-        "ev-5",
-        "ev-6",
-        "ev-7",
-        "ev-8"
+        "ev-2"
       ],
       "checks_passed": [
         "single_source"
@@ -43,7 +39,7 @@
         "unit": "bps"
       },
       "columns": "stated vs FY24",
-      "narrative": "Dividends paid during the period decreased the CET1 ratio by 61 bps (ev-2).",
+      "narrative": "Dividends paid during the period resulted in a 61 bps decrease in the CET1 ratio.",
       "confidence": 85,
       "evidence": [
         "ev-2"
@@ -54,36 +50,18 @@
       "checks_failed": []
     },
     {
-      "canonical": "earnings_generation",
-      "bank_label": "Cash earnings",
+      "canonical": "rwa.credit",
+      "bank_label": "Credit RWA",
       "contribution": {
-        "value": 82.0,
+        "value": -45.0,
         "unit": "bps"
       },
       "columns": "stated vs FY24",
-      "narrative": "Cash earnings generated capital, increasing the CET1 ratio by 82 bps (ev-2).",
-      "confidence": 85,
-      "evidence": [
-        "ev-2"
-      ],
-      "checks_passed": [
-        "single_source"
-      ],
-      "checks_failed": []
-    },
-    {
-      "canonical": "other_unmapped",
-      "bank_label": "Other items",
-      "contribution": {
-        "value": -8.0,
-        "unit": "bps"
-      },
-      "columns": "stated vs FY24",
-      "narrative": "Other items decreased the CET1 ratio by 8 bps (ev-2, ev-10).",
+      "narrative": "An increase in credit risk-weighted assets decreased the CET1 capital ratio by 45 bps.",
       "confidence": 85,
       "evidence": [
         "ev-2",
-        "ev-10"
+        "ev-5"
       ],
       "checks_passed": [
         "single_source"
@@ -98,11 +76,30 @@
         "unit": "bps"
       },
       "columns": "stated vs FY24",
-      "narrative": "Decrease in other (non-credit) RWA increased the CET1 ratio by 1 bps (ev-2, ev-9).",
+      "narrative": "A decrease in other (non-credit) RWA increased the CET1 capital ratio by 1 bps.",
       "confidence": 85,
       "evidence": [
         "ev-2",
-        "ev-9"
+        "ev-6"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "deductions_other",
+      "bank_label": "Other",
+      "contribution": {
+        "value": -8.0,
+        "unit": "bps"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "Other items, including capital deductions and reserves, decreased the CET1 capital ratio by 8 bps.",
+      "confidence": 85,
+      "evidence": [
+        "ev-2",
+        "ev-7"
       ],
       "checks_passed": [
         "single_source"
@@ -120,19 +117,18 @@
       "topic": "Pro-forma adjustment",
       "values": [
         "11.70% reported (ev-1)",
-        "11.81% pro-forma (ev-14)"
+        "11.81% pro-forma (ev-11)"
       ],
       "preferred": "11.70%",
       "reason": "definitional",
-      "explanation": "The pro-forma ratio of 11.81% reflects the sale of MLC Life which completed after the balance date (Oct 31, 2025). The task requires the reported statutory movement."
+      "explanation": "The pro-forma ratio of 11.81% reflects the sale of MLC Life. This is a non-GAAP measure used for context; the statutory movement is based on the reported 11.70%."
     }
   ],
   "attribution_confidence": 60,
   "limitations": [
-    "The bank's published capital walk (ev-2) covers the half-on-half period (Mar 25 to Sep 25), not the full year (Sep 24 to Sep 25).",
-    "The sum of the drivers from the half-on-half walk (-131 bps) does not reconcile with the full-year delta (-65 bps).",
-    "Full-year specific drivers for dividends and earnings are not explicitly quantified in the provided text; the half-on-half values are used as proxies but may differ due to H1 impacts.",
-    "A residual of -34 bts remains unexplained, likely due to H1 movements or differences in the composition of 'Other' items between periods."
+    "The provided evidence contains a half-on-half walk (Mar 25 -> Sep 25) rather than a full-year walk (Sep 24 -> Sep 25).",
+    "The sum of the quantified drivers (-31 bps) does not reconcile with the total delta (-65 bps), leaving a residual of -34 bps.",
+    "The bank narrative attributes the movement to specific factors but does not provide a full-year bridge table that sums to the delta, preventing precise attribution of the residual."
   ],
   "evidence_records": [
     {
@@ -141,7 +137,7 @@
       "pdf_page": 30,
       "printed_page": 28,
       "kind": "table",
-      "quote": "Capital ratios CET1 As at 30 Sep 25 11.70, 31 Mar 25 12.01, 30 Sep 24 12.35",
+      "quote": "Capital ratios CET1 As at 30 Sep 25 11.70 31 Mar 25 12.01 30 Sep 24 12.35",
       "numbers": [
         {
           "label": "CET1 ratio 30 Sep 25",
@@ -161,7 +157,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-2",
@@ -169,7 +166,7 @@
       "pdf_page": 30,
       "printed_page": 28,
       "kind": "table",
-      "quote": "Movements in CET1 capital ratio (%) Mar 25 12.01, Cash earnings 0.82, Dividend (0.61), Credit RWA¹ (0.45), Other RWA 0.01, Other (0.08), Sep 25 11.70",
+      "quote": "Movements in CET1 capital ratio (%) Mar 25 12.01 Cash earnings 0.82 Dividend (0.61) Credit RWA¹ (0.45) Other RWA 0.01 Other (0.08) Sep 25 11.70",
       "numbers": [
         {
           "label": "CET1 ratio Mar 25",
@@ -213,7 +210,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-3",
@@ -229,7 +227,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-4",
@@ -245,7 +244,8 @@
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-5",
@@ -261,58 +261,11 @@
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-6",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 30,
-      "printed_page": 28,
-      "kind": "text",
-      "quote": "volume growth contributing to a decrease of 27 basis points",
-      "numbers": [
-        {
-          "label": "Volume growth impact on CET1",
-          "value": -0.27,
-          "unit": "bps",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-7",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 30,
-      "printed_page": 28,
-      "kind": "text",
-      "quote": "asset quality deterioration contributing to a decrease of 5 basis points",
-      "numbers": [
-        {
-          "label": "Asset quality impact on CET1",
-          "value": -0.05,
-          "unit": "bps",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-8",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 30,
-      "printed_page": 28,
-      "kind": "text",
-      "quote": "model and methodology changes contributing to a decrease of 13 basis points",
-      "numbers": [
-        {
-          "label": "Model/methodology impact on CET1",
-          "value": -0.13,
-          "unit": "bps",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-9",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 30,
       "printed_page": 28,
@@ -325,10 +278,11 @@
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-10",
+      "id": "ev-7",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 30,
       "printed_page": 28,
@@ -341,10 +295,11 @@
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-11",
+      "id": "ev-8",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 68,
       "printed_page": 66,
@@ -369,10 +324,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-12",
+      "id": "ev-9",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 6,
       "printed_page": 4,
@@ -391,10 +347,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-13",
+      "id": "ev-10",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 6,
       "printed_page": 4,
@@ -413,10 +370,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-14",
+      "id": "ev-11",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 6,
       "printed_page": 4,
@@ -429,10 +387,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-15",
+      "id": "ev-12",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -445,10 +404,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-16",
+      "id": "ev-13",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -461,10 +421,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-17",
+      "id": "ev-14",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -483,60 +444,57 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-18",
+      "id": "ev-15",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 106,
       "printed_page": 106,
       "kind": "table",
-      "quote": "APRA Common Equity Tier 1 ratios Mar 25 18.1% Sep 24 17.6% Sep 25 18.1%",
+      "quote": "APRA Common Equity Tier 1 ratios",
       "numbers": [
-        {
-          "label": "APRA CET1 ratio Mar 25",
-          "value": 18.1,
-          "unit": "%",
-          "basis": null
-        },
         {
           "label": "APRA CET1 ratio Sep 24",
-          "value": 17.6,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "APRA CET1 ratio Sep 25",
-          "value": 18.1,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-19",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 106,
-      "printed_page": 106,
-      "kind": "table",
-      "quote": "APRA to Internationally comparable CET1 ratio reconciliation APRA CET1 ratio 11.7 Internationally comparable CET1 ratio 17.1",
-      "numbers": [
-        {
-          "label": "APRA CET1 ratio",
           "value": 11.7,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Internationally comparable CET1 ratio",
+          "label": "APRA CET1 ratio Sep 25",
+          "value": 11.7,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 106,
+      "printed_page": 106,
+      "kind": "table",
+      "quote": "Internationally comparable CET1 ratio",
+      "numbers": [
+        {
+          "label": "Internationally comparable CET1 ratio Sep 24",
+          "value": 14.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Internationally comparable CET1 ratio Sep 25",
           "value": 17.1,
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-20",
+      "id": "ev-17",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 7,
       "printed_page": 7,
@@ -555,10 +513,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-21",
+      "id": "ev-18",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 7,
       "printed_page": 7,
@@ -583,7 +542,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     }
   ],
   "suggested_registry_patches": [],
@@ -591,10 +551,12 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-08-29T13:40:10+00:00",
-    "seconds": 214.5,
-    "cost_usd": 0.0018,
-    "tokens": "37586 in / 5160 out",
-    "orchestration": "pipeline"
+    "generated": "2026-08-29T18:08:53+00:00",
+    "seconds": 45.1,
+    "cost_usd": 0.0017,
+    "tokens": "37782 in / 4716 out",
+    "orchestration": "pipeline",
+    "pages_extracted": 14,
+    "reference_follow": []
   }
 }

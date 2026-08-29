@@ -89,6 +89,12 @@ ABSOLUTE RULES — never break these:
    the primary framing for your driver table — per the source hierarchy.
    Slide walks corroborate and annotate; where their framing differs, say so
    in a disagreement, but do not adopt the slide framing as primary.
+   NEVER MIX FRAMINGS. Every bar in your driver table comes from the ONE walk
+   you adopt, at that walk's own value. A bar only the other document publishes
+   is a disagreement or a limitation, never an extra driver; a value only the
+   other document prints never replaces the adopted walk's value. A table that
+   takes some bars from the book and some from a slide describes no published
+   walk at all.
 9. CLAIM THE WHOLE WALK. Claim every bar of the PRIMARY walk you adopt —
    including bars whose value is 0 and small +-1 bars. A published zero bar is
    the bank's explicit statement that the driver contributed nothing this
@@ -123,6 +129,36 @@ ABSOLUTE RULES — never break these:
    single division's ratio. Report a variant as context or as a disagreement;
    never let one supply the movement. When two candidate rows disagree, the
    source hierarchy decides: the results book's KPI table wins over a slide.
+12. EXPLAIN, DO NOT RESTATE. A narrative that repeats its own number back
+   ("a 5 bps negative contribution from asset pricing") tells a reader nothing
+   the driver table already shows. Every driver needs a narrative, and each one
+   must carry, from the evidence and no further:
+   - the bank's stated reason, in the bank's own words;
+   - every SUB-PART the bank names inside that driver, each WITH ITS OWN
+     PRINTED NUMBER (a driver the bank splits into two named halves is reported
+     as those two halves, not as the total alone);
+   - the division, product or portfolio the bank points at.
+   A sub-part must describe the SAME comparison as the driver it sits under.
+   Rule 6 binds here too: never borrow a sub-split the bank published for a
+   different span. Where the only sub-split covers another comparison, name
+   that span beside the numbers.
+   Carry the printed figures with every fact you mention — the movement, the
+   growth rate and the level the bank prints, never the direction alone. The
+   explanation belongs INSIDE the driver narratives, not only in the headline,
+   and each figure is cited from that driver's own evidence list: that list is
+   where a reader checks the claim. Some evidence records carry a "provenance"
+   field starting "reference_follow": another page pointed at that page, so it
+   holds the bank's own account of a line in the main tables — read those
+   records for the explanation and cite them. Where no record states a reason,
+   write that the bank does not disclose one. Never supply a reason of your own.
+13. SAY WHAT THE WALK HIDES. A bar is a net number and the bank often qualifies
+   it: it calls a movement broadly revenue neutral or largely offset, points at
+   another line that absorbs it, or reports a gross increase beside the
+   decrease that funds it. When a record carries such a qualification, repeat
+   the bank's OWN qualifying words inside that driver's narrative — not only
+   the bar's size — and add the qualification to limitations when it changes
+   what the movement means. A bar reported as a number alone, when the bank
+   qualified it in words, overstates what the bar means.
 
 UNITS: express from_value, to_value, delta, and every contribution ALL in
 "{unit}". Convert percentages when the unit is bps (2.08% = 208; 12.3% = 1230;
@@ -139,7 +175,7 @@ double-quote character: write a label plainly, or wrap it in single quotes.
   "movement_from_column": "<column header of {comparator}, <=12 words>",
   "movement_to_column": "<column header of {period}, <=12 words>",
   "basis": "cash|statutory|ex_notables",
-  "headline": "<=120 words",
+  "headline": "<=180 words",
   "drivers": [{{"canonical": "<taxonomy id>", "bank_label": "<verbatim label or null>",
                "contribution": {{"value": float, "unit": "{unit}"}} | null,
                "columns": "<the two column headers subtracted, or stated vs {comparator}, or null>",
@@ -256,7 +292,19 @@ def author_attribution(
             registry=json.dumps(registry.get("measures", {}), indent=1)
             + "\n"
             + json.dumps(registry.get(f"{case['metric']}_walk_labels", registry.get("nim_walk_labels", {})), indent=1),
-            evidence=json.dumps([r.model_dump() for r in records], indent=1),
+            # "provenance" is dropped when it is empty, so an ordinary record
+            # reads exactly as it did before reference-following existed.
+            evidence=json.dumps(
+                [
+                    {
+                        key: value
+                        for key, value in record.model_dump().items()
+                        if not (key == "provenance" and value is None)
+                    }
+                    for record in records
+                ],
+                indent=1,
+            ),
             walks=json.dumps(walks, indent=1),
             validation=json.dumps(validation),
             rounds_left=max_rounds - round_no,

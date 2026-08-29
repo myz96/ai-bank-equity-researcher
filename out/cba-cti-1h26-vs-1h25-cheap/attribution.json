@@ -11,36 +11,38 @@
     "unit": "ppt"
   },
   "movement_source": "row 'Operating expenses to total operating income (%)', column 31 Dec 24 -> column 31 Dec 25",
-  "headline": "CBA's headline cost-to-income ratio (total) increased by 70 basis points from 45.2% in 1H25 to 45.9% in 1H26. This deterioration was primarily driven by higher operating expenses (+8%) outpacing the growth in operating income (+8%, though narrative cites 21% expense growth vs 8% income growth for statutory context). The underlying ratio improved by 50 basis points.",
+  "headline": "CBA's headline cost-to-income ratio (CTI) widened by 70 basis points (ppt) from 45.2% in 1H25 to 45.9% in 1H26. This deterioration was primarily driven by higher operating expenses (+8% YoY), which outpaced the growth in operating income (+6.6% YoY). While underlying CTI improved by 50 basis points due to stronger income growth relative to underlying expense growth, the inclusion of $170 million in restructuring and notable items in 1H26 pushed the headline ratio up.",
   "drivers": [
     {
       "canonical": "expense_growth",
-      "bank_label": "Operating expenses",
+      "bank_label": "Operating expense growth",
       "contribution": null,
       "columns": "stated vs 1H25",
-      "narrative": "Total operating expenses increased $518 million or 8% on the prior comparative period (ev-3, ev-2). Narrative states this increase partly offset income growth (ev-6). Statutory view shows 21% expense growth (ev-14).",
-      "confidence": 80,
+      "narrative": "Total operating expenses increased by $518 million or 8% year-on-year (ev-3, ev-18). The bank states this increase 'mainly driven by higher operating expenses' (ev-6). Specific drivers include $170m in restructuring costs (ev-17) and organic underlying expense growth of 5% (ev-4).",
+      "confidence": 85,
       "evidence": [
-        "ev-2",
         "ev-3",
+        "ev-4",
         "ev-6",
-        "ev-14"
+        "ev-17",
+        "ev-18"
       ],
       "checks_passed": [],
       "checks_failed": []
     },
     {
       "canonical": "income_growth",
-      "bank_label": "Operating income",
+      "bank_label": "Operating income growth",
       "contribution": null,
       "columns": "stated vs 1H25",
-      "narrative": "Total operating income increased $1,924 million or 14% on the prior comparative period (ev-11, ev-16). Narrative attributes ratio improvement mainly to higher operating income (ev-6).",
-      "confidence": 80,
+      "narrative": "",
+      "confidence": 85,
       "evidence": [
-        "ev-2",
+        "ev-7",
+        "ev-8",
         "ev-11",
-        "ev-16",
-        "ev-6"
+        "ev-15",
+        "ev-21"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -50,11 +52,11 @@
       "bank_label": "Restructuring and notable items",
       "contribution": null,
       "columns": "stated vs 1H25",
-      "narrative": "Notable items of $170 million were incurred in 1H26 compared to nil in 1H25 (ev-18). These are included in the total operating expenses figure used for the headline ratio.",
+      "narrative": "The widening includes $170 million in restructuring and notable items in 1H26 (ev-17, ev-33), compared to zero in 1H25. These items are excluded from the underlying measure but included in the headline total operating expenses used for the headline CTI.",
       "confidence": 90,
       "evidence": [
-        "ev-18",
-        "ev-19"
+        "ev-17",
+        "ev-33"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -62,24 +64,24 @@
   ],
   "residual": null,
   "notable_items": [
-    "Restructuring and notable items: $170m in 1H26 vs $0m in 1H25."
+    "Restructuring and notable items: $170 million in 1H26 vs $0 in 1H25."
   ],
   "disagreements": [
     {
-      "topic": "Underlying vs Total CTI Movement",
+      "topic": "Underlying vs Headline CTI",
       "values": [
-        "Underlying CTI decreased 50 bpts (ev-5)",
-        "Total CTI increased 70 bpts (ev-2)"
+        "Underlying CTI: 44.7% (1H26) vs 45.2% (1H25) -> -50 bpts (ev-1, ev-5)",
+        "Headline CTI: 45.9% (1H26) vs 45.2% (1H25) -> +70 bpts (ev-2)"
       ],
-      "preferred": "Total CTI movement reported in task",
+      "preferred": "Headline CTI",
       "reason": "definitional",
-      "explanation": "The task requires the headline 'Operating expenses to total operating income' ratio. The bank reports a different movement for the 'underlying' measure. Both are cited but only the total is used for the primary movement delta."
+      "explanation": "The task requires the headline cost-to-income ratio. The underlying variant shows an improvement, while the headline shows a widening. We report the headline movement as requested."
     }
   ],
-  "attribution_confidence": 75,
+  "attribution_confidence": 80,
   "limitations": [
-    "No primary walk chart extracted for 1H25->1H26 comparison. Driver contributions (ppt) are not quantified because the bank does not provide a JAWS bridge for the total ratio; only narrative direction and aggregate growth rates are available.",
-    "Confidence capped at 80 for drivers due to reliance on narrative statements rather than explicit ppt contribution tables.",
+    "The specific ppt contribution of each driver (income vs expense vs notable items) is not explicitly quantified in a walk chart. The narrative attributes the movement to these factors based on the bank's text, but precise arithmetic attribution is derived from the component growth rates rather than a published bridge.",
+    "No primary walk chart was extracted for the 1H25 to 1H26 comparison. Evidence relies on Profit Announcement tables and narrative text.",
     "Failed check: no_quantified_drivers"
   ],
   "evidence_records": [
@@ -109,7 +111,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p32 -> page 15"
     },
     {
       "id": "ev-2",
@@ -137,7 +140,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p32 -> page 15"
     },
     {
       "id": "ev-3",
@@ -165,7 +169,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p32 -> page 15"
     },
     {
       "id": "ev-4",
@@ -179,7 +184,7 @@
           "label": "Underlying operating expenses delta 31 Dec 25 vs 31 Dec 24",
           "value": 348.0,
           "unit": "$m",
-          "basis": null
+          "basis": "underlying"
         },
         {
           "label": "Underlying operating expenses 31 Dec 25",
@@ -187,7 +192,8 @@
           "unit": "$m",
           "basis": "underlying"
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p32 -> page 15"
     },
     {
       "id": "ev-5",
@@ -199,23 +205,24 @@
       "numbers": [
         {
           "label": "Cost-to-income ratio (underlying) change 31 Dec 25 vs 31 Dec 24",
-          "value": -50.0,
-          "unit": "bps",
-          "basis": null
+          "value": -0.5,
+          "unit": "ppt",
+          "basis": "underlying"
         },
         {
           "label": "Cost-to-income ratio (underlying) 31 Dec 25",
           "value": 44.7,
           "unit": "%",
-          "basis": null
+          "basis": "underlying"
         },
         {
           "label": "Cost-to-income ratio (underlying) 31 Dec 24",
           "value": 45.2,
           "unit": "%",
-          "basis": null
+          "basis": "underlying"
         }
-      ]
+      ],
+      "provenance": "reference_follow:CBA/1H26/profit_announcement p32 -> page 15"
     },
     {
       "id": "ev-6",
@@ -231,7 +238,8 @@
           "unit": "bps",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-7",
@@ -247,7 +255,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-8",
@@ -263,7 +272,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-9",
@@ -279,7 +289,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-10",
@@ -295,7 +306,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-11",
@@ -323,7 +335,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-12",
@@ -351,7 +364,8 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-13",
@@ -379,32 +393,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-14",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 75,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The result was driven by flat operating performance with a 21% increase in operating expenses, offset by an 8% increase in total operating income",
-      "numbers": [
-        {
-          "label": "Operating expenses change vs prior year",
-          "value": 21.0,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Total operating income change vs prior year",
-          "value": 8.0,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-15",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 32,
       "printed_page": null,
@@ -423,15 +416,16 @@
           "unit": "%",
           "basis": "underlying"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-16",
+      "id": "ev-15",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
       "kind": "table",
-      "quote": "Total operating income 15,021 14,368 14,097",
+      "quote": "Group Performance Summary",
       "numbers": [
         {
           "label": "Total operating income 31 Dec 25",
@@ -451,10 +445,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-17",
+      "id": "ev-16",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -479,10 +474,11 @@
           "unit": "$m",
           "basis": "underlying"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-18",
+      "id": "ev-17",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -507,10 +503,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-19",
+      "id": "ev-18",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 27,
       "printed_page": 2,
@@ -535,10 +532,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-20",
+      "id": "ev-19",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 28,
       "printed_page": 28,
@@ -557,15 +555,16 @@
           "unit": "$m",
           "basis": "null"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-21",
+      "id": "ev-20",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 28,
       "printed_page": 28,
       "kind": "text",
-      "quote": "Underlying cost to income: 45.2% Contribution to mvt: (3.4%) +4.3% +3.5% +1.2% • Wage inflation including higher super guarantee • Vendor IT inflation +5% • Higher cloud consumption and software licensing • Investment in infrastructure, resilience & AI capabilities (0.1%) 44.7% +5.5%",
+      "quote": "Underlying cost to income: 45.2% Contribution to mvt: (3.4%)",
       "numbers": [
         {
           "label": "Underlying cost to income 1H26",
@@ -579,10 +578,11 @@
           "unit": "%",
           "basis": "underlying"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-22",
+      "id": "ev-21",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 8,
       "printed_page": 8,
@@ -607,10 +607,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-23",
+      "id": "ev-22",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 8,
       "printed_page": 8,
@@ -635,7 +636,37 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Pre-provision profit $m 7,725 7,744 8,131 1H25 2H25 1H26",
+      "numbers": [
+        {
+          "label": "Pre-provision profit 1H25",
+          "value": 7725.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Pre-provision profit 2H25",
+          "value": 7744.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Pre-provision profit 1H26",
+          "value": 8131.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
     },
     {
       "id": "ev-24",
@@ -646,24 +677,25 @@
       "quote": "Cost to income 39.5% 39.1% 39.9%",
       "numbers": [
         {
-          "label": "Cost to income 31 Dec 24",
+          "label": "Cost to income ratio 31 Dec 24",
           "value": 39.5,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Cost to income 30 Jun 25",
+          "label": "Cost to income ratio 30 Jun 25",
           "value": 39.1,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Cost to income 31 Dec 25",
+          "label": "Cost to income ratio 31 Dec 25",
           "value": 39.9,
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-25",
@@ -671,27 +703,28 @@
       "pdf_page": 55,
       "printed_page": 55,
       "kind": "table",
-      "quote": "Income 686 611 698",
+      "quote": "Expenses 686 611 698",
       "numbers": [
         {
-          "label": "Total operating income 31 Dec 24",
+          "label": "Total operating expense 31 Dec 24",
           "value": 686.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total operating income 30 Jun 25",
+          "label": "Total operating expense 30 Jun 25",
           "value": 611.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total operating income 31 Dec 25",
+          "label": "Total operating expense 31 Dec 25",
           "value": 698.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-26",
@@ -699,27 +732,28 @@
       "pdf_page": 55,
       "printed_page": 55,
       "kind": "table",
-      "quote": "Expenses 2,001 2,091 2,272",
+      "quote": "Income 2,001 2,091 2,272",
       "numbers": [
         {
-          "label": "Total operating expense 31 Dec 24",
+          "label": "Total operating income 31 Dec 24",
           "value": 2001.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total operating expense 30 Jun 25",
+          "label": "Total operating income 30 Jun 25",
           "value": 2091.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total operating expense 31 Dec 25",
+          "label": "Total operating income 31 Dec 25",
           "value": 2272.0,
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-27",
@@ -741,7 +775,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-28",
@@ -749,7 +784,7 @@
       "pdf_page": 70,
       "printed_page": 70,
       "kind": "table",
-      "quote": "RBS Cost to income 1H25 40.8% 1H26 45.7%",
+      "quote": "RBS Cost to income 1H25 40.8% 1H26 45.7% +8%",
       "numbers": [
         {
           "label": "RBS Cost to income ratio 31 Dec 24",
@@ -763,7 +798,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-29",
@@ -771,7 +807,7 @@
       "pdf_page": 70,
       "printed_page": 70,
       "kind": "table",
-      "quote": "BB Cost to income 1H25 42.0% 1H26 40.2%",
+      "quote": "BB Cost to income 1H25 42.0% 1H26 40.2% -21%",
       "numbers": [
         {
           "label": "BB Cost to income ratio 31 Dec 24",
@@ -785,7 +821,8 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-30",
@@ -793,7 +830,7 @@
       "pdf_page": 70,
       "printed_page": 70,
       "kind": "table",
-      "quote": "IB&M Cost to income 1H25 32.3% 1H26 32.2%",
+      "quote": "IB&M Cost to income 1H25 32.3% 1H26 32.2% +1%",
       "numbers": [
         {
           "label": "IB&M Cost to income ratio 31 Dec 24",
@@ -807,32 +844,11 @@
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
       "id": "ev-31",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 70,
-      "printed_page": 70,
-      "kind": "table",
-      "quote": "ASB (NZD) Cost to income 1H25 39.5% 1H26 39.9%",
-      "numbers": [
-        {
-          "label": "ASB (NZD) Cost to income ratio 31 Dec 24",
-          "value": 39.5,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "ASB (NZD) Cost to income ratio 31 Dec 25",
-          "value": 39.9,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-32",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -846,21 +862,16 @@
           "basis": null
         },
         {
-          "label": "Operating income 31 Dec 25 vs 30 Jun 24 %",
+          "label": "Operating income 31 Dec 25 vs 30 Jun 25",
           "value": 6.6,
           "unit": "%",
           "basis": null
-        },
-        {
-          "label": "Operating income 31 Dec 25 vs 30 Jun 25 %",
-          "value": 4.5,
-          "unit": "%",
-          "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-33",
+      "id": "ev-32",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -874,21 +885,16 @@
           "basis": "underlying"
         },
         {
-          "label": "Underlying operating expenses 31 Dec 25 vs 30 Jun 24 %",
+          "label": "Underlying operating expenses 31 Dec 25 vs 30 Jun 25",
           "value": 5.5,
           "unit": "%",
           "basis": "underlying"
-        },
-        {
-          "label": "Underlying operating expenses 31 Dec 25 vs 30 Jun 25 %",
-          "value": 3.5,
-          "unit": "%",
-          "basis": "underlying"
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-34",
+      "id": "ev-33",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -901,10 +907,11 @@
           "unit": "$m",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
     },
     {
-      "id": "ev-35",
+      "id": "ev-34",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -918,18 +925,59 @@
           "basis": null
         },
         {
-          "label": "Operating performance 31 Dec 25 vs 30 Jun 24 %",
+          "label": "Operating performance 31 Dec 25 vs 30 Jun 25",
           "value": 5.3,
           "unit": "%",
           "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-35",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 24,
+      "printed_page": 24,
+      "kind": "table",
+      "quote": "Loan impairment expense 319 (0.3%) (21.4%)",
+      "numbers": [
+        {
+          "label": "Loan impairment expense 31 Dec 25",
+          "value": 319.0,
+          "unit": "$m",
+          "basis": null
         },
         {
-          "label": "Operating performance 31 Dec 25 vs 30 Jun 25 %",
-          "value": 5.0,
+          "label": "Loan impairment expense 31 Dec 25 vs 30 Jun 25",
+          "value": -0.3,
           "unit": "%",
           "basis": null
         }
-      ]
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-36",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 24,
+      "printed_page": 24,
+      "kind": "table",
+      "quote": "Cash NPAT 5,445 6.1% 6.3%",
+      "numbers": [
+        {
+          "label": "Cash NPAT 31 Dec 25",
+          "value": 5445.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash NPAT 31 Dec 25 vs 30 Jun 25",
+          "value": 6.1,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
     }
   ],
   "suggested_registry_patches": [],
@@ -937,10 +985,14 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
-    "generated": "2026-08-29T13:11:33+00:00",
-    "seconds": 119.2,
-    "cost_usd": 0.0023,
-    "tokens": "42855 in / 7978 out",
-    "orchestration": "pipeline"
+    "generated": "2026-08-29T17:51:20+00:00",
+    "seconds": 99.0,
+    "cost_usd": 0.0024,
+    "tokens": "44481 in / 7967 out",
+    "orchestration": "pipeline",
+    "pages_extracted": 14,
+    "reference_follow": [
+      "CBA/1H26/profit_announcement p31 <- p32 page 15"
+    ]
   }
 }
