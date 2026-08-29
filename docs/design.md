@@ -1,7 +1,7 @@
 # Design doc: the four owned decisions
 
-Status: DRAFT 2026-08-29. Round-2 bake-off numbers (reference-following) land
-before submission. Everything else below is measured and committed.
+Status: DRAFT 2026-08-30. All bake-off rounds are measured and committed;
+final polish before submission.
 
 This document records the four design decisions the project owns end-to-end:
 tools, context management, memory, and evals. Each section states the
@@ -109,12 +109,27 @@ The response is not "buy a bigger model"; it is **deterministic
 reference-following** (ticket 22): after page selection, code scans selected
 pages for note references, printed-page references, and footnote markers,
 resolves them against a per-document notes index, and adds up to four target
-pages to the extraction set. Round 2 of the bake-off scores this engineered
-arm on the same anchors. If it reaches the Sonnet-tier checklist rate at
-cheap-tier cost, the cheap pipeline keeps the research loop; if it
-half-works, the design is a hybrid — cheap pipeline owns numbers, one
-closed-loop pass owns the why-layer, priced at the Sonnet tier (the bake-off
-showed the Fable tier buys nothing extra here).
+pages to the extraction set. Followed pages carry an extraction hint naming
+the reference that reached them, and the author is instructed to explain
+from the bank's own words rather than restate the numbers.
+
+Round 2 measured this engineered arm on the same anchors: **0/15 → 3/15**
+at a worst-case cost of $0.0048 per case, with the suite improving alongside
+(Brier 0.032, confidently-wrong 0.0). The impairment case now carries the
+Note 2.2 provision-type bridge — the exact find that made the closed-loop
+arms the exemplar — inside a $0.003 pipeline run. The residual gap to the
+Sonnet row decomposes into two mechanical fixes (headline facts cannot
+entail in the current report shape; walk-page annotations need a vision
+read to pair numbers with labels) and two facts outside a FY-vs-FY scope,
+not into a loop-shape deficit. The standing plan: one more cheap-tier
+iteration on those fixes; adopt a hybrid (cheap numbers + one Sonnet-tier
+closed-loop why-pass) only if the anchors still sit below the closed-loop
+bar after it. Reference-following also proved a point the bake-off table
+understates: an instructive failure inside the round — the author mixed
+bars from two published walks into a table describing no real walk — was
+caught by the suite's confidently-wrong metric and fixed with a
+NEVER-MIX-FRAMINGS rule the same day. The eval harness, not a bigger
+model, is what makes cheap-tier iteration safe.
 
 ## Decision 3 — Memory: a versioned registry, not a vector store
 
