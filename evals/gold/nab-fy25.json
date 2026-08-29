@@ -35,6 +35,158 @@
         "HoH walk (Mar 25 1.70 -> Sep 25 1.78): lending 0, funding +1, deposits -1, replicating+other +4, liquids +2, M&T +2 (book p17 chart)"
       ],
       "holdout_note": "Frozen 2026-08-29 per the Codex-designed slate, ratified by the user. Prospective quarantine: no dev iteration may run or inspect this case; milestone runs only."
+    },
+    {
+      "metric": "cash_earnings",
+      "split": "dev",
+      "movement": {
+        "from": 7102,
+        "to": 7091,
+        "delta": -11,
+        "unit": "$m",
+        "provenance": "Book p9/p13: 'Cash earnings 7,091 | 7,102 | (0.2)' \u2014 a $11m or 0.2% decrease (p14 prose)"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "Book p14 'September 2025 v September 2024' prose bridge; not force-fitted.",
+        "drivers": {
+          "nii": {
+            "value": 644,
+            "provenance": "p14: 'Net interest income increased by $644 million or 3.8%' (includes an economic-hedge movement)"
+          },
+          "credit_impairment_charge": {
+            "value": -105,
+            "provenance": "p14: 'Credit impairment charge increased by $105 million or 14.4%'"
+          },
+          "tax_and_other": {
+            "value": -27,
+            "provenance": "p14: 'Income tax expense increased by $27 million or 0.9%'"
+          }
+        }
+      },
+      "narrative_checklist": [
+        "statutory net profit decreased $201m or 2.9% while cash earnings fell only 0.2% \u2014 the bases diverge (p14)",
+        "impairment increase driven by individually assessed charges, primarily Corporate and Institutional Banking (p14)"
+      ],
+      "verified": "Hand-verified from NAB FY25 results book page text, 2026-08-29 (pp5-6, 9-10, 13-15)."
+    },
+    {
+      "metric": "roe",
+      "split": "dev",
+      "movement": {
+        "from": 11.6,
+        "to": 11.4,
+        "delta": -0.2,
+        "unit": "ppt",
+        "provenance": "Book p10/p13: 'Cash return on equity 11.4% | 11.6% | (20 bps)'"
+      },
+      "gold_drivers": {
+        "tier": "arithmetic",
+        "provenance": "Level-1 identity: earnings flat (-0.2%) against a growing equity base.",
+        "drivers": {
+          "earnings_effect": {
+            "direction": "flat_slightly_negative",
+            "note": "cash earnings -$11m / -0.2%"
+          },
+          "equity_effect": {
+            "direction": "negative",
+            "note": "equity growth with flat earnings drives the ROE decline"
+          }
+        }
+      },
+      "narrative_checklist": [
+        "statutory ROE 10.8% vs 11.4%, -60bps (p10)"
+      ],
+      "verified": "Hand-verified from NAB FY25 results book page text, 2026-08-29 (pp5-6, 9-10, 13-15)."
+    },
+    {
+      "metric": "cti",
+      "split": "dev",
+      "movement": {
+        "from": 46.5,
+        "to": 47.3,
+        "delta": 0.8,
+        "unit": "ppt",
+        "provenance": "Book p15 (cash-earnings basis): 'Cost to income ratio 47.3% | 46.5% | 80 bps'"
+      },
+      "gold_drivers": {
+        "tier": "arithmetic",
+        "provenance": "Negative jaws: revenue +2.9% vs expenses +4.6% (p5 'FY25 v FY24 drivers of cash earnings change').",
+        "drivers": {
+          "income_growth": {
+            "value_pct": 2.9,
+            "provenance": "book p5"
+          },
+          "expense_growth": {
+            "value_pct": 4.6,
+            "provenance": "book p5"
+          }
+        }
+      },
+      "narrative_checklist": [
+        "a statutory-basis CTI row also exists (49.6% vs 48.5%) \u2014 basis must be named (p15)"
+      ],
+      "verified": "Hand-verified from NAB FY25 results book page text, 2026-08-29 (pp5-6, 9-10, 13-15)."
+    },
+    {
+      "metric": "cet1",
+      "split": "dev",
+      "movement": {
+        "from": 1235,
+        "to": 1170,
+        "delta": -65,
+        "unit": "bps",
+        "provenance": "Book p15: 'CET1 capital ratio 11.70% | 12.35% | (65 bps)'; p6 text confirms 'down (65 bps) from September 2024'"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "Book p6 driver text; decomposition to bar level not published on these pages; checklist-graded.",
+        "drivers": {
+          "rwa": {
+            "direction": "negative",
+            "note": "lending volume growth consumed capital (p6)"
+          },
+          "capital_returns": {
+            "direction": "negative",
+            "note": "increased long-term investment in the business and further impacts listed on p6"
+          }
+        }
+      },
+      "narrative_checklist": [
+        "pro-forma CET1 11.81% reflecting the MLC Life 20% stake sale ($497m, completed 31 Oct 2025) \u2014 pro-forma is not the reported ratio (p6)",
+        "Level 2 basis under APRA's revised framework (p6 footnote)"
+      ],
+      "verified": "Hand-verified from NAB FY25 results book page text, 2026-08-29 (pp5-6, 9-10, 13-15)."
+    },
+    {
+      "metric": "impairment",
+      "split": "dev",
+      "movement": {
+        "from": 728,
+        "to": 833,
+        "delta": 105,
+        "unit": "$m",
+        "provenance": "Book p5: 'Credit impairment charge was $833 million, versus a FY24 charge of $728 million'; p14: '+$105 million or 14.4%'"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "Book p5/p14; not force-fitted.",
+        "drivers": {
+          "individual_provisions": {
+            "value": null,
+            "direction": "up",
+            "note": "FY25 includes individually assessed charges of $964m, primarily CIB (p5, p14)"
+          },
+          "overlays_fla": {
+            "direction": "down",
+            "note": "a $131m release from collective provisions (p5)"
+          }
+        }
+      },
+      "narrative_checklist": [
+        "NAB's label is credit impairment charge (CIC); halves shown 181/171/333 on p5"
+      ],
+      "verified": "Hand-verified from NAB FY25 results book page text, 2026-08-29 (pp5-6, 9-10, 13-15)."
     }
   ]
 }
