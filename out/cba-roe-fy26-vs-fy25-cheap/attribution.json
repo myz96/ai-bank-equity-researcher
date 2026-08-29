@@ -20,11 +20,11 @@
         "value": 0.945,
         "unit": "ppt"
       },
-      "narrative": "Derived: FY25 ROE (13.5%) x Cash NPAT growth (7.0%, ev-7) = +0.945 ppt. Earnings rose $730m to $10,982m (ev-7). Value is derived, not disclosed.",
+      "narrative": "Derived: Prior ROE (13.5%) x Cash NPAT growth (7.0%). Cited from ev-1 and ev-9. Represents the lift at constant equity.",
       "confidence": 80,
       "evidence": [
         "ev-1",
-        "ev-7"
+        "ev-9"
       ],
       "checks_passed": [
         "single_source"
@@ -38,11 +38,12 @@
         "value": -0.445,
         "unit": "ppt"
       },
-      "narrative": "Derived: Total delta (0.5 ppt) minus earnings effect (+0.945 ppt) = -0.445 ppt. Reflects average equity rising from $75,710m to $78,238m (ev-1), likely due to retained earnings exceeding capital returns.",
+      "narrative": "Derived: Total delta (0.5 ppt) minus earnings effect (0.945 ppt). Reflects the dilution from higher average equity (ev-3), likely due to retained earnings.",
       "confidence": 80,
       "evidence": [
         "ev-1",
-        "ev-6"
+        "ev-3",
+        "ev-9"
       ],
       "checks_passed": [
         "single_source"
@@ -55,7 +56,7 @@
   "disagreements": [],
   "attribution_confidence": 80,
   "limitations": [
-    "Earnings and equity effects are mathematically derived contributions, not bank-disclosed bridge components."
+    "Earnings and equity effects are derived arithmetic contributions, not disclosed bank splits."
   ],
   "evidence_records": [
     {
@@ -65,144 +66,6 @@
       "printed_page": null,
       "kind": "table",
       "quote": "Return on Equity – cash basis",
-      "numbers": [
-        {
-          "label": "Average net assets FY26",
-          "value": 78238.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Average net assets FY25",
-          "value": 75710.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Net average equity FY26",
-          "value": 78238.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Net average equity FY25",
-          "value": 75710.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Net profit after tax – cash basis FY26",
-          "value": 10982.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Net profit after tax – cash basis FY25",
-          "value": 10253.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "ROE – cash basis (%) FY26",
-          "value": 14.0,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "ROE – cash basis (%) FY25",
-          "value": 13.5,
-          "unit": "%",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-2",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 147,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on Equity – statutory basis",
-      "numbers": [
-        {
-          "label": "Average net assets FY26",
-          "value": 78238.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "Average net assets FY25",
-          "value": 75710.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "Net average equity FY26",
-          "value": 78238.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "Net average equity FY25",
-          "value": 75710.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "Net profit after tax – statutory basis FY26",
-          "value": 10866.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "Net profit after tax – statutory basis FY25",
-          "value": 10116.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "ROE – statutory basis (%) FY26",
-          "value": 13.9,
-          "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "ROE – statutory basis (%) FY25",
-          "value": 13.4,
-          "unit": "%",
-          "basis": "statutory"
-        }
-      ]
-    },
-    {
-      "id": "ev-3",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 19,
-      "printed_page": 3,
-      "kind": "table",
-      "quote": "Return on equity (ROE) (%) Statutory basis 13.9 13.4 50 bpts 14.2 13.8 40 bpts",
-      "numbers": [
-        {
-          "label": "ROE statutory FY26",
-          "value": 13.9,
-          "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "ROE statutory FY25",
-          "value": 13.4,
-          "unit": "%",
-          "basis": "statutory"
-        }
-      ]
-    },
-    {
-      "id": "ev-4",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 19,
-      "printed_page": 3,
-      "kind": "table",
-      "quote": "Return on equity (ROE) (%) Cash basis 14.0 13.5 50 bpts 14.3 13.8 50 bpts",
       "numbers": [
         {
           "label": "ROE cash FY26",
@@ -219,21 +82,131 @@
       ]
     },
     {
+      "id": "ev-2",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 147,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit after tax – cash basis",
+      "numbers": [
+        {
+          "label": "Cash profit FY26",
+          "value": 10982.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash profit FY25",
+          "value": 10253.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 147,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net average equity (under Return on Equity – cash basis)",
+      "numbers": [
+        {
+          "label": "Avg equity FY26",
+          "value": 78238.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Avg equity FY25",
+          "value": 75710.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) Statutory basis",
+      "numbers": [
+        {
+          "label": "ROE statutory FY26",
+          "value": 13.9,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE statutory FY25",
+          "value": 13.4,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
       "id": "ev-5",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 19,
       "printed_page": 3,
       "kind": "table",
-      "quote": "Earnings Per Share (EPS) (cents) Cash basis – basic 656.9 613.2 7 331.2 325.7 2",
+      "quote": "Return on equity (ROE) (%) Cash basis",
       "numbers": [
         {
-          "label": "Cash EPS FY26",
+          "label": "ROE cash FY26",
+          "value": 14.0,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE cash FY25",
+          "value": 13.5,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Earnings Per Share (EPS) (cents) Statutory basis – basic",
+      "numbers": [
+        {
+          "label": "EPS statutory FY26",
+          "value": 652.6,
+          "unit": "cents",
+          "basis": "statutory"
+        },
+        {
+          "label": "EPS statutory FY25",
+          "value": 606.1,
+          "unit": "cents",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Earnings Per Share (EPS) (cents) Cash basis – basic",
+      "numbers": [
+        {
+          "label": "EPS cash FY26",
           "value": 656.9,
           "unit": "cents",
           "basis": "cash"
         },
         {
-          "label": "Cash EPS FY25",
+          "label": "EPS cash FY25",
           "value": 613.2,
           "unit": "cents",
           "basis": "cash"
@@ -241,7 +214,7 @@
       ]
     },
     {
-      "id": "ev-6",
+      "id": "ev-8",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 26,
       "printed_page": 3,
@@ -258,12 +231,12 @@
           "label": "ROE cash change vs FY25",
           "value": 0.5,
           "unit": "ppt",
-          "basis": "cash"
+          "basis": null
         }
       ]
     },
     {
-      "id": "ev-7",
+      "id": "ev-9",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 26,
       "printed_page": 3,
@@ -280,47 +253,47 @@
           "label": "Cash NPAT change vs FY25",
           "value": 730.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         },
         {
           "label": "Cash NPAT growth rate vs FY25",
           "value": 7.0,
           "unit": "%",
-          "basis": "cash"
+          "basis": null
         }
       ]
     },
     {
-      "id": "ev-8",
+      "id": "ev-10",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 146,
       "printed_page": null,
       "kind": "table",
-      "quote": "Return on Equity – cash basis Average net assets 78,238 75,710 Net average equity 78,238 75,710 Net profit after tax – cash basis 10,982 10,252 ROE – cash basis (%) 14.0 13.5",
+      "quote": "Return on Equity – cash basis",
       "numbers": [
         {
           "label": "Average net assets FY26",
           "value": 78238.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         },
         {
           "label": "Average net assets FY25",
           "value": 75710.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         },
         {
           "label": "Net average equity FY26",
           "value": 78238.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         },
         {
           "label": "Net average equity FY25",
           "value": 75710.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         },
         {
           "label": "Net profit after tax – cash basis FY26",
@@ -349,36 +322,36 @@
       ]
     },
     {
-      "id": "ev-9",
+      "id": "ev-11",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 146,
       "printed_page": null,
       "kind": "table",
-      "quote": "Return on Equity – statutory basis Average net assets 78,238 75,710 Net average equity 78,238 75,710 Net profit after tax – statutory basis 10,911 10,133 ROE – statutory basis (%) 13.9 13.4",
+      "quote": "Return on Equity – statutory basis",
       "numbers": [
         {
           "label": "Average net assets FY26",
           "value": 78238.0,
           "unit": "$m",
-          "basis": "statutory"
+          "basis": null
         },
         {
           "label": "Average net assets FY25",
           "value": 75710.0,
           "unit": "$m",
-          "basis": "statutory"
+          "basis": null
         },
         {
           "label": "Net average equity FY26",
           "value": 78238.0,
           "unit": "$m",
-          "basis": "statutory"
+          "basis": null
         },
         {
           "label": "Net average equity FY25",
           "value": 75710.0,
           "unit": "$m",
-          "basis": "statutory"
+          "basis": null
         },
         {
           "label": "Net profit after tax – statutory basis FY26",
@@ -407,7 +380,7 @@
       ]
     },
     {
-      "id": "ev-10",
+      "id": "ev-12",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 54,
       "printed_page": 54,
@@ -429,7 +402,7 @@
       ]
     },
     {
-      "id": "ev-11",
+      "id": "ev-13",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 54,
       "printed_page": 54,
@@ -456,10 +429,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-28T12:16:34+00:00",
-    "seconds": 51.4,
-    "cost_usd": 0.0014,
-    "tokens": "29667 in / 3572 out",
+    "generated": "2026-08-29T03:40:52+00:00",
+    "seconds": 41.3,
+    "cost_usd": 0.0013,
+    "tokens": "30354 in / 2921 out",
     "orchestration": "pipeline"
   }
 }
