@@ -36,6 +36,184 @@
         "HoH walk (1H25 1.92% -> 2H25 1.95%): loans 0, deposits 0, liquids +3, WSF 0, capital & other -1, T&M +1 (RA p12)"
       ],
       "holdout_note": "Frozen 2026-08-29 per the Codex-designed slate, ratified by the user. Prospective quarantine: no dev iteration may run or inspect this case; milestone runs only."
+    },
+    {
+      "metric": "cash_earnings",
+      "split": "dev",
+      "movement": {
+        "from": 7113,
+        "to": 6972,
+        "delta": -141,
+        "unit": "$m",
+        "provenance": "RA p9: 'Net profit excluding Notable Items 6,972 | 7,113 | (2)' \u2014 Westpac's cash-comparable basis; must be flagged as ex-Notables"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "RA p9 ex-Notables P&L, both FY columns disclosed; not force-fitted.",
+        "drivers": {
+          "nii": {
+            "value": 557,
+            "provenance": "p9: NII 19,473 vs 18,916 (+3%)"
+          },
+          "other_operating_income": {
+            "value": 144,
+            "provenance": "p9: non-interest income 2,991 vs 2,847 (+5%)"
+          },
+          "operating_expenses": {
+            "value": -972,
+            "provenance": "p9: 11,916 vs 10,944 (+9%); includes $273m Fit for Growth restructuring; +6% excluding it"
+          },
+          "credit_impairment_charge": {
+            "value": 113,
+            "provenance": "p9: impairment 424 vs 537 (-21%), favourable"
+          },
+          "tax_and_other": {
+            "value": 34,
+            "provenance": "p9: tax 3,135 vs 3,169; NCI -17 vs 0 separately"
+          }
+        }
+      },
+      "narrative_checklist": [
+        "statutory net profit 6,916 vs 6,990 (-1%); Notable Items are hedging only: -56 vs -123 post-tax (p9)",
+        "the basis divergence must be stated: ex-Notables fell 2% while statutory fell 1%"
+      ],
+      "verified": "Hand-verified from WBC FY25 results announcement full-page reads, 2026-08-29 (pp5-6, 9-10; six-column layout FY25|FY24|mov|2H25|1H25|mov with block headers)."
+    },
+    {
+      "metric": "roe",
+      "split": "dev",
+      "movement": {
+        "from": 11.01,
+        "to": 10.89,
+        "delta": -0.12,
+        "unit": "ppt",
+        "provenance": "RA p10 'Shareholder value - statutory basis': 'Return on average tangible equity (ROTE) 10.89% | 11.01% | (12 bps)' \u2014 ROTE is Westpac's headline return measure"
+      },
+      "gold_drivers": {
+        "tier": "arithmetic",
+        "provenance": "Level-1 identity: ex-Notables profit -2% on flat average tangible equity (63,476 vs 63,415, p10 balance sheet block).",
+        "drivers": {
+          "earnings_effect": {
+            "direction": "negative",
+            "note": "net profit ex-Notables -$141m / -2%"
+          },
+          "equity_effect": {
+            "direction": "flat",
+            "note": "average tangible ordinary equity flat (63,476 vs 63,415)"
+          }
+        }
+      },
+      "narrative_checklist": [
+        "variants on the same page: statutory ROE 9.66 vs 9.77 (-11bps); ex-Notables ROE 9.74 vs 9.94 (-20bps); ex-Notables ROTE 10.97 vs 11.21 (-24bps) \u2014 the variant used must be named (p10)"
+      ],
+      "verified": "Hand-verified from WBC FY25 results announcement full-page reads, 2026-08-29 (pp5-6, 9-10; six-column layout FY25|FY24|mov|2H25|1H25|mov with block headers)."
+    },
+    {
+      "metric": "cti",
+      "split": "dev",
+      "movement": {
+        "from": 50.29,
+        "to": 53.04,
+        "delta": 2.75,
+        "unit": "ppt",
+        "provenance": "RA p10 'Business performance - excluding Notable Items': 'Expense to income ratio 53.04% | 50.29% | 275 bps'"
+      },
+      "gold_drivers": {
+        "tier": "arithmetic",
+        "provenance": "Strongly negative jaws: income +3% (22,464 vs 21,763) against expenses +9% (11,916 vs 10,944), p9.",
+        "drivers": {
+          "income_growth": {
+            "value_pct": 3.2,
+            "provenance": "p9 net operating income"
+          },
+          "expense_growth": {
+            "value_pct": 8.9,
+            "provenance": "p9 operating expenses"
+          },
+          "notable_items": {
+            "direction": "negative",
+            "note": "the $273m restructuring charge sits inside expenses; ex-restructuring growth is +6% (p9)"
+          }
+        }
+      },
+      "narrative_checklist": [
+        "the ratio itself is on the ex-Notables basis; restructuring is inside it as an operating cost (p9/p10)"
+      ],
+      "verified": "Hand-verified from WBC FY25 results announcement full-page reads, 2026-08-29 (pp5-6, 9-10; six-column layout FY25|FY24|mov|2H25|1H25|mov with block headers)."
+    },
+    {
+      "metric": "cet1",
+      "split": "dev",
+      "movement": {
+        "from": 1249,
+        "to": 1253,
+        "delta": 4,
+        "unit": "bps",
+        "provenance": "RA p10: 'Level 2 common equity Tier 1 capital ratio - APRA 12.53% | 12.49% | 4 bps'"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "RA p6 driver text; bar-level walk not on these pages; checklist-graded.",
+        "drivers": {
+          "earnings_generation": {
+            "direction": "positive",
+            "note": "net profit largely offset by dividends and RWA growth (p6)"
+          },
+          "dividend_net_drp": {
+            "direction": "negative",
+            "note": "p6"
+          },
+          "rwa": {
+            "direction": "negative",
+            "note": "increases in RWA (p6)"
+          }
+        }
+      },
+      "narrative_checklist": [
+        "12.53% is $3.1bn above the 11.25% target (p6)",
+        "internationally comparable variant 18.28% on the same page \u2014 variant discipline (p10)"
+      ],
+      "verified": "Hand-verified from WBC FY25 results announcement full-page reads, 2026-08-29 (pp5-6, 9-10; six-column layout FY25|FY24|mov|2H25|1H25|mov with block headers)."
+    },
+    {
+      "metric": "impairment",
+      "split": "dev",
+      "movement": {
+        "from": 537,
+        "to": 424,
+        "delta": -113,
+        "unit": "$m",
+        "provenance": "RA p9: 'Impairment (charges)/benefits (424) | (537) | (21)'"
+      },
+      "loss_rate": {
+        "from": 7,
+        "to": 5,
+        "delta": -2,
+        "unit": "bps of average gross loans",
+        "provenance": "RA p9 prose and p10: 'Impairment charges/(benefits) to average loans 5 bps | 7 bps | (2 bps)'"
+      },
+      "gold_drivers": {
+        "tier": "components",
+        "provenance": "RA p9 prose; not force-fitted.",
+        "drivers": {
+          "individual_provisions": {
+            "direction": "down",
+            "note": "reduction in new IAPs (p9)"
+          },
+          "write_backs_recoveries": {
+            "direction": "down",
+            "note": "higher write-backs and recoveries (p9)"
+          },
+          "overlays_fla": {
+            "direction": "up",
+            "note": "partly offset by an increase for new portfolio overlays (p9)"
+          }
+        }
+      },
+      "narrative_checklist": [
+        "Westpac's label is 'impairment charges'; mortgage 90+ delinquencies improved 1.05% -> 0.70% (p10)"
+      ],
+      "verified": "Hand-verified from WBC FY25 results announcement full-page reads, 2026-08-29 (pp5-6, 9-10; six-column layout FY25|FY24|mov|2H25|1H25|mov with block headers)."
     }
   ]
 }
