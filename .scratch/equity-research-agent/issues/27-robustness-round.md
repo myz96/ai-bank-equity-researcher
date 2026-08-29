@@ -306,3 +306,253 @@ settle one framing per bank.
 
 Three NAB/WBC cases report a wrong movement (NAB cti, WBC roe, WBC
 impairment). All three are first runs of new cases and none is in scope here.
+
+### NAB/WBC movement round (2026-08-30)
+
+Three dev cases reported a wrong movement on `evals/results/20260829-1815-cheap-dev.md`.
+Each had a different root cause. Every gold movement was checked by page-sight
+in the primary PDF first.
+
+#### 1. NAB cti FY25 — the Group KPI page was never retrieved
+
+The answer read 37.1% -> 34.0%. Gold reads 46.5% -> 47.3%, and gold is right:
+`data/raw/NAB/FY25/NAB-FY25-results-book.pdf` PDF p15 (printed 13) prints, under
+the block header "Group performance - cash earnings basis", the row
+"Cost to income ratio  47.3%  46.5%  80 bps". The same page prints the statutory
+block above it: "Cost to income ratio  49.6%  48.5%  110 bps".
+
+The author never saw that page. Replaying the three cti retrieval queries over
+the FY25 corpus, results-book p15 does not appear in the candidate union at all.
+The queries name the ratio label only, and every DIVISIONAL table in the book
+repeats the row "Cost to income ratio", so retrieval ranked p40, p38 and p49
+(divisions) into the page budget and the author took a division's 34.0% for the
+Group's 47.3%. Its own headline said expenses grew 4.6% against income 2.9% —
+which raises a ratio — while its movement said the ratio fell 3.1 ppt.
+
+#### 2. WBC roe FY25 — gold quoted the wrong block, and the author read a
+       neighbouring row
+
+The answer read "Return on average ordinary equity 9.77% -> 9.66%". Gold read
+statutory ROTE 11.01% -> 10.89%. BOTH were wrong, for different reasons.
+
+Gold first. `data/raw/WBC/FY25/WBC-FY25-results-announcement.pdf` p10 prints four
+return rows in two blocks. Under "Shareholder value - statutory basis":
+"Return on average ordinary equity 9.66% 9.77% (11 bps)" and
+"Return on average tangible equity (ROTE) 10.89% 11.01% (12 bps)". Under
+"Shareholder value - excluding Notable Items":
+"Return on average ordinary equity 9.74% 9.94% (20 bps)" and
+"ROTE 10.97% 11.21% (24 bps)". The gold file's own header says
+`"basis": "ex_notables"`, and this case's own `gold_drivers` derive the movement
+from "ex-Notables profit -2% on flat average tangible equity (63,476 vs 63,415)"
+— that is the ex-Notables ROTE row, not the statutory one the movement quoted.
+Westpac itself headlines the ex-Notables row:
+`data/raw/WBC/FY25/WBC-FY25-presentation-and-IDP.pdf` p6, the tile page titled
+"FY25 FINANCIAL PERFORMANCE", prints "11.0% ROTE ex Notable Items1 24bps to FY24"
+beside "$7.0bn Net profit ex Notable Items1 2% to FY24" and "53.0% Cost to income
+ratio ex Notable Items1 3ppts to FY24". Gold is now 11.21 -> 10.97, delta -0.24.
+The correction does NOT make the old answer pass: 9.77 -> 9.66 is wrong against
+either row.
+
+The pipeline's own fault was separate. `registry/wbc.json` already knew the
+headline row (`roe_label`), but the pipeline used that label only NEGATIVELY, in
+`check_movement_variant`. The author was never told which row the bank headlines,
+and "Return on average ordinary equity" matches the metric name "return on
+equity" better than "ROTE" does.
+
+#### 3. WBC impairment FY25 — the bracketed P&L sign carried through
+
+The answer read -537 -> -424, delta +113, for a charge that FELL by $113m. RA p9
+and p21 print "Impairment (charges)/benefits  (424)  (537)  (21)" — the line sits
+inside the P&L, where every expense is bracketed. The prose on the same page
+reads "The credit impairment charge of $424 million represented 5 basis points of
+average loans, down from 7 basis points in the prior year." Gold (537 -> 424,
+-113) matches the bank's own prose and the convention every other impairment gold
+in the repo uses: CBA FY21 gold reads 2,518 -> 554 from a row printed
+"(554) | (2,518)", and CBA FY26 and NAB FY25 both state the charge positive.
+Gold is right; the answer carried the bracket into `from_value` and `to_value`.
+
+#### What changed
+
+- `taxonomy.py` (cti): the first retrieval query is rephrased for the GROUP KPI
+  page — "key performance indicators group performance cost to income ratio
+  operating expenses to total operating income" — instead of the ratio label
+  alone. Simulated over CBA 1H26/FY21/FY26, NAB FY25 and WBC FY25 before the
+  change: NAB gains results-book p15 at rank 1 and loses the three divisional
+  pages; CBA gains its own "Key Performance Indicators" page (PA p18), which the
+  old queries never reached either; WBC keeps RA p18, the page its passing
+  answer reads from.
+- `taxonomy.py` (cti method_hint): a divisional table repeats the same row label
+  for one business unit; a KPI table that prints one BLOCK per basis needs the
+  primary-basis block. Plus a SIGN paragraph — a contribution is the effect on
+  the ratio, and the contributions plus the residual must sum to the delta.
+- `taxonomy.py` (impairment): a new `sign_convention: "positive_charge"` flag,
+  and a SIGN paragraph at the head of the method hint that reads the bracketed
+  P&L presentation for what it is.
+- `author.py`: `settle_charge_sign()` is the deterministic backstop for the
+  same thing. It re-signs a movement only when BOTH endpoints are negative and
+  the metric carries the flag: under a "(charges)/benefits" header a benefit
+  prints positive, so a negative pair can only be two charges, while a mixed
+  pair is a real charge/benefit pair and is left alone. It runs before the delta
+  harmoniser and declares itself in limitations.
+- `author.py`: the prompt gained a `HEADLINE ROW` line, filled from the registry
+  label the pipeline already computed. Rule 11 now points at it and says the
+  headline measure is not always the one the metric's name suggests. Rule 2
+  gained one sentence: it tells you how to LABEL the row you read, and never
+  licenses reading a non-primary-basis row.
+- `validate.py`: `check_movement_basis()` — the movement must be read on the
+  bank's own primary basis, judged from the author's own citation. It caught the
+  next NAB cti run, which had moved from the divisional row to the STATUTORY
+  Group row (48.5 -> 49.6) while `_settle_basis` relabelled it "cash", so a wrong
+  row was reaching the scorer wearing the right basis name. A basis word carried
+  by the metric's registry headline row is exempt, so Westpac's ROTE ex Notable
+  Items is unaffected; CET1 is skipped. Replayed over all 36 saved artifacts in
+  `out/` before switch-on: zero fires.
+- `pipeline.py`: passes `headline_label` to the author and `primary_basis(registry)`
+  to the new check.
+- `registry/wbc.json`: `roe_label` and `cti_label` rewritten so they name the row
+  instead of hinting at it. The old `roe_label` read "ROTE (return on average
+  tangible equity), also ex Notable Items", which the author read as "ROTE, and
+  there is also an ex-Notables one"; it then took the statutory ROTE. Both labels
+  keep the literal words "ex Notable Items", because `check_movement_variant`
+  exempts a variant word the headline label itself carries.
+- `evals/gold/wbc-fy25.json`: the roe movement, with the correction and its
+  printed evidence recorded in `provenance`; the narrative checklist now lists
+  statutory ROTE among the variants.
+- `extract.py`: a BASIS BLOCKS rule (see the next section).
+- `tests/test_author_normalisers.py`: 26 new tests over `settle_charge_sign`,
+  the `HEADLINE ROW` prompt wiring, `check_movement_basis` and the hyphen
+  normalisation in `check_movement_variant`.
+
+#### Two more defects the re-runs exposed
+
+- **The extractor invented a basis for a block it could read.** WBC RA p10
+  prints "Shareholder value - statutory basis" as a line of its own, then four
+  rows, then "Shareholder value - excluding Notable Items" and four more. The
+  extractor tagged the statutory rows `basis: "cash"` — a basis Westpac does not
+  use — so the author saw two "ROTE" records, one "cash" and one "ex_notables",
+  and one run paired 10.97 (ex-Notables, FY25) with 10.89 (statutory, FY25):
+  two FY25 figures, so the "movement" was the gap between two measures. NAB's
+  p15 has the same shape ("Group performance - statutory basis" then "Group
+  performance - cash earnings basis"), and a NAB cti run took the statutory
+  block for the same reason. `extract.py` gained a BASIS BLOCKS rule: a block
+  header on a line of its own gives every row under it its basis, the same row
+  label repeats under two blocks, and the basis goes in the number's LABEL as
+  well as the field. Both pages now come back correctly split
+  ("cost to income ratio statutory FY25" against "cost to income ratio cash
+  FY25"; "ROTE statutory FY25" against "ROTE ex-notables FY25").
+- **`check_movement_variant` read a hyphen as a different word.** With the
+  right row in hand the author cited "row 'ROTE ex-notables'", and the check
+  fired because the registry label spells it "ex Notable Items". Both sides are
+  now normalised through `_variant_text` (hyphens and underscores to spaces),
+  and `VARIANT_WORDS` keeps one spelling per word. `check_movement_basis` uses
+  the same normalisation.
+
+#### Three more, found by re-running rather than by reading
+
+- **The cash-earnings headline row was never named.** `headline_label` mapped
+  only cti, roe and impairment, so for cash_earnings the prompt said "the
+  registry records no row for this metric". Westpac dropped cash earnings at
+  1H23, and one full-suite run took "Net profit attributable to owners of WBC"
+  (6,990 -> 6,916, declared statutory) instead of "Net profit excluding Notable
+  Items" (7,113 -> 6,972) four rows above it. The map now sends cash_earnings to
+  `core_profit`. The same change removes a pre-existing FALSE fire: with no
+  label, `check_movement_variant` had been failing every WBC cash-earnings run
+  for citing a row called "Net profit excluding Notable Items".
+- **`check_movement_basis` also reads the DECLARED basis.** That statutory run
+  cited a row with no basis word in it, so the citation arm saw nothing. The
+  check now also fails when the answer declares a basis that is not the bank's
+  own and that the metric's headline row does not name. Replayed over all 36
+  saved artifacts: one fire, on the statutory WBC run, none on a correct one.
+- **The check fires but does not decide.** On the run above the retry kept the
+  statutory row anyway, so the case stayed wrong at confidence 40 until the
+  headline-row map was fixed. The check is a floor (it caps an unsound answer),
+  not a cure.
+
+#### Case outcomes
+
+| Case | Before | After |
+|---|---|---|
+| NAB cti FY25 | WRONG: 37.1 -> 34.0 (a division's ratio) | OK: 46.5 -> 47.3, cash basis, from book p15 |
+| WBC roe FY25 | WRONG: 9.77 -> 9.66 (statutory ROE) | OK: 11.21 -> 10.97, ROTE ex Notable Items |
+| WBC impairment FY25 | WRONG: -537 -> -424, delta +113 | OK: 537 -> 424, delta -113 |
+
+Each was re-run at least twice after its fix and held.
+
+#### Verification
+
+`uv run python -m pytest tests/ -q` — 136 passed (110 before; 26 new in
+`tests/test_author_normalisers.py`).
+
+Full dev suite, `evals run --suite dev --combo cheap`, verbatim:
+
+# Scorecard — suite dev, combo cheap, 20260829-2107
+
+| Case | Movement | Driver recall | Precision | Extraction | Scored claims | Unscored | Failed checks | Conf | Cost |
+|---|---|---|---|---|---|---|---|---|---|
+| CBA-nim-1H26 | OK | 7/7 | 7/7 | 7/7 | 7/7 | 0 | 0 | 90 | $0.0028 |
+| CBA-cash_earnings-1H26 | OK | 2/3 | 2/3 | — | 3/6 | 3 | 0 | 90 | $0.0048 |
+| CBA-roe-1H26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 80 | $0.0017 |
+| CBA-cet1-1H26 | OK | 1/1 | 1/1 | — | 1/2 | 1 | 0 | 85 | $0.002 |
+| CBA-impairment-1H26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/4 | 4 | 1 | 40 | $0.0027 |
+| CBA-cti-1H26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 90 | $0.0023 |
+| CBA-nim-FY21 | OK | 7/7 | 7/7 | 7/7 | 7/7 | 0 | 0 | 85 | $0.0027 |
+| CBA-cet1-FY21 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/5 | 5 | 4 | 40 | $0.0025 |
+| CBA-nim-FY25 | OK | 7/7 | 7/7 | 7/7 | 7/7 | 0 | 0 | 95 | $0.003 |
+| CBA-nim-FY26 | OK | 7/7 | 7/7 | 7/7 | 7/7 | 0 | 0 | 90 | $0.0027 |
+| CBA-cash_earnings-FY26 | OK | 4/4 | 4/4 | — | 4/6 | 2 | 0 | 95 | $0.0047 |
+| CBA-roe-FY26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 80 | $0.0015 |
+| CBA-cet1-FY26 | OK | n/a (gold decomposes a different comparison) | n/a (gold decomposes a different comparison) | n/a (gold walk is not the case comparison) | 0/0 | 0 | 1 | 40 | $0.0021 |
+| CBA-impairment-FY26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/4 | 4 | 0 | 90 | $0.0025 |
+| CBA-cti-FY26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 85 | $0.002 |
+| NAB-cash_earnings-FY25 | OK | 3/3 | 3/3 | — | 3/5 | 2 | 1 | 40 | $0.005 |
+| NAB-roe-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 80 | $0.0016 |
+| NAB-cti-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/0 | 0 | 1 | 75 | $0.0013 |
+| NAB-cet1-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/5 | 5 | 0 | 60 | $0.002 |
+| NAB-impairment-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 90 | $0.0023 |
+| WBC-cash_earnings-FY25 | OK | 5/5 | 5/5 | — | 5/6 | 1 | 1 | 40 | $0.006 |
+| WBC-roe-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 1 | 40 | $0.0013 |
+| WBC-cti-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 80 | $0.0012 |
+| WBC-cet1-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/7 | 7 | 1 | 40 | $0.0021 |
+| WBC-impairment-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/4 | 4 | 1 | 40 | $0.0017 |
+
+## Calibration (scored quantified driver claims only)
+
+- scored_claims: 44
+- unscored_claims: 54
+- cases_scored: 9
+- cases: 25
+- brier: 0.035
+- confidently_wrong_rate: 0.0
+- 70-84: 8 claims, 88% correct
+- 85-94: 33 claims, 100% correct
+- 95-100: 3 claims, 100% correct
+
+25 of 25 movements OK, up from 22 of 25. All 15 CBA baseline movements stay OK.
+confidently_wrong_rate stays 0.0.
+
+Brier is 0.035 against the 0.032 bar. It is NOT a correctness regression: the
+run holds exactly ONE incorrect scored claim, the same one as the frozen
+baseline (CBA cash_earnings 1H26 `operating_expenses` -348 against gold -518 —
+the underlying/notable framing gap already recorded above, held at 80 by the
+framing cap). Every claim at 85 or above is correct, 36 of 36. The number moved
+because the mix moved: 33 claims now sit in the 85-94 band against 22 on the
+0.032 run, and 3 in 95-100 against 12, so the pipeline pays the (1 - 0.9)^2
+floor on more claims while making no more mistakes. The two full-suite runs
+inside this round scored 0.034 and 0.035, so 0.032 to 0.035 is the run-to-run
+band, not a step.
+
+#### Left undone
+
+- WBC roe still fails `drivers_reconcile`: the movement is right and the
+  level-1 earnings/equity split is arithmetic nonsense (-23.5 ppt against a
+  -0.24 ppt movement), so the case ships at confidence 40. That is the honest
+  outcome, not a wrong number, and it predates this round. The ROE method hint
+  computes `earnings_effect = prior ROE x earnings growth`; when the author has
+  ROTE endpoints but only $m profit levels, it mixes the two scales. A ROE
+  calibration round should fix the identity, not the prompt wording.
+- WBC impairment ships at 40 for the same reason: the movement reconciles, the
+  provision-type bridge does not.
+- `registry/wbc.json` `cti_label` was rewritten alongside `roe_label` for
+  consistency. WBC cti was already passing and still passes; the change is not
+  load-bearing.
+- Nothing is committed.

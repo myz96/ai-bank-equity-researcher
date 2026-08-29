@@ -221,7 +221,20 @@ TAXONOMY: dict[str, dict] = {
             "provisions for impairment asset quality",
         ],
         "walk_markers": [],
+        # A charge is stated as a POSITIVE number, whatever sign the table
+        # prints. Banks put the impairment line inside the P&L, where every
+        # expense is bracketed: Westpac prints "Impairment (charges)/benefits
+        # (424) | (537)" and CBA's FY21 group summary prints "(554) | (2,518)".
+        # Both are charges. author.py reads this flag.
+        "sign_convention": "positive_charge",
         "method_hint": (
+            "SIGN: state the charge as a POSITIVE number in both endpoints, so a FALLING "
+            "charge gives a NEGATIVE delta. A results table often prints the impairment line "
+            "inside the P&L, where expenses are bracketed — a row reading 'Impairment "
+            "(charges)/benefits (424) (537)' is a charge of 424 against a charge of 537, and "
+            "the bank's own prose beside it says 'the credit impairment charge of $424 "
+            "million'. Take the bracketed figures as charge magnitudes; never carry the "
+            "bracket into from_value and to_value. "
             "Quantify the movement components in $m. PROVISION TYPE FIRST: when the "
             "impairment note splits the CHARGE into its provision types for both periods "
             "— net collective provisioning, new and increased individually assessed "
@@ -261,7 +274,15 @@ TAXONOMY: dict[str, dict] = {
         "unit": "ppt",
         "method": "two_level_arithmetic",
         "retrieval_queries": [
-            "operating expenses to total operating income cost to income",
+            # Phrased for the GROUP KPI / performance-summary page, not for the
+            # ratio label alone (ticket 27, NAB FY25). Every divisional table
+            # repeats the row "Cost to income ratio", so a label-only query
+            # ranked three NAB divisional pages above the Group KPI page and
+            # the author took a division's 34.0% for the Group's 47.3%. Naming
+            # the section title as well as both common label forms puts the KPI
+            # page first for CBA, NAB and WBC alike.
+            "key performance indicators group performance cost to income ratio "
+            "operating expenses to total operating income",
             "operating expenses staff technology investment productivity",
             "total operating income growth expense growth jaws",
         ],
@@ -271,13 +292,25 @@ TAXONOMY: dict[str, dict] = {
             "every period column — the ratio's numerator and denominator"
         ),
         "method_hint": (
-            "Take the ratio endpoints from the results book's KPI table, from the row for the "
-            "bank's HEADLINE cost-to-income measure named in the bank vocabulary, reading each "
-            "task period's own column. An 'underlying', 'ex-notable' or single-division version "
+            "Take the ratio endpoints from the GROUP KPI table of the results book, from the "
+            "row for the bank's HEADLINE cost-to-income measure named in the bank vocabulary, "
+            "reading each task period's own column. A divisional or segment table repeats the "
+            "SAME row label for ONE business unit at a different level: that is not the Group "
+            "ratio, so never let it supply the movement — a divisional ratio is often ten or "
+            "more points away from the Group's. When the KPI table prints one BLOCK per basis "
+            "(a statutory block and a cash block, each with its own 'Cost to income ratio' "
+            "row), take the block for the bank's primary basis and quote the other block as "
+            "context. An 'underlying', 'ex-notable' or single-division version "
             "of the ratio is a DIFFERENT measure: report it beside the headline movement or as "
             "a disagreement, never as the movement itself. Level 1 is jaws: compute income "
             "growth and expense growth in per cent from the disclosed levels of both periods, "
-            "say which grew faster, and name the jaws as positive or negative. Claim a ppt "
+            "say which grew faster, and name the jaws as positive or negative. SIGN: a "
+            "contribution is the effect on the RATIO, so the quantified contributions plus the "
+            "residual must sum to the movement delta. Expense growth that outruns income "
+            "growth RAISES the ratio, which is a POSITIVE contribution to a rising ratio; "
+            "income growth that outruns expenses LOWERS it. Check the sum against the delta "
+            "before you answer: two negative contributions can never explain a ratio that "
+            "rose. Claim a ppt "
             "contribution only when the evidence supports the arithmetic; otherwise give the "
             "growth rates in the narrative and leave the ppt split unquantified."
         ),

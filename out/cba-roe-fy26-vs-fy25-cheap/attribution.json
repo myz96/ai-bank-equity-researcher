@@ -10,22 +10,23 @@
     "delta": 0.5,
     "unit": "ppt"
   },
-  "movement_source": "row 'Return on Equity – cash basis', column FY25 -> column FY26",
-  "headline": "CBA's cash ROE increased by 50 bps to 14.0% in FY26 (ev-1). This improvement was driven by a 7% growth in cash NPAT ($10,982m), which lifted ROE at constant equity, partially offset by the dilutive effect of higher average net assets ($78,238m) as retained earnings accumulated.",
+  "movement_source": "row 'Return on equity (cash basis)', column FY25 -> column FY26",
+  "headline": "CBA's cash ROE rose 50 bps to 14.0% in FY26, driven by a 7% increase in cash NPAT ($10,982m) which lifted ROE by approximately 94 bpts at constant equity. This was partially offset by a higher average net asset base ($78,238m vs $75,710m), contributing a negative drag of approximately 44 bpts.",
   "drivers": [
     {
       "canonical": "earnings_effect",
       "bank_label": "Higher cash NPAT",
       "contribution": {
-        "value": 0.945,
+        "value": 0.94,
         "unit": "ppt"
       },
       "columns": "stated vs FY25",
-      "narrative": "Derived: Prior ROE (13.5%) x Cash NPAT growth (7.0%). Ev-9 cites $730m increase. At constant equity, this lift is ~95 bps.",
+      "narrative": "Derived: Prior ROE (13.5%) x Cash NPAT growth (7%). Ev-8 cites $730m (+7%) cash NPAT growth. Narrative states this drove the increase.",
       "confidence": 80,
       "evidence": [
         "ev-1",
-        "ev-9"
+        "ev-7",
+        "ev-8"
       ],
       "checks_passed": [
         "single_source"
@@ -36,16 +37,15 @@
       "canonical": "equity_effect",
       "bank_label": "Higher net assets",
       "contribution": {
-        "value": -0.445,
+        "value": -0.44,
         "unit": "ppt"
       },
       "columns": "stated vs FY25",
-      "narrative": "Derived: Total delta (0.5 ppt) minus earnings effect (0.945 ppt). Driven by avg equity rising from $75,710m to $78,238m (ev-3), absorbing retained earnings.",
+      "narrative": "Derived: Total delta (0.5 ppt) minus earnings effect (0.94 ppt). Ev-1 shows avg net assets grew from $75,710m to $78,238m (+3.3%), diluting ROE.",
       "confidence": 80,
       "evidence": [
         "ev-1",
-        "ev-3",
-        "ev-9"
+        "ev-7"
       ],
       "checks_passed": [
         "single_source"
@@ -53,13 +53,15 @@
       "checks_failed": []
     }
   ],
-  "residual": null,
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
   "notable_items": [],
   "disagreements": [],
   "attribution_confidence": 80,
   "limitations": [
-    "Earnings and equity effects are derived arithmetic contributions, not disclosed bank splits.",
-    "Residual interaction term is embedded in the equity effect."
+    "Earnings and equity effects are derived arithmetic contributions, not explicitly quantified splits in the bank's disclosure."
   ],
   "evidence_records": [
     {
@@ -71,13 +73,49 @@
       "quote": "Return on Equity – cash basis",
       "numbers": [
         {
-          "label": "ROE cash FY26",
+          "label": "Average net assets FY26",
+          "value": 78238.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average net assets FY25",
+          "value": 75710.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net average equity FY26",
+          "value": 78238.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net average equity FY25",
+          "value": 75710.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net profit after tax – cash basis FY26",
+          "value": 10982.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Net profit after tax – cash basis FY25",
+          "value": 10253.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE – cash basis (%) FY26",
           "value": 14.0,
           "unit": "%",
           "basis": "cash"
         },
         {
-          "label": "ROE cash FY25",
+          "label": "ROE – cash basis (%) FY25",
           "value": 13.5,
           "unit": "%",
           "basis": "cash"
@@ -91,48 +129,61 @@
       "pdf_page": 147,
       "printed_page": null,
       "kind": "table",
-      "quote": "Net profit after tax – cash basis",
+      "quote": "Return on Equity – statutory basis",
       "numbers": [
         {
-          "label": "Cash profit FY26",
-          "value": 10982.0,
+          "label": "Average net assets FY26",
+          "value": 78238.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
         },
         {
-          "label": "Cash profit FY25",
-          "value": 10253.0,
+          "label": "Average net assets FY25",
+          "value": 75710.0,
           "unit": "$m",
-          "basis": "cash"
+          "basis": null
+        },
+        {
+          "label": "Net average equity FY26",
+          "value": 78238.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net average equity FY25",
+          "value": 75710.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net profit after tax – statutory basis FY26",
+          "value": 10866.0,
+          "unit": "$m",
+          "basis": "statutory"
+        },
+        {
+          "label": "Net profit after tax – statutory basis FY25",
+          "value": 10116.0,
+          "unit": "$m",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE – statutory basis (%) FY26",
+          "value": 13.9,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE – statutory basis (%) FY25",
+          "value": 13.4,
+          "unit": "%",
+          "basis": "statutory"
         }
       ],
       "provenance": null
     },
     {
       "id": "ev-3",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 147,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Net average equity (under Return on Equity – cash basis)",
-      "numbers": [
-        {
-          "label": "Avg equity FY26",
-          "value": 78238.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Avg equity FY25",
-          "value": 75710.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-4",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 19,
       "printed_page": 3,
@@ -155,7 +206,7 @@
       "provenance": null
     },
     {
-      "id": "ev-5",
+      "id": "ev-4",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 19,
       "printed_page": 3,
@@ -178,53 +229,53 @@
       "provenance": null
     },
     {
+      "id": "ev-5",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) Statutory basis 13.9 13.4 50 bpts 14.2 13.6 60 bpts",
+      "numbers": [
+        {
+          "label": "ROE statutory including discontinued FY26",
+          "value": 13.9,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE statutory including discontinued FY25",
+          "value": 13.4,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": null
+    },
+    {
       "id": "ev-6",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 19,
       "printed_page": 3,
       "kind": "table",
-      "quote": "Earnings Per Share (EPS) (cents) Statutory basis – basic 652.6 606.1 8 328.9 323.7 2",
+      "quote": "Return on equity (ROE) (%) Cash basis 14.0 13.5 50 bpts 14.3 13.8 50 bpts",
       "numbers": [
         {
-          "label": "EPS statutory FY26",
-          "value": 652.6,
-          "unit": "cents",
-          "basis": "statutory"
+          "label": "ROE cash including discontinued FY26",
+          "value": 14.0,
+          "unit": "%",
+          "basis": "cash"
         },
         {
-          "label": "EPS statutory FY25",
-          "value": 606.1,
-          "unit": "cents",
-          "basis": "statutory"
+          "label": "ROE cash including discontinued FY25",
+          "value": 13.5,
+          "unit": "%",
+          "basis": "cash"
         }
       ],
       "provenance": null
     },
     {
       "id": "ev-7",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 19,
-      "printed_page": 3,
-      "kind": "table",
-      "quote": "Earnings Per Share (EPS) (cents) Cash basis – basic 656.9 613.2 7 331.2 325.7 2",
-      "numbers": [
-        {
-          "label": "EPS cash FY26",
-          "value": 656.9,
-          "unit": "cents",
-          "basis": "cash"
-        },
-        {
-          "label": "EPS cash FY25",
-          "value": 613.2,
-          "unit": "cents",
-          "basis": "cash"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-8",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 26,
       "printed_page": 3,
@@ -241,13 +292,13 @@
           "label": "ROE cash change vs FY25",
           "value": 0.5,
           "unit": "ppt",
-          "basis": null
+          "basis": "cash"
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-9",
+      "id": "ev-8",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 26,
       "printed_page": 3,
@@ -264,19 +315,19 @@
           "label": "Cash NPAT change vs FY25",
           "value": 730.0,
           "unit": "$m",
-          "basis": null
+          "basis": "cash"
         },
         {
           "label": "Cash NPAT growth rate vs FY25",
           "value": 7.0,
           "unit": "%",
-          "basis": null
+          "basis": "cash"
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-10",
+      "id": "ev-9",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 146,
       "printed_page": null,
@@ -320,13 +371,13 @@
           "basis": "cash"
         },
         {
-          "label": "ROE – cash basis FY26",
+          "label": "ROE – cash basis (%) FY26",
           "value": 14.0,
           "unit": "%",
           "basis": "cash"
         },
         {
-          "label": "ROE – cash basis FY25",
+          "label": "ROE – cash basis (%) FY25",
           "value": 13.5,
           "unit": "%",
           "basis": "cash"
@@ -335,7 +386,7 @@
       "provenance": null
     },
     {
-      "id": "ev-11",
+      "id": "ev-10",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 146,
       "printed_page": null,
@@ -379,16 +430,39 @@
           "basis": "statutory"
         },
         {
-          "label": "ROE – statutory basis FY26",
+          "label": "ROE – statutory basis (%) FY26",
           "value": 13.9,
           "unit": "%",
           "basis": "statutory"
         },
         {
-          "label": "ROE – statutory basis FY25",
+          "label": "ROE – statutory basis (%) FY25",
           "value": 13.4,
           "unit": "%",
           "basis": "statutory"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 54,
+      "printed_page": 54,
+      "kind": "text",
+      "quote": "Statutory NPAT ($m) 10,911 +7.7%",
+      "numbers": [
+        {
+          "label": "Statutory NPAT FY26",
+          "value": 10911.0,
+          "unit": "$m",
+          "basis": "statutory"
+        },
+        {
+          "label": "Statutory NPAT growth",
+          "value": 7.7,
+          "unit": "%",
+          "basis": null
         }
       ],
       "provenance": null
@@ -398,30 +472,7 @@
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 54,
       "printed_page": 54,
-      "kind": "table",
-      "quote": "ROE (cash) 14.0% +50bpts",
-      "numbers": [
-        {
-          "label": "ROE cash FY26",
-          "value": 14.0,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "ROE cash FY25",
-          "value": 13.5,
-          "unit": "%",
-          "basis": "cash"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-13",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 54,
-      "printed_page": 54,
-      "kind": "table",
+      "kind": "text",
       "quote": "Cash NPAT ($m) 10,982 +7.1%",
       "numbers": [
         {
@@ -431,9 +482,32 @@
           "basis": "cash"
         },
         {
-          "label": "Cash NPAT FY25",
-          "value": 10252.3,
-          "unit": "$m",
+          "label": "Cash NPAT growth",
+          "value": 7.1,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 54,
+      "printed_page": 54,
+      "kind": "text",
+      "quote": "ROE (cash) 14.0% +50bpts",
+      "numbers": [
+        {
+          "label": "ROE cash FY26",
+          "value": 14.0,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE cash change",
+          "value": 0.5,
+          "unit": "ppt",
           "basis": "cash"
         }
       ],
@@ -445,10 +519,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-29T18:02:12+00:00",
-    "seconds": 27.3,
-    "cost_usd": 0.0013,
-    "tokens": "31266 in / 3117 out",
+    "generated": "2026-08-29T20:54:35+00:00",
+    "seconds": 37.9,
+    "cost_usd": 0.0015,
+    "tokens": "34584 in / 3607 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": []

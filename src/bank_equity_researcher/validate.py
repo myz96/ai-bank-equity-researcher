@@ -627,9 +627,20 @@ def unclaimed_components(attribution, component_labels: dict[str, tuple[str, ...
 # 1H26 CTI case took "Underlying operating expenses to underlying operating
 # income" instead of the KPI row, and CET1 FY21 took a pro-forma endpoint.
 VARIANT_WORDS = (
-    "underlying", "ex-notable", "ex notable", "excluding notable",
-    "pro-forma", "pro forma", "proforma", "internationally comparable", "level 1",
+    "underlying", "ex notable", "excluding notable",
+    "pro forma", "proforma", "internationally comparable", "level 1",
 )
+
+
+def _variant_text(text: str) -> str:
+    """One spelling for a hyphenated word, so the label and the citation match.
+
+    "ex-Notables" and "ex Notable Items" are the same word, and the author
+    picks either. Westpac's registry label spells it with a space, so a run
+    that wrote "row 'ROTE ex-notables'" failed a check that its own headline
+    row should have exempted.
+    """
+    return text.lower().replace("-", " ").replace("_", " ")
 
 
 def check_movement_variant(attribution, headline_label: str | None) -> tuple[list[str], list[str]]:
@@ -640,10 +651,10 @@ def check_movement_variant(attribution, headline_label: str | None) -> tuple[lis
     measure is itself an underlying figure is unaffected.
     """
     passed, failed = [], []
-    source = (attribution.movement_source or "").lower()
+    source = _variant_text(attribution.movement_source or "")
     if not source or attribution.movement is None:
         return passed, failed
-    label = (headline_label or "").lower()
+    label = _variant_text(headline_label or "")
     hits = [word for word in VARIANT_WORDS if word in source and word not in label]
     if hits:
         failed.append(
@@ -653,6 +664,76 @@ def check_movement_variant(attribution, headline_label: str | None) -> tuple[lis
         )
     else:
         passed.append("movement_from_headline_row")
+    return passed, failed
+
+
+# The words a movement_source uses to name the basis it was read on. Same
+# vocabulary as author._BASIS_WORDS, kept here because the check reads the
+# author's citation, not the author's basis field.
+BASIS_SOURCE_WORDS = {
+    "statutory": ("statutory",),
+    "ex_notables": ("ex notable", "excluding notable"),
+    "cash": ("cash",),
+}
+
+
+def check_movement_basis(
+    attribution, primary_basis: str | None, headline_label: str | None
+) -> tuple[list[str], list[str]]:
+    """The movement must be read on the bank's own primary basis.
+
+    A KPI page prints the SAME row twice, once under a "statutory basis" block
+    header and once under a "cash earnings basis" one, a few lines apart: NAB's
+    FY25 book page 15 prints "Cost to income ratio 49.6% | 48.5%" and then
+    "Cost to income ratio 47.3% | 46.5%". The row label alone cannot tell them
+    apart, so check_movement_variant sees nothing wrong.
+
+    The masking made it worse. The author declared basis "statutory", no cited
+    quote printed that word, and _settle_basis substituted the registry's
+    primary basis — so the statutory numbers reached the scorer wearing the
+    cash label and the basis check passed on a wrong row.
+
+    Two signals, in order. First the basis word inside the author's own
+    citation. Then the basis the answer DECLARES, for the case where the
+    citation names no basis at all: Westpac's FY25 cash-earnings run cited "row
+    'Net profit attributable to owners of WBC'" — no basis word — and declared
+    "statutory", where Westpac reports on the excluding-Notable-Items basis and
+    prints "Net profit excluding Notable Items" four rows above.
+
+    A word the metric's registry HEADLINE ROW carries is exempt, so a bank whose
+    headline row really is on another basis (Westpac's ROTE ex Notable Items) is
+    unaffected. CET1 is skipped: a regulatory capital ratio has no basis.
+    """
+    passed, failed = [], []
+    source = _variant_text(attribution.movement_source or "")
+    if not source or attribution.movement is None or attribution.metric == "cet1":
+        return passed, failed
+    if not primary_basis:
+        return passed, failed
+    label = _variant_text(headline_label or "")
+    for basis, words in BASIS_SOURCE_WORDS.items():
+        if basis == primary_basis:
+            continue
+        hits = [word for word in words if word in source and word not in label]
+        if hits:
+            failed.append(
+                f"movement_basis (the row you read is a '{hits[0]}' row: "
+                f"{attribution.movement_source}. This bank reports on the {primary_basis} "
+                "basis, and the same table prints the same row under that basis a few lines "
+                "away. Read the movement there, and quote the other basis as context)"
+            )
+            return passed, failed
+    declared = (attribution.basis or "").strip().lower()
+    if declared and declared != primary_basis and not any(
+        word in label for word in BASIS_SOURCE_WORDS.get(declared, ())
+    ):
+        failed.append(
+            f"movement_basis (you declared basis '{declared}' where this bank reports on the "
+            f"{primary_basis} basis. The {primary_basis} row is printed in the same table: read "
+            f"the movement from it, and give the {declared} movement in the headline as context)"
+        )
+        return passed, failed
+    passed.append("movement_on_primary_basis")
     return passed, failed
 
 

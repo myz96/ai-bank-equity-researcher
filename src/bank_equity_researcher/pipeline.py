@@ -8,7 +8,7 @@ import re
 import time
 from datetime import datetime, timezone
 
-from .author import author_attribution
+from .author import author_attribution, primary_basis
 from .config import COMBOS, OUT_DIR, REGISTRY_DIR
 from .corpus import Document, documents_for_period
 from .extract import WALK_PAGE_HINT, extract_text_evidence, extract_walk
@@ -25,6 +25,7 @@ from .validate import (
     check_component_columns,
     check_drivers_reconcile,
     check_movement,
+    check_movement_basis,
     check_movement_columns,
     check_movement_variant,
     check_walk,
@@ -131,10 +132,27 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     # periods — code classifies the walk from those labels (defect 24).
     text_case_desc = f"{case_desc}\n{period_note}"
     # The bank's own name for this metric's headline row, when the registry
-    # records one; used to tell the headline measure from a named variant.
+    # records one. It is used twice: the author prompt NAMES it, so the model
+    # does not have to guess which of several adjacent rows the bank headlines
+    # (Westpac headlines ROTE ex Notable Items, and the author read the plainer
+    # "Return on average ordinary equity" one line above it); and
+    # check_movement_variant reads it to tell the headline measure from a
+    # named variant.
+    # cash_earnings maps to core_profit: Westpac dropped cash earnings at 1H23
+    # and headlines "net profit excluding Notable Items", so an author told only
+    # the metric's generic name reads the statutory row four lines above it.
     headline_label = registry.get("measures", {}).get(
-        {"cti": "cti_label", "roe": "roe_label", "impairment": "impairment_line"}.get(metric_key, "")
+        {
+            "cash_earnings": "core_profit",
+            "cti": "cti_label",
+            "roe": "roe_label",
+            "impairment": "impairment_line",
+        }.get(metric_key, "")
     )
+    # The basis the bank itself reports on, from the same registry vocabulary.
+    # check_movement_basis uses it to catch a movement read from the statutory
+    # block of a KPI page that prints the same row under both bases.
+    bank_basis = primary_basis(registry) if registry.get("measures") else None
 
     docs = documents_for_period(bank, period, comparator)
     if not docs:
@@ -333,6 +351,7 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             validation=author_validation,
             fetch_more=fetch_more,
             period_note=period_note,
+            headline_row=headline_label,
         )
         output_failures = (
             check_movement(attribution.movement)[1]
@@ -342,6 +361,7 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
                 attribution, period_date, comparator_date, prior_half_date
             )[1]
             + check_movement_variant(attribution, headline_label)[1]
+            + check_movement_basis(attribution, bank_basis, headline_label)[1]
             + component_checks(attribution)[1]
         )
         # Completeness nudge (ticket 27): a disclosed bridge component the
@@ -427,6 +447,7 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         check_comparison_leak(attribution, primary_view, context_view),
         check_movement_columns(attribution, period_date, comparator_date, prior_half_date),
         check_movement_variant(attribution, headline_label),
+        check_movement_basis(attribution, bank_basis, headline_label),
         component_checks(attribution),
     ):
         validation["passed"] += check[0]

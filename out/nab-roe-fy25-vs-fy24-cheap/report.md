@@ -4,47 +4,49 @@
 
 *Read from: row 'Cash return on equity', column FY24 -> column FY25*
 
-NAB's Cash ROE declined by 20 bps to 11.4% in FY25 (ev-3). Earnings fell $11m to $7,091m while average equity rose $1.3bn to $62.4bn (ev-2). The earnings effect is a negative contribution of approximately 20 bps, and the equity effect is approximately zero.
+NAB's Cash ROE declined by 20 bps to 11.4% in FY25 (ev-8). This decline is driven by a negative earnings effect of approximately 23 bps due to a slight decrease in cash earnings, partially offset by a positive equity effect of approximately 3 bps as average equity increased.
 
 ## Drivers
 
 | Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
 |---|---|---|---|---|---|
-| `earnings_effect` | — | -20 ppt | 80 | 2 () | ev-2, ev-3, ev-10 |
-| `equity_effect` | — | +19.8 ppt | 80 | 1 (single_source) | ev-2 |
+| `earnings_effect` | — | -0.23 ppt | 80 | 2 () | ev-4, ev-6, ev-8, ev-15 |
+| `equity_effect` | — | +0.03 ppt | 80 | 1 (single_source) | ev-5, ev-6, ev-8 |
 | *residual (unexplained)* | — | +0 ppt | — | — |
 
 ### earnings_effect
-*-20 ppt | confidence 80/100*
+*-0.23 ppt | confidence 80/100*
 
-Derived: prior-period ROE (11.6%) multiplied by earnings growth (-0.15%). Earnings fell $11m to $7,091m from $7,102m (ev-2, ev-10). This represents a quantified contribution derived from KPI-table endpoints.
-> [ev-2] NAB/FY25/results_book, PDF p71: "Cash return on equity Earnings ($m) Cash earnings 7,091 7,102 3,508 3,583 Total average equity (attributable to owners of the Company) ($m) 62,355 61,039 63,375 61,314 Cash return on equity 11.4% 11.6% 11.0% 11.7%"
-> [ev-3] NAB/FY25/results_book, printed p8: "Cash return on equity 11.4% 11.6% (20 bps) 11.0% 11.7% (70 bps)"
-> [ev-10] NAB/FY25/investor_presentation, printed p39: "Cash earnings 7,091 7,102 (11) 3,508 3,583 (75)"
+Derived: Prior ROE (11.6%) multiplied by earnings growth (-0.15%). Earnings fell $11m from $7,102m to $7,091m (ev-4, ev-15). Value is derived, not disclosed.
+> [ev-4] NAB/FY25/results_book, PDF p71: "Cash earnings 7,091 7,102 3,508 3,583"
+> [ev-6] NAB/FY25/results_book, PDF p71: "Cash return on equity 11.4% 11.6% 11.0% 11.7%"
+> [ev-8] NAB/FY25/results_book, printed p8: "Cash return on equity 11.4% 11.6% (20 bps) 11.0% 11.7% (70 bps)"
+> [ev-15] NAB/FY25/investor_presentation, printed p39: "Cash earnings 7,091 7,102 (11) 3,508 3,583 (75)"
 
 ### equity_effect
-*+19.8 ppt | confidence 80/100*
+*+0.03 ppt | confidence 80/100*
 
-Residual: total delta (-20.0) minus earnings effect (-20.0). Equity grew ~2.1%, offsetting the earnings decline. Derived value.
-> [ev-2] NAB/FY25/results_book, PDF p71: "Cash return on equity Earnings ($m) Cash earnings 7,091 7,102 3,508 3,583 Total average equity (attributable to owners of the Company) ($m) 62,355 61,039 63,375 61,314 Cash return on equity 11.4% 11.6% 11.0% 11.7%"
+Derived: Total delta minus earnings effect. Average equity rose from $61,039m to $62,355m (ev-5), increasing the denominator and mitigating the earnings decline. Value is derived, not disclosed.
+> [ev-5] NAB/FY25/results_book, PDF p71: "Total average equity (attributable to owners of the Company) ($m) 62,355 61,039 63,375 61,314"
+> [ev-6] NAB/FY25/results_book, PDF p71: "Cash return on equity 11.4% 11.6% 11.0% 11.7%"
+> [ev-8] NAB/FY25/results_book, printed p8: "Cash return on equity 11.4% 11.6% (20 bps) 11.0% 11.7% (70 bps)"
 
 ## Source disagreements
-- **ROE Value Source** (definitional): 11.4% — NAB/FY25/results_book (ev-2) vs 10.7% — NAB/FY25/investor_presentation (ev-6)
-  Preferred: 11.4%. The results book (ev-2) is the primary source per hierarchy. The investor presentation (ev-6) likely uses a different basis or restatement.
+- **Cash ROE FY25 value** (restatement): 11.4% - NAB/FY25/results_book (ev-6) vs 10.7% - NAB/FY25/investor_presentation (ev-9)
+  Preferred: 11.4%. The results book (ev-6) is the primary source per hierarchy. The presentation (ev-9) likely contains a typo or uses a different basis not specified.
 
 ## Limitations
-- Earnings effect is derived, not disclosed as a standalone driver.
-- Equity effect is a residual.
-- Disagreement exists between results book and investor presentation for FY25 ROE.
+- Earnings and equity effects are derived using arithmetic decomposition, not disclosed by the bank.
+- Disagreement exists between sources for FY25 Cash ROE; results book preferred.
 
 ## Provenance
 - combo: cheap
 - models: extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash
 - documents: NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)
-- generated: 2026-08-29T18:07:33+00:00
-- seconds: 38.9
-- cost_usd: 0.0019
-- tokens: 39793 in / 5361 out
+- generated: 2026-08-29T21:00:09+00:00
+- seconds: 43.7
+- cost_usd: 0.0016
+- tokens: 33605 in / 4630 out
 - orchestration: pipeline
 - pages_extracted: 15
 - reference_follow: ['NAB/FY25/investor_presentation p39 <- p5 page 39', 'NAB/FY25/investor_presentation p10 <- p39 page 10 [added]']

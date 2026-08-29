@@ -25,6 +25,8 @@ METHOD FOR THIS METRIC: {method_hint}
 BANK VOCABULARY AND LABEL MAP (from the bank registry):
 {registry}
 
+HEADLINE ROW for {metric_name} at this bank (from the registry): {headline_row}
+
 SOURCE HIERARCHY when sources disagree: audited statements and Profit
 Announcement tables > Profit Announcement narrative > presentation slides >
 transcripts > else. Restated comparatives from the newer document win. Every
@@ -51,6 +53,10 @@ ABSOLUTE RULES — never break these:
    write it because the figure comes from audited accounts. Naming a basis you
    did not read from is an error even when the numbers are right. Discuss the
    other basis in the headline; do not relabel your own movement.
+   This rule tells you how to LABEL the row you read; it never licenses reading
+   a non-primary row. A KPI page often prints the SAME row twice, once under a
+   "statutory basis" block header and once under the primary-basis block a few
+   lines away: take the PRIMARY-basis block, and quote the other as context.
 3. If cash and statutory movements differ materially, show both in the headline
    and record a disagreement with reason "definitional".
 4. Confidence is 0-100: the probability the claim would be judged correct
@@ -122,13 +128,17 @@ ABSOLUTE RULES — never break these:
    only. If a component's columns do not match {comparator} -> {period},
    the contribution is a different comparison's number: recompute it from
    the right columns instead of relabelling it.
-11. RATIO VARIANT. Use the bank's headline reported measure — the one named in
-   BANK VOCABULARY above — read from the results book's KPI or summary table.
-   A named variant of the same ratio is a DIFFERENT measure: Level 1 vs Level
-   2, internationally comparable, pro-forma, underlying, ex-notable, or a
-   single division's ratio. Report a variant as context or as a disagreement;
-   never let one supply the movement. When two candidate rows disagree, the
-   source hierarchy decides: the results book's KPI table wins over a slide.
+11. RATIO VARIANT. Use the bank's headline reported measure — the row named in
+   HEADLINE ROW above — read from the results book's KPI or summary table.
+   HEADLINE ROW names the measure this bank itself headlines, which is not
+   always the one the task's metric name suggests: read that row even when a
+   neighbouring row carries a plainer name. A row whose label merely resembles
+   it is a DIFFERENT measure, and so is any named variant: Level 1 vs Level 2,
+   internationally comparable, pro-forma, underlying, ex-notable, tangible
+   versus ordinary equity, or a single division's ratio. Report a variant as
+   context or as a disagreement; never let one supply the movement. When two
+   candidate rows disagree, the source hierarchy decides: the results book's
+   KPI table wins over a slide.
 12. EXPLAIN, DO NOT RESTATE. A narrative that repeats its own number back
    ("a 5 bps negative contribution from asset pricing") tells a reader nothing
    the driver table already shows. Every driver needs a narrative, and each one
@@ -218,7 +228,7 @@ _BASIS_WORDS = {
 }
 
 
-def _primary_basis(registry: dict) -> str:
+def primary_basis(registry: dict) -> str:
     """The bank's own headline basis, read from the registry vocabulary."""
     core = str(registry.get("measures", {}).get("core_profit", "")).lower()
     for basis, words in _BASIS_WORDS.items():
@@ -242,6 +252,39 @@ def _percent_evidenced(value: float, records: list[EvidenceRecord]) -> bool:
     )
 
 
+def settle_charge_sign(movement: dict, taxonomy: dict, reply: dict) -> dict:
+    """A charge metric states both endpoints as positive charge magnitudes.
+
+    Banks print the impairment line inside the P&L, where an expense carries
+    brackets. Westpac's FY25 row reads "Impairment (charges)/benefits (424) |
+    (537)" and CBA's FY21 group summary reads "(554) | (2,518)"; both periods
+    are charges, and the prose beside each table calls them "$424 million" and
+    "$554 million". An author that carries the bracket through re-signs the
+    whole movement, so a FALLING charge reports as a rise: Westpac FY25 came
+    back as -537 -> -424, delta +113, where the charge fell by $113m.
+
+    Only a pair of NEGATIVE endpoints is re-signed. Under the bracketed
+    presentation a benefit prints positive, so a negative pair can only be two
+    charges. A mixed pair is a charge in one period and a benefit in the other,
+    and it keeps the signs the author read.
+    """
+    if taxonomy.get("sign_convention") != "positive_charge" or not isinstance(movement, dict):
+        return movement
+    frm, to = movement.get("from_value"), movement.get("to_value")
+    if not (isinstance(frm, (int, float)) and isinstance(to, (int, float))):
+        return movement
+    if frm >= 0 or to >= 0:
+        return movement
+    movement["from_value"], movement["to_value"] = -frm, -to
+    movement["delta"] = round(-to + frm, 2)
+    reply.setdefault("limitations", []).append(
+        f"Movement re-signed from ({frm:g}, {to:g}) to charge magnitudes: the row prints the "
+        "charge inside the P&L, where an expense is bracketed. A charge is stated as a "
+        "positive number, so a falling charge gives a negative delta."
+    )
+    return movement
+
+
 def _settle_basis(basis: str, registry: dict, records: list[EvidenceRecord], reply: dict) -> str:
     """A declared basis must be a word the bank printed on a page we read.
 
@@ -252,7 +295,7 @@ def _settle_basis(basis: str, registry: dict, records: list[EvidenceRecord], rep
     registry and record the substitution.
     """
     basis = str(basis or "").strip().lower() or "cash"
-    primary = _primary_basis(registry)
+    primary = primary_basis(registry)
     if basis == primary or _basis_printed(basis, records):
         return basis
     reply.setdefault("limitations", []).append(
@@ -276,6 +319,7 @@ def author_attribution(
     validation: dict,
     fetch_more,
     period_note: str = "",
+    headline_row: str | None = None,
     max_rounds: int = 2,
 ) -> Attribution:
     records = list(evidence_records)
@@ -292,6 +336,11 @@ def author_attribution(
             registry=json.dumps(registry.get("measures", {}), indent=1)
             + "\n"
             + json.dumps(registry.get(f"{case['metric']}_walk_labels", registry.get("nim_walk_labels", {})), indent=1),
+            headline_row=headline_row
+            or (
+                "the registry records no row for this metric — take the bank's own headline "
+                "measure from the results book's KPI or performance-summary table"
+            ),
             # "provenance" is dropped when it is empty, so an ordinary record
             # reads exactly as it did before reference-following existed.
             evidence=json.dumps(
@@ -347,6 +396,10 @@ def author_attribution(
                     f"Movement endpoints converted from percent ({frm}, {to}) to bps: the unit "
                     "for this metric is bps."
                 )
+        if isinstance(movement, dict):
+            # Charge-sign normaliser: run before the delta harmoniser, so the
+            # re-signed endpoints and their delta reach it already agreeing.
+            movement = settle_charge_sign(movement, taxonomy, reply)
         if isinstance(movement, dict):
             # Delta harmoniser: endpoints are the primary facts; a delta that
             # contradicts them is a unit slip (e.g. "50 bpts" against ppt

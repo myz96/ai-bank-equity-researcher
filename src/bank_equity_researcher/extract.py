@@ -47,7 +47,17 @@ Rules:
   the word itself - cash, statutory, underlying, ex-notable. When the page
   prints no such word beside the number, return null. Never infer a basis from
   where the table sits or from the fact that the figure is audited: a guessed
-  basis is read downstream as the bank's own label.
+  basis is read downstream as the bank's own label. Use the words the page
+  prints, and never substitute a basis word the page does not print.
+- BASIS BLOCKS: a KPI or summary table is often split into BLOCKS, each opened
+  by its own basis header on a line of its own ("Group performance - statutory
+  basis", then "Group performance - cash earnings basis"; "Shareholder value -
+  statutory basis", then "Shareholder value - excluding Notable Items"). Every
+  row under a block header takes THAT block's basis, and the SAME row label
+  repeats under two blocks with different values. Put the block's basis in the
+  "basis" field AND name it in the number's label, so the two copies of the row
+  can be told apart ("cost to income ratio statutory FY25" against "cost to
+  income ratio cash FY25").
 - Extract only what is on this page. If nothing is relevant, return [].
 - Percentages: keep the unit "%" and the printed value (2.05% -> value 2.05).
 - Negative values in parentheses are negative numbers.
