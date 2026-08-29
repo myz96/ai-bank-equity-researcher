@@ -18,7 +18,30 @@ Read this alongside map.md. Deadline: hard 2026-09-03, internal target 2026-09-0
   planned sealed holdout BANK (identity only in sealed README). Sealed dir must NEVER be
   referenced in repo/prompts/subagent briefs.
 
-## In-flight right now (background tasks; notifications will arrive)
+## UPDATE 2026-08-29 ~23:30 — overnight autonomous run
+
+Everything below in "In-flight" COMPLETED. Current state:
+
+- Ticket 27 dev-fix round: gated (leakage scan clean, only tolerance change is
+  the new tighter COMPONENT_TOL $2m, 88 tests pass, scorecard verified) and
+  committed at 9a9d13d. 25-case suite: Brier 0.035, confidently-wrong 0.0,
+  85+ claims 36/36, no baseline case red. Three NAB/WBC first-run movement
+  misses (NAB cti, WBC roe, WBC impairment) are logged, out of ticket scope.
+- Bake-off COMPLETE, all five arms, four anchors each: cheap 0/15, glm 1/15,
+  Sonnet 6/15, Fable 3/15, Codex 1/15 on the judge checklist; movements 4/4
+  everywhere. Decision table + recommendation written into ticket 32.
+  Verdict: reasoning tier is NOT the bottleneck; loop shape is. Round 2 =
+  ticket 22 deterministic reference-following as the engineered arm.
+- $130m FY25 notables gold RESTORED after page-sight (both PAs print it;
+  52+33+45=130). Ticket 22 design section written. Codex trio was stuck in a
+  paused sleep (machine slept through the quota-reset timer) — killed the
+  timer, all three cases completed.
+- glm-5.3 operational finding: author_max_tokens 24000 was too small on the
+  densest bridge prompt (empty content x5); raised to 40000 in config.py.
+- Spend check: key usage $3.07 of $100 limit (the account-level $177 figure
+  is lifetime, not this project).
+
+## In-flight at snapshot time — ALL DONE, see update above (kept for history)
 
 1. **Dev-fix agent** (resumed after stream drop): component-column fix (cash_earnings 1H26
    0/3→2/3 verified single-case), completeness nudge, per-driver caps, extraction budget 6000
@@ -60,6 +83,14 @@ Read this alongside map.md. Deadline: hard 2026-09-03, internal target 2026-09-0
 - Sealed gold spot-check + optional own case in ~/equity-holdout-sealed/.
 - Ratify crossref pass thresholds (coverage 1.0, fact accuracy 0.75) + partial-vs-stated rule.
 - Eval-review-guide judgment calls 1/2/5 (tolerances, 85 boundary, min n).
+- NEW: ratify the bake-off decision in ticket 32 (build ticket 22 first;
+  hybrid with a Sonnet-tier research pass only if it half-works).
+- NEW (from the dev-fix agent): the CBA 1H26 expense-framing choice — the
+  answer claims underlying -348 + notables -170 = -518, which is exactly the
+  value the 1H26 gold verifies on the combined row, but the FY26 gold verifies
+  the underlying row. Choose: accept a split that sums to a verified parent,
+  or settle one framing per bank. (Framing cap keeps both claims at 80
+  meanwhile, so nothing reads confidently wrong.)
 
 ## Key facts easy to lose
 

@@ -51,7 +51,10 @@ COMBOS: dict[str, Combo] = {
         extract="qwen/qwen3.7-flash",
         vision="qwen/qwen3.7-flash",
         author="z-ai/glm-5.3",
-        author_max_tokens=24000,
+        # 24000 was not enough on the densest bridge prompt (CBA cash_earnings
+        # FY26): glm-5.3 spent the whole budget reasoning and returned empty
+        # content five times (bake-off, 2026-08-29).
+        author_max_tokens=40000,
         judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
     ),
 }
