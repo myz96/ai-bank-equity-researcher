@@ -57,6 +57,7 @@ A shared GitHub repo (`myz96/ai-bank-equity-researcher`) that contains a working
 - Iteration priorities — after the first eval results.
 - Rerun of the Fable frontier benchmark against the completed pipeline; a human-expert scoring pass as the tier above it (aspirational).
 - Exit criterion (user, 2026-08-26): the system is not "done" until it passes held-out cross-reference consolidation cases (ticket 26) — answers that require stitching footnotes and tables from many parts of a report.
+- Holdout policy (user-ratified 2026-08-29): two tiers. Tier 1 = the frozen 8-case Codex slate in-repo (prospective quarantine; milestone runs only). Tier 2 = the SEALED case set outside the repo (~/equity-holdout-sealed/), invisible to all pipeline iteration, one administered run at the final milestone — the primary defensible evidence. Pipeline subagent briefs must never reference the sealed directory.
 - Final report: README, design doc, transcript attachment, reviewer access.
 
 ## Out of scope

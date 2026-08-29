@@ -3,21 +3,28 @@
   "period": "FY25",
   "comparator": "FY24",
   "basis": "ex_notables",
-  "verified": "Hand-verified from the rendered FY25 results announcement page (PDF p12, printed 12), 2026-08-26. Westpac FY ends 30 September. NOTE: Westpac's headline NIM walk is on the excluding-Notable-Items basis — the agent must state this.",
+  "verified": "Hand-verified from the rendered FY25 results announcement page (PDF p12, printed 12), 2026-08-26. Westpac FY ends 30 September. NOTE: Westpac's headline NIM walk is on the excluding-Notable-Items basis \u2014 the agent must state this.",
   "cases": [
     {
       "metric": "nim",
-      "split": "dev",
+      "split": "holdout",
       "movement": {
-        "from": 195, "to": 194, "delta": -1, "unit": "bps",
-        "provenance": "FY25 results announcement PDF p12: 'Net interest margin movement — Excluding Notable Items — Full Year 2025 - Full Year 2024: 1.95% -> 1.94%; NIM decreased 1 basis point to 1.94%'"
+        "from": 195,
+        "to": 194,
+        "delta": -1,
+        "unit": "bps",
+        "provenance": "FY25 results announcement PDF p12: 'Net interest margin movement \u2014 Excluding Notable Items \u2014 Full Year 2025 - Full Year 2024: 1.95% -> 1.94%; NIM decreased 1 basis point to 1.94%'"
       },
       "gold_drivers": {
         "tier": "walk",
         "provenance": "FY25 results announcement PDF p12 waterfall, read from the rendered page; sums -1 = movement.",
         "drivers": {
-          "asset_pricing": -1, "funding.deposits": -2, "liquids": 2,
-          "funding.wholesale": -1, "capital_replicating": 1, "markets_treasury": 0
+          "asset_pricing": -1,
+          "funding.deposits": -2,
+          "liquids": 2,
+          "funding.wholesale": -1,
+          "capital_replicating": 1,
+          "markets_treasury": 0
         }
       },
       "narrative_checklist": [
@@ -27,7 +34,8 @@
         "deposit spread -2bps: mix shift to lower-spread savings, term deposit compression, lower rates; hedged deposit earnings higher (RA p12)",
         "wholesale funding -1bp: final TFF drawdowns matured in the prior year (RA p12)",
         "HoH walk (1H25 1.92% -> 2H25 1.95%): loans 0, deposits 0, liquids +3, WSF 0, capital & other -1, T&M +1 (RA p12)"
-      ]
+      ],
+      "holdout_note": "Frozen 2026-08-29 per the Codex-designed slate, ratified by the user. Prospective quarantine: no dev iteration may run or inspect this case; milestone runs only."
     }
   ]
 }

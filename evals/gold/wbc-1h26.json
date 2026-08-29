@@ -7,17 +7,24 @@
   "cases": [
     {
       "metric": "nim",
-      "split": "dev",
+      "split": "holdout",
       "movement": {
-        "from": 192, "to": 189, "delta": -3, "unit": "bps",
-        "provenance": "1H26 RA PDF p13: 'First Half 2026 – First Half 2025: 1.92% -> 1.89%; NIM decreased by 3 basis points to 1.89%'"
+        "from": 192,
+        "to": 189,
+        "delta": -3,
+        "unit": "bps",
+        "provenance": "1H26 RA PDF p13: 'First Half 2026 \u2013 First Half 2025: 1.92% -> 1.89%; NIM decreased by 3 basis points to 1.89%'"
       },
       "gold_drivers": {
         "tier": "walk",
         "provenance": "1H26 RA PDF p13 PCP waterfall, read from the rendered page; sums -3 = movement. Westpac splits a 'Timing difference' bar (rate-change pass-through lag) -> canonical rate_timing.",
         "drivers": {
-          "asset_pricing": -2, "funding.deposits": -1, "rate_timing": -1,
-          "liquids": 5, "funding.wholesale": 0, "capital_replicating": -3,
+          "asset_pricing": -2,
+          "funding.deposits": -1,
+          "rate_timing": -1,
+          "liquids": 5,
+          "funding.wholesale": 0,
+          "capital_replicating": -3,
           "markets_treasury": -1
         }
       },
@@ -27,7 +34,8 @@
         "capital & other -3bps: a remediation provision in the current period and non-repeat of prior-period items (RA p13)",
         "liquids +5bps: trading assets reduced, liquid assets grew slower than lending, spreads narrowed (RA p13)",
         "HoH walk (2H25 1.95% -> 1H26 1.89%, -6bps): loans -3, deposits 0, timing -2, liquids +2, WSF 0, capital -1, T&M -2 (RA p13)"
-      ]
+      ],
+      "holdout_note": "Frozen 2026-08-29 per the Codex-designed slate, ratified by the user. Prospective quarantine: no dev iteration may run or inspect this case; milestone runs only."
     }
   ]
 }

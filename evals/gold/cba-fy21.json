@@ -8,22 +8,33 @@
     {
       "metric": "nim",
       "split": "dev",
-      "holdout_candidate": true,
       "movement": {
-        "from": 207, "to": 203, "delta": -4, "unit": "bps",
+        "from": 207,
+        "to": 203,
+        "delta": -4,
+        "unit": "bps",
         "provenance": "FY21 presentation slide 63: FY20 207 -> FY21 203, '(4)bpts', continuing operations basis"
       },
       "gold_drivers": {
         "tier": "walk",
         "provenance": "FY21 presentation slide 63 'Group margin', read from the rendered page; sums -4 = movement. Era framings preserved: 'Deposit Pricing & Funding' folds deposits, wholesale and replicating-portfolio effects; 'Basis Risk (incl RP)' includes replicating portfolio.",
         "drivers": {
-          "liquids": -4, "asset_pricing": -2, "funding": -3,
-          "capital_replicating": -2, "mix": 2, "basis_risk": 3, "markets_treasury": 2
+          "liquids": -4,
+          "asset_pricing": -2,
+          "funding": -3,
+          "capital_replicating": -2,
+          "mix": 2,
+          "basis_risk": 3,
+          "markets_treasury": 2
         },
         "era_labels": {
-          "Higher Liquids": "liquids", "Asset Pricing": "asset_pricing",
-          "Deposit Pricing & Funding": "funding", "Capital & Other": "capital_replicating",
-          "Portfolio Mix": "mix", "Basis Risk (incl RP)": "basis_risk", "Treasury & Markets": "markets_treasury"
+          "Higher Liquids": "liquids",
+          "Asset Pricing": "asset_pricing",
+          "Deposit Pricing & Funding": "funding",
+          "Capital & Other": "capital_replicating",
+          "Portfolio Mix": "mix",
+          "Basis Risk (incl RP)": "basis_risk",
+          "Treasury & Markets": "markets_treasury"
         }
       },
       "narrative_checklist": [
@@ -32,110 +43,162 @@
         "asset pricing -2: home loans net flat (pricing +9, switching -5, discounting -4), business lending -1, consumer finance -1 (slide 63)",
         "low-rate environment and TFF cited as the FY22 considerations (slide 63)",
         "the Profit Announcement of this era carries the drivers as prose, not a chart (printed pp12-13)"
-      ]
+      ],
+      "split_note": "Stays dev: Codex contamination analysis found this case repeatedly exercised (7/7 runs, era labels visible to retrieval vocabulary)."
     },
     {
       "metric": "cash_earnings",
-      "split": "dev",
+      "split": "holdout",
       "movement": {
-        "from": 7225, "to": 8653, "delta": 1428, "unit": "$m",
+        "from": 7225,
+        "to": 8653,
+        "delta": 1428,
+        "unit": "$m",
         "provenance": "FY21 PA PDF p22 KPIs and p31 GPS: cash NPAT continuing 8,653 vs 7,225, +20%"
       },
       "gold_drivers": {
         "tier": "components",
         "provenance": "GPS table, PA PDF p31. The dominant driver is the COVID provision unwind in impairment.",
         "drivers": {
-          "credit_impairment_charge": {"value": 1964, "provenance": "GPS p31: LIE (554) vs (2,518) — a $1,964m favourable swing"},
-          "nii": {"value": null, "provenance": "income split not probed; total operating income 24,156 vs 23,761 (+2%, +$395m) at GPS p31"},
-          "operating_expenses": {"value": -249, "provenance": "GPS p31: operating expenses excluding remediation 10,784 vs 10,535"}
+          "credit_impairment_charge": {
+            "value": 1964,
+            "provenance": "GPS p31: LIE (554) vs (2,518) \u2014 a $1,964m favourable swing"
+          },
+          "nii": {
+            "value": null,
+            "provenance": "income split not probed; total operating income 24,156 vs 23,761 (+2%, +$395m) at GPS p31"
+          },
+          "operating_expenses": {
+            "value": -249,
+            "provenance": "GPS p31: operating expenses excluding remediation 10,784 vs 10,535"
+          }
         }
       },
       "narrative_checklist": [
         "the earnings recovery is dominated by the impairment unwind, not income growth (GPS p31)",
         "statutory NPAT 8,843 vs 7,388 (+20%) beside cash (KPI p22)"
-      ]
+      ],
+      "holdout_note": "Frozen 2026-08-29 per the Codex-designed slate, ratified by the user. Prospective quarantine: no dev iteration may run or inspect this case; milestone runs only."
     },
     {
       "metric": "roe",
-      "split": "dev",
+      "split": "holdout",
       "movement": {
-        "from": 10.2, "to": 11.5, "delta": 1.3, "unit": "ppt",
+        "from": 10.2,
+        "to": 11.5,
+        "delta": 1.3,
+        "unit": "ppt",
         "provenance": "FY21 PA PDF p23 KPIs (continuing): 'Cash basis 11.5 | 10.2 | 130 bpts'"
       },
       "gold_drivers": {
         "tier": "arithmetic",
         "provenance": "Level-1 identity: cash NPAT +20% dominated; equity also grew (capital build to CET1 13.1%).",
         "drivers": {
-          "earnings_effect": {"direction": "positive", "note": "cash NPAT +$1,428m / +20%, mostly the impairment unwind"},
-          "equity_effect": {"direction": "negative_partial", "note": "equity grew with the capital build (CET1 11.6% -> 13.1%), damping the ROE recovery"}
+          "earnings_effect": {
+            "direction": "positive",
+            "note": "cash NPAT +$1,428m / +20%, mostly the impairment unwind"
+          },
+          "equity_effect": {
+            "direction": "negative_partial",
+            "note": "equity grew with the capital build (CET1 11.6% -> 13.1%), damping the ROE recovery"
+          }
         }
       },
       "narrative_checklist": [
         "statutory ROE 11.8 vs 10.4, +140bpts (KPI p23)"
-      ]
+      ],
+      "holdout_note": "Frozen 2026-08-29 per the Codex-designed slate, ratified by the user. Prospective quarantine: no dev iteration may run or inspect this case; milestone runs only."
     },
     {
       "metric": "cet1",
       "split": "dev",
       "movement": {
-        "from": 1160, "to": 1310, "delta": 150, "unit": "bps",
+        "from": 1160,
+        "to": 1310,
+        "delta": 150,
+        "unit": "bps",
         "provenance": "FY21 PA PDF p23 KPIs: 'Common Equity Tier 1 (APRA) (%) 13.1 | 11.6 | 150 bpts'"
       },
       "gold_drivers": {
         "tier": "components",
         "provenance": "Era case: the divestment year. Driver decomposition not probed to bar level; checklist-graded.",
         "drivers": {
-          "earnings_generation": {"direction": "positive", "note": "capital generated from earnings"},
-          "divestments_acquisitions": {"direction": "positive", "note": "completed divestments (wealth/insurance era exits) added capital"}
+          "earnings_generation": {
+            "direction": "positive",
+            "note": "capital generated from earnings"
+          },
+          "divestments_acquisitions": {
+            "direction": "positive",
+            "note": "completed divestments (wealth/insurance era exits) added capital"
+          }
         }
       },
       "narrative_checklist": [
         "internationally comparable CET1 19.4% vs 17.4% (KPI p23)",
-        "FY21 announced a $6bn off-market buy-back after year end — context for the capital surplus (presentation)"
+        "FY21 announced a $6bn off-market buy-back after year end \u2014 context for the capital surplus (presentation)"
       ]
     },
     {
       "metric": "impairment",
-      "split": "dev",
-      "holdout_candidate": true,
+      "split": "holdout",
       "movement": {
-        "from": 2518, "to": 554, "delta": -1964, "unit": "$m",
-        "provenance": "FY21 PA PDF p31 GPS: 'Loan impairment expense (554) | (2,518) | (78)' — a 78% fall"
+        "from": 2518,
+        "to": 554,
+        "delta": -1964,
+        "unit": "$m",
+        "provenance": "FY21 PA PDF p31 GPS: 'Loan impairment expense (554) | (2,518) | (78)' \u2014 a 78% fall"
       },
       "loss_rate": {
-        "from": 33, "to": 7, "delta": -26, "unit": "bps of average GLAA",
+        "from": 33,
+        "to": 7,
+        "delta": -26,
+        "unit": "bps of average GLAA",
         "provenance": "FY21 PA PDF p23 KPIs: 'Loan impairment expense (cash basis) annualised as a % of average GLAAs 0.07 | 0.33 | (26)bpts'"
       },
       "gold_drivers": {
         "tier": "components",
         "provenance": "The COVID provision unwind: collective provisions raised in FY20 released/not repeated. Bullet-level splits not probed; checklist-graded.",
         "drivers": {
-          "overlays_fla": {"direction": "down", "note": "FY20 COVID forward-looking collective provisions did not repeat / partially released"}
+          "overlays_fla": {
+            "direction": "down",
+            "note": "FY20 COVID forward-looking collective provisions did not repeat / partially released"
+          }
         }
       },
       "narrative_checklist": [
         "the loss-rate fall from 33bps to 7bps is the era's defining credit story",
         "FY20 comparator included the COVID central overlay build"
-      ]
+      ],
+      "holdout_note": "Frozen 2026-08-29 per the Codex-designed slate, ratified by the user. Prospective quarantine: no dev iteration may run or inspect this case; milestone runs only."
     },
     {
       "metric": "cti",
-      "split": "dev",
+      "split": "holdout",
       "movement": {
-        "from": 46.3, "to": 47.0, "delta": 0.7, "unit": "ppt",
+        "from": 46.3,
+        "to": 47.0,
+        "delta": 0.7,
+        "unit": "ppt",
         "provenance": "FY21 PA PDF p22 KPIs: 'Operating expenses to total operating income (%) 47.0 | 46.3 | 70 bpts'"
       },
       "gold_drivers": {
         "tier": "arithmetic",
         "provenance": "Negative jaws: income +1.7% (24,156 vs 23,761) vs expenses ex-remediation +2.4% (10,784 vs 10,535), GPS p31.",
         "drivers": {
-          "income_growth": {"value_pct": 1.7, "provenance": "GPS p31"},
-          "expense_growth": {"value_pct": 2.4, "provenance": "GPS p31 (excluding remediation costs)"}
+          "income_growth": {
+            "value_pct": 1.7,
+            "provenance": "GPS p31"
+          },
+          "expense_growth": {
+            "value_pct": 2.4,
+            "provenance": "GPS p31 (excluding remediation costs)"
+          }
         }
       },
       "narrative_checklist": [
-        "the FY21 text layer prints decimals with an internal space ('47. 0') — an era-specific parsing trap recorded for extraction robustness"
-      ]
+        "the FY21 text layer prints decimals with an internal space ('47. 0') \u2014 an era-specific parsing trap recorded for extraction robustness"
+      ],
+      "holdout_note": "Frozen 2026-08-29 per the Codex-designed slate, ratified by the user. Prospective quarantine: no dev iteration may run or inspect this case; milestone runs only."
     }
   ]
 }

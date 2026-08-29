@@ -7,17 +7,24 @@
   "cases": [
     {
       "metric": "nim",
-      "split": "dev",
+      "split": "holdout",
       "movement": {
-        "from": 170, "to": 181, "delta": 11, "unit": "bps",
+        "from": 170,
+        "to": 181,
+        "delta": 11,
+        "unit": "bps",
         "provenance": "1H26 results book PDF p26 table: 'Group net interest margin (%) 1.81 | 1.78 | 1.70 | 3 bps | 11 bps' (Mar 26 v Mar 25 = 11 bps)"
       },
       "gold_drivers": {
         "tier": "walk",
         "provenance": "1H26 results book PDF p26, 'March 2026 v March 2025' text bullets (the chart on the page is the HoH walk). Sums +11 = movement.",
         "drivers": {
-          "markets_treasury": 4, "liquids": 3, "capital_replicating": 6,
-          "funding.wholesale": 1, "funding.deposits": 1, "asset_pricing": -4
+          "markets_treasury": 4,
+          "liquids": 3,
+          "capital_replicating": 6,
+          "funding.wholesale": 1,
+          "funding.deposits": 1,
+          "asset_pricing": -4
         }
       },
       "narrative_checklist": [
@@ -26,7 +33,8 @@
         "lending margin -4bps: competition in business and housing lending plus rate-timing differences in Australian home lending (book p26)",
         "NII $9,163m, +8.5% PCP; +7.2% underlying excluding economic hedges and NZ FX translation (book p26)",
         "HoH walk (Sep 25 1.78 -> Mar 26 1.81): lending -4, funding 0, deposits +1, replicating +3, liquids +1, M&T +2 (book p26 chart)"
-      ]
+      ],
+      "holdout_note": "Frozen 2026-08-29 per the Codex-designed slate, ratified by the user. Prospective quarantine: no dev iteration may run or inspect this case; milestone runs only."
     }
   ]
 }
