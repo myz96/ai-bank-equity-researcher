@@ -1,0 +1,270 @@
+{
+  "bank": "WBC",
+  "metric": "cti",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "ex_notables",
+  "movement": {
+    "from_value": 50.3,
+    "to_value": 53.0,
+    "delta": 2.7,
+    "unit": "ppt"
+  },
+  "movement_source": "row 'Cost-to-income ratio (ex-notables)', column Full Year Sept 2024 -> column Full Year Sept 2025",
+  "headline": "WBC's cost-to-income ratio (ex-notables) widened by 270 bps to 53.0% in FY25 from 50.3% in FY24. This deterioration was driven by operating expenses growing faster than operating income.",
+  "drivers": [
+    {
+      "canonical": "expense_growth",
+      "bank_label": "Operating expense growth",
+      "contribution": null,
+      "columns": "stated vs FY24",
+      "narrative": "",
+      "confidence": 80,
+      "evidence": [
+        "ev-1",
+        "ev-3"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "income_growth",
+      "bank_label": "Operating income growth",
+      "contribution": null,
+      "columns": "stated vs FY24",
+      "narrative": "Net operating income grew from $10,947m to $11,471m, an increase of approximately 4.8% (ev-7). Income growth lagged expense growth, contributing to the higher ratio.",
+      "confidence": 80,
+      "evidence": [
+        "ev-7"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    }
+  ],
+  "residual": null,
+  "notable_items": [],
+  "disagreements": [
+    {
+      "topic": "Headline vs Ex-Notable Ratio",
+      "values": [
+        "53.0% (ex-notables basis, ev-2)",
+        "44.0% (headline implied, ev-5)"
+      ],
+      "preferred": "53.0% (ex-notables)",
+      "reason": "definitional",
+      "explanation": "The task requires the headline measure. However, the provided evidence for the headline 'Expense to income' (ev-5) shows 44.0%, while the ex-notable measure (ev-2) shows 53.0%. The validation history flagged that reading the ex-notable row as the headline was a failure. Without explicit FY24/FY25 headline numbers in the text, I cannot compute the headline movement accurately. I have reported the ex-notable movement as it is the only fully quantified period-over-period comparison available in the evidence records (ev-2), but this represents a deviation from the strict 'headline' instruction due to missing data."
+    }
+  ],
+  "attribution_confidence": 40,
+  "limitations": [
+    "The requested 'headline' cost-to-income ratio endpoints were not explicitly provided in the evidence records for both FY24 and FY25. The evidence contains the 'ex-notables' ratio (ev-2) and half-year headline ratios (ev-5). To avoid guessing, I reported the movement for the 'ex-notables' ratio, which is clearly defined in the bank vocabulary as a distinct measure. The headline ratio movement cannot be calculated with certainty from the provided snippets.",
+    "Failed check: movement_from_variant (the row you read is a 'ex-notable' variant: row 'Cost-to-income ratio (ex-notables)', column Full Year Sept 2024 -> column Full Year Sept 2025. Read the headline measure instead, and report the variant as context or as a disagreement)",
+    "Failed check: no_quantified_drivers"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 18,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Total operating expenses increased 9% to $11,916 million.",
+      "numbers": [
+        {
+          "label": "Total operating expenses FY25",
+          "value": 11916.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses change FY25 vs FY24",
+          "value": 972.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 18,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The expense to income ratio excluding Notable Items was 53.0%, up from 50.3%.",
+      "numbers": [
+        {
+          "label": "Cost-to-income ratio FY25 (ex-notables)",
+          "value": 53.0,
+          "unit": "%",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Cost-to-income ratio FY24 (ex-notables)",
+          "value": 50.3,
+          "unit": "%",
+          "basis": "ex_notables"
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 18,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Total operating expenses\n(11,916)\n(10,944)\n9",
+      "numbers": [
+        {
+          "label": "Total operating expenses Full Year Sept 2025",
+          "value": 11916.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses Full Year Sept 2024",
+          "value": 10944.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses % Mov't Sept 25 - Sept 24",
+          "value": 9.0,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 101,
+      "printed_page": 101,
+      "kind": "text",
+      "quote": "Key financial metrics ex Notable Items",
+      "numbers": []
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 101,
+      "printed_page": 101,
+      "kind": "table",
+      "quote": "Expense to income (%) 44.0 43.5 45.7 216 bps",
+      "numbers": [
+        {
+          "label": "Cost-to-income ratio 2H24",
+          "value": 44.0,
+          "unit": "%",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Cost-to-income ratio 1H25",
+          "value": 43.5,
+          "unit": "%",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Cost-to-income ratio 2H25",
+          "value": 45.7,
+          "unit": "%",
+          "basis": "ex_notables"
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 101,
+      "printed_page": 101,
+      "kind": "table",
+      "quote": "Pre-provision profit ($m) 1,741 1,693 1,690 (0%)",
+      "numbers": [
+        {
+          "label": "Pre-provision profit 2H24",
+          "value": 1741.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Pre-provision profit 1H25",
+          "value": 1693.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Pre-provision profit 2H25",
+          "value": 1690.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 119,
+      "printed_page": 119,
+      "kind": "table",
+      "quote": "Net operating income 10,947 10,993 11,471",
+      "numbers": [
+        {
+          "label": "Net operating income FY24",
+          "value": 10947.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net operating income PRIOR HALF",
+          "value": 10993.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net operating income FY25",
+          "value": 11471.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 119,
+      "printed_page": 119,
+      "kind": "table",
+      "quote": "Expenses (5,549) (5,698) (6,218)",
+      "numbers": [
+        {
+          "label": "Total operating expense FY24",
+          "value": -5549.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expense PRIOR HALF",
+          "value": -5698.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expense FY25",
+          "value": -6218.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
+    "generated": "2026-08-29T13:51:07+00:00",
+    "seconds": 85.7,
+    "cost_usd": 0.0012,
+    "tokens": "30280 in / 2435 out",
+    "orchestration": "pipeline"
+  }
+}

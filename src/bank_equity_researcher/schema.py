@@ -35,6 +35,11 @@ class DriverClaim(BaseModel):
     canonical: str
     bank_label: str | None = None
     contribution: Contribution | None = None  # None = unquantified narrative driver
+    # The two period COLUMNS this component delta was subtracted from, as the
+    # bank prints them. A bridge component carries the same column trap as the
+    # movement: the middle column of a three-column table is the prior half, so
+    # subtracting it gives a half-on-half number, not the task's comparison.
+    columns: str | None = None
     narrative: str = ""
     confidence: int = Field(ge=0, le=100)
     evidence: list[str] = []

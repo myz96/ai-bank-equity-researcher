@@ -1,0 +1,269 @@
+{
+  "bank": "NAB",
+  "metric": "roe",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "cash",
+  "movement": {
+    "from_value": 11.6,
+    "to_value": 11.4,
+    "delta": -0.2,
+    "unit": "ppt"
+  },
+  "movement_source": "row 'Cash return on equity', column FY24 -> column FY25",
+  "headline": "NAB's Cash ROE declined by 20 bps to 11.4% in FY25 (ev-3). Earnings fell slightly (-$11m) while average equity rose (+$1.3bn), with the equity effect dominating the decline.",
+  "drivers": [
+    {
+      "canonical": "earnings_effect",
+      "bank_label": "Earnings effect",
+      "contribution": {
+        "value": -0.18,
+        "unit": "ppt"
+      },
+      "columns": "FY24 -> FY25",
+      "narrative": "Derived: Prior ROE (11.6%) x earnings growth (-0.15%). Cited ev-2 for earnings/equity levels. Value is derived, not disclosed.",
+      "confidence": 75,
+      "evidence": [
+        "ev-2",
+        "ev-3"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "equity_effect",
+      "bank_label": "Equity effect",
+      "contribution": {
+        "value": -0.02,
+        "unit": "ppt"
+      },
+      "columns": "FY24 -> FY25",
+      "narrative": "Residual: Delta (-0.2) minus earnings effect (-0.18). Driven by higher average equity ($62.4bn vs $61.0bn) diluting returns. Cited ev-2.",
+      "confidence": 75,
+      "evidence": [
+        "ev-2",
+        "ev-3"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": null,
+  "notable_items": [],
+  "disagreements": [
+    {
+      "topic": "Cash ROE FY25 value",
+      "values": [
+        "11.4% - ev-2/ev-3 (Results Book)",
+        "10.7% - ev-4 (Investor Presentation)"
+      ],
+      "preferred": "11.4%",
+      "reason": "restatement",
+      "explanation": "The Results Book (ev-2) and its summary table (ev-3) are higher hierarchy than the Investor Presentation slide (ev-4). The slide likely contains a typo or uses a different basis."
+    }
+  ],
+  "attribution_confidence": 75,
+  "limitations": [
+    "Earnings growth rate inferred from absolute profit change rather than stated percentage.",
+    "Drivers are arithmetic derivations; bank does not explicitly split ROE movement into these components."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 71,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Statutory return on equity Earnings ($m) Net profit attributable to owners of the Company 6,759 6,960 3,352 3,407 Average equity ($m) Average equity 63,106 61,433 64,130 62,061 Less: Average non-controlling interests (751) (394) (755) (747) Total average equity (attributable to owners of the Company) 62,355 61,039 63,375 61,314 Statutory return on equity 10.8% 11.4% 10.5% 11.1%",
+      "numbers": [
+        {
+          "label": "Net profit attributable to owners of the Company FY25",
+          "value": 6759.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net profit attributable to owners of the Company FY24",
+          "value": 6960.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average equity FY25",
+          "value": 63106.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average equity FY24",
+          "value": 61433.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average non-controlling interests FY25",
+          "value": -751.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average non-controlling interests FY24",
+          "value": -394.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total average equity (attributable to owners of the Company) FY25",
+          "value": 62355.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total average equity (attributable to owners of the Company) FY24",
+          "value": 61039.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Statutory return on equity FY25",
+          "value": 10.8,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "Statutory return on equity FY24",
+          "value": 11.4,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 71,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Cash return on equity Earnings ($m) Cash earnings 7,091 7,102 3,508 3,583 Total average equity (attributable to owners of the Company) ($m) 62,355 61,039 63,375 61,314 Cash return on equity 11.4% 11.6% 11.0% 11.7%",
+      "numbers": [
+        {
+          "label": "Cash earnings FY25",
+          "value": 7091.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash earnings FY24",
+          "value": 7102.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Total average equity (attributable to owners of the Company) FY25",
+          "value": 62355.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Total average equity (attributable to owners of the Company) FY24",
+          "value": 61039.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash return on equity FY25",
+          "value": 11.4,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash return on equity FY24",
+          "value": 11.6,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 10,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Cash return on equity 11.4% 11.6% (20 bps) 11.0% 11.7% (70 bps)",
+      "numbers": [
+        {
+          "label": "Cash return on equity FY25",
+          "value": 11.4,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash return on equity FY24",
+          "value": 11.6,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 6,
+      "printed_page": 6,
+      "kind": "table",
+      "quote": "Cash return on equity FY24 11.6% FY25 10.7%",
+      "numbers": [
+        {
+          "label": "Cash ROE FY24",
+          "value": 11.6,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash ROE FY25",
+          "value": 10.7,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 6,
+      "printed_page": 6,
+      "kind": "table",
+      "quote": "Basic cash EPS (cents) FY24 169 FY25 170",
+      "numbers": [
+        {
+          "label": "Basic Cash EPS FY24",
+          "value": 169.0,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "Basic Cash EPS FY25",
+          "value": 170.0,
+          "unit": "cents",
+          "basis": "cash"
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
+    "generated": "2026-08-29T13:34:03+00:00",
+    "seconds": 111.8,
+    "cost_usd": 0.0013,
+    "tokens": "29584 in / 2882 out",
+    "orchestration": "pipeline"
+  }
+}

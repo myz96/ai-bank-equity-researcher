@@ -10,22 +10,22 @@
     "delta": 0.1,
     "unit": "ppt"
   },
-  "movement_source": "row 'ROE - cash basis', column 31 Dec 24 -> column 31 Dec 25",
-  "headline": "CBA's cash ROE increased 10 basis points to 13.8% in 1H26 (ev-1). This movement is driven by a positive earnings effect from higher cash NPAT growth of 6%, partially offset by a negative equity effect due to the increase in average net assets.",
+  "movement_source": "row 'Return on equity (cash basis)', column 31 Dec 24 -> column 31 Dec 25",
+  "headline": "CBA's cash ROE increased 10 bpts to 13.8% in 1H26 vs 1H25, driven by a 6% rise in cash NPAT partially offset by higher average net assets.",
   "drivers": [
     {
       "canonical": "earnings_effect",
       "bank_label": null,
       "contribution": {
-        "value": 0.82,
+        "value": 0.8,
         "unit": "ppt"
       },
-      "narrative": "Derived: prior-period ROE (13.7%) multiplied by cash NPAT growth (6.0%, ev-2). Represents the lift at constant equity. Cited from KPI table and profit announcement.",
+      "columns": "stated vs 1H25",
+      "narrative": "Derived: prior-period ROE (13.7%) multiplied by stated cash NPAT growth (6.0%). This represents the lift at constant equity. Derived from ev-1 and ev-2.",
       "confidence": 80,
       "evidence": [
         "ev-1",
-        "ev-2",
-        "ev-6"
+        "ev-2"
       ],
       "checks_passed": [
         "single_source"
@@ -36,16 +36,16 @@
       "canonical": "equity_effect",
       "bank_label": null,
       "contribution": {
-        "value": -0.72,
+        "value": -0.7,
         "unit": "ppt"
       },
-      "narrative": "Derived: total delta (0.1 ppt) minus earnings effect (0.82 ppt). Reflects dilution from higher average net assets ($78,004m vs $74,176m, ev-3), likely from retained earnings.",
+      "columns": "stated vs 1H25",
+      "narrative": "Residual: total delta (0.1 ppt) minus earnings effect (0.8 ppt). Reflects dilution from higher average net assets ($78,004m vs $74,176m), likely due to retained earnings. Derived from ev-1, ev-2, ev-3.",
       "confidence": 80,
       "evidence": [
         "ev-1",
         "ev-2",
-        "ev-3",
-        "ev-6"
+        "ev-3"
       ],
       "checks_passed": [
         "single_source"
@@ -53,27 +53,23 @@
       "checks_failed": []
     }
   ],
-  "residual": {
-    "value": -0.0,
-    "unit": "ppt"
-  },
+  "residual": null,
   "notable_items": [],
   "disagreements": [
     {
-      "topic": "Statutory ROE definition",
+      "topic": "Statutory ROE values",
       "values": [
         "13.6% (ev-8)",
         "13.8% (ev-9)"
       ],
       "preferred": "13.6%",
       "reason": "definitional",
-      "explanation": "The results book summary (ev-8) reports statutory ROE as 13.6%, while the detailed reconciliation table (ev-9) lists it as 13.8%. The summary figure is preferred for consistency with the primary narrative."
+      "explanation": "ev-8 is the primary KPI table for statutory ROE; ev-9 appears to be a summary or slide with a discrepancy."
     }
   ],
   "attribution_confidence": 80,
   "limitations": [
-    "Earnings and equity effects are derived arithmetic contributions, not explicitly disclosed by the bank.",
-    "Residual is negligible but non-zero due to rounding of inputs."
+    "Earnings and equity effects are derived arithmetic contributions, not disclosed by the bank."
   ],
   "evidence_records": [
     {
@@ -91,9 +87,9 @@
           "basis": "cash"
         },
         {
-          "label": "ROE cash change vs 31 Dec 24",
-          "value": 0.1,
-          "unit": "ppt",
+          "label": "ROE cash 31 Dec 24",
+          "value": 13.7,
+          "unit": "%",
           "basis": "cash"
         }
       ]
@@ -107,21 +103,27 @@
       "quote": "Cash net profit after tax (“cash NPAT” or “cash profit”) from continuing operations increased $313 million or 6% on the prior comparative period to $5,445 million.",
       "numbers": [
         {
+          "label": "Cash NPAT change 31 Dec 25 vs 31 Dec 24",
+          "value": 313.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash NPAT growth rate 31 Dec 25 vs 31 Dec 24",
+          "value": 6.0,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
           "label": "Cash NPAT 31 Dec 25",
           "value": 5445.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Cash NPAT change vs 31 Dec 24",
-          "value": 313.0,
+          "label": "Cash NPAT 31 Dec 24",
+          "value": 5132.0,
           "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Cash NPAT growth % vs 31 Dec 24",
-          "value": 6.0,
-          "unit": "%",
           "basis": "cash"
         }
       ]
@@ -300,7 +302,7 @@
       "pdf_page": 19,
       "printed_page": null,
       "kind": "table",
-      "quote": "Return on equity (ROE) (%) Statutory basis 13.8 13.1 13.7",
+      "quote": "Return on equity (ROE) (%) Statutory basis 13.8 13.1 13.8",
       "numbers": [
         {
           "label": "ROE statutory 31 Dec 25",
@@ -316,7 +318,7 @@
         },
         {
           "label": "ROE statutory 31 Dec 24",
-          "value": 13.7,
+          "value": 13.8,
           "unit": "%",
           "basis": "statutory"
         }
@@ -380,6 +382,34 @@
     },
     {
       "id": "ev-12",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Dividend cover - \"cash basis\" (times) 1.4 1.2 1.4",
+      "numbers": [
+        {
+          "label": "Dividend cover cash 31 Dec 25",
+          "value": 1.4,
+          "unit": "ratio",
+          "basis": "cash"
+        },
+        {
+          "label": "Dividend cover cash 30 Jun 25",
+          "value": 1.2,
+          "unit": "ratio",
+          "basis": "cash"
+        },
+        {
+          "label": "Dividend cover cash 31 Dec 24",
+          "value": 1.4,
+          "unit": "ratio",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-13",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 168,
       "printed_page": null,
@@ -461,7 +491,7 @@
       ]
     },
     {
-      "id": "ev-13",
+      "id": "ev-14",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 168,
       "printed_page": null,
@@ -543,7 +573,7 @@
       ]
     },
     {
-      "id": "ev-14",
+      "id": "ev-15",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 53,
       "printed_page": 53,
@@ -565,7 +595,7 @@
       ]
     },
     {
-      "id": "ev-15",
+      "id": "ev-16",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 53,
       "printed_page": 53,
@@ -592,10 +622,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
-    "generated": "2026-08-29T03:30:15+00:00",
-    "seconds": 81.8,
+    "generated": "2026-08-29T13:07:09+00:00",
+    "seconds": 56.5,
     "cost_usd": 0.0016,
-    "tokens": "31624 in / 4766 out",
+    "tokens": "32158 in / 4982 out",
     "orchestration": "pipeline"
   }
 }

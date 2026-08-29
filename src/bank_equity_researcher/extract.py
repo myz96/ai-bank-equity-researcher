@@ -105,10 +105,15 @@ def extract_text_evidence(
     text = doc.page_texts()[page_no - 1]
     if not text.strip():
         return []
+    # 3000 tokens truncated a dense performance-summary page mid-string, and a
+    # truncated reply is unparseable, so the whole PAGE was lost and the case
+    # crashed (NAB and WBC FY25 cash earnings, ticket 27). One record per row
+    # per period column is the point of this stage, so the budget has to cover
+    # the densest page, not the average one.
     raw = llm.chat_json(
         model,
         TEXT_PROMPT.format(case=case, doc_desc=doc.doc_id, page_text=text[:8000]),
-        max_tokens=3000,
+        max_tokens=6000,
     )
     records = []
     for item in raw if isinstance(raw, list) else []:

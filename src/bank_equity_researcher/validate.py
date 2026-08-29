@@ -32,6 +32,11 @@ CORROBORATION_TOL = 1.5
 # A claim "matches" a walk bar when it repeats it: bars are printed exactly, so
 # the match is tight. Used by the comparison-leak check, never by corroboration.
 LEAK_TOL = {"bps": 0.5, "$m": 10.0, "ppt": 0.1}
+# Component deltas subtract two integer $m table cells, so a repeat is exact;
+# 2.0 absorbs a restated comparative. LEAK_TOL's 10.0 is for movement LEVELS —
+# at component scale it let one component's half-on-half delta hide behind a
+# neighbouring component's nearby PCP delta.
+COMPONENT_TOL = 2.0
 
 
 # --------------------------------------------------------------------------
@@ -434,6 +439,187 @@ def check_movement_columns(
     else:
         passed.append("movement_from_comparator_column")
     return passed, failed
+
+
+def _period_tokens(label: str | None, date: tuple[int, int] | None) -> set[str]:
+    """Every spelling a column header uses for one task period.
+
+    Two families: the balance date ("31 Dec 24", "December 2024") and the
+    period tag a bank prints above a full-year column ("FY25"). A bridge table
+    uses either, so both must group to the same period.
+    """
+    tokens = _date_tokens(date)
+    tag = _normalize_label(label or "")
+    if tag:
+        tokens.add(tag)
+    return tokens
+
+
+def half_label(date: tuple[int, int] | None, calendar: dict) -> str | None:
+    """The bank's own tag for a half's balance date: (6, 2025) -> '2H25' at CBA.
+
+    Tables label the prior-half column either by its date ("30 Jun 25") or by
+    its tag ("2H25"), and a slide usually prefers the tag.
+    """
+    if date is None:
+        return None
+    for tag in ("1H", "2H"):
+        for year in (date[1], date[1] + 1):
+            if period_end_date(f"{tag}{year}", calendar) == date:
+                return f"{tag}{str(year)[2:]}"
+    return None
+
+
+# The day of the month printed in front of a column header ("31 Dec 25",
+# "30 Jun 25"). It belongs to the date, not to the row, so it comes off with
+# the date: otherwise the same row's December and June columns end as two
+# different stems and no delta can be formed between them.
+_LEADING_DAY_RE = re.compile(r"\d{1,2}$")
+
+
+def _stems_by_period(
+    records, groups: dict[str, set[str]], unit: str
+) -> dict[str, dict[str, set[float]]]:
+    """row stem -> period -> the values the evidence prints for that column.
+
+    A number's label names its own period column; the rest of the label is the
+    ROW it was read from. Strip the period out and two columns of one row share
+    a stem, so their difference is that row's movement. Only numbers in the
+    metric's own unit take part: a percentage row of the same table would
+    otherwise contribute deltas that mean nothing in dollars.
+    """
+    stems: dict[str, dict[str, set[float]]] = {}
+    for record in records:
+        for number in record.numbers:
+            if number.unit != unit:
+                continue
+            label = _normalize_label(number.label)
+            hits = [(key, t) for key, tokens in groups.items() for t in tokens if t in label]
+            if len({key for key, _ in hits}) != 1:
+                continue
+            key, token = max(hits, key=lambda hit: len(hit[1]))
+            cut = label.find(token)
+            stem = _LEADING_DAY_RE.sub("", label[:cut]) + label[cut + len(token):]
+            stems.setdefault(stem, {}).setdefault(key, set()).add(number.value)
+    return stems
+
+
+def _component_delta_pools(
+    stems: dict[str, dict[str, set[float]]]
+) -> tuple[set[float], set[float]]:
+    """(deltas a component MAY claim, deltas it may NOT) as magnitudes.
+
+    A component delta of the task's comparison subtracts the comparator column
+    from the period column of ONE row. Every other pairing inside the same row
+    describes a different comparison: period minus prior half is the
+    half-on-half movement, prior half minus comparator is the half before that.
+    Magnitudes, because the author signs a cost component the other way up.
+    """
+    correct: set[float] = set()
+    wrong: set[float] = set()
+    for periods in stems.values():
+        current = periods.get("period", set())
+        comparator = periods.get("comparator", set())
+        prior = periods.get("prior_half", set())
+        for value in current:
+            correct.update(abs(value - other) for other in comparator)
+            wrong.update(abs(value - other) for other in prior)
+        for value in prior:
+            wrong.update(abs(value - other) for other in comparator)
+        # A prior-half LEVEL claimed as a contribution is the same trap one
+        # step earlier: the 1H26 case claimed impairment -406, which is the
+        # 30 Jun 25 column's figure, not any movement at all.
+        wrong.update(abs(value) for value in prior)
+    return correct, wrong
+
+
+def check_component_columns(
+    attribution, period_date, comparator_date, prior_half_date, prior_half_label=None
+) -> tuple[list[str], list[str]]:
+    """Rule 10's column discipline, applied to every COMPONENT of a bridge.
+
+    check_movement_columns guards the headline only. A bridge answer can carry
+    the right movement and still read its components out of the wrong columns:
+    the CBA 1H26 cash-earnings case reported the movement 5,132 -> 5,445
+    correctly while taking impairment off the prior half's column. This check
+    mirrors it one level down and reads the extracted evidence, not the model's
+    note: it groups every extracted number by the period column its label
+    names, forms each row's three possible deltas, and fires when a claimed
+    contribution matches a delta that spans the PRIOR HALF and matches no
+    period-versus-comparator delta anywhere in the evidence.
+
+    The second condition is what keeps the check quiet. A component that
+    reconciles with any row's own prior-corresponding-period movement is never
+    reported, so a claim that is right for a reason this code cannot see still
+    passes.
+    """
+    passed, failed = [], []
+    if attribution.movement is None:
+        return passed, failed
+    unit = attribution.movement.unit
+    groups = {
+        "period": _period_tokens(attribution.period, period_date),
+        "comparator": _period_tokens(attribution.comparator, comparator_date),
+        "prior_half": _period_tokens(prior_half_label, prior_half_date),
+    }
+    if not all(groups.values()):
+        return passed, failed
+    if any(
+        groups[a] & groups[b]
+        for a, b in (("period", "comparator"), ("period", "prior_half"), ("comparator", "prior_half"))
+    ):
+        return passed, failed
+    correct, wrong = _component_delta_pools(_stems_by_period(attribution.evidence_records, groups, unit))
+    if not wrong:
+        return passed, failed
+    tolerance = COMPONENT_TOL if unit == "$m" else LEAK_TOL.get(unit, 0.5)
+    for driver in attribution.drivers:
+        if driver.contribution is None:
+            continue
+        value = abs(driver.contribution.value)
+        # A contribution smaller than the tolerance matches almost any pool, so
+        # this check cannot diagnose it either way.
+        if value <= tolerance:
+            continue
+        if not any(abs(value - w) <= tolerance for w in wrong):
+            continue
+        if any(abs(value - c) <= tolerance for c in correct):
+            continue
+        failed.append(
+            f"component_from_prior_half ({driver.canonical} claims "
+            f"{driver.contribution.value:+g} {unit}, which is a delta against the PRIOR HALF's "
+            f"column and matches no {attribution.period} versus {attribution.comparator} delta "
+            "in the evidence; subtract the comparator column from the period column of that "
+            "component's own row)"
+        )
+    if not failed:
+        passed.append("components_from_comparator_column")
+    return passed, failed
+
+
+def unclaimed_components(attribution, component_labels: dict[str, tuple[str, ...]]) -> list[str]:
+    """Bridge components the evidence quantifies and the author left unclaimed.
+
+    Feeds the author retry as a completeness nudge (ticket 27). Across three
+    runs the CBA FY26 cash-earnings case claimed four, four and then three of
+    its disclosed components, so the recall of a disclosed component was a
+    matter of luck. The list names the canonical id and one evidence id, never
+    a target value.
+    """
+    quantified = {d.canonical for d in attribution.drivers if d.contribution is not None}
+    missing = []
+    for canonical, keywords in component_labels.items():
+        if canonical in quantified:
+            continue
+        seen = [
+            record.id
+            for record in attribution.evidence_records
+            for number in record.numbers
+            if any(word in _normalize_label(number.label) for word in keywords)
+        ]
+        if seen:
+            missing.append(f"{canonical} (quantified in evidence {', '.join(sorted(set(seen))[:3])})")
+    return missing
 
 
 # A ratio the bank prints under one of these words is a NAMED VARIANT, not the

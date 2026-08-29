@@ -1,0 +1,657 @@
+{
+  "bank": "WBC",
+  "metric": "cet1",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "ex_notables",
+  "movement": {
+    "from_value": 1249.0,
+    "to_value": 1253.0,
+    "delta": 4.0,
+    "unit": "bps"
+  },
+  "movement_source": "row 'Level 2 common equity Tier 1 capital ratio', column 30 Sept 2024 -> column 30 Sept 2025",
+  "headline": "WBC's Level 2 CET1 ratio increased by 4 bps to 12.53% in FY25 (ev-1, ev-7). The movement is driven by earnings partially offset by dividends, RWA growth, and buybacks. Note: the published walk chart for this period fails the sum check (-16 bps vs +4 bps), creating a significant residual.",
+  "drivers": [
+    {
+      "canonical": "earnings_generation",
+      "bank_label": "Net profit",
+      "contribution": {
+        "value": 4.0,
+        "unit": "bps"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "Capital generated from net profit contributed +4 bps to the ratio per the FY24-FY25 walk chart (ev-1).",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "dividend_net_drp",
+      "bank_label": "2024 final ordinary dividend",
+      "contribution": {
+        "value": -4.0,
+        "unit": "bps"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "The payment of the 2024 final ordinary dividend reduced the ratio by 4 bps (ev-1).",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "dividend_net_drp",
+      "bank_label": "2025 interim ordinary dividend",
+      "contribution": {
+        "value": -4.0,
+        "unit": "bps"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "The payment of the 2025 interim ordinary dividend reduced the ratio by 4 bps (ev-1).",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "rwa",
+      "bank_label": "Total RWA",
+      "contribution": {
+        "value": -4.0,
+        "unit": "bps"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "Total risk-weighted assets movement reduced the ratio by 4 bps (ev-1).",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "capital_returns",
+      "bank_label": "Market share buybacks",
+      "contribution": {
+        "value": -4.0,
+        "unit": "bps"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "Market share buybacks reduced the ratio by 4 bps (ev-1).",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "deductions_other",
+      "bank_label": "Capitalised software",
+      "contribution": {
+        "value": -4.0,
+        "unit": "bps"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "Capitalised software movements reduced the ratio by 4 bps (ev-1).",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "other_unmapped",
+      "bank_label": "Other reserve movements",
+      "contribution": {
+        "value": 0.0,
+        "unit": "bps"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "Other reserve movements had no impact on the ratio (ev-1).",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 20.0,
+    "unit": "bps"
+  },
+  "notable_items": [],
+  "disagreements": [
+    {
+      "topic": "Walk Summation Error",
+      "values": [
+        "Sum of bars = -16 bps (Source: ev-1)",
+        "Stated Delta = +4 bps (Source: ev-1, ev-5)"
+      ],
+      "preferred": "Stated Delta",
+      "reason": "error",
+      "explanation": "The primary walk chart (ev-1) lists bars that sum to -16 bps, but the text and table explicitly state a +4 bps increase. The residual captures this discrepancy."
+    }
+  ],
+  "attribution_confidence": 40,
+  "limitations": [
+    "The primary walk chart (ev-1) contains a summation error where the bars do not reconcile to the stated endpoints. Quantified drivers are taken directly from the chart labels despite the arithmetic mismatch.",
+    "Half-on-half data (ev-2, ev-3) was excluded as it does not match the FY24-FY25 comparison window.",
+    "Basis normalised from 'cash' to 'ex_notables': no page in evidence prints 'cash' beside the movement, and the registry names ex_notables as the bank's headline basis.",
+    "Failed check: walk_sum (start 1249 + bars -16.0 = 1233.0 != end 1253, tol 1.0) [WBC/FY25/results_announcement PDF p28 (ev-1)]"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 28,
+      "printed_page": null,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Full Year 2025 - Full Year 2024 Level 2 CET1 capital ratio movement: 30 Sept 2024 1249 -> 30 Sept 2025 1253",
+      "numbers": [
+        {
+          "label": "Net profit",
+          "value": 4.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "2024 final ordinary dividend",
+          "value": -4.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "2025 interim ordinary dividend",
+          "value": -4.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Other reserve movements",
+          "value": 0.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Capitalised software",
+          "value": -4.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Total RWA",
+          "value": -4.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Market share buybacks",
+          "value": -4.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 29,
+      "printed_page": null,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Second Half 2025 - First Half 2025 Level 2 CET1 capital ratio movement: Mar-25 1224 -> Sep-25 1253",
+      "numbers": [
+        {
+          "label": "Net profit",
+          "value": 80.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Dividends",
+          "value": -58.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "RWA movement",
+          "value": -7.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Capital deductions and other items",
+          "value": 16.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Capital return",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 77,
+      "printed_page": 77,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Level 2 CET1 capital ratio movements (%, bps): Mar-25 1224 -> Sep-25 1253",
+      "numbers": [
+        {
+          "label": "Net profit",
+          "value": 80.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "1H25 dividend",
+          "value": -58.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "RWA",
+          "value": -12.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "IRRBB",
+          "value": 5.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Other¹",
+          "value": 16.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Capital return",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 6,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The CET1 capital ratio of 12.5% is above our target ratio of 11.25% in normal operating conditions.",
+      "numbers": [
+        {
+          "label": "CET1 Capital Ratio FY25",
+          "value": 12.5,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 6,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The CET1 capital ratio increased 4 basis points as net profit was largely offset by the payment of dividends and increases in Risk Weighted Assets (RWA).",
+      "numbers": [
+        {
+          "label": "CET1 Capital Ratio Change FY25 vs FY24",
+          "value": 0.04,
+          "unit": "ppt",
+          "basis": null
+        },
+        {
+          "label": "CET1 Capital Ratio FY25",
+          "value": 12.5,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 6,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "CET1 CAPITAL RATIO 12.5 12.5 18.3 18.3 APRA basis Internationally comparable Sep-24 Sep-25",
+      "numbers": [
+        {
+          "label": "CET1 Capital Ratio FY24 (APRA)",
+          "value": 12.5,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "CET1 Capital Ratio FY25 (APRA)",
+          "value": 12.5,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "CET1 Capital Ratio FY24 (Internationally comparable)",
+          "value": 18.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 Capital Ratio FY25 (Internationally comparable)",
+          "value": 18.3,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 10,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Level 2 common equity Tier 1 capital ratio: - Australian Prudential Regulation Authority (APRA)",
+      "numbers": [
+        {
+          "label": "CET1 APRA FY24",
+          "value": 12.49,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 APRA FY25",
+          "value": 12.53,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 31,
+      "printed_page": 31,
+      "kind": "table",
+      "quote": "CET1 capital ratio %",
+      "numbers": [
+        {
+          "label": "CET1 capital ratio FY24",
+          "value": 12.53,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 capital ratio FY25",
+          "value": 12.24,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 28,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "CET1 capital ratio 12.53% 12.24% 12.49% 4 bps 29 bps",
+      "numbers": [
+        {
+          "label": "CET1 capital ratio FY25",
+          "value": 12.53,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 capital ratio PRIOR HALF",
+          "value": 12.24,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 capital ratio FY24",
+          "value": 12.49,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 28,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The Level 2 CET1 capital ratio was 12.53% at 30 September 2025, 4 basis points higher than 30 September 2024.",
+      "numbers": [
+        {
+          "label": "Level 2 CET1 capital ratio movement FY25 vs FY24",
+          "value": 0.04,
+          "unit": "ratio",
+          "basis": null
+        },
+        {
+          "label": "Level 2 CET1 capital ratio FY25",
+          "value": 12.53,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Level 2 CET1 capital ratio FY24",
+          "value": 12.49,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 77,
+      "printed_page": 77,
+      "kind": "text",
+      "quote": "Level 2 CET1 capital ratio movements (%, bps)",
+      "numbers": []
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 77,
+      "printed_page": 77,
+      "kind": "table",
+      "quote": "Key capital ratios3 (%) Sep-24 Mar-25 Sep-25 Level 2 CET1 capital ratio 12.5 12.2 12.5",
+      "numbers": [
+        {
+          "label": "Level 2 CET1 capital ratio Sep-24",
+          "value": 12.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Level 2 CET1 capital ratio Mar-25",
+          "value": 12.2,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Level 2 CET1 capital ratio Sep-25",
+          "value": 12.5,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 77,
+      "printed_page": 77,
+      "kind": "table",
+      "quote": "Key capital ratios3 (%) Sep-24 Mar-25 Sep-25 Tier 1 capital ratio 14.8 14.5 14.4",
+      "numbers": [
+        {
+          "label": "Tier 1 capital ratio Sep-24",
+          "value": 14.8,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Tier 1 capital ratio Mar-25",
+          "value": 14.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Tier 1 capital ratio Sep-25",
+          "value": 14.4,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 77,
+      "printed_page": 77,
+      "kind": "table",
+      "quote": "Key capital ratios3 (%) Sep-24 Mar-25 Sep-25 Level 1 CET1 capital ratio 12.7 12.5 12.7",
+      "numbers": [
+        {
+          "label": "Level 1 CET1 capital ratio Sep-24",
+          "value": 12.7,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Level 1 CET1 capital ratio Mar-25",
+          "value": 12.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Level 1 CET1 capital ratio Sep-25",
+          "value": 12.7,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 77,
+      "printed_page": 77,
+      "kind": "table",
+      "quote": "Internationally comparable ratios4 Sep-24 Mar-25 Sep-25 CET1 capital ratio (internationally comparable) 18.3 18.2 18.3",
+      "numbers": [
+        {
+          "label": "CET1 capital ratio (internationally comparable) Sep-24",
+          "value": 18.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 capital ratio (internationally comparable) Mar-25",
+          "value": 18.2,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 capital ratio (internationally comparable) Sep-25",
+          "value": 18.3,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 77,
+      "printed_page": 77,
+      "kind": "text",
+      "quote": "CAPITAL, FUNDING AND LIQUIDITY Lending (34bps) Data refinement 16bps Credit quality & other 6bps Adjustments (post 30 Sep 25) • IRRBB standard changes 39bps • Operational risk overlay removal 17bps Other considerations • Share buyback2 (23bps) • Standardised floor met",
+      "numbers": [
+        {
+          "label": "Lending movement",
+          "value": -34.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Data refinement movement",
+          "value": 16.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Credit quality & other movement",
+          "value": 6.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "IRRBB standard changes adjustment",
+          "value": 39.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Operational risk overlay removal adjustment",
+          "value": 17.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Share buyback consideration",
+          "value": -23.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
+    "generated": "2026-08-29T13:53:27+00:00",
+    "seconds": 140.6,
+    "cost_usd": 0.0019,
+    "tokens": "45244 in / 4499 out",
+    "orchestration": "pipeline"
+  }
+}

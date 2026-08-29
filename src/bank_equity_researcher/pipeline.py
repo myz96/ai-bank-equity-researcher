@@ -21,6 +21,7 @@ from .validate import (
     MONTH_NUMBERS,
     annotate_walks,
     check_comparison_leak,
+    check_component_columns,
     check_drivers_reconcile,
     check_movement,
     check_movement_columns,
@@ -28,8 +29,10 @@ from .validate import (
     check_walk,
     corroborate,
     cross_source_view,
+    half_label,
     implied_residual,
     period_end_date,
+    unclaimed_components,
     walks_for_view,
 )
 
@@ -118,6 +121,9 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         )
         if prior_half_date == comparator_date:
             prior_half_date = None
+    # The tag a table prints for the prior-half column when it uses tags
+    # instead of dates ("2H25" beside "1H26" on a slide).
+    prior_half_tag = half_label(prior_half_date, calendar)
     # The text extractor gets the balance dates so it labels each period column
     # by its own date; the WALK reader deliberately does not, because it must
     # copy the endpoint labels off the chart rather than echo the task's
@@ -225,10 +231,17 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     # Walk pages also get text extraction: the narrative beside a walk carries
     # the explanations and caveats (defect 22), and some banks (ANZ) publish
     # the driver decomposition as bulleted text rather than a chart.
+    # One unreadable page must not crash the case: the answer then rests on the
+    # pages that did read, and the lost page is declared as a limitation so the
+    # gap is visible instead of silent (ticket 27).
+    unread_pages = []
     for doc_id, page in text_pages + walk_pages:
-        records.extend(
-            extract_text_evidence(llm, combo.extract, doc_by_id[doc_id], page, text_case_desc, next_id)
-        )
+        try:
+            records.extend(
+                extract_text_evidence(llm, combo.extract, doc_by_id[doc_id], page, text_case_desc, next_id)
+            )
+        except Exception as exc:  # noqa: BLE001 - a lost page is a gap, not a crash
+            unread_pages.append(f"{doc_id} p{page} ({type(exc).__name__})")
 
     # 4. The bounded evidence-request hook.
     def fetch_more(query: str):
@@ -265,6 +278,19 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
 
     # 5. Author, with one retry if output-level validation fails: the failure
     # text goes back to the author so it can correct or declare a residual.
+    # The component-column check mirrors the movement-column check one level
+    # down, for bridge metrics only: a NIM walk's bars are read off a chart,
+    # never subtracted from table columns, so the check has nothing to say
+    # there (and replayed over saved NIM artifacts it false-fired).
+    is_bridge = metric_cfg["method"] == "bridge_extraction"
+
+    def component_checks(attribution) -> tuple[list[str], list[str]]:
+        if not is_bridge:
+            return [], []
+        return check_component_columns(
+            attribution, period_date, comparator_date, prior_half_date, prior_half_tag
+        )
+
     author_validation = dict(validation)
     attribution = None
     for attempt in range(2):
@@ -289,8 +315,18 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
                 attribution, period_date, comparator_date, prior_half_date
             )[1]
             + check_movement_variant(attribution, headline_label)[1]
+            + component_checks(attribution)[1]
         )
-        if not output_failures or attempt == 1:
+        # Completeness nudge (ticket 27): a disclosed bridge component the
+        # author left unclaimed is a recall gap, not a validation failure — it
+        # drives one retry, never a confidence cap, and the nudge names the
+        # component and its evidence ids only, never a value.
+        missing_components = (
+            unclaimed_components(attribution, metric_cfg.get("component_labels", {}))
+            if is_bridge
+            else []
+        )
+        if not (output_failures or missing_components) or attempt == 1:
             break
         author_validation = {
             **validation,
@@ -298,6 +334,14 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             "instruction": "Fix these failures: use the walk matching the task periods, "
             "or declare a residual and lower confidence. Do not force numbers.",
         }
+        if missing_components:
+            author_validation["components_unclaimed"] = (
+                "The evidence quantifies these bridge components and your answer leaves "
+                "them unclaimed: " + "; ".join(missing_components) + ". Claim each one as "
+                "a quantified contribution from its cited records (delta = the "
+                f"{period} column minus the {comparator} column of that component's own "
+                "row, or the movement the bank states against the comparator)."
+            )
         # Residual assist (ticket 27): hand back the arithmetic, not just the
         # verdict. The model recomputed the residual wrongly a second time when
         # it only saw "drivers_reconcile failed".
@@ -312,6 +356,42 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
 
     # 6. Corroboration annotation, then output-level validation.
     corroborate(attribution, cross_source)
+    if is_bridge:
+        # Evidence-ladder cap, made mechanical for bridge components (ticket
+        # 27). Prompt rule 4 caps a delta the model computed itself at 80; the
+        # model does not always obey it. A component delta counts as STATED
+        # only when a record the driver cites prints that delta as a number —
+        # otherwise the arithmetic is the model's own and 80 is the ceiling.
+        for driver in attribution.drivers:
+            if driver.contribution is None or driver.confidence <= 80:
+                continue
+            cited = [r for r in records if r.id in driver.evidence]
+            stated = any(
+                abs(abs(number.value) - abs(driver.contribution.value)) <= 0.5
+                for record in cited
+                for number in record.numbers
+            )
+            if not stated:
+                driver.confidence = 80
+                driver.checks_passed.append("computed_delta_cap_80")
+        # Framing-uncertainty cap. A bank that prints BOTH an underlying and a
+        # headline expense row publishes two valid framings of one component.
+        # An author that claims the split (underlying expenses plus a separate
+        # notable-items component) has made a framing choice the disclosure
+        # itself does not settle, so neither claim may reach near-certainty.
+        split = {
+            d.canonical: d
+            for d in attribution.drivers
+            if d.contribution is not None
+            and d.canonical in ("operating_expenses", "notable_items")
+        }
+        if len(split) == 2:
+            for driver in split.values():
+                driver.confidence = min(driver.confidence, 80)
+            attribution.limitations.append(
+                "Expenses are claimed on the underlying/notable split; the bank equally "
+                "publishes the combined headline framing, so both claims are capped at 80."
+            )
     output_failed: list[str] = []
     drivers_passed, drivers_failed = check_drivers_reconcile(attribution)
     for check in (
@@ -320,6 +400,7 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         check_comparison_leak(attribution, primary_view, context_view),
         check_movement_columns(attribution, period_date, comparator_date, prior_half_date),
         check_movement_variant(attribution, headline_label),
+        component_checks(attribution),
     ):
         validation["passed"] += check[0]
         output_failed += check[1]
@@ -375,6 +456,11 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     validation["failed"] += output_failed
     if fatal or peripheral:
         attribution.limitations.extend(f"Failed check: {f}" for f in fatal + peripheral)
+    if unread_pages:
+        attribution.limitations.append(
+            "These pages could not be read and are missing from the evidence: "
+            + "; ".join(unread_pages)
+        )
     if fatal:
         # Overconfidence cap: an attribution whose load-bearing checks fail
         # cannot claim high confidence, whatever the model said (ticket 02/07).
@@ -392,6 +478,20 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             "for this comparison. Confidence is capped at 85."
         )
         attribution.attribution_confidence = min(attribution.attribution_confidence, 85)
+        for driver in attribution.drivers:
+            driver.confidence = min(driver.confidence, 85)
+    # Per-driver evidence-ladder cap, independent of the fatal branch above
+    # (ticket 27, goal 3). When a walk metric has NO successfully extracted
+    # primary walk, no driver claim is walk-verified for this comparison, so no
+    # driver may exceed 85 — whatever the model said. The elif above already
+    # caps the context-walk state, but it is skipped when the fatal cap fires
+    # first: the outage run shipped derived drivers at 90 under an attribution
+    # capped at 40. Walks that exist but are unclassified are exempt on
+    # purpose — the cold path for an unseen bank whose calendar is absent is
+    # not evidence the walk covers another comparison.
+    if metric_cfg["method"] == "walk_extraction" and not primary_walks and (
+        classified or not walks
+    ):
         for driver in attribution.drivers:
             driver.confidence = min(driver.confidence, 85)
 

@@ -1,0 +1,441 @@
+{
+  "bank": "NAB",
+  "metric": "cti",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "cash",
+  "movement": {
+    "from_value": 37.1,
+    "to_value": 34.0,
+    "delta": -3.1,
+    "unit": "ppt"
+  },
+  "movement_source": "row 'Cost to income ratio', column FY24 -> column FY25",
+  "headline": "NAB's headline CTI improved by 310 bps (3.1 ppt) to 34.0% in FY25, driven by a Jaws effect where operating expenses grew faster (+4.6%) than operating income (+2.9%). This improvement was partially offset by $130m in notable payroll review and remediation costs.",
+  "drivers": [
+    {
+      "canonical": "income_growth",
+      "bank_label": "Operating income growth",
+      "contribution": null,
+      "columns": "stated vs FY24",
+      "narrative": "Narrative: Operating income grew +2.9% (ev-3, ev-5). Income growth is slower than expense growth, exerting negative pressure on the ratio.",
+      "confidence": 90,
+      "evidence": [
+        "ev-3",
+        "ev-5"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "expense_growth",
+      "bank_label": "Operating expense growth",
+      "contribution": null,
+      "columns": "stated vs FY24",
+      "narrative": "Narrative: Operating expenses grew +4.6% (ev-2, ev-4, ev-5). Expense growth outpaced income growth, exerting positive pressure on the ratio.",
+      "confidence": 90,
+      "evidence": [
+        "ev-2",
+        "ev-4",
+        "ev-5"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "notable_items",
+      "bank_label": "Payroll review and remediation charges",
+      "contribution": {
+        "value": 1.3,
+        "unit": "ppt"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "Narrative: $130m in payroll review and remediation costs increased expenses. On a ~$9.4bn expense base, this adds approx 1.3ppt to the ratio.",
+      "confidence": 80,
+      "evidence": [
+        "ev-2",
+        "ev-4"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": -4.4,
+    "unit": "ppt"
+  },
+  "notable_items": [
+    "Payroll review and remediation charges ($130m)"
+  ],
+  "disagreements": [],
+  "attribution_confidence": 80,
+  "limitations": [
+    "Cannot quantify exact ppt contribution of jaws drivers without explicit bank bridge.",
+    "Residual likely reflects base effect of denominator growth."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 20,
+      "printed_page": 18,
+      "kind": "table",
+      "quote": "Total operating expenses(1) 9,848 9,413 4.6 5,043 4,805 5.0",
+      "numbers": [
+        {
+          "label": "Total operating expenses FY25",
+          "value": 9848.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses FY24",
+          "value": 9413.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 20,
+      "printed_page": 18,
+      "kind": "text",
+      "quote": "Operating expenses increased by $435 million or 4.6%. Excluding an increase of $130 million for payroll review and remediation costs, operating expenses increased by $305 million or 3.2%.",
+      "numbers": [
+        {
+          "label": "Operating expenses change FY25 vs FY24",
+          "value": 435.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses level FY25",
+          "value": 9848.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 5,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Revenue increased by 2.9% with key drivers including volume growth and higher Markets & Treasury (M&T) income, partially offset by higher customer-related remediation charges and the impact from business disposals and run-offs.",
+      "numbers": [
+        {
+          "label": "Revenue change FY25 vs FY24",
+          "value": 2.9,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 5,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Expenses increased by 4.6% including $130 million related to payroll review and remediation charges.",
+      "numbers": [
+        {
+          "label": "Expenses change FY25 vs FY24",
+          "value": 4.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Payroll review and remediation charges",
+          "value": 130.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 5,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "FY25 v FY24 drivers of cash earnings change (%) Income Expenses Underlying profit 2.9 4.6 1.3",
+      "numbers": [
+        {
+          "label": "Income change FY25 vs FY24",
+          "value": 2.9,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Expenses change FY25 vs FY24",
+          "value": 4.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Underlying profit change FY25 vs FY24",
+          "value": 1.3,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 40,
+      "printed_page": 38,
+      "kind": "table",
+      "quote": "Net operating income 4,094 3,892 5.2 2,076 2,018 2.9",
+      "numbers": [
+        {
+          "label": "Net operating income FY25",
+          "value": 4094.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net operating income FY24",
+          "value": 3892.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net operating income H1 FY25 vs H1 FY24 change",
+          "value": 2.9,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 40,
+      "printed_page": 38,
+      "kind": "table",
+      "quote": "Operating expenses(1) (1,392) (1,443) (3.5) (697) (695) 0.3",
+      "numbers": [
+        {
+          "label": "Operating expenses FY25",
+          "value": -1392.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses FY24",
+          "value": -1443.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses H1 FY25 vs H1 FY24 change",
+          "value": 0.3,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 40,
+      "printed_page": 38,
+      "kind": "table",
+      "quote": "Cost to income ratio 34.0 37.1 (310 bps) 33.6 34.4 (80 bps)",
+      "numbers": [
+        {
+          "label": "Cost to income ratio FY25",
+          "value": 34.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost to income ratio FY24",
+          "value": 37.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost to income ratio H1 FY25 vs H1 FY24 change",
+          "value": -80.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 49,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Total operating expenses(2) 10,348 10,012 5,323 5,025",
+      "numbers": [
+        {
+          "label": "Total operating expenses FY25",
+          "value": 10348.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses FY24",
+          "value": 10012.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses H1 FY25",
+          "value": 5323.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 38,
+      "printed_page": 36,
+      "kind": "table",
+      "quote": "Net operating income 4,625 4,487 3.1 2,386 2,239 6.6",
+      "numbers": [
+        {
+          "label": "Net operating income FY25",
+          "value": 4625.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net operating income FY24",
+          "value": 4487.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net operating income Prior Half",
+          "value": 2386.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 38,
+      "printed_page": 36,
+      "kind": "table",
+      "quote": "Operating expenses(2) (2,581) (2,576) 0.2 (1,294) (1,287) 0.5",
+      "numbers": [
+        {
+          "label": "Operating expenses FY25",
+          "value": -2581.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses FY24",
+          "value": -2576.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses Prior Half",
+          "value": -1294.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 38,
+      "printed_page": 36,
+      "kind": "table",
+      "quote": "Cost to income ratio 55.8 57.4 (160 bps) 54.2 57.5 (330 bps)",
+      "numbers": [
+        {
+          "label": "Cost to income ratio FY25",
+          "value": 55.8,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost to income ratio FY24",
+          "value": 57.4,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost to income ratio Prior Half",
+          "value": 54.2,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 36,
+      "printed_page": 36,
+      "kind": "table",
+      "quote": "Operating expenses ($m) Sep 25 5,043 Mar 25 4,805",
+      "numbers": [
+        {
+          "label": "Operating expenses FY25",
+          "value": 5043.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses Prior Half (Mar 25)",
+          "value": 4805.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 36,
+      "printed_page": 36,
+      "kind": "text",
+      "quote": "HoH increase +5.0% (ex payroll review +4.1%)",
+      "numbers": [
+        {
+          "label": "HoH change %",
+          "value": 5.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "HoH change ex payroll review %",
+          "value": 4.1,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
+    "generated": "2026-08-29T13:36:36+00:00",
+    "seconds": 152.5,
+    "cost_usd": 0.0018,
+    "tokens": "40209 in / 4343 out",
+    "orchestration": "pipeline"
+  }
+}

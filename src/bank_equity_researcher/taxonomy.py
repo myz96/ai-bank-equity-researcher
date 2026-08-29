@@ -51,13 +51,36 @@ TAXONOMY: dict[str, dict] = {
         "retrieval_queries": [
             "cash earnings statutory net profit reconciliation non-cash items",
             "total operating income operating performance net profit after tax cash basis",
-            "net interest income increase average interest earning assets growth",
+            # Phrased for the NII section's TABLE page (the row levels and the
+            # stated PCP movement), not the continuation page of its prose: the
+            # old growth-phrased query ranked the continuation page first and
+            # the 1H26 author never saw the stated PCP movement (ticket 27).
+            "net interest income cash basis net interest margin average interest earning assets table",
             "other operating income commissions lending fees trading income",
             "underlying operating expenses staff information technology restructuring notable items",
             "operating expenses waterfall inflation investment technology productivity",
             "loan impairment expense retail banking business banking new zealand movement",
             "income tax expense effective tax rate",
         ],
+        # The bridge components live in P&L tables whose rows a literal-minded
+        # extractor drops as background ("cash earnings" names none of them).
+        "extract_focus": (
+            "also extract every P&L line of the group performance and section tables for "
+            "EVERY period column - net interest income, other operating income, total "
+            "operating income, operating expenses (underlying, notable items and total), "
+            "loan impairment expense, tax expense and profit - these are the bridge "
+            "components"
+        ),
+        # Canonical component -> normalised label words that identify it in
+        # extracted evidence. Drives the completeness nudge in the author
+        # retry: a component these words find quantified in evidence must not
+        # stay unclaimed. Words, never values.
+        "component_labels": {
+            "nii": ("netinterestincome",),
+            "other_operating_income": ("otheroperatingincome",),
+            "operating_expenses": ("operatingexpenses",),
+            "credit_impairment_charge": ("loanimpairmentexpense", "creditimpairment"),
+        },
         # "Statutory vs cash NPAT" was removed as a walk marker (ticket 25):
         # it marks a two-column LEVELS reconciliation table, not a movement
         # bridge. The vision walk reader turned its comparator column into
@@ -69,18 +92,28 @@ TAXONOMY: dict[str, dict] = {
             "Build the bridge from component MOVEMENTS in $m: net interest income, other "
             "operating income, UNDERLYING operating expenses (state notable/restructuring "
             "items separately, never inside the underlying number), credit impairment, and "
-            "tax. When a table shows both periods' levels, compute the delta yourself and "
-            "cite the table (e.g. expenses and tax are usually disclosed as levels for both "
-            "periods). Claim tax_and_other as a quantified component from the tax expense "
-            "movement, and claim the notable/restructuring items DELTA as its own "
-            "notable_items component; declare a residual only for what genuinely remains. "
-            "Say explicitly whether an expense figure is underlying or headline. "
-            "NEVER claim statutory-to-cash reconciliation items (hedging/IFRS volatility, "
-            "disposal gains and losses) as bridge drivers: they explain why statutory "
-            "differs from cash in the SAME period, not why cash earnings moved year on "
-            "year. When the reconciliation is in evidence, the headline MUST also give the "
-            "statutory movement next to the cash movement and name the non-cash items that "
-            "separate them."
+            "tax. CLAIM EVERY COMPONENT the evidence quantifies — at minimum NII, other "
+            "operating income, underlying operating expenses and loan impairment; leaving "
+            "a disclosed component unclaimed is a recall failure, not caution. COLUMN "
+            "DISCIPLINE per component: prefer the movement the bank STATES 'on the prior "
+            "comparative period'; when you compute a delta yourself from a table, "
+            "subtract that component's value in the comparator's column from its value "
+            "in the period's column — the SAME rule as the movement, so a delta against "
+            "the middle (prior-half) column, or a prior-half level, is never a "
+            "contribution. A near-zero movement between the task's two columns is still "
+            "the movement, however large the swing against the prior half looks. SIGN: a "
+            "contribution is the effect on cash earnings — an INCREASE in expenses, "
+            "impairment or tax is a NEGATIVE contribution even where the bank prints the "
+            "change as a positive number. Claim tax_and_other as a quantified component "
+            "from the tax expense movement, and claim the notable/restructuring items "
+            "DELTA as its own notable_items component; declare a residual only for what "
+            "genuinely remains. Say explicitly whether an expense figure is underlying or "
+            "headline. NEVER claim statutory-to-cash reconciliation items (hedging/IFRS "
+            "volatility, disposal gains and losses) as bridge drivers: they explain why "
+            "statutory differs from cash in the SAME period, not why cash earnings moved "
+            "year on year. When the reconciliation is in evidence, the headline MUST also "
+            "give the statutory movement next to the cash movement and name the non-cash "
+            "items that separate them."
         ),
         "drivers": {
             "nii": "Net interest income total (claim this when volume/margin are not separately quantified in dollars)",

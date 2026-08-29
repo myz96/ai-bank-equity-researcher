@@ -153,3 +153,156 @@ re-confirmed by a full suite run:
 
 Both fixes were verified case by case; the confirming suite run was stopped
 part way at the coordinator's instruction.
+
+## Progress note — 2026-08-29 (component-column discipline, bridge completeness, per-driver walk cap)
+
+Three defects from the 20260829 dev baseline, worked in priority order.
+
+### 1. Component-column trap on cash_earnings 1H26 (was 0/3)
+
+The movement machinery (rule 10, `check_movement_columns`) guarded the
+headline only. The 1H26 case had the movement right and every component wrong:
+the author took its component numbers from the prior-half column or from
+half-on-half framings, because the pages that state the PCP movements were
+never in evidence. Four changes, one per layer:
+
+- **Retrieval**: the NII query was phrased for growth prose and ranked the NII
+  section's CONTINUATION page above its table page, so the author never saw
+  the stated PCP movement. Rephrased for the table page. A `extract_focus`
+  was added for cash_earnings so the extractor covers every P&L line of the
+  performance tables with one number per period column — before it, pages 27,
+  34 and 35 of the 1H26 PA returned zero to six records; after, ten each with
+  per-column labels.
+- **Author prompt**: rule 10 now binds every COMPONENT of a bridge to the same
+  column discipline as the movement, and each quantified driver returns a
+  `columns` citation field (<=12 words), mirroring the three movement fields.
+  The method hint names the mandatory components, the column subtraction rule,
+  the prior-half-level trap, and the sign convention (an expense increase is a
+  negative contribution).
+- **Deterministic check**: `check_component_columns` (validate.py) mirrors
+  `check_movement_columns` one level down, for bridge metrics only. It groups
+  every extracted number by the period column its label names, strips the
+  period out of the label to pair the same row's columns, and forms each row's
+  three deltas. It fires when a claimed contribution matches a prior-half
+  delta OR a prior-half level and matches no period-versus-comparator delta
+  anywhere in evidence. Tolerance is `COMPONENT_TOL` = $2m, not the movement's
+  $10m: component deltas subtract integer cells, and at $10m one component's
+  half-on-half delta hid behind a neighbouring component's PCP delta.
+  Replayed over the saved non-holdout artifacts before switch-on: zero fires
+  (scoped to bridge metrics after it false-fired on two NIM/impairment
+  artifacts in an unscoped replay). Synthetic 1H26-shaped fixtures live in
+  `tests/test_component_columns.py`.
+- **Result**: 1H26 movement OK, recall 2/3 with correct values (nii and
+  impairment exact; the bridge sums to the delta exactly with no residual).
+  The one miss is a framing gap, not a column error: the answer claims the
+  underlying/notable expense split while this case's gold verifies the
+  headline expense row. The FY26 gold verifies the underlying row, so the two
+  golds disagree on framing; see the cap below.
+
+### 2. FY26 completeness variance (was 3/4 to 4/4 across runs)
+
+`unclaimed_components` (validate.py) reads a per-metric `component_labels`
+map (taxonomy) and lists bridge components the evidence quantifies but the
+answer leaves unclaimed — canonical id and evidence ids only, never a value.
+A non-empty list drives the one author retry as a nudge; it is not a failed
+check and never caps confidence. With the method hint's CLAIM EVERY COMPONENT
+sentence, FY26 now claims all six components and reconciles exactly (4/4
+recall and precision, no residual).
+
+### 3. Per-driver cap under total walk failure
+
+The evidence-ladder cap (defect 24) sat in an `elif` behind the fatal branch,
+so the outage run shipped derived drivers at 90 under an attribution capped at
+40. A standalone block now caps every driver at 85 whenever a walk metric has
+no primary walk — context walks present or no walk extracted at all.
+Unclassified-only walks stay exempt (the cold path for an unseen bank).
+
+### Two calibration caps the rework exposed
+
+- **Computed-delta cap made mechanical**: prompt rule 4 caps a self-computed
+  delta at 80, and the model does not always obey. For bridge components the
+  pipeline now checks whether any cited record PRINTS the claimed delta; if
+  none does, the arithmetic is the model's own and confidence drops to 80
+  (`computed_delta_cap_80`).
+- **Framing-uncertainty cap**: when the answer claims the underlying/notable
+  expense split, both claims cap at 80 — the bank equally publishes the
+  combined headline framing, so a framing-relative claim cannot reach
+  near-certainty. This is what keeps the 1H26 framing gap out of the
+  confidently-wrong band honestly.
+
+### 4. Mid-band overconfidence (note only)
+
+On the frozen baseline, claims in the 70-84 band scored 0% correct (2 claims)
+while 85+ scored 31/31: the model used 80 as its "probably right" default, so
+the band under the confidently-wrong threshold was where its wrong guesses
+pooled. The band was too small to read much into.
+
+The final run changes the picture. The band now holds 8 claims at 88%
+correct, because the mechanical caps move honest claims into it: the WBC
+bridge scores 5/5 with every claim at 80. So the band is no longer a
+wrong-way signal, but it is now a MIXED one — it holds both self-computed
+correct claims and the round's two wrong claims. The next calibration round
+should ask whether a self-computed delta that reconciles to the movement
+deserves more than 80.
+
+### 5. Extraction budget: a lost page crashed the case
+
+The first verification suite crashed the NAB and WBC FY25 cash-earnings cases
+with `Unterminated string` from `chat_json`. The cause was mine: the new
+`extract_focus` asks for one record per P&L row per period column, and on a
+dense performance-summary page that reply passed the 3000-token budget, so it
+truncated mid-string and the whole PAGE was unparseable. Two fixes:
+
+- The text-extraction budget is now 6000 tokens. One record per row per column
+  is the point of the stage, so the budget must cover the densest page.
+- A page that still fails no longer crashes the case. `run_case` catches the
+  failure, keeps the pages that did read, and appends the lost page to
+  `limitations`, so the gap is visible instead of silent.
+
+Both cases then ran. Cold first-run scores (these ten NAB/WBC cases are new to
+the suite, so they are a starting point, not a regression): NAB movement OK
+with 2/3 recall; WBC 3/5 recall with the movement taken on the statutory
+basis where the gold wants ex-Notables. Every wrong claim in both sits at 80,
+under the confidently-wrong threshold, because the computed-delta cap fired on
+each self-computed delta.
+
+### Verification
+
+Two baseline cases went red in the first suite and BOTH recovered on a
+re-run with the same code, so they are run-to-run variance, not a regression:
+
+- `CBA-cet1-1H26` recall 1/1 -> 0/1 -> 1/1. Both red and green runs sit at
+  the same capped confidence. The baseline's green also carried a
+  `comparison_leak` failure that the recovered run does not.
+- `CBA-cti-1H26` movement OK -> variant row -> OK. This case picks between two
+  adjacent ratio rows and was already failing one check at baseline.
+
+Neither metric is a bridge, so none of the component-column work touches them.
+
+### Final dev suite — `evals/results/20260829-1354-cheap-dev.md`
+
+All 25 dev cases ran with the final code. No baseline case went red.
+
+| Measure | Frozen baseline (15 CBA) | Final run (25 cases) |
+|---|---|---|
+| movements OK | 15/15 | 15/15 CBA, 22/25 overall |
+| CBA cash_earnings 1H26 recall | 0/3 | 2/3 |
+| CBA cash_earnings FY26 recall | 3/4 | 4/4 |
+| CBA nim FY26 recall | 6/6 | 7/7 |
+| NAB cash_earnings FY25 recall | crashed | 3/3 |
+| WBC cash_earnings FY25 recall | crashed | 5/5 |
+| Brier | 0.058 | 0.035 |
+| confidently-wrong rate | 0.0 | 0.0 |
+| 85+ claims correct | 31/31 | 36/36 |
+
+The one remaining CBA 1H26 miss is a gold-framing question, not a wrong
+number: the answer claims underlying expenses -348 plus notable items -170,
+which sums to -518 — exactly the value this case's gold verifies on the
+combined headline row. The FY26 gold verifies the underlying row instead, so
+the two golds frame the same component differently. The framing cap holds
+both claims at 80, so the split never reads as confidently wrong. A gold
+decision is needed: either accept a split that sums to a verified parent, or
+settle one framing per bank.
+
+Three NAB/WBC cases report a wrong movement (NAB cti, WBC roe, WBC
+impairment). All three are first runs of new cases and none is in scope here.

@@ -106,6 +106,16 @@ ABSOLUTE RULES — never break these:
    name does not match the balance date in PERIOD DEFINITIONS, the movement is
    wrong — correct from_value and to_value, not the note. If a row shows only
    two period columns, check its header names the comparator before you use it.
+   THE SAME DISCIPLINE BINDS EVERY COMPONENT of a bridge. A component's
+   contribution is its {period} column minus its {comparator} column (or the
+   movement the bank states against {comparator}) — never a difference
+   involving the prior-half column, and never a single column's level. For
+   every quantified driver, fill "columns" with the two column headers you
+   subtracted (e.g. "31 Dec 24 -> 31 Dec 25"), or "stated vs {comparator}"
+   when the bank prints the movement itself. At most 12 words, a citation
+   only. If a component's columns do not match {comparator} -> {period},
+   the contribution is a different comparison's number: recompute it from
+   the right columns instead of relabelling it.
 11. RATIO VARIANT. Use the bank's headline reported measure — the one named in
    BANK VOCABULARY above — read from the results book's KPI or summary table.
    A named variant of the same ratio is a DIFFERENT measure: Level 1 vs Level
@@ -132,6 +142,7 @@ double-quote character: write a label plainly, or wrap it in single quotes.
   "headline": "<=120 words",
   "drivers": [{{"canonical": "<taxonomy id>", "bank_label": "<verbatim label or null>",
                "contribution": {{"value": float, "unit": "{unit}"}} | null,
+               "columns": "<the two column headers subtracted, or stated vs {comparator}, or null>",
                "narrative": "<=60 words", "confidence": int,
                "evidence": ["ev-1", ...]}}],
   "residual": {{"value": float, "unit": "{unit}"}} | null,
@@ -304,6 +315,11 @@ def author_attribution(
             contribution = driver.get("contribution")
             if isinstance(contribution, dict) and contribution.get("value") is None:
                 driver["contribution"] = None
+            # "columns" is a citation with a 12-word budget, like the three
+            # movement fields: the cap leaves no room for it to become a
+            # scratchpad.
+            if driver.get("columns") is not None:
+                driver["columns"] = str(driver["columns"]).strip()[:120] or None
         attribution = Attribution(
             bank=case["bank"],
             metric=case["metric"],

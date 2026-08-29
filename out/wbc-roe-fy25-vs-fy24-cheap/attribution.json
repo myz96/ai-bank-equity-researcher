@@ -1,0 +1,211 @@
+{
+  "bank": "WBC",
+  "metric": "roe",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "ex_notables",
+  "movement": {
+    "from_value": 9.77,
+    "to_value": 9.66,
+    "delta": -0.11,
+    "unit": "ppt"
+  },
+  "movement_source": "row 'Return on average ordinary equity', column FY24 (Sep 2024) -> column FY25 (Sep 2025)",
+  "headline": "WBC's headline ROE (cash) declined by 11 bps to 9.66% in FY25 from 9.77% in FY24. The decline is primarily driven by a reduction in earnings at constant equity, partially offset by the effect of average equity levels.",
+  "drivers": [
+    {
+      "canonical": "earnings_effect",
+      "bank_label": null,
+      "contribution": {
+        "value": -0.11,
+        "unit": "ppt"
+      },
+      "columns": "stated vs FY24",
+      "narrative": "",
+      "confidence": 80,
+      "evidence": [
+        "ev-1",
+        "ev-5"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "equity_effect",
+      "bank_label": null,
+      "contribution": {
+        "value": 0.0,
+        "unit": "ppt"
+      },
+      "columns": "Avg Ordinary Equity FY24 -> Avg Ordinary Equity FY25",
+      "narrative": "Average ordinary equity increased marginally by $51m (0.07%). At constant earnings, this negligible increase would have slightly depressed ROE, but given the magnitude relative to the total delta, it is treated as zero contribution here. Value is derived.",
+      "confidence": 80,
+      "evidence": [
+        "ev-1",
+        "ev-5"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
+  "notable_items": [],
+  "disagreements": [],
+  "attribution_confidence": 80,
+  "limitations": [
+    "The earnings growth rate used for the earnings_effect calculation is implied from the ROE and Equity data rather than explicitly stated as a driver percentage in the provided evidence. Confidence is capped at 80 due to this derivation.",
+    "Basis normalised from 'cash' to 'ex_notables': no page in evidence prints 'cash' beside the movement, and the registry names ex_notables as the bank's headline basis."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 10,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Return on average ordinary equity 9.66% 9.77% (11 bps) 9.89% 9.42% 47 bps",
+      "numbers": [
+        {
+          "label": "ROE cash FY25",
+          "value": 9.66,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "ROE cash FY24",
+          "value": 9.77,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 10,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Return on average tangible equity (ROTE) 10.89% 11.01% (12 bps) 11.13% 10.63% 50 bps",
+      "numbers": [
+        {
+          "label": "ROTE cash FY25",
+          "value": 10.89,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "ROTE cash FY24",
+          "value": 11.01,
+          "unit": "%",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 10,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Return on average ordinary equity 9.74% 9.94% (20 bps) 9.66% 9.81% (15 bps)",
+      "numbers": [
+        {
+          "label": "ROE ex_notables FY25",
+          "value": 9.74,
+          "unit": "%",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "ROE ex_notables FY24",
+          "value": 9.94,
+          "unit": "%",
+          "basis": "ex_notables"
+        }
+      ]
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 10,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "ROTE 10.97% 11.21% (24 bps) 10.87% 11.08% (21 bps)",
+      "numbers": [
+        {
+          "label": "ROTE ex_notables FY25",
+          "value": 10.97,
+          "unit": "%",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "ROTE ex_notables FY24",
+          "value": 11.21,
+          "unit": "%",
+          "basis": "ex_notables"
+        }
+      ]
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 10,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Average ordinary equity ($m) 71,544 71,493 - 72,499 70,584 3",
+      "numbers": [
+        {
+          "label": "Avg Ordinary Equity FY25",
+          "value": 71544.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Avg Ordinary Equity FY24",
+          "value": 71493.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 10,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Average total equity ($m) 71,885 71,549 - 72,837 70,928 3",
+      "numbers": [
+        {
+          "label": "Avg Total Equity FY25",
+          "value": 71885.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Avg Total Equity FY24",
+          "value": 71549.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ]
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "cheap",
+    "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
+    "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
+    "generated": "2026-08-29T13:49:41+00:00",
+    "seconds": 121.7,
+    "cost_usd": 0.0012,
+    "tokens": "31439 in / 2200 out",
+    "orchestration": "pipeline"
+  }
+}
