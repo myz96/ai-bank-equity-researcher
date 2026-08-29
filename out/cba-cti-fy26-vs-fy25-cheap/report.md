@@ -1,36 +1,39 @@
 # CBA — cti — FY26 vs FY25
 
-**Movement (statutory basis):** 45.7ppt → 45.5ppt (-0.2ppt) | **Attribution confidence:** 95/100
+**Movement (cash basis):** 45.7ppt → 45.5ppt (-0.2ppt) | **Attribution confidence:** 80/100
 
-CBA's statutory cost-to-income ratio (CTI) improved by 20 basis points to 45.5% in FY26 from 45.7% in FY25 (ev-1, ev-7). This improvement was driven by operating income growth outpacing underlying operating expense growth. Operating expenses grew 6% (ev-2), while total operating income increased from $28,465m to $30,224m, a growth rate of approximately 6.2%. The faster income growth compressed the ratio despite rising costs.
+*Read from: row 'Operating expenses to total operating income (%)', column FY25 -> column FY26*
 
-## Drivers
+CBA's headline cost-to-income ratio improved by 20 basis points (0.2 ppt) from 45.7% in FY25 to 45.5% in FY26. This improvement was driven by operating income growth outpacing underlying operating expense growth.
 
-| Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
-|---|---|---|---|---|---|
-| `income_growth` | — | +0.2 ppt | 95 | 2 () | ev-2, ev-4 |
+### income_growth — "Total operating income"
+*unquantified | confidence 90/100*
 
-### income_growth
-*+0.2 ppt | confidence 95/100*
+Operating income grew 6.2% (ev-24), exceeding expense growth and driving the ratio down.
+> [ev-24] CBA/FY26/results_presentation, printed p7: "Operating income FY25 28,465 FY26 30,224 +6.2%"
+> [ev-3] CBA/FY26/profit_announcement, PDF p31: "Operating expenses to total operating income (%) 45.5 45.7 (20)bpts"
 
-Operating income growth (~6.2%) exceeded expense growth (6%), mechanically improving the CTI. Calculated from ev-4 ($28,465m to $30,224m) and ev-2 (6% expense growth).
-> [ev-2] CBA/FY26/asx_announcement, PDF p2: "6% on FY25"
-> [ev-4] CBA/FY26/profit_announcement, printed p2: "Group Performance Summary"
+### expense_growth — "Underlying operating expenses"
+*unquantified | confidence 90/100*
+
+Underlying operating expenses grew 5.6% (ev-25), slower than income growth.
+> [ev-25] CBA/FY26/results_presentation, printed p7: "Operating expenses FY25 12,866 FY26 13,585 +5.6%"
+> [ev-3] CBA/FY26/profit_announcement, PDF p31: "Operating expenses to total operating income (%) 45.5 45.7 (20)bpts"
 
 ## Source disagreements
-- **Basis of CTI reporting** (definitional): 45.5% (statutory, ev-1, ev-7) vs 44.9% (underlying, ev-5, ev-6)
-  Preferred: statutory. The task asks for CBA's CTI movement. Standard equity analysis typically uses the headline statutory or cash-basis CTI unless 'underlying' is specified. Ev-1 and Ev-7 provide the statutory view (45.5%, -20bps). Ev-5/6 provide the underlying view (44.9%, -30bps). These are different metrics due to exclusion of notable items. I have selected the statutory basis as it is the primary reported headline figure in the ASX announcement table (ev-1).
+- **Ratio Variant Definition** (definitional): 45.5% (total/cash) vs 44.9% (underlying/ex_notables)
+  Preferred: 45.5%. The task requires the headline measure defined in bank vocabulary as 'Operating expenses to total operating income'. The underlying ratio is a different metric.
 
 ## Limitations
-- No walk chart provided to decompose drivers further than jaws effect.
-- Underlying vs Statutory basis disagreement noted; statutory chosen as primary.
+- No primary walk chart extracted for this specific comparison. Driver contributions are unquantified because the evidence provides aggregate growth rates rather than a JAWS decomposition table.
+- Failed check: no_quantified_drivers
 
 ## Provenance
 - combo: cheap
 - models: extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash
-- documents: CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY25/profit_announcement (e2e911ab4fed)
-- generated: 2026-08-26T06:34:49+00:00
-- seconds: 37.6
-- cost_usd: 0.0007
-- tokens: 14593 in / 1962 out
+- documents: CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)
+- generated: 2026-08-28T12:27:50+00:00
+- seconds: 100.8
+- cost_usd: 0.0022
+- tokens: 43551 in / 6800 out
 - orchestration: pipeline

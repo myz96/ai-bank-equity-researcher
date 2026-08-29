@@ -17,6 +17,11 @@ def render_report(attribution: Attribution) -> str:
             f"**Movement ({a.basis} basis):** {m.from_value:g}{m.unit} → {m.to_value:g}{m.unit} "
             f"({m.delta:+g}{m.unit}) | **Attribution confidence:** {a.attribution_confidence}/100"
         )
+        if a.movement_source:
+            # Which period COLUMN each endpoint came from: the only way a
+            # reader can tell this movement from a half-on-half one.
+            lines.append("")
+            lines.append(f"*Read from: {a.movement_source}*")
     lines.append("")
     lines.append(a.headline)
     lines.append("")

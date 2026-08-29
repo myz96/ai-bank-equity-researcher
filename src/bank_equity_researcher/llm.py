@@ -19,6 +19,30 @@ API_URL = "https://openrouter.ai/api/v1/chat/completions"
 # rely on a large max_tokens; content arrives after the reasoning block.
 ALWAYS_REASONS = {"z-ai/glm-5.3"}
 
+# Absolute wall-clock budget for ONE request, body included.
+#
+# httpx's `timeout` bounds the gap between chunks, never the whole call, so a
+# provider that drips a response body a few bytes at a time keeps the socket
+# alive for ever. A dev-suite run stalled for 30 minutes on exactly that: the
+# process sat in bytes_join assembling response.content while the API itself
+# answered a fresh request in under two seconds. The deadline below is checked
+# per chunk, so a slow route is abandoned and retried on another route.
+#
+# The budget scales with the output the caller asked for: a 4k-token
+# extraction gets the floor, and a 24k-token reasoning author gets room to
+# finish. Generous against a healthy route, decisive against a dead one.
+DEADLINE_FLOOR_S = 120.0
+DEADLINE_SECONDS_PER_TOKEN = 0.02
+# A well-formed reply is a few hundred KB. Beyond this the body is a fault,
+# not an answer, and reading it only wastes memory.
+MAX_RESPONSE_BYTES = 8 * 1024 * 1024
+# Per-chunk network timeouts, so a silent socket also fails fast.
+CHUNK_TIMEOUT = httpx.Timeout(connect=20.0, read=45.0, write=45.0, pool=20.0)
+
+
+class ResponseDeadline(RuntimeError):
+    """The response body exceeded its wall-clock or size budget."""
+
 
 @dataclass
 class Usage:
@@ -26,6 +50,8 @@ class Usage:
     completion_tokens: int = 0
     cost_usd: float = 0.0
     calls: int = 0
+    json_retries: int = 0
+    deadline_aborts: int = 0
     by_model: dict = field(default_factory=dict)
 
     def add(self, model: str, prompt: int, completion: int) -> None:
@@ -45,6 +71,36 @@ class Usage:
 class LLM:
     def __init__(self) -> None:
         self.usage = Usage()
+
+    def _post(self, payload: dict, deadline_s: float) -> tuple[int, bytes]:
+        """One request, streamed, under an absolute wall-clock deadline.
+
+        The body is read chunk by chunk so the elapsed time and the byte count
+        are checked as it arrives. A route that never stops sending is aborted
+        here instead of holding the whole run; the caller's retry loop then
+        tries again, usually on a different provider.
+        """
+        started = time.monotonic()
+        chunks: list[bytes] = []
+        total = 0
+        with httpx.Client(timeout=CHUNK_TIMEOUT) as client, client.stream(
+            "POST",
+            API_URL,
+            headers={"Authorization": f"Bearer {openrouter_api_key()}"},
+            json=payload,
+        ) as response:
+            for chunk in response.iter_bytes():
+                chunks.append(chunk)
+                total += len(chunk)
+                elapsed = time.monotonic() - started
+                if elapsed > deadline_s or total > MAX_RESPONSE_BYTES:
+                    self.usage.deadline_aborts += 1
+                    response.close()
+                    raise ResponseDeadline(
+                        f"response abandoned after {elapsed:.0f}s and {total} bytes "
+                        f"(deadline {deadline_s:.0f}s, cap {MAX_RESPONSE_BYTES} bytes)"
+                    )
+            return response.status_code, b"".join(chunks)
 
     def chat(
         self,
@@ -73,24 +129,21 @@ class LLM:
         if model not in ALWAYS_REASONS:
             payload["reasoning"] = {"enabled": False}
 
+        deadline_s = max(DEADLINE_FLOOR_S, max_tokens * DEADLINE_SECONDS_PER_TOKEN)
         last_error: Exception | None = None
         for attempt in range(retries):
             try:
-                response = httpx.post(
-                    API_URL,
-                    headers={"Authorization": f"Bearer {openrouter_api_key()}"},
-                    json=payload,
-                    timeout=300,
-                )
-                if response.status_code == 400 and "reasoning" in payload:
+                status, body = self._post(payload, deadline_s)
+                if status == 400 and "reasoning" in payload:
                     payload.pop("reasoning")
                     continue
-                if response.status_code == 429:
+                if status == 429:
                     time.sleep(15 * (attempt + 1))
                     last_error = RuntimeError("429 Too Many Requests")
                     continue
-                response.raise_for_status()
-                data = response.json()
+                if status >= 400:
+                    raise RuntimeError(f"HTTP {status}: {body[:300]!r}")
+                data = json.loads(body)
                 if "choices" not in data:
                     raise RuntimeError(f"no choices: {str(data)[:300]}")
                 usage = data.get("usage", {})
@@ -104,8 +157,26 @@ class LLM:
                 time.sleep(2**attempt)
         raise RuntimeError(f"chat() failed for {model} after {retries} attempts: {last_error}")
 
-    def chat_json(self, model: str, prompt: str, **kwargs):
-        return parse_json_block(self.chat(model, prompt, **kwargs))
+    def chat_json(self, model: str, prompt: str, *, json_retries: int = 2, **kwargs):
+        """chat() plus a parse-failure retry, so every JSON caller inherits it.
+
+        The cheap models occasionally return a TRUNCATED reply with
+        finish_reason "stop" — the CBA FY25 Profit Announcement NIM chart came
+        back as '```json\\n{\\n  "title": "NIM Movement' twice, and the author
+        died twice on "Expecting ':' delimiter" (ticket 27). Re-issuing the
+        whole request usually routes to a healthy provider, so the retry
+        repeats the call rather than the parse, and asks for terminated JSON.
+        """
+        hint = "\n\nReply with COMPLETE terminated JSON only - no prose, no trailing text."
+        error: Exception | None = None
+        for attempt in range(json_retries + 1):
+            text = self.chat(model, prompt if attempt == 0 else prompt + hint, **kwargs)
+            try:
+                return parse_json_block(text)
+            except ValueError as exc:
+                error = exc
+                self.usage.json_retries += 1
+        raise error if error else RuntimeError("chat_json failed without an error")
 
 
 def parse_json_block(text: str):
@@ -117,5 +188,50 @@ def parse_json_block(text: str):
         raise ValueError(f"no JSON in reply: {text[:200]}")
     # strict=False tolerates literal newlines/control chars inside strings,
     # which vision models emit when reading multi-line chart labels.
-    obj, _ = json.JSONDecoder(strict=False).raw_decode(candidate[start:])
+    body = candidate[start:]
+    try:
+        obj, _ = json.JSONDecoder(strict=False).raw_decode(body)
+    except json.JSONDecodeError:
+        for repair in _REPAIRS:
+            patched = repair(body)
+            if patched == body:
+                continue
+            try:
+                obj, _ = json.JSONDecoder(strict=False).raw_decode(patched)
+                return obj
+            except json.JSONDecodeError:
+                continue
+        raise _decode_error(body)
     return obj
+
+
+# Both CBA CTI cases died on a dropped key colon. The model wrote
+# '"narrative "Operating expenses grew 5.8%",' — the colon and the value's
+# opening quote are missing, so the key swallowed the space. The pattern needs
+# a bare identifier, whitespace, a closing quote and then a character that can
+# never follow a string in valid JSON, which makes a false positive impossible.
+_MISSING_KEY_COLON = re.compile(r'("[A-Za-z_][A-Za-z0-9_]*)\s+"(?=[^\s,:\]}])')
+# The same slip with the value's quote intact: two strings side by side, which
+# valid JSON never contains either.
+_MISSING_COLON = re.compile(r'("[A-Za-z_][A-Za-z0-9_]*")(?=\s+["\[{tfn\-0-9])')
+
+# Applied only after a strict parse has failed, and kept only if the patched
+# text parses. A repair that does not parse is discarded, never guessed at.
+_REPAIRS = (
+    lambda body: _MISSING_KEY_COLON.sub(r'\1": "', body),
+    lambda body: _MISSING_COLON.sub(r"\1: ", body),
+)
+
+
+def _decode_error(body: str) -> ValueError:
+    """Re-run the failing decode to build a message that names the text.
+
+    A bare "Expecting ':' delimiter: line 18 column 19" costs a whole rerun to
+    diagnose; the window either side of the fault names the culprit at once.
+    """
+    try:
+        json.JSONDecoder(strict=False).raw_decode(body)
+    except json.JSONDecodeError as exc:
+        window = body[max(0, exc.pos - 90): exc.pos + 90].replace("\n", "\\n")
+        return ValueError(f"{exc.msg} at pos {exc.pos}; near: ...{window}...")
+    return ValueError("JSON decode failed and then succeeded on retry")

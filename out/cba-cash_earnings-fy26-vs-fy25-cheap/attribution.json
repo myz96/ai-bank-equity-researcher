@@ -10,7 +10,8 @@
     "delta": 730.0,
     "unit": "$m"
   },
-  "headline": "CBA's cash earnings (NPAT) increased $730 million (+7.1%) to $10,982 million in FY26. The growth was primarily driven by a $1,563 million increase in Net Interest Income (NII), supported by strong volume growth ($92 billion IEA increase). This was partially offset by higher operating expenses ($719 million underlying increase) and higher credit impairment charges ($62 million increase). Other operating income contributed positively with a $196 million increase.",
+  "movement_source": "row 'Net profit after tax from continuing operations – cash basis', column FY25 -> column FY26",
+  "headline": "CBA's cash earnings (NPAT) rose $730 million (+7%) to $10,982 million in FY26. Growth was driven by a $1,563 million increase in Net Interest Income and a $196 million rise in Other Operating Income. These gains were partially offset by a $719 million increase in underlying operating expenses, a $62 million rise in credit impairment charges, and a $208 million increase in corporate tax expense.",
   "drivers": [
     {
       "canonical": "nii",
@@ -19,11 +20,12 @@
         "value": 1563.0,
         "unit": "$m"
       },
-      "narrative": "NII increased $1,563 million (7%) to $25,586 million. Driven by an $92 billion (8%) increase in average interest earning assets, partly offset by a 3 bps decrease in NIM to 2.05%.",
+      "narrative": "NII increased $1,563 million (+7%), driven by an $92 billion (8%) growth in average interest-earning assets, which was partly offset by a 3 bps decline in NIM to 2.05%.",
       "confidence": 85,
       "evidence": [
-        "ev-27",
-        "ev-28"
+        "ev-23",
+        "ev-25",
+        "ev-26"
       ],
       "checks_passed": [
         "single_source"
@@ -37,7 +39,7 @@
         "value": 196.0,
         "unit": "$m"
       },
-      "narrative": "Other operating income increased $196 million (4%) to $4,638 million. Commissions rose $135 million; lending fees up $12 million; trading down $9 million; funds management up $12 million; other income up $46 million.",
+      "narrative": "Other operating income grew $196 million (+4%) to $4,638 million, supported by increases in commissions ($135m), other income ($46m), and funds management income ($12m).",
       "confidence": 85,
       "evidence": [
         "ev-1",
@@ -59,7 +61,7 @@
         "value": -719.0,
         "unit": "$m"
       },
-      "narrative": "Underlying operating expenses increased $719 million (6%) to $13,585 million. Staff costs rose $288 million; IT services up $393 million; occupancy down $19 million; other expenses up $57 million.",
+      "narrative": "Underlying operating expenses rose $719 million (+6%) to $13,585 million. Increases were led by IT services (+$393m) and staff costs (+$288m), partially offset by lower occupancy (-$19m).",
       "confidence": 85,
       "evidence": [
         "ev-7",
@@ -80,14 +82,44 @@
         "value": -62.0,
         "unit": "$m"
       },
-      "narrative": "Loan impairment expense increased $62 million (9%) to $788 million. Increases in Retail Banking Services ($106m) and New Zealand ($11m) were partially offset by decreases in Business Banking ($45m) and IB&M ($16m).",
+      "narrative": "Credit impairment charges increased by $62 million (from $726m to $788m), reducing earnings. This reflects higher provisions across the portfolio.",
       "confidence": 85,
       "evidence": [
-        "ev-13",
-        "ev-14",
-        "ev-15",
-        "ev-16",
-        "ev-17"
+        "ev-18"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "notable_items",
+      "bank_label": "Restructuring and notable items",
+      "contribution": {
+        "value": -40.0,
+        "unit": "$m"
+      },
+      "narrative": "Notable/restructuring items increased by $40 million (from -$130m to -$170m), representing a larger drag on earnings compared to the prior year.",
+      "confidence": 85,
+      "evidence": [
+        "ev-15"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "tax_and_other",
+      "bank_label": "Corporate tax expense",
+      "contribution": {
+        "value": -208.0,
+        "unit": "$m"
+      },
+      "narrative": "Corporate tax expense increased by $208 million (from $4,491m to $4,699m), reflecting higher pre-tax profits and effective tax rates.",
+      "confidence": 85,
+      "evidence": [
+        "ev-20"
       ],
       "checks_passed": [
         "single_source"
@@ -95,30 +127,13 @@
       "checks_failed": []
     }
   ],
-  "residual": {
-    "value": -148.0,
-    "unit": "$m"
-  },
-  "notable_items": [],
-  "disagreements": [
-    {
-      "topic": "Residual / Tax",
-      "values": [
-        "Calculated Residual: -$148.0m",
-        "Tax Movement: ~$100-$150m (implied)"
-      ],
-      "preferred": "Residual",
-      "reason": "definitional",
-      "explanation": "The sum of quantified drivers (NII + OOI + OpEx + Impairment) is $730 million, which exactly matches the Cash NPAT delta. However, this implies that the tax impact and any other minor items net to zero or are included in the 'residual' bucket if we strictly follow the P&L waterfall. In reality, NPAT = Pre-tax Profit * (1-t). The pre-tax profit movement is $730m. If tax rate is ~30%, tax impact is ~$220m. The fact that the driver sum equals the NPAT delta suggests either the 'drivers' listed are post-tax or there is a significant unquantified tax benefit or the residual captures the tax effect. Given the instruction to claim tax_and_other as a quantified component from tax expense movement, and no explicit tax dollar movement is provided in the evidence records (only statutory/cash reconciliation non-cash items), I must report the residual. The exact match of pre-tax drivers to NPAT delta is unusual and likely indicates the 'drivers' represent the full P&L impact including tax effects implicitly or the residual captures the tax variance. Without explicit tax dollar figures, I cannot split it."
-    }
+  "residual": null,
+  "notable_items": [
+    "Restructuring and notable items: -$170m (FY26) vs -$130m (FY25)"
   ],
-  "attribution_confidence": 40,
-  "limitations": [
-    "No explicit tax expense dollar movement is provided in the evidence records to isolate 'tax_and_other'.",
-    "The sum of the primary P&L drivers (NII, OOI, OpEx, Impairment) equals the total Cash NPAT delta ($730m), implying a residual of $0 for these specific line items relative to the bottom line, but this ignores the tax effect on the pre-tax profit change. A residual of -$148m was calculated based on the assumption that the provided drivers are pre-tax and the final NPAT includes tax, but without explicit tax data, this is an estimate.",
-    "Notable/Restructuring items are excluded from underlying expenses but their delta is not explicitly quantified as a separate bridge driver in the text, though ev-44 shows FY26 level of $170m ex_notables. The FY25 level is not explicitly given in the same format to calculate the delta directly.",
-    "Failed check: drivers_reconcile (drivers +978.0 + residual -148.0 != delta +730.0, tol 1.0)"
-  ],
+  "disagreements": [],
+  "attribution_confidence": 95,
+  "limitations": [],
   "evidence_records": [
     {
       "id": "ev-1",
@@ -129,13 +144,19 @@
       "quote": "Other operating income was $4,638 million, an increase of $196 million or 4% on the prior year.",
       "numbers": [
         {
+          "label": "Other operating income FY25",
+          "value": 4442.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
           "label": "Other operating income FY26",
           "value": 4638.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Other operating income delta FY26 vs FY25",
+          "label": "Other operating income change FY26 vs FY25",
           "value": 196.0,
           "unit": "$m",
           "basis": "cash"
@@ -151,13 +172,19 @@
       "quote": "Commissions increased by $135 million or 6% to $2,234 million",
       "numbers": [
         {
+          "label": "Commissions FY25",
+          "value": 2099.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
           "label": "Commissions FY26",
           "value": 2234.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Commissions delta FY26 vs FY25",
+          "label": "Commissions change FY26 vs FY25",
           "value": 135.0,
           "unit": "$m",
           "basis": "cash"
@@ -173,13 +200,19 @@
       "quote": "Lending fees increased by $12 million or 1% to $924 million",
       "numbers": [
         {
+          "label": "Lending fees FY25",
+          "value": 912.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
           "label": "Lending fees FY26",
           "value": 924.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Lending fees delta FY26 vs FY25",
+          "label": "Lending fees change FY26 vs FY25",
           "value": 12.0,
           "unit": "$m",
           "basis": "cash"
@@ -195,13 +228,19 @@
       "quote": "Trading income decreased by $9 million or 1% to $1,190 million",
       "numbers": [
         {
+          "label": "Trading income FY25",
+          "value": 1199.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
           "label": "Trading income FY26",
           "value": 1190.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Trading income delta FY26 vs FY25",
+          "label": "Trading income change FY26 vs FY25",
           "value": -9.0,
           "unit": "$m",
           "basis": "cash"
@@ -217,13 +256,19 @@
       "quote": "Funds management income increased by $12 million or 10% to $134 million",
       "numbers": [
         {
+          "label": "Funds management income FY25",
+          "value": 122.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
           "label": "Funds management income FY26",
           "value": 134.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Funds management income delta FY26 vs FY25",
+          "label": "Funds management income change FY26 vs FY25",
           "value": 12.0,
           "unit": "$m",
           "basis": "cash"
@@ -239,13 +284,19 @@
       "quote": "Other income increased by $46 million or 42% to $156 million",
       "numbers": [
         {
+          "label": "Other income FY25",
+          "value": 110.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
           "label": "Other income FY26",
           "value": 156.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Other income delta FY26 vs FY25",
+          "label": "Other income change FY26 vs FY25",
           "value": 46.0,
           "unit": "$m",
           "basis": "cash"
@@ -267,7 +318,13 @@
           "basis": "cash"
         },
         {
-          "label": "Underlying operating expenses delta FY26 vs FY25",
+          "label": "Underlying operating expenses FY25",
+          "value": 12866.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Underlying operating expenses change FY26 vs FY25",
           "value": 719.0,
           "unit": "$m",
           "basis": "cash"
@@ -289,7 +346,13 @@
           "basis": "cash"
         },
         {
-          "label": "Staff expenses delta FY26 vs FY25",
+          "label": "Staff expenses FY25",
+          "value": 7970.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Staff expenses change FY26 vs FY25",
           "value": 288.0,
           "unit": "$m",
           "basis": "cash"
@@ -311,7 +374,13 @@
           "basis": "cash"
         },
         {
-          "label": "Occupancy and equipment expenses delta FY26 vs FY25",
+          "label": "Occupancy and equipment expenses FY25",
+          "value": 957.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Occupancy and equipment expenses change FY26 vs FY25",
           "value": -19.0,
           "unit": "$m",
           "basis": "cash"
@@ -333,7 +402,13 @@
           "basis": "cash"
         },
         {
-          "label": "IT services expenses delta FY26 vs FY25",
+          "label": "IT services expenses FY25",
+          "value": 2389.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "IT services expenses change FY26 vs FY25",
           "value": 393.0,
           "unit": "$m",
           "basis": "cash"
@@ -355,7 +430,13 @@
           "basis": "cash"
         },
         {
-          "label": "Other expenses delta FY26 vs FY25",
+          "label": "Other expenses FY25",
+          "value": 1550.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Other expenses change FY26 vs FY25",
           "value": 57.0,
           "unit": "$m",
           "basis": "cash"
@@ -371,19 +452,19 @@
       "quote": "Underlying operating expenses to underlying operating income ratio decreased 30 basis points from 45.2% to 44.9%.",
       "numbers": [
         {
-          "label": "Ratio FY26",
+          "label": "UOE/UOI ratio FY26",
           "value": 44.9,
           "unit": "%",
           "basis": "cash"
         },
         {
-          "label": "Ratio FY25",
+          "label": "UOE/UOI ratio FY25",
           "value": 45.2,
           "unit": "%",
           "basis": "cash"
         },
         {
-          "label": "Ratio delta",
+          "label": "UOE/UOI ratio change FY26 vs FY25",
           "value": -30.0,
           "unit": "bps",
           "basis": "cash"
@@ -393,20 +474,20 @@
     {
       "id": "ev-13",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Loan impairment expense was $788 million, an increase of $62 million or 9% on the prior year.",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Group Performance Summary",
       "numbers": [
         {
-          "label": "Loan impairment expense FY26",
-          "value": 788.0,
+          "label": "Total operating income FY26",
+          "value": 30224.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Loan impairment expense delta FY26 vs FY25",
-          "value": 62.0,
+          "label": "Total operating income FY25",
+          "value": 28465.0,
           "unit": "$m",
           "basis": "cash"
         }
@@ -415,20 +496,20 @@
     {
       "id": "ev-14",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "An increase in Retail Banking Services of $106 million to an expense of $378 million",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Underlying operating expenses (13,585) (12,866) 6 (6,865) (6,720) 2",
       "numbers": [
         {
-          "label": "Retail Banking Services Loan impairment expense FY26",
-          "value": 378.0,
+          "label": "Underlying operating expenses FY26",
+          "value": -13585.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Retail Banking Services Loan impairment expense delta FY26 vs FY25",
-          "value": 106.0,
+          "label": "Underlying operating expenses FY25",
+          "value": -12866.0,
           "unit": "$m",
           "basis": "cash"
         }
@@ -437,20 +518,20 @@
     {
       "id": "ev-15",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "An increase in New Zealand of $11 million to an expense of $66 million",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Restructuring and notable items ¹ (170) (130) 31 – (170) (large)",
       "numbers": [
         {
-          "label": "New Zealand Loan impairment expense FY26",
-          "value": 66.0,
+          "label": "Restructuring and notable items FY26",
+          "value": -170.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "New Zealand Loan impairment expense delta FY26 vs FY25",
-          "value": 11.0,
+          "label": "Restructuring and notable items FY25",
+          "value": -130.0,
           "unit": "$m",
           "basis": "cash"
         }
@@ -459,20 +540,20 @@
     {
       "id": "ev-16",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "A decrease in Business Banking of $45 million to an expense of $310 million",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Total operating expenses (13,755) (12,996) 6 (6,865) (6,890) –",
       "numbers": [
         {
-          "label": "Business Banking Loan impairment expense FY26",
-          "value": 310.0,
+          "label": "Total operating expenses FY26",
+          "value": -13755.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Business Banking Loan impairment expense delta FY26 vs FY25",
-          "value": -45.0,
+          "label": "Total operating expenses FY25",
+          "value": -12996.0,
           "unit": "$m",
           "basis": "cash"
         }
@@ -481,20 +562,20 @@
     {
       "id": "ev-17",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "A decrease in Institutional Banking and Markets of $16 million to an expense of $33 million",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Operating performance 16,469 15,469 6 8,338 8,131 3",
       "numbers": [
         {
-          "label": "Institutional Banking and Markets Loan impairment expense FY26",
-          "value": 33.0,
+          "label": "Operating performance FY26",
+          "value": 16469.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Institutional Banking and Markets Loan impairment expense delta FY26 vs FY25",
-          "value": -16.0,
+          "label": "Operating performance FY25",
+          "value": 15469.0,
           "unit": "$m",
           "basis": "cash"
         }
@@ -503,21 +584,21 @@
     {
       "id": "ev-18",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Loan impairment expense as a percentage of average gross loans and acceptances (GLAA) increased 1 basis point to 8 basis points.",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Loan impairment expense (788) (726) 9 (469) (319) 47",
       "numbers": [
         {
-          "label": "Loan impairment expense % of avg GLAA FY26",
-          "value": 8.0,
-          "unit": "bps",
+          "label": "Loan impairment expense FY26",
+          "value": -788.0,
+          "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Loan impairment expense % of avg GLAA delta FY26 vs FY25",
-          "value": 1.0,
-          "unit": "bps",
+          "label": "Loan impairment expense FY25",
+          "value": -726.0,
+          "unit": "$m",
           "basis": "cash"
         }
       ]
@@ -525,21 +606,21 @@
     {
       "id": "ev-19",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Loan impairment expense annualised as a percentage of average GLAA increased 3 basis points to 9 basis points.",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Net profit before tax 15,681 14,743 6 7,869 7,812 1",
       "numbers": [
         {
-          "label": "Loan impairment expense annualised % of avg GLAA H1 FY26",
-          "value": 9.0,
-          "unit": "bps",
+          "label": "Net profit before tax FY26",
+          "value": 15681.0,
+          "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Loan impairment expense annualised % of avg GLAA delta H1 FY26 vs H2 FY25",
-          "value": 3.0,
-          "unit": "bps",
+          "label": "Net profit before tax FY25",
+          "value": 14743.0,
+          "unit": "$m",
           "basis": "cash"
         }
       ]
@@ -547,27 +628,21 @@
     {
       "id": "ev-20",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
+      "pdf_page": 27,
+      "printed_page": 2,
       "kind": "table",
-      "quote": "Full Year Ended 30 Jun 26 30 Jun 25 Jun 26 vs Jun 25 % ... Loan impairment expense/(benefit) 788 726 9",
+      "quote": "Corporate tax expense (4,699) (4,491) 5 (2,332) (2,367) (1)",
       "numbers": [
         {
-          "label": "Loan impairment expense FY26",
-          "value": 788.0,
+          "label": "Corporate tax expense FY26",
+          "value": -4699.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Loan impairment expense FY25",
-          "value": 726.0,
+          "label": "Corporate tax expense FY25",
+          "value": -4491.0,
           "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Loan impairment expense growth FY26 vs FY25",
-          "value": 9.0,
-          "unit": "%",
           "basis": "cash"
         }
       ]
@@ -578,16 +653,16 @@
       "pdf_page": 27,
       "printed_page": 2,
       "kind": "table",
-      "quote": "Net profit after tax from continuing operations – cash basis",
+      "quote": "Net profit after tax from continuing operations – cash basis 10,982 10,252 7 5,537 5,445 2",
       "numbers": [
         {
-          "label": "Cash NPAT FY26",
+          "label": "Net profit after tax from continuing operations cash basis FY26",
           "value": 10982.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Cash NPAT FY25",
+          "label": "Net profit after tax from continuing operations cash basis FY25",
           "value": 10252.0,
           "unit": "$m",
           "basis": "cash"
@@ -600,104 +675,16 @@
       "pdf_page": 27,
       "printed_page": 2,
       "kind": "table",
-      "quote": "Non-cash items – continuing operations",
+      "quote": "Net profit after tax – statutory basis 10,866 10,116 7 5,499 5,367 2",
       "numbers": [
         {
-          "label": "Non-cash items FY26",
-          "value": -71.0,
-          "unit": "$m",
-          "basis": "null"
-        },
-        {
-          "label": "Non-cash items FY25",
-          "value": -119.0,
-          "unit": "$m",
-          "basis": "null"
-        }
-      ]
-    },
-    {
-      "id": "ev-23",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 27,
-      "printed_page": 2,
-      "kind": "table",
-      "quote": "Net profit after tax from continuing operations – statutory basis",
-      "numbers": [
-        {
-          "label": "Statutory NPAT FY26",
-          "value": 10911.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "Statutory NPAT FY25",
-          "value": 10133.0,
-          "unit": "$m",
-          "basis": "statutory"
-        }
-      ]
-    },
-    {
-      "id": "ev-24",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 27,
-      "printed_page": 2,
-      "kind": "table",
-      "quote": "Net profit after tax from discontinued operations – cash basis",
-      "numbers": [
-        {
-          "label": "Discontinued Cash NPAT FY26",
-          "value": 0.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Discontinued Cash NPAT FY25",
-          "value": 1.0,
-          "unit": "$m",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-25",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 27,
-      "printed_page": 2,
-      "kind": "table",
-      "quote": "Non-cash items – discontinued operations",
-      "numbers": [
-        {
-          "label": "Discontinued Non-cash items FY26",
-          "value": -45.0,
-          "unit": "$m",
-          "basis": "null"
-        },
-        {
-          "label": "Discontinued Non-cash items FY25",
-          "value": -18.0,
-          "unit": "$m",
-          "basis": "null"
-        }
-      ]
-    },
-    {
-      "id": "ev-26",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 27,
-      "printed_page": 2,
-      "kind": "table",
-      "quote": "Net profit after tax – statutory basis",
-      "numbers": [
-        {
-          "label": "Total Statutory NPAT FY26",
+          "label": "Net profit after tax statutory basis FY26",
           "value": 10866.0,
           "unit": "$m",
           "basis": "statutory"
         },
         {
-          "label": "Total Statutory NPAT FY25",
+          "label": "Net profit after tax statutory basis FY25",
           "value": 10116.0,
           "unit": "$m",
           "basis": "statutory"
@@ -705,12 +692,12 @@
       ]
     },
     {
-      "id": "ev-27",
+      "id": "ev-23",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 28,
       "printed_page": null,
-      "kind": "text",
-      "quote": "Net interest income was $25,586 million, an increase of $1,563 million or 7% on the prior year.",
+      "kind": "table",
+      "quote": "Net interest income 25,586 24,023 7 12,891 12,695 2",
       "numbers": [
         {
           "label": "NII FY26",
@@ -719,33 +706,21 @@
           "basis": "cash"
         },
         {
-          "label": "NII Delta FY26 vs FY25",
-          "value": 1563.0,
+          "label": "NII FY25",
+          "value": 24023.0,
           "unit": "$m",
           "basis": "cash"
         }
       ]
     },
     {
-      "id": "ev-28",
+      "id": "ev-24",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 28,
       "printed_page": null,
-      "kind": "text",
-      "quote": "The result was driven by a $92 billion or 8% increase in average interest earning assets to $1,246 billion, partly offset by a 3 basis point decrease in net interest margin to 2.05%.",
+      "kind": "table",
+      "quote": "Net interest margin (%) 2.05 2.08 (3)bpts 2.06 2.04 2bpts",
       "numbers": [
-        {
-          "label": "Avg IEA FY26",
-          "value": 1246000.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Avg IEA Delta FY26 vs FY25",
-          "value": 92000.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
         {
           "label": "NIM FY26",
           "value": 2.05,
@@ -753,15 +728,71 @@
           "basis": "cash"
         },
         {
-          "label": "NIM Change FY26 vs FY25",
-          "value": -3.0,
-          "unit": "bps",
+          "label": "NIM FY25",
+          "value": 2.08,
+          "unit": "%",
           "basis": "cash"
         }
       ]
     },
     {
-      "id": "ev-29",
+      "id": "ev-25",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 28,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Net interest income was $25,586 million, an increase of $1,563 million or 7% on the prior year.",
+      "numbers": [
+        {
+          "label": "NII Delta FY26 vs FY25",
+          "value": 1563.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "NII FY26",
+          "value": 25586.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-26",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 28,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The result was driven by a $92 billion or 8% increase in average interest earning assets to $1,246 billion, partly offset by a 3 basis point decrease in net interest margin to 2.05%.",
+      "numbers": [
+        {
+          "label": "Avg IEA Delta FY26 vs FY25",
+          "value": 92000.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Avg IEA FY26",
+          "value": 1246000.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "NIM Change FY26 vs FY25",
+          "value": -3.0,
+          "unit": "bps",
+          "basis": "cash"
+        },
+        {
+          "label": "NIM FY26",
+          "value": 2.05,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-27",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 28,
       "printed_page": null,
@@ -777,7 +808,7 @@
       ]
     },
     {
-      "id": "ev-30",
+      "id": "ev-28",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 28,
       "printed_page": null,
@@ -785,14 +816,52 @@
       "quote": "Home loan average balances increased $32 billion or 5% on the prior year to $630 billion.",
       "numbers": [
         {
-          "label": "Home Loan Avg Balances FY26",
-          "value": 630000.0,
+          "label": "Avg Home Loans Delta FY26 vs FY25",
+          "value": 32000.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Home Loan Avg Balances Delta FY26 vs FY25",
-          "value": 32000.0,
+          "label": "Avg Home Loans FY26",
+          "value": 630000.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-29",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 28,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Consumer finance average balances increased 2% on the prior year to $17 billion",
+      "numbers": [
+        {
+          "label": "Avg Consumer Finance FY26",
+          "value": 17000.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-30",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 28,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Business and corporate loan average balances increased $27 billion or 10% on the prior year to $299 billion",
+      "numbers": [
+        {
+          "label": "Avg Business/Corp Loans Delta FY26 vs FY25",
+          "value": 27000.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Avg Business/Corp Loans FY26",
+          "value": 299000.0,
           "unit": "$m",
           "basis": "cash"
         }
@@ -804,11 +873,17 @@
       "pdf_page": 28,
       "printed_page": null,
       "kind": "text",
-      "quote": "Consumer finance average balances increased 2% on the prior year to $17 billion",
+      "quote": "Non-lending interest earning assets (excluding liquid assets) average balances increased $17 billion or 18% on the prior year to $112 billion",
       "numbers": [
         {
-          "label": "Consumer Finance Avg Balances FY26",
+          "label": "Avg Non-Lending IEA Delta FY26 vs FY25",
           "value": 17000.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Avg Non-Lending IEA FY26",
+          "value": 112000.0,
           "unit": "$m",
           "basis": "cash"
         }
@@ -820,17 +895,17 @@
       "pdf_page": 28,
       "printed_page": null,
       "kind": "text",
-      "quote": "Business and corporate loan average balances increased $27 billion or 10% on the prior year to $299 billion",
+      "quote": "Liquid asset average balances increased $15 billion or 9% on the prior year to $187 billion.",
       "numbers": [
         {
-          "label": "Biz & Corp Loan Avg Balances FY26",
-          "value": 299000.0,
+          "label": "Avg Liquid Assets Delta FY26 vs FY25",
+          "value": 15000.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Biz & Corp Loan Avg Balances Delta FY26 vs FY25",
-          "value": 27000.0,
+          "label": "Avg Liquid Assets FY26",
+          "value": 187000.0,
           "unit": "$m",
           "basis": "cash"
         }
@@ -838,98 +913,6 @@
     },
     {
       "id": "ev-33",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Non-lending interest earning assets (excluding liquid assets) average balances increased $17 billion or 18% on the prior year to $112 billion",
-      "numbers": [
-        {
-          "label": "Non-Lending IEA Avg Balances FY26",
-          "value": 112000.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Non-Lending IEA Avg Balances Delta FY26 vs FY25",
-          "value": 17000.0,
-          "unit": "$m",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-34",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Liquid asset average balances increased $15 billion or 9% on the prior year to $187 billion.",
-      "numbers": [
-        {
-          "label": "Liquid Assets Avg Balances FY26",
-          "value": 187000.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Liquid Assets Avg Balances Delta FY26 vs FY25",
-          "value": 15000.0,
-          "unit": "$m",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-35",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Asset pricing: Decreased margin by 5 basis points driven by home lending pricing (down 4 basis points) and business and institutional lending pricing (down 1 basis point)",
-      "numbers": [
-        {
-          "label": "NIM Asset Pricing Impact",
-          "value": -5.0,
-          "unit": "bps",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-36",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Portfolio mix: Increased margin by 2 basis points driven by favourable asset mix from strong growth in business lending and favourable funding mix from strong growth in deposits.",
-      "numbers": [
-        {
-          "label": "NIM Portfolio Mix Impact",
-          "value": 2.0,
-          "unit": "bps",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-37",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 7,
-      "printed_page": 7,
-      "kind": "text",
-      "quote": "Cash NPAT up 7%",
-      "numbers": [
-        {
-          "label": "Cash NPAT growth",
-          "value": 7.0,
-          "unit": "%",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-38",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 7,
       "printed_page": 7,
@@ -947,17 +930,11 @@
           "value": 30224.0,
           "unit": "$m",
           "basis": "cash"
-        },
-        {
-          "label": "Operating income growth",
-          "value": 6.2,
-          "unit": "%",
-          "basis": "cash"
         }
       ]
     },
     {
-      "id": "ev-39",
+      "id": "ev-34",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 7,
       "printed_page": 7,
@@ -975,17 +952,11 @@
           "value": 13585.0,
           "unit": "$m",
           "basis": "cash"
-        },
-        {
-          "label": "Operating expenses growth",
-          "value": 5.6,
-          "unit": "%",
-          "basis": "cash"
         }
       ]
     },
     {
-      "id": "ev-40",
+      "id": "ev-35",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 7,
       "printed_page": 7,
@@ -1003,17 +974,11 @@
           "value": 16469.0,
           "unit": "$m",
           "basis": "cash"
-        },
-        {
-          "label": "Pre-provision profit growth",
-          "value": 6.5,
-          "unit": "%",
-          "basis": "cash"
         }
       ]
     },
     {
-      "id": "ev-41",
+      "id": "ev-36",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 7,
       "printed_page": 7,
@@ -1031,10 +996,120 @@
           "value": 10982.0,
           "unit": "$m",
           "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-37",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 24,
+      "printed_page": 24,
+      "kind": "text",
+      "quote": "Cash NPAT up 7% vs FY25",
+      "numbers": [
+        {
+          "label": "Cash NPAT growth FY26 vs FY25",
+          "value": 7.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-38",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 24,
+      "printed_page": 24,
+      "kind": "table",
+      "quote": "Operating income 30,224 6.2% 1.2%",
+      "numbers": [
+        {
+          "label": "Operating income FY26",
+          "value": 30224.0,
+          "unit": "$m",
+          "basis": "cash"
         },
         {
-          "label": "Cash NPAT growth",
-          "value": 7.1,
+          "label": "Operating income change FY26 vs FY25",
+          "value": 6.2,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating income change 2H26 vs 1H26",
+          "value": 1.2,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-39",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 24,
+      "printed_page": 24,
+      "kind": "table",
+      "quote": "Underlying operating expenses 13,585 5.6% 2.2%",
+      "numbers": [
+        {
+          "label": "Underlying operating expenses FY26",
+          "value": 13585.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Underlying operating expenses change FY26 vs FY25",
+          "value": 5.6,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Underlying operating expenses change 2H26 vs 1H26",
+          "value": 2.2,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-40",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 24,
+      "printed_page": 24,
+      "kind": "table",
+      "quote": "Restructuring and notable items 170",
+      "numbers": [
+        {
+          "label": "Restructuring and notable items FY26",
+          "value": 170.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        }
+      ]
+    },
+    {
+      "id": "ev-41",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 24,
+      "printed_page": 24,
+      "kind": "table",
+      "quote": "Operating performance 16,469 6.5% 2.5%",
+      "numbers": [
+        {
+          "label": "Operating performance FY26",
+          "value": 16469.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating performance change FY26 vs FY25",
+          "value": 6.5,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating performance change 2H26 vs 1H26",
+          "value": 2.5,
           "unit": "%",
           "basis": "cash"
         }
@@ -1046,19 +1121,25 @@
       "pdf_page": 24,
       "printed_page": 24,
       "kind": "table",
-      "quote": "Operating income",
+      "quote": "Loan impairment expense 788 8.5% 47.0%",
       "numbers": [
         {
-          "label": "Operating income FY26",
-          "value": 30224.0,
+          "label": "Loan impairment expense FY26",
+          "value": 788.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Operating income growth vs FY25",
-          "value": 6.2,
+          "label": "Loan impairment expense change FY26 vs FY25",
+          "value": 8.5,
           "unit": "%",
-          "basis": null
+          "basis": "cash"
+        },
+        {
+          "label": "Loan impairment expense change 2H26 vs 1H26",
+          "value": 47.0,
+          "unit": "%",
+          "basis": "cash"
         }
       ]
     },
@@ -1068,89 +1149,7 @@
       "pdf_page": 24,
       "printed_page": 24,
       "kind": "table",
-      "quote": "Underlying operating expenses",
-      "numbers": [
-        {
-          "label": "Underlying operating expenses FY26",
-          "value": 13585.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Underlying operating expenses growth vs FY25",
-          "value": 5.6,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-44",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 24,
-      "printed_page": 24,
-      "kind": "table",
-      "quote": "Restructuring and notable items",
-      "numbers": [
-        {
-          "label": "Restructuring and notable items FY26",
-          "value": 170.0,
-          "unit": "$m",
-          "basis": "ex_notables"
-        }
-      ]
-    },
-    {
-      "id": "ev-45",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 24,
-      "printed_page": 24,
-      "kind": "table",
-      "quote": "Operating performance",
-      "numbers": [
-        {
-          "label": "Operating performance FY26",
-          "value": 16469.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Operating performance growth vs FY25",
-          "value": 6.5,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-46",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 24,
-      "printed_page": 24,
-      "kind": "table",
-      "quote": "Loan impairment expense",
-      "numbers": [
-        {
-          "label": "Loan impairment expense FY26",
-          "value": 788.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Loan impairment expense growth vs FY25",
-          "value": 8.5,
-          "unit": "%",
-          "basis": null
-        }
-      ]
-    },
-    {
-      "id": "ev-47",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 24,
-      "printed_page": 24,
-      "kind": "table",
-      "quote": "Cash NPAT",
+      "quote": "Cash NPAT 10,982 7.1% 1.7%",
       "numbers": [
         {
           "label": "Cash NPAT FY26",
@@ -1159,26 +1158,102 @@
           "basis": "cash"
         },
         {
-          "label": "Cash NPAT growth vs FY25",
+          "label": "Cash NPAT change FY26 vs FY25",
           "value": 7.1,
           "unit": "%",
-          "basis": null
+          "basis": "cash"
+        },
+        {
+          "label": "Cash NPAT change 2H26 vs 1H26",
+          "value": 1.7,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-44",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 56,
+      "printed_page": 56,
+      "kind": "table",
+      "quote": "Cash NPAT By division",
+      "numbers": [
+        {
+          "label": "Cash NPAT RBS FY26",
+          "value": 5330.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash NPAT RBS FY25",
+          "value": 5587.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-45",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 56,
+      "printed_page": 56,
+      "kind": "text",
+      "quote": "RBS vs FY25 • Income +10% • Expenses +9% • Impairment expense ($45m)",
+      "numbers": [
+        {
+          "label": "RBS Impairment expense change vs FY25",
+          "value": -45.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-46",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 56,
+      "printed_page": 56,
+      "kind": "text",
+      "quote": "BB vs FY25 • Income +4% • Expenses +4% • Impairment expense ($16m)",
+      "numbers": [
+        {
+          "label": "BB Impairment expense change vs FY25",
+          "value": -16.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ]
+    },
+    {
+      "id": "ev-47",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 56,
+      "printed_page": 56,
+      "kind": "text",
+      "quote": "IB&M vs FY25 • Income +6% • Expenses3 +16% • Impairment expense +$18m",
+      "numbers": [
+        {
+          "label": "IB&M Impairment expense change vs FY25",
+          "value": 18.0,
+          "unit": "$m",
+          "basis": "cash"
         }
       ]
     },
     {
       "id": "ev-48",
       "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 24,
-      "printed_page": 24,
+      "pdf_page": 56,
+      "printed_page": 56,
       "kind": "text",
-      "quote": "Cash NPAT up 7% vs FY25",
+      "quote": "NZ (NZD)2 vs FY25 • Income +6% • Expenses +6% • Impairment expense +$106m",
       "numbers": [
         {
-          "label": "Cash NPAT growth vs FY25",
-          "value": 7.0,
-          "unit": "%",
-          "basis": null
+          "label": "NZ Impairment expense change vs FY25",
+          "value": 106.0,
+          "unit": "$m",
+          "basis": "cash"
         }
       ]
     },
@@ -1188,19 +1263,19 @@
       "pdf_page": 56,
       "printed_page": 56,
       "kind": "table",
-      "quote": "Cash NPAT By division",
+      "quote": "Cost to income RBS 32.3% 32.2%",
       "numbers": [
         {
-          "label": "Cash NPAT FY25",
-          "value": 5330.0,
-          "unit": "$m",
-          "basis": "cash"
+          "label": "Cost to income RBS FY26",
+          "value": 32.3,
+          "unit": "%",
+          "basis": "null"
         },
         {
-          "label": "Cash NPAT FY26",
-          "value": 5587.0,
-          "unit": "$m",
-          "basis": "cash"
+          "label": "Cost to income RBS FY25",
+          "value": 32.2,
+          "unit": "%",
+          "basis": "null"
         }
       ]
     },
@@ -1209,26 +1284,20 @@
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 56,
       "printed_page": 56,
-      "kind": "text",
-      "quote": "RBS vs FY25 • Income +10% • Expenses +9% • Impairment expense ($45m)",
+      "kind": "table",
+      "quote": "Cost to income BB 43.4% 47.1%",
       "numbers": [
         {
-          "label": "Income Growth",
-          "value": 10.0,
+          "label": "Cost to income BB FY26",
+          "value": 43.4,
           "unit": "%",
           "basis": "null"
         },
         {
-          "label": "Expenses Growth",
-          "value": 9.0,
+          "label": "Cost to income BB FY25",
+          "value": 47.1,
           "unit": "%",
           "basis": "null"
-        },
-        {
-          "label": "Impairment Expense Delta",
-          "value": -45.0,
-          "unit": "$m",
-          "basis": "cash"
         }
       ]
     },
@@ -1237,26 +1306,20 @@
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 56,
       "printed_page": 56,
-      "kind": "text",
-      "quote": "BB vs FY25 • Income +4% • Expenses +4% • Impairment expense ($16m)",
+      "kind": "table",
+      "quote": "Cost to income IB&M 39.3% 39.3%",
       "numbers": [
         {
-          "label": "Income Growth",
-          "value": 4.0,
+          "label": "Cost to income IB&M FY26",
+          "value": 39.3,
           "unit": "%",
           "basis": "null"
         },
         {
-          "label": "Expenses Growth",
-          "value": 4.0,
+          "label": "Cost to income IB&M FY25",
+          "value": 39.3,
           "unit": "%",
           "basis": "null"
-        },
-        {
-          "label": "Impairment Expense Delta",
-          "value": -16.0,
-          "unit": "$m",
-          "basis": "cash"
         }
       ]
     },
@@ -1265,26 +1328,20 @@
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 56,
       "printed_page": 56,
-      "kind": "text",
-      "quote": "IB&M vs FY25 • Income +6% • Expenses +16% • Impairment expense +$18m",
+      "kind": "table",
+      "quote": "Cost to income NZ 41.0% 40.6%",
       "numbers": [
         {
-          "label": "Income Growth",
-          "value": 6.0,
+          "label": "Cost to income NZ FY26",
+          "value": 41.0,
           "unit": "%",
           "basis": "null"
         },
         {
-          "label": "Expenses Growth",
-          "value": 16.0,
+          "label": "Cost to income NZ FY25",
+          "value": 40.6,
           "unit": "%",
           "basis": "null"
-        },
-        {
-          "label": "Impairment Expense Delta",
-          "value": 18.0,
-          "unit": "$m",
-          "basis": "cash"
         }
       ]
     },
@@ -1293,24 +1350,18 @@
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 56,
       "printed_page": 56,
-      "kind": "text",
-      "quote": "NZ (NZD) vs FY25 • Income +6% • Expenses +6% • Impairment expense +$106m",
+      "kind": "table",
+      "quote": "Cash NPAT RBS 4,092 4,544",
       "numbers": [
         {
-          "label": "Income Growth",
-          "value": 6.0,
-          "unit": "%",
-          "basis": "null"
+          "label": "Cash NPAT RBS FY26",
+          "value": 4092.0,
+          "unit": "$m",
+          "basis": "cash"
         },
         {
-          "label": "Expenses Growth",
-          "value": 6.0,
-          "unit": "%",
-          "basis": "null"
-        },
-        {
-          "label": "Impairment Expense Delta",
-          "value": 106.0,
+          "label": "Cash NPAT RBS FY25",
+          "value": 4544.0,
           "unit": "$m",
           "basis": "cash"
         }
@@ -1318,181 +1369,6 @@
     },
     {
       "id": "ev-54",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 56,
-      "printed_page": 56,
-      "kind": "table",
-      "quote": "Cost to income RBS FY25 32.3% FY26 32.2%",
-      "numbers": [
-        {
-          "label": "Cost to Income Ratio FY25",
-          "value": 32.3,
-          "unit": "%",
-          "basis": "null"
-        },
-        {
-          "label": "Cost to Income Ratio FY26",
-          "value": 32.2,
-          "unit": "%",
-          "basis": "null"
-        }
-      ]
-    },
-    {
-      "id": "ev-55",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 56,
-      "printed_page": 56,
-      "kind": "table",
-      "quote": "Cost to income BB FY25 43.4% FY26 47.1%",
-      "numbers": [
-        {
-          "label": "Cost to Income Ratio FY25",
-          "value": 43.4,
-          "unit": "%",
-          "basis": "null"
-        },
-        {
-          "label": "Cost to Income Ratio FY26",
-          "value": 47.1,
-          "unit": "%",
-          "basis": "null"
-        }
-      ]
-    },
-    {
-      "id": "ev-56",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 56,
-      "printed_page": 56,
-      "kind": "table",
-      "quote": "Cost to income IB&M FY25 39.3% FY26 39.3%",
-      "numbers": [
-        {
-          "label": "Cost to Income Ratio FY25",
-          "value": 39.3,
-          "unit": "%",
-          "basis": "null"
-        },
-        {
-          "label": "Cost to Income Ratio FY26",
-          "value": 39.3,
-          "unit": "%",
-          "basis": "null"
-        }
-      ]
-    },
-    {
-      "id": "ev-57",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 56,
-      "printed_page": 56,
-      "kind": "table",
-      "quote": "Cost to income NZ FY25 41.0% FY26 40.6%",
-      "numbers": [
-        {
-          "label": "Cost to Income Ratio FY25",
-          "value": 41.0,
-          "unit": "%",
-          "basis": "null"
-        },
-        {
-          "label": "Cost to Income Ratio FY26",
-          "value": 40.6,
-          "unit": "%",
-          "basis": "null"
-        }
-      ]
-    },
-    {
-      "id": "ev-58",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 56,
-      "printed_page": 56,
-      "kind": "text",
-      "quote": "vs FY25 (2%) +11% +5% +2%",
-      "numbers": [
-        {
-          "label": "Total Cost to Income Change",
-          "value": -2.0,
-          "unit": "ppt",
-          "basis": "null"
-        },
-        {
-          "label": "RBS Cost to Income Change",
-          "value": 11.0,
-          "unit": "ppt",
-          "basis": "null"
-        },
-        {
-          "label": "BB Cost to Income Change",
-          "value": 5.0,
-          "unit": "ppt",
-          "basis": "null"
-        },
-        {
-          "label": "IB&M Cost to Income Change",
-          "value": 2.0,
-          "unit": "ppt",
-          "basis": "null"
-        }
-      ]
-    },
-    {
-      "id": "ev-59",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 64,
-      "printed_page": 64,
-      "kind": "table",
-      "quote": "Other operating income",
-      "numbers": [
-        {
-          "label": "Other operating income FY26",
-          "value": 1199.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Other operating income FY25",
-          "value": 1190.0,
-          "unit": "$m",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-60",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 64,
-      "printed_page": 64,
-      "kind": "table",
-      "quote": "Trading income",
-      "numbers": [
-        {
-          "label": "Trading income FY26",
-          "value": 4638.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Trading income FY25",
-          "value": 4442.0,
-          "unit": "$m",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-61",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 23,
-      "printed_page": 23,
-      "kind": "text",
-      "quote": "Statutory NPAT of $10.9 billion – broadly in line with Cash NPAT",
-      "numbers": []
-    },
-    {
-      "id": "ev-62",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 23,
       "printed_page": 23,
@@ -1514,51 +1390,7 @@
       ]
     },
     {
-      "id": "ev-63",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 23,
-      "printed_page": 23,
-      "kind": "table",
-      "quote": "Non-cash items: - Transaction costs and gains/(losses) on disposals",
-      "numbers": [
-        {
-          "label": "Transaction costs/disposals FY25",
-          "value": -172.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Transaction costs/disposals FY26",
-          "value": -17.0,
-          "unit": "$m",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-64",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 23,
-      "printed_page": 23,
-      "kind": "table",
-      "quote": "- Hedging and IFRS volatility",
-      "numbers": [
-        {
-          "label": "Hedging/IFRS volatility FY25",
-          "value": 53.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Hedging/IFRS volatility FY26",
-          "value": -54.0,
-          "unit": "$m",
-          "basis": "cash"
-        }
-      ]
-    },
-    {
-      "id": "ev-65",
+      "id": "ev-55",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 23,
       "printed_page": 23,
@@ -1585,10 +1417,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-27T07:56:25+00:00",
-    "seconds": 136.5,
-    "cost_usd": 0.0031,
-    "tokens": "45157 in / 13117 out",
+    "generated": "2026-08-28T12:15:43+00:00",
+    "seconds": 85.6,
+    "cost_usd": 0.0023,
+    "tokens": "34073 in / 10011 out",
     "orchestration": "pipeline"
   }
 }

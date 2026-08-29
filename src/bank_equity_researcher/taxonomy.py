@@ -16,6 +16,17 @@ TAXONOMY: dict[str, dict] = {
             "group margin walk deposits funding liquids replicating portfolio",
         ],
         "walk_markers": ["NIM Movement since", "Group margin", "Net interest margin movement", "margin movement", "Net interest margin -", "Net interest margin –"],
+        "method_hint": (
+            "Take the movement from the GROUP net interest margin row of the results book's "
+            "KPI or performance-summary table, reading each task period's own column. A "
+            "divisional or segment table repeats a margin row for ONE business unit at a "
+            "different level: that is not the Group margin, so never let it supply the "
+            "movement. The Group margin row carries no cash or statutory label; report it on "
+            "the bank's primary basis and do not call it statutory. Build the driver table "
+            "from the walk whose endpoints are the task's two balance dates; when the results "
+            "book and a slide both publish that walk, the book's framing is primary and the "
+            "slide corroborates. Claim every bar of the walk you adopt, zero bars included."
+        ),
         "drivers": {
             "asset_pricing": "Lending margin / asset pricing / competition",
             "funding": "Funding costs (parent of deposits and wholesale)",
@@ -101,7 +112,8 @@ TAXONOMY: dict[str, dict] = {
         ),
         "walk_markers": [],
         "method_hint": (
-            "Quantify the movement from the KPI table (both periods, in ppt). Level 1 is an "
+            "Quantify the movement from the KPI table, reading the row for the bank's headline "
+            "ROE measure and the column of each task period (in ppt). Level 1 is an "
             "ARITHMETIC DERIVATION, not a disclosure hunt: with the ROE endpoints and the "
             "earnings growth rate in evidence, compute earnings_effect = prior-period ROE x "
             "earnings growth (the ppt lift at constant equity), and equity_effect = total "
@@ -132,6 +144,19 @@ TAXONOMY: dict[str, dict] = {
             "risk weighted assets movement credit market operational IRRBB",
         ],
         "walk_markers": ["Movements in bpts", "capital ratio movement", "CET1 ratio movement"],
+        "method_hint": (
+            "Take the movement from the capital or KPI table, reading the APRA Level 2 (Group) "
+            "CET1 ratio row and the column of each task period. The Level 1 ratio, the "
+            "internationally comparable ratio and any pro-forma ratio are DIFFERENT measures: "
+            "quote them as context or as a disagreement, never as the movement. Build the "
+            "driver table from a walk whose endpoints are the task's two balance dates. Banks "
+            "often publish only the half-on-half capital walk: when they do, do NOT restate its "
+            "bars as this comparison's contributions. Quantify instead the drivers the text "
+            "states in bpts for events INSIDE the comparison window — regulatory, model and "
+            "accounting-standard changes, dividends net of DRP, buy-backs and divestments are "
+            "usually footnoted with their own bpts impact — cite the footnote, and leave the "
+            "rest unquantified with the half-on-half walk's numbers described in the narrative."
+        ),
         "drivers": {
             "earnings_generation": "Capital generated from earnings",
             "dividend_net_drp": "Dividends net of DRP",
@@ -190,6 +215,21 @@ TAXONOMY: dict[str, dict] = {
             "total operating income growth expense growth jaws",
         ],
         "walk_markers": [],
+        "extract_focus": (
+            "also extract the total operating income and total operating expense levels for "
+            "every period column — the ratio's numerator and denominator"
+        ),
+        "method_hint": (
+            "Take the ratio endpoints from the results book's KPI table, from the row for the "
+            "bank's HEADLINE cost-to-income measure named in the bank vocabulary, reading each "
+            "task period's own column. An 'underlying', 'ex-notable' or single-division version "
+            "of the ratio is a DIFFERENT measure: report it beside the headline movement or as "
+            "a disagreement, never as the movement itself. Level 1 is jaws: compute income "
+            "growth and expense growth in per cent from the disclosed levels of both periods, "
+            "say which grew faster, and name the jaws as positive or negative. Claim a ppt "
+            "contribution only when the evidence supports the arithmetic; otherwise give the "
+            "growth rates in the narrative and leave the ppt split unquantified."
+        ),
         "drivers": {
             "income_growth": "Operating income growth (jaws numerator)",
             "expense_growth": "Operating expense growth (jaws denominator)",

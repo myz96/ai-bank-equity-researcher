@@ -72,6 +72,11 @@ class Attribution(BaseModel):
     comparator: str
     basis: str
     movement: Movement | None = None
+    # Which document, row and period COLUMN each endpoint came from. Half-year
+    # tables print three period columns, so naming the column is the only way
+    # a reader can tell a prior-corresponding-period movement from a
+    # half-on-half one (defect 24).
+    movement_source: str | None = None
     headline: str = ""
     drivers: list[DriverClaim] = []
     residual: Contribution | None = None
