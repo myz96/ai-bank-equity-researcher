@@ -95,3 +95,15 @@ _Avoid_: knowledge base, profile
 **Corroboration**:
 Agreement of independent documents on the same claim, within tolerance. A single-source claim caps its confidence; a divergent pair raises a disagreement, never an average.
 _Avoid_: cross-check (that word is reserved for validation checks)
+
+**Citation grounding**:
+The grade a narrative claim gets instead of a numeric score. Two judge models from different families each answer two questions: does the answer STATE the claim, and do the answer's cited quotes ENTAIL it. The claim passes only on both, and only when the two judges agree.
+_Avoid_: fact check, verification
+
+**Narrative checklist**:
+The reasons a good first-pass note should mention for one gold case. Checklist items carry no gold value; citation grounding grades them.
+_Avoid_: rubric, criteria
+
+**Location coverage**:
+The share of a cross-reference case's required pages that the answer cited. It measures retrieval, never correctness: a case passes only when location coverage AND judged fact accuracy pass.
+_Avoid_: recall (that word is reserved for driver scoring)

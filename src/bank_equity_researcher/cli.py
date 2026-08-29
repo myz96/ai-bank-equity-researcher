@@ -29,7 +29,7 @@ def main() -> int:
     discover_cmd.add_argument("--seed", required=True, help="the bank's homepage or IR page URL")
 
     evals_cmd = sub.add_parser("evals", help="run the eval harness")
-    evals_cmd.add_argument("action", choices=["run", "crossref", "rescore"])
+    evals_cmd.add_argument("action", choices=["run", "crossref", "rescore", "judge"])
     evals_cmd.add_argument("--suite", default="dev", help="dev | holdout")
     evals_cmd.add_argument("--combo", default="cheap")
     evals_cmd.add_argument("--bank", default=None)
@@ -49,6 +49,12 @@ def main() -> int:
             from .evals import run_crossref_suite
 
             card = run_crossref_suite(args.combo, args.bank)
+        elif args.action == "judge":
+            # Citation-grounding judge over SAVED out/*/ artifacts: it grades
+            # each case's narrative checklist and calls no pipeline stage.
+            from .evals import run_judge_suite
+
+            card = run_judge_suite(args.suite, args.combo, args.bank)
         elif args.action == "rescore":
             from .evals import rescore
 

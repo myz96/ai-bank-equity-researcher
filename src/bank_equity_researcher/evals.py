@@ -20,13 +20,16 @@ tests/test_scoring.py is the executable specification of these rules.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
+import subprocess
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .config import OUT_DIR, REGISTRY_DIR, REPO_ROOT
+from .config import COMBOS, OUT_DIR, REGISTRY_DIR, REPO_ROOT
+from .judge import answer_prose, cited_quotes, judge_facts
 from .schema import Attribution, DriverClaim
 from .validate import (
     MONEY_ABS_TOL_M,
@@ -93,10 +96,33 @@ def load_crossref_gold(bank: str | None = None) -> list[dict]:
     return cases
 
 
-def score_crossref(gold_case: dict, ask_output: dict) -> dict:
-    """Location coverage: the fraction of gold required_locations whose
-    (doc substring, pdf_page) appears among the evidence records cited by
-    the answer's key_facts."""
+def crossref_answer_prose(ask_output: dict) -> str:
+    """The answer's own words: the prose plus its key-fact sentences.
+
+    The evidence quotes are deliberately left out. A note that pastes a quote
+    saying the fact has not stated the fact itself (judge.answer_prose).
+    """
+    facts = "\n".join(f"- {f.get('fact', '')}" for f in ask_output.get("key_facts", []))
+    return f"{ask_output.get('answer', '')}\n\nKey facts:\n{facts}".strip()
+
+
+def score_crossref(
+    gold_case: dict,
+    ask_output: dict,
+    llm=None,
+    judges: tuple[str, ...] | None = None,
+) -> dict:
+    """Location coverage AND judged fact accuracy — two populations, never one.
+
+    Location coverage is the fraction of gold required_locations whose
+    (doc substring, pdf_page) appears among the evidence records cited by the
+    answer's key_facts. It measures retrieval, not correctness (finding 7).
+
+    Fact accuracy is the fraction of gold_answer_facts that the judges rule
+    BOTH stated by the answer AND entailed by its cited quotes. Pass `llm` and
+    `judges` to run it; without them the fact check is reported as not run,
+    and the case cannot be called a pass.
+    """
     cited_ids = {e for fact in ask_output.get("key_facts", []) for e in fact.get("evidence", [])}
     cited = [r for r in ask_output.get("evidence_records", []) if r["id"] in cited_ids]
 
@@ -110,31 +136,71 @@ def score_crossref(gold_case: dict, ask_output: dict) -> dict:
                           "holds": loc.get("holds", ""), "hit": bool(hit_ids),
                           "cited_by": hit_ids})
     total = len(locations)
-    return {
+    gold_facts = gold_case.get("gold_answer_facts", []) or []
+    if llm is None or not judges:
+        fact_check = {
+            "status": "not_run (no judge client)",
+            "gold_answer_facts": gold_facts,
+            "fact_accuracy": None,
+            "accuracy_fraction": None,
+        }
+    else:
+        fact_check = judge_facts(
+            llm,
+            gold_facts,
+            crossref_answer_prose(ask_output),
+            [r.get("quote", "") for r in cited],
+            tuple(judges),
+        )
+
+    coverage_fraction = round(hits / total, 3) if total else None
+    row = {
         "case": gold_case["id"],
         "location_coverage": f"{hits}/{total}",
-        "coverage_fraction": round(hits / total, 3) if total else None,
+        "coverage_fraction": coverage_fraction,
         "locations": locations,
         "cited_evidence_ids": sorted(cited_ids),
         "confidence": ask_output.get("confidence"),
         "limitations": len(ask_output.get("limitations", [])),
-        # Stub for judge-based fact checking (not yet implemented): the gold
-        # facts a judge must verify against the answer text.
-        "fact_check": {
-            "status": "not_implemented",
-            "gold_answer_facts": gold_case.get("gold_answer_facts", []),
-            "answer": ask_output.get("answer", ""),
-        },
+        "fact_check": fact_check,
+        "fact_accuracy": fact_check.get("fact_accuracy"),
         "cost_usd": ask_output.get("provenance", {}).get("cost_usd"),
         "seconds": ask_output.get("provenance", {}).get("seconds"),
     }
+    row["passes"] = crossref_passes(coverage_fraction, fact_check.get("accuracy_fraction"))
+    return row
+
+
+# A crossref case passes only when the answer reached every required location
+# AND the judges confirmed the gold facts (finding 7). Coverage is a necessary
+# condition, never a sufficient one: the mortgage-offset answer scored 1/1
+# coverage while omitting the required balances and adding an unsupported
+# causal reading.
+#
+# Coverage must be complete. The gold names the locations that CARRY the
+# answer; missing one means part of the answer was never sighted.
+CROSSREF_COVERAGE_PASS = 1.0
+# Fact accuracy allows one flagged or judge-split fact in a four-fact case
+# without failing the whole case, and no more.
+CROSSREF_FACT_PASS = 0.75
+
+
+def crossref_passes(coverage_fraction: float | None, accuracy_fraction: float | None) -> bool | None:
+    """None means "not decidable": an unjudged case is not a passing case."""
+    if coverage_fraction is None or accuracy_fraction is None:
+        return None
+    return coverage_fraction >= CROSSREF_COVERAGE_PASS and accuracy_fraction >= CROSSREF_FACT_PASS
 
 
 def run_crossref_suite(combo: str, bank: str | None = None) -> Path:
-    """Run every crossref HOLDOUT case through ask and report location
-    coverage. Discipline: run at most once per milestone; never iterate on it."""
+    """Run every crossref HOLDOUT case through ask, then report location
+    coverage AND judged fact accuracy. Discipline: run at most once per
+    milestone; never iterate on it."""
     from .ask import run_ask
+    from .llm import LLM
 
+    judges = COMBOS[combo].judges
+    judge_llm = LLM()
     rows = []
     for gold in load_crossref_gold(bank):
         label = f"{gold['bank']} {gold['id']}"
@@ -142,33 +208,61 @@ def run_crossref_suite(combo: str, bank: str | None = None) -> Path:
             output, _ = run_ask(
                 gold["bank"], [gold["period"], gold["comparator"]], gold["question"], combo
             )
-            row = score_crossref(gold, output)
+            row = score_crossref(gold, output, judge_llm, judges)
         except Exception as exc:  # noqa: BLE001 - a crashed case is a scored failure
             row = {"case": label, "error": str(exc)[:300]}
         print(f"scored {label}: {json.dumps({k: v for k, v in row.items() if k not in ('locations', 'fact_check')})[:250]}")
         rows.append(row)
 
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+    stamp = run_stamp()
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     raw_path = RESULTS_DIR / f"{stamp}-{combo}-crossref.jsonl"
     raw_path.write_text("\n".join(json.dumps(r) for r in rows))
 
     lines = [f"# Crossref scorecard — combo {combo}, {stamp}", ""]
-    lines.append("| Case | Location coverage | Missed locations | Conf | Cost |")
-    lines.append("|---|---|---|---|---|")
+    lines += scorecard_meta(stamp, f"judges: {', '.join(judges)}")
+    lines += [
+        "",
+        (
+            "Two populations, reported apart. **Location coverage** measures the "
+            "retriever: did the answer cite the pages that carry the answer? "
+            "**Fact accuracy** measures the answer: did the judges rule each gold "
+            "fact both STATED by the answer and ENTAILED by its cited quotes? A "
+            f"case PASSES only when coverage is {CROSSREF_COVERAGE_PASS:.0%} and "
+            f"fact accuracy is at least {CROSSREF_FACT_PASS:.0%}. Coverage alone "
+            "is not correctness (ticket 29, finding 7)."
+        ),
+        "",
+    ]
+    lines.append("| Case | Pass | Location coverage | Fact accuracy | Flagged | Missed locations | Conf | Cost |")
+    lines.append("|---|---|---|---|---|---|---|---|")
     for r in rows:
         if "error" in r:
-            lines.append(f"| {r['case']} | ERROR: {r['error'][:80]} | | | |")
+            lines.append(f"| {r['case']} | ERROR: {r['error'][:60]} | | | | | | |")
             continue
         missed = "; ".join(
             f"{loc['doc']} p{loc['pdf_page']}" for loc in r["locations"] if not loc["hit"]
         ) or "—"
+        passes = {True: "PASS", False: "FAIL", None: "—"}[r.get("passes")]
+        fact_check = r.get("fact_check", {})
         lines.append(
-            f"| {r['case']} | {r['location_coverage']} | {missed} "
-            f"| {r['confidence']} | ${r.get('cost_usd', 0)} |"
+            f"| {r['case']} | {passes} | {r['location_coverage']} "
+            f"| {fact_check.get('fact_accuracy', '—')} | {fact_check.get('flagged', '—')} "
+            f"| {missed} | {r['confidence']} | ${r.get('cost_usd', 0)} |"
         )
-    lines += ["", "Judge-based fact checking against gold_answer_facts: not implemented",
-              "(the gold facts are recorded per case in the .jsonl for a later judge)."]
+    lines += ["", "## Judged facts", ""]
+    for r in rows:
+        if "error" in r:
+            continue
+        lines.append(f"### {r['case']}")
+        for fact in r.get("fact_check", {}).get("facts", []):
+            lines.append(f"- **{fact['verdict']}** — {fact['fact']}")
+            lines.append(f"  - {fact['reason']}")
+        lines.append("")
+    lines.append(
+        f"Judge cost: ${round(judge_llm.usage.cost_usd, 4)} over "
+        f"{judge_llm.usage.calls} calls (on top of the per-case answer cost)."
+    )
     card_path = RESULTS_DIR / f"{stamp}-{combo}-crossref.md"
     card_path.write_text("\n".join(lines) + "\n")
     return card_path
@@ -720,7 +814,7 @@ def run_suite(suite: str, combo: str, bank: str | None = None) -> Path:
         print(f"scored {label}: {json.dumps({k: v for k, v in row.items() if k != 'claims'})[:200]}")
         rows.append(row)
 
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+    stamp = run_stamp()
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     raw_path = RESULTS_DIR / f"{stamp}-{combo}-{suite}.jsonl"
     raw_path.write_text("\n".join(json.dumps(r) for r in rows))
@@ -735,6 +829,191 @@ def run_suite(suite: str, combo: str, bank: str | None = None) -> Path:
 # ---------------------------------------------------------------------------
 # Scorecards and the offline rescore (ticket 28 verification)
 # ---------------------------------------------------------------------------
+
+
+def _git_commit() -> str:
+    try:
+        head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO_ROOT,
+                              capture_output=True, text=True, timeout=10, check=False)
+        status = subprocess.run(["git", "status", "--porcelain"], cwd=REPO_ROOT,
+                                capture_output=True, text=True, timeout=10, check=False)
+    except Exception:  # noqa: BLE001 - metadata is best-effort, never fatal
+        return "unknown"
+    return head.stdout.strip() + (" (working tree dirty)" if status.stdout.strip() else "")
+
+
+def _gold_sha() -> str:
+    """One hash over the whole gold set, so a scorecard names the gold it used."""
+    digest = hashlib.sha256()
+    for path in sorted(GOLD_DIR.glob("*.json")):
+        digest.update(path.name.encode())
+        digest.update(path.read_bytes())
+    return digest.hexdigest()[:16]
+
+
+def run_stamp() -> str:
+    """One UTC clock reading per run, shared by the file names and the header."""
+    return datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+
+
+def scorecard_meta(stamp: str, *extra: str) -> list[str]:
+    """The header that makes two runs comparable experiments (finding 10)."""
+    lines = [
+        "## Run metadata",
+        "",
+        f"- run: {stamp} (UTC)",
+        f"- commit: {_git_commit()}",
+        f"- gold sha256 (evals/gold/*.json, first 16): {_gold_sha()}",
+    ]
+    lines += [f"- {item}" for item in extra if item]
+    return lines
+
+
+def artifact_dir(gold: dict, combo: str) -> Path:
+    """The saved out/<slug>/ directory for one gold case and one combo."""
+    slug = f"{gold['bank']}-{gold['metric']}-{gold['period']}-vs-{gold['comparator']}-{combo}".lower()
+    return OUT_DIR / slug
+
+
+# ---------------------------------------------------------------------------
+# Narrative checklist grading (ticket 29 finding 7; gold README: "checklist
+# items are never value-scored; they are graded by citation-grounding").
+# ---------------------------------------------------------------------------
+
+
+def judge_case_checklist(llm, gold: dict, combo: str, judges: tuple[str, ...]) -> dict:
+    """Grade one case's narrative_checklist against its SAVED artifact.
+
+    No pipeline stage runs and no document is fetched. The report's own prose
+    answers "does the note say it"; the quotes its drivers cite answer "does
+    the source support it".
+    """
+    case = f"{gold['bank']}-{gold['metric']}-{gold['period']}"
+    row = {"case": case, "metric": gold["metric"], "period": gold["period"]}
+    checklist = [str(item) for item in (gold.get("narrative_checklist") or [])]
+    out = artifact_dir(gold, combo)
+    row["artifact"] = f"out/{out.name}"
+    if not checklist:
+        return {**row, "status": "no narrative_checklist in gold", "note": "", "total": 0}
+    if not (out / "report.md").exists() or not (out / "attribution.json").exists():
+        return {**row, "status": "no saved artifact", "note": f"out/{out.name}",
+                "total": len(checklist)}
+
+    attribution = json.loads((out / "attribution.json").read_text())
+    row["artifact_generated"] = attribution.get("provenance", {}).get("generated", "")
+    graded = judge_facts(
+        llm,
+        checklist,
+        answer_prose((out / "report.md").read_text()),
+        cited_quotes(attribution),
+        judges,
+    )
+    return {**row, **graded}
+
+
+def run_judge_suite(suite: str = "dev", combo: str = "cheap", bank: str | None = None) -> Path:
+    """Judge every case's narrative checklist and write a coverage scorecard."""
+    from .llm import LLM
+
+    judges = COMBOS[combo].judges
+    llm = LLM()
+    rows = []
+    for gold in load_gold(suite, bank):
+        row = judge_case_checklist(llm, gold, combo, judges)
+        print(f"judged {row['case']}: {row.get('fact_accuracy', row.get('status'))} "
+              f"flagged={row.get('flagged', '—')} spend=${round(llm.usage.cost_usd, 4)}")
+        rows.append(row)
+
+    stamp = run_stamp()
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    (RESULTS_DIR / f"{stamp}-{combo}-{suite}-judge.jsonl").write_text(
+        "\n".join(json.dumps(r) for r in rows)
+    )
+    card_path = RESULTS_DIR / f"{stamp}-{combo}-{suite}-judge.md"
+    card_path.write_text(
+        "\n".join(judge_scorecard_lines(stamp, suite, combo, judges, rows, llm)) + "\n"
+    )
+    return card_path
+
+
+def judge_scorecard_lines(
+    stamp: str, suite: str, combo: str, judges, rows: list[dict], llm
+) -> list[str]:
+    """Coverage first (finding 2), then the rate, then every judged item."""
+    judged = [r for r in rows if r.get("status") == "judged"]
+    items = sum(r["total"] for r in judged)
+    passed = sum(r["passed"] for r in judged)
+    flagged = sum(r["flagged"] for r in judged)
+    flagged_split = sum(r["flagged_split"] for r in judged)
+    flagged_unreadable = sum(r["flagged_unreadable"] for r in judged)
+
+    lines = [f"# Narrative checklist scorecard — suite {suite}, combo {combo}", ""]
+    lines += scorecard_meta(stamp, f"judges: {', '.join(judges)}",
+                            "input: saved out/*/report.md + attribution.json (no pipeline calls)")
+    lines += [
+        "",
+        "## Coverage",
+        "",
+        f"- cases in the {suite} suite: {len(rows)}",
+        f"- cases judged: {len(judged)}",
+        f"- cases not judged: {len(rows) - len(judged)}"
+        + (f" ({'; '.join(sorted({r['status'] for r in rows if r.get('status') != 'judged'}))})"
+           if len(rows) - len(judged) else ""),
+        f"- checklist items judged: {items}",
+        (
+            f"- items flagged: {flagged} — {flagged_split} judge split (a human must read "
+            f"the fact), {flagged_unreadable} unreadable or unreachable judge (repeat the run)"
+        ),
+        "",
+        "## What a column means",
+        "",
+        (
+            "A checklist item PASSES only when both judges rule it STATED by the "
+            "report's own prose AND ENTAILED by the quotes the report cites. "
+            "`stated, not entailed` is the ungrounded-narrative failure: the note "
+            "asserts the reason but the cited source does not carry it. "
+            "`not stated` means the note left the reason out. Flagged items count "
+            "as neither a pass nor a fail."
+        ),
+        "",
+        "| Case | Checklist pass | Rate | Stated, not entailed | Not stated | Flagged |",
+        "|---|---|---|---|---|---|",
+    ]
+    for row in rows:
+        if row.get("status") != "judged":
+            note = f" ({row['note']})" if row.get("note") else ""
+            lines.append(f"| {row['case']} | not judged: {row.get('status')}{note} | — | — | — | — |")
+            continue
+        rate = f"{row['accuracy_fraction']:.0%}" if row["accuracy_fraction"] is not None else "—"
+        lines.append(
+            f"| {row['case']} | {row['fact_accuracy']} | {rate} "
+            f"| {row['stated_not_entailed']} | {row['not_stated']} | {row['flagged']} |"
+        )
+    rate = f"{passed / items:.0%}" if items else "n/a"
+    lines.append(f"| **TOTAL** | **{passed}/{items}** | **{rate}** | "
+                 f"**{sum(r['stated_not_entailed'] for r in judged)}** | "
+                 f"**{sum(r['not_stated'] for r in judged)}** | **{flagged}** |")
+    lines += [
+        "",
+        (
+            "Descriptive for this run only: one run, one combo, no repeat sampling "
+            "and no case-cluster bootstrap (finding 9). Do not quote the rate as a "
+            "calibration claim."
+        ),
+        "",
+        "## Judged items",
+        "",
+    ]
+    for row in rows:
+        if row.get("status") != "judged":
+            continue
+        lines.append(f"### {row['case']} ({row['fact_accuracy']})")
+        for fact in row["facts"]:
+            lines.append(f"- **{fact['verdict']}** — {fact['fact']}")
+            lines.append(f"  - {fact['reason']}")
+        lines.append("")
+    lines.append(f"Judge spend: ${round(llm.usage.cost_usd, 4)} over {llm.usage.calls} calls.")
+    return lines
 
 
 def _movement_label(row: dict) -> str:
@@ -817,9 +1096,10 @@ def rescore(
     previous run's .jsonl to compare against."""
     rows = []
     for gold in load_gold(suite, bank):
-        slug = f"{gold['bank']}-{gold['metric']}-{gold['period']}-vs-{gold['comparator']}-{combo}".lower()
+        out = artifact_dir(gold, combo)
+        slug = out.name
         case = f"{gold['bank']}-{gold['metric']}-{gold['period']}"
-        path = OUT_DIR / slug / "attribution.json"
+        path = out / "attribution.json"
         if not path.exists():
             rows.append({"case": case, "metric": gold["metric"], "error": f"no artifact at out/{slug}"})
             continue
@@ -841,7 +1121,7 @@ def rescore(
         print(f"rescored {case}: movement={_movement_label(row)} recall={row['driver_recall']} "
               f"precision={row['driver_precision']} extraction={row.get('extraction', '—')}")
 
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+    stamp = run_stamp()
     stem = label or f"rescore-{stamp}-{combo}-{suite}"
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     (RESULTS_DIR / f"{stem}.jsonl").write_text("\n".join(json.dumps(r) for r in rows))
