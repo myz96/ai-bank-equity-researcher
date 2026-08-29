@@ -161,6 +161,7 @@ TAXONOMY: dict[str, dict] = {
             "earnings_generation": "Capital generated from earnings",
             "dividend_net_drp": "Dividends net of DRP",
             "capital_returns": "Buybacks and capital returns",
+            "rwa": "Total risk-weighted assets movement (parent of rwa.credit, rwa.market, rwa.operational, rwa.irrbb; claim this for an undecomposed total-RWA bar)",
             "rwa.credit": "Credit risk RWA movement",
             "rwa.market": "Traded market risk RWA",
             "rwa.operational": "Operational risk RWA",
