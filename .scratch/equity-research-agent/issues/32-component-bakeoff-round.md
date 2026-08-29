@@ -87,6 +87,39 @@ DECISION (recommended; user ratifies):
    cases at lower cost, and its p118 find is the exemplar of what the pass
    buys. Fable/Codex tiers buy nothing extra here.
 
+## ROUND 2 RESULT (2026-08-30, ticket 22 engineered arm; commit 78448fb)
+
+The reference-following arm scored **3/15** on the anchors (one earlier
+sample of the same code: 4/15), against the pre-registered bar of Sonnet's
+6/15. Suite stayed green everywhere and improved: 15/15 CBA movements,
+brier 0.032, confidently-wrong 0.0, 34/34 at 85+; worst anchor cost
+$0.0048 (envelope $0.010). Full detail in ticket 22's progress note.
+
+By the pre-registered rule this is the "half-works" branch -> hybrid. But
+the residual 12-item gap decomposes before that conclusion follows:
+
+- 3 items (cash-earnings): the judge's entailment path reads only quotes a
+  DRIVER cites, so headline-level facts (operating-performance frame,
+  statutory-vs-cash frame) can never entail in the pipeline's report shape,
+  however well sourced. Both judges already answer "stated" on one of them.
+  This is a report-shape/protocol interaction, not a research failure —
+  and Sonnet also scored 0/3 here.
+- 5 items (nim FY21): slide-63 annotation layer separates numbers from
+  labels in the text layer; text extraction cannot pair them. Identified
+  mechanical fix: a vision read of walk-page annotations. Sonnet got 2/5
+  by reading the same page visually.
+- 2 items (impairment): half-year facts a FY-vs-FY note legitimately
+  skips (caveat 1 above; every arm scored 0 on them).
+- Meanwhile the arm now delivers the p118 Note 2.2 bridge (+150/-17/-71,
+  zero residual) INSIDE the attribution — the exact find that made the
+  Sonnet arm the exemplar — but no checklist item credits it.
+
+Reading: the remaining gap to the Sonnet bar is two mechanical fixes
+(headline citations in the report shape; vision annotation pairing), not a
+loop-shape deficit. RECOMMENDATION UPDATE: run one more cheap-tier
+iteration on those two fixes before paying for a hybrid pass; adopt the
+hybrid only if the anchors still sit below ~6/15 after it. User ratifies.
+
 ## Question
 
 Time-permitting robustness round (user, 2026-08-28): the current component choices are tested but not comprehensively compared — make each a measured decision rather than an assumption. Reuse the prototype-13/14 harnesses; every arm scores against existing gold.
