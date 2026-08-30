@@ -20,6 +20,11 @@ PRICES: dict[str, tuple[float, float]] = {
     "deepseek/deepseek-v4-pro-0813": (1.122, 3.366),
     "z-ai/glm-5.3": (1.40, 4.40),
     "stealth/ox-alpha": (0.0, 0.0),
+    # Closed-loop research agent tiers (ADR-0005), from the OpenRouter
+    # catalogue 2026-08-30. A tool loop reports its own cost per call, so
+    # these are the fallback, not the primary accounting.
+    "anthropic/claude-opus-5": (5.00, 25.00),
+    "anthropic/claude-sonnet-5": (2.00, 10.00),
 }
 
 
@@ -35,6 +40,19 @@ class Combo:
     # (ticket 14), so its budget must cover reasoning + answer.
     author_max_tokens: int
     judges: tuple[str, str]
+    # Which orchestration shell answers a case: "pipeline" is the open-loop
+    # staged flow, "agent" is the closed-loop tool-use research agent
+    # (ADR-0005). The CLI reads this, so a combo chooses its own shell.
+    orchestration: str = "pipeline"
+    # The tool-calling model that drives the research loop.
+    agent: str = ""
+    agent_max_tokens: int = 8000
+    # Runaway protection only (ADR-0005 point 5): set generously enough that a
+    # normal run never meets them. On exhaustion the loop asks for a submission
+    # of what it has, with the shortfall declared; it never crashes.
+    max_tool_calls: int = 40
+    cost_ceiling_usd: float = 2.0
+    wall_clock_s: float = 1800.0
 
 
 COMBOS: dict[str, Combo] = {
@@ -56,6 +74,42 @@ COMBOS: dict[str, Combo] = {
         # content five times (bake-off, 2026-08-29).
         author_max_tokens=40000,
         judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
+    ),
+    # The closed-loop research agent (ADR-0005). The default combo runs the
+    # strongest reliably tool-calling model in the OpenRouter catalogue:
+    # anthropic/claude-opus-5 is the newest and the top of the Opus line
+    # (published 2026-07-24, above claude-sonnet-5 and claude-fable-5), and a
+    # live probe confirmed it emits a well-formed tool call, reads the result
+    # and calls the next tool.
+    "agentic": Combo(
+        name="agentic",
+        # The agent reads charts through the same vision tool the pipeline
+        # uses; extract/author stay filled so the combo answers every caller.
+        extract="anthropic/claude-opus-5",
+        vision="anthropic/claude-opus-5",
+        author="anthropic/claude-opus-5",
+        author_max_tokens=16000,
+        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
+        orchestration="agent",
+        agent="anthropic/claude-opus-5",
+        agent_max_tokens=8000,
+        cost_ceiling_usd=2.0,
+    ),
+    # A comparison arm, never the product (ADR-0005 point 4): it measures what
+    # the model tier buys INSIDE a closed loop. qwen3.7-flash is the cheapest
+    # model in the catalogue that tool-called reliably on the live probe;
+    # z-ai/glm-5.3 is the documented fallback if it stops doing so.
+    "agentic-cheap": Combo(
+        name="agentic-cheap",
+        extract="qwen/qwen3.7-flash",
+        vision="qwen/qwen3.7-flash",
+        author="qwen/qwen3.7-flash",
+        author_max_tokens=8000,
+        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
+        orchestration="agent",
+        agent="qwen/qwen3.7-flash",
+        agent_max_tokens=8000,
+        cost_ceiling_usd=0.50,
     ),
 }
 

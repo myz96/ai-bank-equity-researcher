@@ -40,8 +40,38 @@ MAX_RESPONSE_BYTES = 8 * 1024 * 1024
 CHUNK_TIMEOUT = httpx.Timeout(connect=20.0, read=45.0, write=45.0, pool=20.0)
 
 
+# Providers that honour an explicit prompt-cache breakpoint. A tool loop
+# re-sends its whole transcript every turn, so each turn is a prefix of the
+# next; one breakpoint on the end of the transcript lets the provider keep that
+# prefix and charge a fraction for it on the turn after. Measured on
+# anthropic/claude-opus-5, 2026-08-30: 6232 prompt tokens cost $0.039 written
+# and $0.0038 read back, an eleven-fold reduction. A provider not named here
+# gets the transcript unchanged.
+CACHE_BREAKPOINT_PREFIXES = ("anthropic/",)
+
+
 class ResponseDeadline(RuntimeError):
     """The response body exceeded its wall-clock or size budget."""
+
+
+def with_cache_breakpoint(messages: list[dict], model: str) -> list[dict]:
+    """Mark the end of the transcript as cacheable, where the provider allows.
+
+    The caller's list is never mutated: a breakpoint left on an old message
+    would pin the cache to a prefix that is no longer the end of the
+    transcript, and the next turn would pay to write a second copy.
+    """
+    if not messages or not model.startswith(CACHE_BREAKPOINT_PREFIXES):
+        return messages
+    last = messages[-1]
+    content = last.get("content")
+    if not isinstance(content, str) or not content:
+        return messages
+    marked = dict(last)
+    marked["content"] = [
+        {"type": "text", "text": content, "cache_control": {"type": "ephemeral"}}
+    ]
+    return [*messages[:-1], marked]
 
 
 @dataclass
@@ -54,9 +84,18 @@ class Usage:
     deadline_aborts: int = 0
     by_model: dict = field(default_factory=dict)
 
-    def add(self, model: str, prompt: int, completion: int) -> None:
+    def add(self, model: str, prompt: int, completion: int, cost_usd: float | None = None) -> None:
+        """Book one call. `cost_usd` overrides the per-token table.
+
+        A tool loop re-sends its whole transcript every turn, so what it really
+        costs depends on provider-side prompt caching that a token table cannot
+        see. When the provider reports the price of a call, that number is the
+        truth and the table is only the fallback.
+        """
         pin, pout = PRICES.get(model, (0.0, 0.0))
         cost = prompt / 1e6 * pin + completion / 1e6 * pout
+        if isinstance(cost_usd, (int, float)) and not isinstance(cost_usd, bool):
+            cost = float(cost_usd)
         self.prompt_tokens += prompt
         self.completion_tokens += completion
         self.cost_usd += cost
@@ -156,6 +195,69 @@ class LLM:
                 last_error = exc
                 time.sleep(2**attempt)
         raise RuntimeError(f"chat() failed for {model} after {retries} attempts: {last_error}")
+
+    def chat_tools(
+        self,
+        model: str,
+        messages: list[dict],
+        tools: list[dict],
+        *,
+        max_tokens: int = 4000,
+        retries: int = 5,
+    ) -> dict:
+        """One tool-calling turn, under chat()'s deadline and retry discipline.
+
+        OpenRouter speaks the OpenAI tools schema, so a turn is an ordinary
+        request that also carries `tools`. The return value is the assistant
+        MESSAGE, because the caller needs both halves of it: the prose and the
+        tool calls it asked for. A reply is empty only when it carries neither.
+        """
+        payload: dict = {
+            "model": model,
+            "messages": with_cache_breakpoint(messages, model),
+            "tools": tools,
+            "max_tokens": max_tokens,
+            "temperature": 0,
+            # Ask the provider to price the call itself; see Usage.add.
+            "usage": {"include": True},
+        }
+        if model not in ALWAYS_REASONS:
+            payload["reasoning"] = {"enabled": False}
+
+        deadline_s = max(DEADLINE_FLOOR_S, max_tokens * DEADLINE_SECONDS_PER_TOKEN)
+        last_error: Exception | None = None
+        for attempt in range(retries):
+            try:
+                status, body = self._post(payload, deadline_s)
+                if status == 400 and "reasoning" in payload:
+                    payload.pop("reasoning")
+                    continue
+                if status == 429:
+                    time.sleep(15 * (attempt + 1))
+                    last_error = RuntimeError("429 Too Many Requests")
+                    continue
+                if status >= 400:
+                    raise RuntimeError(f"HTTP {status}: {body[:300]!r}")
+                data = json.loads(body)
+                if "choices" not in data:
+                    raise RuntimeError(f"no choices: {str(data)[:300]}")
+                usage = data.get("usage", {})
+                self.usage.add(
+                    model,
+                    usage.get("prompt_tokens", 0),
+                    usage.get("completion_tokens", 0),
+                    cost_usd=usage.get("cost"),
+                )
+                message = data["choices"][0]["message"]
+                if not message.get("content") and not message.get("tool_calls"):
+                    raise RuntimeError("empty reply: neither content nor a tool call")
+                return message
+            except Exception as exc:  # noqa: BLE001
+                last_error = exc
+                time.sleep(2**attempt)
+        raise RuntimeError(
+            f"chat_tools() failed for {model} after {retries} attempts: {last_error}"
+        )
 
     def chat_json(self, model: str, prompt: str, *, json_retries: int = 2, **kwargs):
         """chat() plus a parse-failure retry, so every JSON caller inherits it.

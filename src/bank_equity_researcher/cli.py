@@ -15,7 +15,8 @@ def main() -> int:
     analyse.add_argument("--metric", required=True, help="nim | cash_earnings | roe | cet1 | impairment | cti")
     analyse.add_argument("--period", required=True, help="e.g. FY26, 1H26")
     analyse.add_argument("--comparator", default=None, help="defaults: FY->prior FY, half->PCP")
-    analyse.add_argument("--combo", default="cheap", help="model combo: cheap | normal")
+    analyse.add_argument("--combo", default="agentic",
+                         help="model combo: agentic | agentic-cheap | cheap | normal")
 
     ask = sub.add_parser("ask", help="answer a free-form question from the corpus")
     ask.add_argument("--bank", required=True, help="e.g. CBA, NAB, WBC")
@@ -89,7 +90,15 @@ def main() -> int:
         print(json.dumps(manifest, indent=2))
         return 0
 
-    from .pipeline import run_case
+    # A combo chooses its own orchestration shell (ADR-0005): "agent" is the
+    # closed-loop research agent, anything else is the open-loop pipeline. Both
+    # shells write the same artifacts, so every downstream reader is unchanged.
+    from .config import COMBOS
+
+    if COMBOS[args.combo].orchestration == "agent":
+        from .research_agent import run_agent_case as run_case
+    else:
+        from .pipeline import run_case
 
     attribution, out_dir = run_case(args.bank.upper(), args.metric, args.period, args.comparator, args.combo)
     print((out_dir / "report.md").read_text())
