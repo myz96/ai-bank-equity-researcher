@@ -1,0 +1,150 @@
+{
+  "split_note": "dev researcher-question set, Codex-authored 2026-08-30",
+  "cases": [
+    {
+      "id": "nab-business-growth-quality",
+      "split": "dev",
+      "question": "Assess whether NAB's FY25 Business & Private Banking growth was value-accretive rather than growth bought at the expense of margin or credit quality. Reconcile lending, revenue and cash-earnings growth with the NIM, impairment-charge and sector/NPL disclosures, and identify what is broad-based versus single-name driven.",
+      "gold_answer_facts": [
+        "The printed 'Business and housing lending GLAs and deposits' chart shows business lending of $155.0bn at Sep-24 and $166.3bn at Sep-25, labelled 6.7% growth; the same page prints 'Revenue' of $8,358m in FY24 and $8,531m in FY25, up 2.1%, and 'Cash earnings' of $3,277m and $3,330m, up 1.6% (NAB/FY25/investor-presentation, PDF page 49).",
+        "The printed 'Net interest margin' bars are 3.11% in 1H24, 3.07% in 2H24, 3.01% in 1H25 and 3.02% in 2H25; 'Credit impairment charge and as a % of GLAs' prints $237m/0.18% in 1H25 and $292m/0.21% in 2H25 (NAB/FY25/investor-presentation, PDF page 49).",
+        "The printed 'Diversified Australian business lending growth (YoY)' chart shows Agri 3.5%, Health 5.9%, CRE 7.4%, Other 10.4%, NAB B&PB 7.3% and NAB Small business 9.2%, alongside the statement 'Broad based growth across most sectors including Trade, Manufacturing, Construction, Transport' (NAB/FY25/investor-presentation, PDF page 50).",
+        "The printed NPL chart rises from 2.66% at Sep-24 to 3.22% at Sep-25 and flags 'Includes 21bps relating to 2 large Agri customers'; the page also states, 'Excluding two large well secured Agri customers, underlying NPL ratio down 3bps to 3.01%' and 'Stable to improving NPL outcomes in 2H25 for most sectors' (NAB/FY25/investor-presentation, PDF page 27)."
+      ],
+      "required_locations": [
+        {
+          "doc": "NAB/FY25/investor-presentation",
+          "pdf_page": 49,
+          "holds": "B&PB cash earnings, revenue, lending/deposit balances, NIM and impairment-charge trends."
+        },
+        {
+          "doc": "NAB/FY25/investor-presentation",
+          "pdf_page": 50,
+          "holds": "Sector growth, B&PB and small-business growth rates, market shares and the broad-based-growth statement."
+        },
+        {
+          "doc": "NAB/FY25/investor-presentation",
+          "pdf_page": 27,
+          "holds": "Headline and underlying B&PB NPL trends, including the two large Agri customers."
+        }
+      ],
+      "trap": "A shallow reader calls the 3.22% NPL ratio broad-based deterioration, misses that 21bps relates to two large well-secured Agri names, and equates 7.3% segment growth with the separately presented 6.7% balance growth without noticing the page's segmentation/restatement qualifications."
+    },
+    {
+      "id": "wbc-fy26-productivity-versus-investment",
+      "split": "dev",
+      "question": "Is Westpac's targeted FY26 productivity enough to restore positive jaws, or is it mainly an offset to continuing wage, banker and UNITE investment pressure? Ground the judgment in the FY25 expense bridge, the investment-spend mix and the disclosed duration/expensing profile of UNITE.",
+      "gold_answer_facts": [
+        "The printed 'FY25 expenses ($m)' bridge moves from $10,944m in FY24 to $11,916m in FY25, a 9% increase, with Staff costs +$397m, Technology +$146m, Volume and other +$199m, Productivity ($402m), Investments +$359m and Restructuring charge +$273m; it labels the increase 6% excluding restructuring (WBC/FY25/presentation-and-IDP, PDF page 27).",
+        "Under 'Key considerations for FY26' the page prints 'EBA increase 3% to 4% and investment in bankers', 'Increase in UNITE spend' and 'Fit for Growth benefits to contribute to targeted productivity of >$500m in FY26' (WBC/FY25/presentation-and-IDP, PDF page 27).",
+        "The printed 'Investment spend' chart rises from $1,756m in FY24 to $1,918m in FY25, up 9%; the table shows 'Total expensed' rising from 56% to 60% and 'Amortisation expense ($m)' from $889m to $995m (WBC/FY25/presentation-and-IDP, PDF page 26).",
+        "The FY26 considerations print 'Investment spend ~$2bn' and 'Increase in UNITE spend to $850m - $950m, ~75% expensed' (WBC/FY25/presentation-and-IDP, PDF page 26).",
+        "The UNITE page states 'Plan extends into FY29', 'Expect to invest $850 - $950 million in FY26', 'c.40% of total investment spend FY27 - FY28', 'Lower spend in FY29' and 'c.75% of spend to be expensed' (WBC/FY25/presentation-and-IDP, PDF page 14)."
+      ],
+      "required_locations": [
+        {
+          "doc": "WBC/FY25/presentation-and-IDP",
+          "pdf_page": 27,
+          "holds": "FY25 expense bridge and FY26 wage, banker, UNITE and >$500m productivity considerations."
+        },
+        {
+          "doc": "WBC/FY25/presentation-and-IDP",
+          "pdf_page": 26,
+          "holds": "Investment spend, expensed share, amortisation and FY26 investment outlook."
+        },
+        {
+          "doc": "WBC/FY25/presentation-and-IDP",
+          "pdf_page": 14,
+          "holds": "UNITE's FY26 spend, expensing profile and program duration through FY29."
+        }
+      ],
+      "trap": "The >$500m productivity figure is a gross target, not a promised net expense reduction. Treating it as automatic positive jaws ignores EBA and banker costs, higher UNITE spend, the roughly 75% expensed mix and a program that extends into FY29."
+    },
+    {
+      "id": "fy25-cross-bank-earnings-conversion",
+      "split": "dev",
+      "question": "Across CBA, NAB and Westpac in FY25, which bank best converted its disclosed underlying top-line or pre-provision performance into its preferred cash/core earnings measure, and what explains the ordering? Compare direction and drivers rather than absolute dollars, and state the comparability limits of the three non-identical profit measures.",
+      "gold_answer_facts": [
+        "CBA's printed cash-basis 'Group Performance Summary' shows total operating income of $28,465m versus $27,174m, up 5%; operating expenses of $12,996m versus $12,218m, up 6%; operating performance of $15,469m versus $14,956m, up 3%; loan impairment expense of $726m versus $802m, down 9%; and continuing-operations cash NPAT of $10,252m versus $9,836m, up 4% (CBA/FY25/profit-announcement, PDF page 16).",
+        "NAB's printed 'Financial results' charts show underlying profit of $10,965m versus $10,823m, up 1.3%; cash earnings of $7,091m versus $7,102m, down 0.2%; and statutory profit of $6,759m versus $6,960m, down 2.9% (NAB/FY25/investor-presentation, PDF page 5).",
+        "Westpac's printed 'FY25 financial performance' table shows net profit excluding Notable Items of $6,972m versus $7,113m, down 2%; revenue of $22.5bn versus $21.8bn, up 3%; expenses of $11.9bn versus $10.9bn, up 9%; expenses excluding restructuring of $11.6bn versus $10.9bn, up 6%; pre-provision profit of $10.5bn versus $10.8bn, down 3%; and impairment charges to average loans of 5bps versus 7bps (WBC/FY25/presentation-and-IDP, PDF page 20)."
+      ],
+      "required_locations": [
+        {
+          "doc": "CBA/FY25/profit-announcement",
+          "pdf_page": 16,
+          "holds": "CBA cash-basis income, expenses, operating performance, impairment and cash NPAT."
+        },
+        {
+          "doc": "NAB/FY25/investor-presentation",
+          "pdf_page": 5,
+          "holds": "NAB underlying profit, cash earnings and statutory profit."
+        },
+        {
+          "doc": "WBC/FY25/presentation-and-IDP",
+          "pdf_page": 20,
+          "holds": "Westpac profit excluding Notable Items, revenue, expenses, pre-provision profit and impairment rate."
+        }
+      ],
+      "trap": "A shallow comparison ranks banks by absolute profit dollars or mixes CBA cash NPAT, NAB statutory profit and Westpac reported net profit. The intended comparison uses each bank's preferred non-statutory/core measure, while explicitly acknowledging that those measures are not identically defined."
+    },
+    {
+      "id": "cba-fy25-fy26-earnings-engine-rotation",
+      "split": "dev",
+      "question": "How did CBA's earnings engine rotate from FY25 to FY26, and was FY26's faster cash-NPAT growth higher quality despite reported NIM compression and a higher loan-loss rate? Reconcile the two years' income/expense/impairment mix with CBA's own FY26 margin bridge.",
+      "gold_answer_facts": [
+        "The FY25 review states, 'Cash net profit after tax (cash NPAT or cash profit) from continuing operations increased $416 million or 4% on the prior year to $10,252 million. The result was driven by a 3% increase in operating performance with a 5% increase in operating income and a 6% increase in operating expenses, as well as a $76 million decrease in loan impairment expense' (CBA/FY25/profit-announcement, PDF page 26).",
+        "The FY25 review also states, 'Net Interest Income (NII) increased 5%, primarily driven by a 9 basis point increase in Net Interest Margin (NIM) and a $9 billion increase in Average Interest Earning Assets (AIEA).' It adds that excluding liquid assets and institutional pooled facilities, growth was driven by a 5% increase in AIEA and a 2 basis point increase in NIM (CBA/FY25/profit-announcement, PDF page 26).",
+        "The printed FY26 key outcomes show Cash NPAT of $10,982m, up 7.1%; operating income of $30,224m, up 6.2%; operating expenses of $13,755m, up 5.8%; cost to income of 45.5%, down 20bps; NIM of 2.05%, down 3bps; and LIE to GLAA of 8bps, up 1bp (CBA/FY26/results-presentation, PDF page 54).",
+        "The printed FY26 'Group margin - 12 months' bridge moves from 208bps in FY25 to 205bps in FY26 and is captioned 'Lower margin largely due to growth in liquids and repos - competition offset by hedge earnings'; the bridge prints Liquids & repos (4bps), Asset pricing (5bps), Funding costs nil, Portfolio mix +2bps, Interest rate risk hedging +5bps and Treasury & Markets (1bp) (CBA/FY26/results-presentation, PDF page 60)."
+      ],
+      "required_locations": [
+        {
+          "doc": "CBA/FY25/profit-announcement",
+          "pdf_page": 26,
+          "holds": "FY25 cash NPAT growth and its operating-income, expense, impairment, NII, NIM and AIEA drivers."
+        },
+        {
+          "doc": "CBA/FY26/results-presentation",
+          "pdf_page": 54,
+          "holds": "FY26 cash NPAT, income, expenses, cost-to-income, NIM and loan-loss rate."
+        },
+        {
+          "doc": "CBA/FY26/results-presentation",
+          "pdf_page": 60,
+          "holds": "FY26 reported NIM bridge and the offset between liquid/repo and competitive pressure versus mix and hedge earnings."
+        }
+      ],
+      "trap": "The reported 3bp NIM decline does not by itself establish weaker revenue quality: the bridge says liquids/repos had minimal earnings impact and shows hedge and mix offsets. A shallow reader also credits FY26 with FY25's impairment tailwind even though FY26 LIE to GLAA rose by 1bp."
+    },
+    {
+      "id": "wbc-low-impairment-versus-provision-caution",
+      "split": "dev",
+      "question": "Does Westpac's low FY25 impairment charge show that credit-risk normalisation is complete, or does the September 2025 provision stock still embed material caution? Reconcile the charge flow, the CAP/IAP movements, overlays and the probability-weighted/base/downside ECL scenarios.",
+      "gold_answer_facts": [
+        "The printed FY25 financial-performance table shows 'Impairment charges to average loans annualised' of 5bps in FY25 versus 7bps in FY24 (WBC/FY25/presentation-and-IDP, PDF page 20).",
+        "The impairment-provisions page states 'Impairment charges remain low, 4bps of average loans', 'CAP to credit RWA of 1.25%, down 1bps', 'Overlays increased $108m', '2.5ppt increase in downside scenario weight' and 'IAP decreased $72m due to a single name write-off' (WBC/FY25/presentation-and-IDP, PDF page 29).",
+        "The printed provision stack totals $5,096m at Sep-24, $5,072m at Mar-25 and $4,987m at Sep-25; the Sep-25 components are Overlays $238m, Stage 1 CAP $933m, Stage 2 CAP $2,087m, Stage 3 CAP $1,190m and Stage 3 IAP $539m (WBC/FY25/presentation-and-IDP, PDF page 54).",
+        "The printed 'Expected credit loss (ECL) ($m)' chart shows reported probability-weighted ECL of $4,987m, 100% base case ECL of $3,040m and 100% downside ECL of $7,152m, with the statement '$1.9bn in provisions above the base case ECL' (WBC/FY25/presentation-and-IDP, PDF page 54)."
+      ],
+      "required_locations": [
+        {
+          "doc": "WBC/FY25/presentation-and-IDP",
+          "pdf_page": 20,
+          "holds": "Full-year impairment-charge rate versus FY24."
+        },
+        {
+          "doc": "WBC/FY25/presentation-and-IDP",
+          "pdf_page": 29,
+          "holds": "Period impairment rate, CAP/IAP movements, overlays and downside scenario weighting."
+        },
+        {
+          "doc": "WBC/FY25/presentation-and-IDP",
+          "pdf_page": 54,
+          "holds": "Provision-stock composition and probability-weighted, base-case and downside ECL amounts."
+        }
+      ],
+      "trap": "A shallow reader treats a low impairment charge as equivalent to a lightly provisioned balance sheet. That confuses a period flow with the closing provision stock and misses higher overlays, a higher downside weight, the single-name write-off effect on IAP and $1.9bn of provisions above base-case ECL."
+    }
+  ]
+}
