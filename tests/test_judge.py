@@ -590,3 +590,28 @@ def test_the_question_gold_loads_as_its_own_suite():
     # The bank filter reads the banks a question names, since a case may span
     # three of them.
     assert {c["id"] for c in load_question_gold("dev", "NAB")} <= ids
+
+
+def test_judge_fact_max_quotes_widens_the_window():
+    """The questions suite widens the evidence window; the default stays
+    frozen. A wider window must reach the quotes the default drops."""
+    from bank_equity_researcher import judge as J
+
+    class FakeLLM:
+        def __init__(self):
+            self.prompts = []
+
+        def chat_json(self, model, prompt, max_tokens=None):
+            self.prompts.append(prompt)
+            if "does the NOTE state" in prompt or '"stated"' in prompt:
+                return {"stated": "stated", "why": ""}
+            return {"entailed": "entailed", "why": ""}
+
+    quotes = [f"quote number {i}" for i in range(40)]
+    default = J.judge_fact(FakeLLM(), "a fact", "the note", quotes, ("j1", "j2"))
+    assert default.quotes_used == 24
+    widened = J.judge_fact(FakeLLM(), "a fact", "the note", quotes, ("j1", "j2"), max_quotes=48)
+    assert widened.quotes_used == 40
+    llm = FakeLLM()
+    J.judge_fact(llm, "a fact", "the note", quotes, ("j1", "j2"), max_quotes=48)
+    assert any("quote number 39" in p for p in llm.prompts)

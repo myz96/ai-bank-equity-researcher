@@ -149,6 +149,7 @@ def score_crossref(
     llm=None,
     judges: tuple[str, ...] | None = None,
     doc_index: dict[str, str] | None = None,
+    max_quotes: int | None = None,
 ) -> dict:
     """Location coverage AND judged fact accuracy — two populations, never one.
 
@@ -196,6 +197,7 @@ def score_crossref(
             crossref_answer_prose(ask_output),
             [r.get("quote", "") for r in cited],
             tuple(judges),
+            max_quotes=max_quotes,
         )
 
     coverage_fraction = round(hits / total, 3) if total else None
@@ -264,7 +266,16 @@ def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
             output, _ = run_question(
                 gold.get("bank"), gold["question"], combo, periods or None
             )
-            row = score_crossref(gold, output, judge_llm, judges, doc_index)
+            # Researcher-question answers legitimately cite ~40 records; the
+            # frozen 24-quote window dropped grounding they actually had
+            # (measured 2026-08-30: 15 of 39 cited records never reached the
+            # entailment judge). The wider window applies to every arm of the
+            # questions suite equally; the crossref holdout keeps the frozen
+            # default for comparability with its earlier runs.
+            row = score_crossref(
+                gold, output, judge_llm, judges, doc_index,
+                max_quotes=48 if kind == "questions" else None,
+            )
         except Exception as exc:  # noqa: BLE001 - a crashed case is a scored failure
             row = {"case": label, "error": str(exc)[:300]}
         print(f"scored {label}: {json.dumps({k: v for k, v in row.items() if k not in ('locations', 'fact_check')})[:250]}")

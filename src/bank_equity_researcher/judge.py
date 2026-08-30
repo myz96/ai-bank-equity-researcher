@@ -199,15 +199,24 @@ def judge_fact(
     answer_text: str,
     cited_quotes: list[str],
     judges: tuple[str, ...],
+    max_quotes: int | None = None,
 ) -> Verdict:
     """Grade one fact with the two-judge, two-question protocol.
 
     `llm` is any object with `chat_json(model, prompt, max_tokens=...)`, so the
     tests drive the verdict table without a network call.
+
+    `max_quotes` widens the evidence window past MAX_QUOTES for answer classes
+    whose grounding is legitimately larger (a researcher-question answer cites
+    ~40 records; the default window dropped 15 of them before entailment, so
+    a MORE thorough answer lost grounding it actually had). The character
+    budget scales with it. The default stays frozen for every existing suite.
     """
+    limit = MAX_QUOTES if max_quotes is None else max_quotes
+    char_limit = MAX_QUOTE_CHARS * max(1, (limit + MAX_QUOTES - 1) // MAX_QUOTES)
     answer, truncated = _truncate(answer_text, MAX_ANSWER_CHARS)
-    quotes = [q for q in (cited_quotes or []) if str(q).strip()][:MAX_QUOTES]
-    quote_block, _ = _truncate(_format_quotes(quotes), MAX_QUOTE_CHARS)
+    quotes = [q for q in (cited_quotes or []) if str(q).strip()][:limit]
+    quote_block, _ = _truncate(_format_quotes(quotes), char_limit)
 
     replies: list[JudgeReply] = []
     for model in judges:
@@ -304,6 +313,7 @@ def judge_facts(
     answer_text: str,
     cited_quotes: list[str],
     judges: tuple[str, ...],
+    max_quotes: int | None = None,
 ) -> dict:
     """Grade a list of facts and summarise them, coverage first (finding 2).
 
@@ -311,7 +321,10 @@ def judge_facts(
     fact is never counted as a pass, and its count is reported beside the rate
     so a run with many flags cannot read as a clean result.
     """
-    verdicts = [judge_fact(llm, fact, answer_text, cited_quotes, judges) for fact in facts]
+    verdicts = [
+        judge_fact(llm, fact, answer_text, cited_quotes, judges, max_quotes=max_quotes)
+        for fact in facts
+    ]
     passed = sum(1 for v in verdicts if v.verdict == PASS)
     flagged = [v for v in verdicts if v.verdict == FLAGGED]
     # The two flag causes need different work. A split needs a human to read
