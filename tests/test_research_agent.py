@@ -1478,3 +1478,241 @@ def test_the_agent_reads_the_chart_annotation_layer(docs, case):
     result = research.read_chart("CBA/FY26/profit_announcement", 14)
     assert result["annotations"], "the callout layer must reach the agent"
     assert any("Savings" in (r.quote or "") for r in research.records)
+
+
+# ---------------------------------------------------------------------------
+# Review round 2
+#
+# The marker relaxation is a fix of a round-1 fix. "A standalone one- or
+# two-digit token" is not the shape of a footnote marker, it is the shape of
+# most small numbers on a results page: over the 607 pages of CBA's FY26 and
+# 1H26 books the old pattern removed 10,158 tokens, 16.7 a page, and 324 pages
+# lost ten or more. What it removed was the day and the two-digit year of every
+# column header, every bps value under 100, and the tier of every capital
+# instrument.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "page,quote",
+    [
+        # Tier 1 and Tier 2 are DIFFERENT instruments.
+        ("Additional Tier 1 and Tier 2 Capital.", "Additional Tier and Tier Capital."),
+        ("The margin decreased 1 basis point to 6 basis points",
+         "decreased basis point to basis points"),
+        ("12 months at 31 December 2025 was 5.2 years.",
+         "months at December 2025 was 5.2 years."),
+    ],
+)
+def test_the_relaxation_does_not_delete_the_data_it_walks_past(page, quote):
+    """All three quotes were accepted as verbatim before the pattern narrowed.
+
+    The record then showed the reader and the grounding judge a sentence with
+    its load-bearing numbers removed.
+    """
+    assert RA.match_quote(quote, page) == (False, "")
+
+
+def test_a_marker_is_still_stripped_between_a_label_and_its_value():
+    """The round-1 repro, which must keep passing: the shape rule is narrower,
+    not absent."""
+    matched, relaxation = RA.match_quote(
+        "Revenue from ordinary activities 30,153",
+        "Revenue from ordinary activities 2 3 30,153",
+    )
+    assert matched and "markers_stripped" in relaxation
+
+
+def test_a_superscript_marker_comes_off_wherever_it_stands():
+    """No page prints a value in superscript, so a superscript is always a
+    marker — including at the end of a row label."""
+    matched, _ = RA.match_quote(
+        "Restructuring and notable items (170) (130)",
+        "Restructuring and notable items ¹ (170) (130)",
+    )
+    assert matched
+
+
+def test_a_column_header_keeps_its_day_and_its_year():
+    assert RA.strip_markers("31 Dec 25 30 Jun 25 31 Dec 24") == "31 Dec 25 30 Jun 25 31 Dec 24"
+
+
+# ---------------------------------------------------------------------------
+# A model-supplied NumberFact is checked against the quote it sits under
+# ---------------------------------------------------------------------------
+
+
+def test_a_number_the_quote_does_not_print_is_dropped(docs, case):
+    """`cite` took the model's figures on trust.
+
+    An agent could quote an unrelated verbatim sentence, attach
+    {"value": 150, "unit": "$m"}, and every check that reads record.numbers —
+    the column checks, the percent-evidence tests, the citation cap — would
+    then read a number no page prints.
+    """
+    research = _research(_LLM([]), docs, case)
+    out = research.cite(
+        "CBA/FY26/profit_announcement",
+        12,
+        [
+            {
+                "quote": "Net interest margin    2.05%    2.08%",
+                "numbers": [
+                    {"label": "NIM FY26", "value": 2.05, "unit": "%"},
+                    {"label": "invented", "value": 150.0, "unit": "$m"},
+                ],
+            }
+        ],
+    )
+    assert len(out["cited"]) == 1
+    assert [n.value for n in research.records[0].numbers] == [2.05]
+    assert out["dropped_numbers"] and "150" in out["dropped_numbers"][0]
+
+
+def test_the_cite_tool_requires_its_numbers():
+    """The pipeline's extractor always emits NumberFacts and the agent's cite
+    left them optional, so four saved agentic bridge artifacts hold ZERO of
+    them and every check reading record.numbers ran on an empty pool."""
+    cite = next(t for t in RA.TOOL_SPECS if t["function"]["name"] == "cite")
+    item = cite["function"]["parameters"]["properties"]["quotes"]["items"]
+    assert item["required"] == ["quote", "numbers"]
+    assert "numbers" in RA.HOW_TO_RESEARCH
+
+
+def test_a_prose_quote_may_carry_an_empty_numbers_list(docs, case):
+    research = _research(_LLM([]), docs, case)
+    out = research.cite(
+        "CBA/FY26/profit_announcement",
+        12,
+        [{"quote": "Refer to Note 2.2 for further information.", "numbers": []}],
+    )
+    assert len(out["cited"]) == 1
+    assert "dropped_numbers" not in out
+
+
+# ---------------------------------------------------------------------------
+# The annotation layer does not depend on the walk read
+# ---------------------------------------------------------------------------
+
+
+def test_the_callout_layer_is_read_even_when_the_bars_are_not(docs, case):
+    """The pipeline attempts the callouts whatever the walk read did, and this
+    shell returned early — so the two shells stopped being evidence-comparable
+    exactly where a page is hardest to read."""
+
+    class _AnnotationsOnlyLLM(_LLM):
+        def chat_json(self, model, prompt, image_png=None, max_tokens=None):
+            if "ANNOTATION LAYER" in prompt:
+                return {"annotations": [{"bar": "", "label": "Savings", "value": -2.0}]}
+            raise RuntimeError("the chart is unreadable")
+
+    research = _research(_AnnotationsOnlyLLM([]), docs, case)
+    out = research.read_chart("CBA/FY26/profit_announcement", 14)
+    assert "could not be read" in out["error"]
+    assert out["annotations"], "the callouts survive an unreadable walk"
+    assert any("Savings" in (r.quote or "") for r in research.records)
+
+
+# ---------------------------------------------------------------------------
+# The cost ceiling binds per call
+# ---------------------------------------------------------------------------
+
+
+def test_the_cost_ceiling_binds_inside_a_turn(wired, monkeypatch):
+    """One read_chart costs TWO vision calls and counts as one tool call, so a
+    turn carrying five chart reads issued ten vision calls with no cost check
+    between them. Cost was read once a turn; now it sits in front of each
+    dispatch."""
+    combo = _Combo(max_tool_calls=20, cost_ceiling_usd=0.50)
+    llm = _LLM(
+        [
+            _assistant(
+                *[_tool_call(f"c{i}", "search_pages", {"query": f"margin {i}"}) for i in range(6)]
+            ),
+            _assistant(_tool_call("cs", "submit", _submission())),
+        ]
+    )
+    # Every dispatched call spends the whole ceiling.
+    original = RA.Research.search_pages
+
+    def _expensive(self, query, doc_id=None):
+        llm.usage.cost_usd += 0.60
+        return original(self, query, doc_id)
+
+    monkeypatch.setattr(RA.Research, "search_pages", _expensive)
+    attribution, _out = _run(llm, monkeypatch, combo)
+    assert attribution.provenance["tool_calls"] == 1
+    assert attribution.provenance["budget_exhausted"].startswith("the cost ceiling")
+
+
+# ---------------------------------------------------------------------------
+# A substituted period reaches the model, not only the reader
+# ---------------------------------------------------------------------------
+
+
+def test_the_scope_note_reaches_the_question_prompt(wired, monkeypatch, docs):
+    """The agent was asked about a period the corpus does not hold, handed
+    another period's documents, and told nothing: it hunted for pages that do
+    not exist and could report an FY25 figure under an FY26 label."""
+
+    def _substituting(question, bank=None, periods=None, notes=None):
+        if notes is not None:
+            notes.append("the corpus holds no CBA document for FY26; researched in FY25 instead")
+        return docs
+
+    monkeypatch.setattr(RA, "documents_for_question", _substituting)
+    seen: list[str] = []
+
+    class _RecordingLLM(_LLM):
+        def chat_tools(self, model, messages, tools, max_tokens=None):
+            seen.extend(m["content"] for m in messages if m["role"] == "user")
+            return super().chat_tools(model, messages, tools, max_tokens=max_tokens)
+
+    llm = _RecordingLLM([_assistant(_tool_call("cs", "submit", {
+        "evidence": [], "answer": "n/a", "key_facts": [], "confidence": 10,
+    }))])
+    monkeypatch.setattr(RA, "LLM", lambda: llm)
+    monkeypatch.setitem(RA.COMBOS, "agentic", _Combo())
+    output, _out = RA.run_agent_question("CBA", "what happened in FY26?", "agentic")
+    assert any("researched in FY25 instead" in text for text in seen), (
+        "the substitution must reach the ANSWERER, not only the reader"
+    )
+    # And it still reaches the reader.
+    assert any("researched in FY25 instead" in item for item in output["limitations"])
+
+
+def test_the_scope_note_reaches_the_open_loop_answer_prompt(monkeypatch, tmp_path, docs):
+    """The same gap in the open-loop question shell (ask.py)."""
+    from bank_equity_researcher import ask
+
+    seen: list[str] = []
+
+    class _AskLLM:
+        def __init__(self) -> None:
+            self.usage = _Usage()
+
+        def chat_json(self, model, prompt, image_png=None, max_tokens=None):
+            seen.append(prompt)
+            if "retrieval queries" in prompt:
+                return []
+            if "EVIDENCE RECORDS" in prompt:
+                return {"answer": "n/a", "key_facts": [], "confidence": 10, "limitations": []}
+            return {"quotes": []}
+
+    def _substituting(question, bank=None, periods=None, notes=None):
+        if notes is not None:
+            notes.append("the corpus holds no CBA document for FY26; researched in FY25 instead")
+        return docs
+
+    monkeypatch.setattr(ask, "LLM", _AskLLM)
+    monkeypatch.setattr(ask, "OUT_DIR", tmp_path / "out")
+    monkeypatch.setattr(ask, "documents_for_question", _substituting)
+    monkeypatch.setattr(ask, "retrieve", lambda doc, query, top_k=4: [(2, 1.0)])
+    monkeypatch.setattr(
+        ask, "extract_text_evidence",
+        lambda llm, model, doc, page, case, next_id, provenance=None: [],
+    )
+    ask.run_ask("CBA", "what happened in FY26?", "cheap")
+    assert any(
+        "researched in FY25 instead" in prompt for prompt in seen if "EVIDENCE RECORDS" in prompt
+    )

@@ -8,6 +8,7 @@ import re
 from .corpus import Document
 from .llm import LLM
 from .schema import EvidenceRecord, NumberFact
+from .validate import walk_sum_tolerance
 
 TEXT_PROMPT = """You extract evidence for bank equity research. Today's task: {case}.
 
@@ -339,11 +340,19 @@ def extract_walk(llm: LLM, model: str, doc: Document, page_no: int, case: str, n
     # Endpoint scale harmoniser: vision sometimes converts endpoints and bars
     # at different scales (12.3% -> 123 with bars in true bps). If one scale
     # factor on the endpoints makes the walk sum, apply and record it.
+    #
+    # The trigger is check_walk's own tolerance, in the walk's unit. It was a
+    # flat 10, which is a quantity in BASIS POINTS: on a ppt walk nothing could
+    # ever reach it, so the harmoniser was dead code there, and on a $m walk it
+    # accepted a residual of ten dollars-million as "the walk sums" — ten times
+    # the money tolerance, and enough to rescale endpoints onto a wrong factor
+    # that then passed check_walk.
+    tolerance = walk_sum_tolerance(doc.doc_type, unit)
     bar_sum = sum(b["bps"] for b in walk["bars"])
-    if abs(walk["start_bps"] + bar_sum - walk["end_bps"]) > 10:
+    if abs(walk["start_bps"] + bar_sum - walk["end_bps"]) > tolerance:
         for factor in (10.0, 100.0, 0.1, 0.01):
             s, e = walk["start_bps"] * factor, walk["end_bps"] * factor
-            if abs(s + bar_sum - e) <= 10:
+            if abs(s + bar_sum - e) <= tolerance:
                 walk["start_bps"], walk["end_bps"] = s, e
                 walk["scale_adjusted"] = f"endpoints x{factor}"
                 break

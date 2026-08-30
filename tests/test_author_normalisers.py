@@ -25,6 +25,7 @@ from bank_equity_researcher.schema import (
 from bank_equity_researcher.taxonomy import TAXONOMY
 from bank_equity_researcher.validate import (
     check_drivers_reconcile,
+    check_movement,
     check_movement_basis,
     check_movement_variant,
     settle_identity_scale,
@@ -507,3 +508,104 @@ def test_identity_scale_is_silent_without_a_movement():
     )
     attribution.movement = None
     assert settle_identity_scale(attribution, TAXONOMY["roe"]["method"]) is None
+
+
+# ---------------------------------------------------------------------------
+# Review round 2
+# ---------------------------------------------------------------------------
+
+
+class _ReplyingLLM:
+    """Answers one caller-supplied reply."""
+
+    def __init__(self, reply: dict) -> None:
+        self.reply = reply
+        self.prompts: list[str] = []
+
+    def chat_json(self, model, prompt, max_tokens=None):
+        self.prompts.append(prompt)
+        return dict(self.reply)
+
+
+def _authored(reply: dict, metric: str = "cash_earnings") -> Attribution:
+    return author_attribution(
+        _ReplyingLLM(reply),
+        "model",
+        max_tokens=100,
+        case={"bank": "CBA", "metric": metric, "period": "FY26", "comparator": "FY25"},
+        taxonomy=TAXONOMY[metric],
+        registry={"measures": {"core_profit": "cash net profit after tax"}},
+        evidence_records=[
+            EvidenceRecord(id="ev-1", doc_id="CBA/FY26/profit_announcement", pdf_page=1,
+                           quote="Net interest income 19,473 18,916")
+        ],
+        walks=[],
+        validation={},
+        fetch_more=lambda query: [],
+        headline_row=None,
+    )
+
+
+def test_the_open_loop_author_drops_an_off_unit_contribution():
+    """The closed-loop shell has guarded this since it was written and the
+    open-loop author never did, so the same submission was corrected in one
+    shell and shipped in the other."""
+    attribution = _authored(
+        {
+            "movement": {"from_value": 5132, "to_value": 5445, "delta": 313, "unit": "$m"},
+            "basis": "cash",
+            "headline": "",
+            "drivers": [
+                {"canonical": "nii", "contribution": {"value": 310, "unit": "$m"},
+                 "narrative": "", "confidence": 90, "evidence": ["ev-1"]},
+                {"canonical": "mix", "contribution": {"value": -3, "unit": "bps"},
+                 "narrative": "", "confidence": 90, "evidence": ["ev-1"]},
+            ],
+            "attribution_confidence": 80,
+            "limitations": [],
+        }
+    )
+    off_unit = next(d for d in attribution.drivers if d.canonical == "mix")
+    assert off_unit.contribution is None
+    assert off_unit.confidence == 60
+    assert any("not the movement's unit" in item for item in attribution.limitations)
+
+
+def test_a_unit_spelling_difference_is_not_an_off_unit_contribution():
+    """"$M" and "$m" are one unit; the guard reads the canonical spelling."""
+    attribution = _authored(
+        {
+            "movement": {"from_value": 5132, "to_value": 5445, "delta": 313, "unit": "$m"},
+            "basis": "cash",
+            "headline": "",
+            "drivers": [
+                {"canonical": "nii", "contribution": {"value": 313, "unit": "$M"},
+                 "narrative": "", "confidence": 90, "evidence": ["ev-1"]},
+            ],
+            "attribution_confidence": 80,
+            "limitations": [],
+        }
+    )
+    assert attribution.drivers[0].contribution is not None
+
+
+def test_the_delta_harmoniser_repairs_a_ratio_slip_the_check_would_fail():
+    """Round 1 gave check_movement a unit-typed table and left the two
+    normalisers that REPAIR a delta on a flat 0.51, which is a basis-point
+    quantity. For a ppt movement the repair stayed silent exactly where the
+    check then failed at 0.1, so a repairable one-line slip sank the answer to
+    confidence 40."""
+    attribution = _authored(
+        {
+            "movement": {"from_value": 45.0, "to_value": 46.0, "delta": 1.5, "unit": "ppt"},
+            "basis": "cash",
+            "headline": "",
+            "drivers": [],
+            "attribution_confidence": 80,
+            "limitations": [],
+        },
+        metric="cti",
+    )
+    assert attribution.movement.delta == 1.0
+    assert any("delta normalised" in item for item in attribution.limitations)
+    assert check_movement(attribution.movement)[1] == []

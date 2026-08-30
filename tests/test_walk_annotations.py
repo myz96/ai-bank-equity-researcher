@@ -166,3 +166,56 @@ def test_annotation_records_keep_everything_when_no_bar_was_read():
     """A walk read that failed leaves no bar labels, and the callouts still stand."""
     raw = {"annotations": [{"bar": None, "label": "Asset pricing", "value": -5}]}
     assert len(annotation_records(raw, _Doc(), 63, 61, _ids(), "bps")) == 1
+
+
+# ---------------------------------------------------------------------------
+# Review round 2: the endpoint scale harmoniser is measured in the walk's unit
+#
+# The harmoniser fires when the bars do not reach the endpoints and one scale
+# factor on the endpoints closes the gap. Its trigger was a flat 10, which is a
+# quantity in BASIS POINTS: a ppt walk could never reach it, so the harmoniser
+# was dead code there, and a $m walk accepted a residual of ten dollars-million
+# as "the walk sums" — ten times the money tolerance.
+# ---------------------------------------------------------------------------
+
+
+class _WalkDoc(_Doc):
+    doc_id = "CBA/FY26/profit_announcement"
+    doc_type = "profit_announcement"
+
+    def page_texts(self):
+        return ["Cost to income ratio movement"]
+
+
+def test_a_ratio_walk_reaches_the_endpoint_harmoniser():
+    """The endpoints arrive as a fraction and the bars in points. A factor of
+    100 closes the walk exactly; the old trigger never looked."""
+    from bank_equity_researcher.extract import extract_walk
+
+    walk, _record = extract_walk(
+        _LLM({
+            "title": "CTI movement",
+            "start_label": "FY25", "start_bps": 0.4570,
+            "bars": [{"label": "Expense growth", "bps": -0.2}],
+            "end_label": "FY26", "end_bps": 0.4550,
+        }),
+        "vision-model", _WalkDoc(), 1, "CBA cost to income", _ids(), unit="ppt",
+    )
+    assert walk.get("scale_adjusted") == "endpoints x100.0"
+    assert round(walk["start_bps"], 2) == 45.70
+    assert round(walk["end_bps"], 2) == 45.50
+
+
+def test_a_walk_that_already_sums_is_left_alone():
+    from bank_equity_researcher.extract import extract_walk
+
+    walk, _record = extract_walk(
+        _LLM({
+            "title": "CTI movement",
+            "start_label": "FY25", "start_bps": 45.70,
+            "bars": [{"label": "Expense growth", "bps": -0.2}],
+            "end_label": "FY26", "end_bps": 45.50,
+        }),
+        "vision-model", _WalkDoc(), 1, "CBA cost to income", _ids(), unit="ppt",
+    )
+    assert "scale_adjusted" not in walk

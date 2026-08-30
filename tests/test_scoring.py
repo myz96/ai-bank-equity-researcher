@@ -94,6 +94,17 @@ def attribution(
     )
 
 
+# A gold movement is stated in its metric's own unit. The default used to be
+# "bps" whatever the metric, so a cash_earnings fixture carried $m claims
+# against a bps movement — an inconsistency the scorer could not see until it
+# started reading the claim's unit.
+_METRIC_UNITS = {
+    "nim": "bps", "cet1": "bps",
+    "cash_earnings": "$m", "impairment": "$m",
+    "roe": "ppt", "cti": "ppt",
+}
+
+
 def gold_case(
     gold_drivers: dict,
     metric: str = "nim",
@@ -109,7 +120,8 @@ def gold_case(
         "period": period,
         "comparator": comparator,
         "basis": basis,
-        "movement": movement or {"from": 208, "to": 205, "delta": -3, "unit": "bps"},
+        "movement": movement
+        or {"from": 208, "to": 205, "delta": -3, "unit": _METRIC_UNITS.get(metric, "bps")},
         "gold_drivers": gold_drivers,
     }
     if alt_framings:
@@ -515,3 +527,40 @@ def test_calibration_covers_scored_claims_only():
     assert cal["unscored_claims"] == 1
     assert cal["brier"] == pytest.approx(((0.9 - 1) ** 2 + 0.9**2) / 2, abs=1e-9)
     assert cal["confidently_wrong_rate"] == 0.5
+
+
+# ---------------------------------------------------------------------------
+# Review round 2: the scorer reads the claim's own unit
+#
+# score_drivers took ONE unit from the gold movement and applied it to every
+# claim, so a "+3 bps" contribution was measured against a "+3 $m" gold slot
+# and graded correct by tolerance. A claim in another unit is a claim about
+# something else.
+# ---------------------------------------------------------------------------
+
+
+def test_a_claim_in_another_unit_is_incorrect_not_correct():
+    gold = gold_case(
+        {"tier": "components", "drivers": {"nii": {"value": 229}}}, metric="cash_earnings"
+    )
+    result = score_drivers(gold_framings(gold), [claim("nii", 229, unit="bps")], "$m")
+    assert result["claims"][0]["label"] == INCORRECT
+    assert "claimed in bps" in result["claims"][0]["reason"]
+
+
+def test_a_claim_with_no_unit_keeps_the_existing_behaviour():
+    """Absence of evidence is not a mismatch: a claim that names no unit is
+    scored as it always was, on its value."""
+    gold = gold_case(
+        {"tier": "components", "drivers": {"nii": {"value": 229}}}, metric="cash_earnings"
+    )
+    result = score_drivers(gold_framings(gold), [claim("nii", 229, unit="")], "$m")
+    assert result["claims"][0]["label"] == CORRECT
+
+
+def test_a_unit_spelling_difference_is_not_a_mismatch():
+    gold = gold_case(
+        {"tier": "components", "drivers": {"nii": {"value": 229}}}, metric="cash_earnings"
+    )
+    result = score_drivers(gold_framings(gold), [claim("nii", 229, unit="$M")], "$m")
+    assert result["claims"][0]["label"] == CORRECT

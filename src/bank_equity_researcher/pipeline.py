@@ -26,6 +26,7 @@ from .taxonomy import METRIC_ALIASES, TAXONOMY
 from .validate import (
     MONTH_NUMBERS,
     annotate_walks,
+    cap_unreconciled_drivers,
     cap_weakly_cited_claims,
     check_comparison_leak,
     check_component_columns,
@@ -34,6 +35,7 @@ from .validate import (
     check_movement_basis,
     check_movement_columns,
     check_movement_variant,
+    check_ratio_level,
     check_walk,
     corroborate,
     cross_source_view,
@@ -41,6 +43,8 @@ from .validate import (
     implied_residual,
     period_end_date,
     settle_identity_scale,
+    settle_ratio_scale,
+    sign_flip_hint,
     unclaimed_components,
     walks_for_view,
 )
@@ -389,15 +393,24 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             period_note=period_note,
             headline_row=headline_label,
         )
-        # Ratio-identity scale (ticket 27, iteration 3). ROE and CTI derive
-        # their level-1 split from an identity, and an author that feeds a
-        # growth rate printed in per cent into it — or a dollar movement that
-        # never met its denominator — states the split 100x too large. The
-        # numbers are corrected before any check reads them, and the retry
-        # below asks for the headline to be rewritten on the same scale.
+        # Two scale correctors, in order, both before any check reads the
+        # numbers, and both asking the retry to rewrite the prose to match.
+        #
+        # settle_ratio_scale (round 2) restates a ratio MOVEMENT whose
+        # endpoints arrived in basis points — the mirror of the percent-to-bps
+        # lift author.py has always had for the bps metrics.
+        #
+        # settle_identity_scale (ticket 27, iteration 3) restates the
+        # CONTRIBUTIONS: ROE and CTI derive their level-1 split from an
+        # identity, and an author that feeds a growth rate printed in per cent
+        # into it — or a dollar movement that never met its denominator —
+        # states the split 100x too large. It runs second, so it reads the
+        # endpoints the ratio corrector has already settled.
+        ratio_note = settle_ratio_scale(attribution)
         scale_note = settle_identity_scale(attribution, metric_cfg["method"])
         output_failures = (
             check_movement(attribution.movement)[1]
+            + check_ratio_level(attribution.movement)[1]
             + check_drivers_reconcile(attribution)[1]
             + check_comparison_leak(attribution, primary_view, context_view)[1]
             + check_movement_columns(
@@ -416,7 +429,9 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             if is_bridge
             else []
         )
-        if not (output_failures or missing_components or scale_note) or attempt == 1:
+        if not (
+            output_failures or missing_components or scale_note or ratio_note
+        ) or attempt == 1:
             break
         author_validation = {
             **validation,
@@ -424,6 +439,25 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             "instruction": "Fix these failures: use the walk matching the task periods, "
             "or declare a residual and lower confidence. Do not force numbers.",
         }
+        if ratio_note:
+            # As with the identity note: the endpoints are already corrected,
+            # and this asks for one answer whose PROSE and contributions agree
+            # with them. It names the arithmetic, never a value to reach.
+            author_validation["ratio_scale"] = (
+                "Your movement endpoints were not the level of a ratio, and the evidence "
+                "prints them as percentages one factor of 100 down. A ratio movement is "
+                "stated in the ratio's own unit: a return on equity of 11.6 per cent is "
+                "11.6 in points, and a change column printed in basis points is divided by "
+                "100 to enter it. Rewrite the endpoints, the delta, every contribution AND "
+                "the headline on the ratio's own scale."
+            )
+        # Sign hint (round 2). The gap between the contributions and the delta
+        # is exactly twice one contribution: the signature of a component
+        # signed the wrong way up. This is a question, never a correction, and
+        # it names no value the author should reach.
+        hint = sign_flip_hint(attribution)
+        if hint and any(f.startswith("drivers_reconcile") for f in output_failures):
+            author_validation["check_this_contribution_sign"] = hint
         if scale_note:
             # The numbers are already corrected; this asks for one answer whose
             # PROSE agrees with them. Generic wording: it names the arithmetic,
@@ -489,6 +523,7 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     drivers_passed, drivers_failed = check_drivers_reconcile(attribution)
     for check in (
         check_movement(attribution.movement),
+        check_ratio_level(attribution.movement),
         (drivers_passed, drivers_failed),
         check_comparison_leak(attribution, primary_view, context_view),
         check_movement_columns(attribution, period_date, comparator_date, prior_half_date),
@@ -559,6 +594,10 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         # Overconfidence cap: an attribution whose load-bearing checks fail
         # cannot claim high confidence, whatever the model said (ticket 02/07).
         attribution.attribution_confidence = min(attribution.attribution_confidence, 40)
+        # The cap reaches the DRIVERS too (review round 2). It used to stop at
+        # the header, and the calibration metrics read per-driver confidence,
+        # so every failed check was invisible to them.
+        cap_unreconciled_drivers(attribution, fatal)
     elif metric_cfg["method"] == "walk_extraction" and classified and not primary_walks:
         # Evidence-ladder cap (defect 24), the CBA CET1 case: the bank
         # publishes only a half-on-half CET1 walk, so a full-year or

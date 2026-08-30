@@ -8,6 +8,11 @@ import json
 
 from .llm import LLM
 from .schema import Attribution, EvidenceRecord, enforce_evidence_gate
+from .validate import (
+    _percent_evidenced,
+    movement_arithmetic_tolerance,
+    normalize_unit,
+)
 
 AUTHOR_PROMPT = """You are a first-pass banking-sector equity research analyst.
 
@@ -260,13 +265,39 @@ def _basis_printed(basis: str, records: list[EvidenceRecord]) -> bool:
     return any(word in record.quote.lower() for record in records for word in words)
 
 
-def _percent_evidenced(value: float, records: list[EvidenceRecord]) -> bool:
-    """True when the extracted evidence prints this exact value as a percent."""
-    return any(
-        abs(number.value - value) <= 0.005 and number.unit in ("%", "ppt", "ratio")
-        for record in records
-        for number in record.numbers
-    )
+def drop_off_unit_contributions(drivers: list[dict], unit: str) -> list[str]:
+    """A contribution stated in another unit stops being a contribution.
+
+    A contribution is a share of THIS movement, so it is stated in the
+    movement's own unit. A value in another unit is a fact about something
+    else: the CBA FY26 cash-earnings run claimed a -3 bps margin move as a
+    component of a $m bridge, where the reconciliation summed it as -3 dollars.
+    The number is not deleted — it stays in the narrative, where it belongs —
+    but it stops being a quantified contribution, and the driver falls to the
+    narrative cap.
+
+    The closed-loop shell has guarded this since it was written and the
+    open-loop author never did, so the same submission was corrected in one
+    shell and shipped in the other. Both call this. Mutates; returns the notes.
+    """
+    dropped: list[str] = []
+    for driver in drivers:
+        if not isinstance(driver, dict):
+            continue
+        contribution = driver.get("contribution")
+        if not isinstance(contribution, dict) or contribution.get("value") is None:
+            continue
+        given = str(contribution.get("unit") or unit).strip()
+        if normalize_unit(given) == normalize_unit(unit):
+            continue
+        driver["contribution"] = None
+        driver["confidence"] = min(int(driver.get("confidence") or 0), 60)
+        dropped.append(
+            f"{driver.get('canonical', '?')} was claimed as "
+            f"{contribution.get('value')} {given}, which is not the movement's unit "
+            f"({unit}); it is reported in the narrative and not as a contribution"
+        )
+    return dropped
 
 
 def settle_charge_sign(movement: dict, taxonomy: dict, reply: dict) -> dict:
@@ -407,7 +438,9 @@ def author_attribution(
                 and _percent_evidenced(to, records)
             ):
                 movement["from_value"], movement["to_value"] = frm * 100, to * 100
-                if abs(movement.get("delta", 0) - round((to - frm) * 100, 1)) > 0.51:
+                if abs(movement.get("delta", 0) - round((to - frm) * 100, 1)) > (
+                    movement_arithmetic_tolerance(movement.get("unit"))
+                ):
                     movement["delta"] = round((to - frm) * 100, 1)
                 reply.setdefault("limitations", []).append(
                     f"Movement endpoints converted from percent ({frm}, {to}) to bps: the unit "
@@ -420,9 +453,16 @@ def author_attribution(
         if isinstance(movement, dict):
             # Delta harmoniser: endpoints are the primary facts; a delta that
             # contradicts them is a unit slip (e.g. "50 bpts" against ppt
-            # endpoints). Recompute and record.
+            # endpoints). Recompute and record. The threshold is the one
+            # check_movement uses, indexed by the movement's own unit: a flat
+            # 0.51 is a basis-point quantity, so for a ppt movement the repair
+            # stayed silent exactly where the check then failed at 0.1.
             implied = round(movement["to_value"] - movement["from_value"], 2)
-            if abs(movement["delta"] - implied) > 0.51 and implied != 0:
+            if (
+                abs(movement["delta"] - implied)
+                > movement_arithmetic_tolerance(movement.get("unit"))
+                and implied != 0
+            ):
                 reply.setdefault("limitations", []).append(
                     f"Movement delta normalised from {movement['delta']} to {implied} "
                     "(unit slip against the endpoints)."
@@ -438,6 +478,9 @@ def author_attribution(
             # scratchpad.
             if driver.get("columns") is not None:
                 driver["columns"] = str(driver["columns"]).strip()[:120] or None
+        reply.setdefault("limitations", []).extend(
+            drop_off_unit_contributions(reply.get("drivers", []), taxonomy["unit"])
+        )
         attribution = Attribution(
             bank=case["bank"],
             metric=case["metric"],

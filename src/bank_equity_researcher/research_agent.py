@@ -31,8 +31,8 @@ from datetime import datetime, timezone
 
 from .ask import render_answer, slugify
 from .author import (
-    _percent_evidenced,
     _settle_basis,
+    drop_off_unit_contributions,
     primary_basis,
     settle_charge_sign,
 )
@@ -54,7 +54,9 @@ from .schema import (
 )
 from .taxonomy import METRIC_ALIASES, TAXONOMY
 from .validate import (
+    _percent_evidenced,
     annotate_walks,
+    cap_unreconciled_drivers,
     cap_weakly_cited_claims,
     check_comparison_leak,
     check_component_columns,
@@ -63,12 +65,16 @@ from .validate import (
     check_movement_basis,
     check_movement_columns,
     check_movement_variant,
+    check_ratio_level,
     check_walk,
     corroborate,
     cross_source_view,
     half_label,
+    movement_arithmetic_tolerance,
     period_end_date,
+    quote_prints,
     settle_identity_scale,
+    settle_ratio_scale,
     walks_for_view,
 )
 
@@ -107,7 +113,9 @@ HOW_TO_RESEARCH = """HOW TO RESEARCH
 - cite turns quotes from a page you just read into evidence records with ids.
   Cite a page's facts WHILE you have the page in front of you, all of them in
   one call. Each quote is checked against the page at once, so you find out
-  immediately whether it holds.
+  immediately whether it holds. Every quote that carries a figure must list
+  that figure in "numbers", with its label, its period and its unit; a quote
+  that prints no figure takes an empty list.
 - follow_references lists what a page points at: notes, appendices, "refer to
   page 21". A summary line gives you the size of a movement; the note behind it
   gives you the reason, the component rows and the split. Follow those pointers
@@ -334,7 +342,7 @@ QUESTION_PROMPT = """TASK: answer this question from the banks' own published
 documents, then submit the note.
 
 QUESTION: {question}
-
+{period_note}
 DOCUMENTS IN SCOPE (doc_id, period, pages):
 {documents}
 
@@ -470,9 +478,28 @@ TOOL_SPECS: list[dict] = [
                                     ),
                                 },
                                 "kind": {"type": "string", "description": "text | table"},
-                                "numbers": {"type": "array", "items": _NUMBER_SCHEMA},
+                                "numbers": {
+                                    "type": "array",
+                                    "description": (
+                                        "every figure the quote prints, each with its "
+                                        "label, its period and its unit. Pass an empty "
+                                        "list for a quote that prints no figure."
+                                    ),
+                                    "items": _NUMBER_SCHEMA,
+                                },
                             },
-                            "required": ["quote"],
+                            # "numbers" is required because the deterministic
+                            # checks read it. The open-loop pipeline's extractor
+                            # always emits these facts and the agent's cite tool
+                            # left them optional, so four saved agentic bridge
+                            # artifacts hold ZERO of them and every check that
+                            # reads record.numbers ran on an empty pool: the
+                            # column checks, the percent-evidence tests and half
+                            # the citation cap were silently switched off in the
+                            # shell that exists to be compared against the
+                            # pipeline. An empty list is a valid answer for a
+                            # prose quote.
+                            "required": ["quote", "numbers"],
                         },
                     },
                 },
@@ -681,18 +708,37 @@ _PUNCTUATION = str.maketrans(
 )
 
 
-# A standalone one- or two-digit token: the shape a footnote or reference
-# marker takes where a bank prints it INSIDE a table row. The CBA FY26 Profit
-# Announcement p2 text layer reads "Revenue from ordinary activities 2 3
-# 30,153"; the 2 and the 3 are markers pointing at notes, and a reader of the
+# A footnote or reference marker, in the SHAPE a marker takes: one or two
+# digits sitting between the end of a row LABEL and that row's VALUE. The CBA
+# FY26 Profit Announcement p2 text layer reads "Revenue from ordinary
+# activities 2 3 30,153"; the 2 and the 3 point at notes, and a reader of the
 # page sees the row as "Revenue from ordinary activities 30,153". A quote
 # faithful to what the reader sees was rejected as not on the page.
-_MARKER_RE = re.compile(r"(?<!\S)\d{1,2}(?!\S)")
+#
+# The shape rule is the whole of the fix. A bare "standalone one- or two-digit
+# token" cannot tell a marker from data, and over the 607 pages of CBA's FY26
+# and 1H26 books it removed 10,158 tokens, 16.7 a page, most of them real: the
+# day and the two-digit year of every column header, every bps value under 100,
+# and the tier of every capital instrument. Under that rule the page said
+# "Additional Tier 1 and Tier 2 Capital" and a quote reading "Additional Tier
+# and Tier Capital" was accepted as verbatim, though Tier 1 and Tier 2 are
+# different instruments. The relaxation exists to let a quote OMIT a marker, so
+# it must remove markers and nothing else.
+#
+# Three conditions, all required: a LETTER ends the label before the run; the
+# run is one or two digits (repeated, because a row carries two markers); and a
+# VALUE follows it immediately — three or more characters of digits and
+# thousands separators, optionally bracketed. "decreased 1 basis point", "31
+# December 2025" and "Tier 1 and Tier 2" all fail the third condition.
+_MARKER_RE = re.compile(r"(?<=[A-Za-z])((?:\s+\d{1,2})+)(?=\s+\(?[\d,]{3,})")
+# A superscript digit is a marker wherever it stands: no page prints a value in
+# superscript. "Restructuring and notable items ¹" is the whole row label.
+_SUPERSCRIPT_MARKER_RE = re.compile(r"[¹²³⁰-⁹]+")
 
 
 def strip_markers(text: str) -> str:
     """The page as a reader sees it, with interleaved footnote markers gone."""
-    return _MARKER_RE.sub(" ", str(text or ""))
+    return _MARKER_RE.sub(" ", _SUPERSCRIPT_MARKER_RE.sub(" ", str(text or "")))
 
 
 MARKER_RELAXATION = (
@@ -860,7 +906,16 @@ class Research:
             )
         except Exception as exc:  # noqa: BLE001 - an unreadable chart is a gap, not a crash
             self.validation["failed"].append(f"walk_extraction_error p{page}: {exc}")
-            return {"error": f"the chart on {doc.doc_id} p{page} could not be read: {exc}"}
+            # The ANNOTATION layer is a separate read of the same page, and the
+            # open-loop pipeline attempts it whether or not the walk read
+            # succeeded. This shell used to return here, so an unreadable chart
+            # cost the agent callout evidence the baseline shell still had —
+            # the two shells stopped being evidence-comparable exactly where a
+            # page was hardest to read. The bar labels are simply unknown.
+            return {
+                "error": f"the chart on {doc.doc_id} p{page} could not be read: {exc}",
+                "annotations": self._read_annotations(doc, page, case_desc, unit, ()),
+            }
         passed, failed = check_walk(walk, doc.doc_type, unit)
         walk["source"] = f"{doc.doc_id} PDF p{page} ({record.id})"
         walk["record_id"] = record.id
@@ -891,28 +946,33 @@ class Research:
         # tools, not the orchestration. One extra vision call per chart, and it
         # degrades to nothing on any failure.
         bar_labels = tuple(str(bar.get("label", "")) for bar in walk.get("bars", []))
-        callouts = extract_walk_annotations(
-            self.llm, self.combo.vision, doc, page, case_desc, self.next_id,
-            unit=unit, bar_labels=bar_labels,
-        )
-        self.records.extend(callouts)
         return {
             "doc_id": doc.doc_id,
             "pdf_page": page,
             "evidence_id": record.id,
             "unit": unit,
             "walk": {k: v for k, v in walk.items() if k != "record_id"},
-            "annotations": [
-                {
-                    "evidence_id": r.id,
-                    "quote": r.quote,
-                    "numbers": [
-                        {"label": n.label, "value": n.value, "unit": n.unit} for n in r.numbers
-                    ],
-                }
-                for r in callouts
-            ],
+            "annotations": self._read_annotations(doc, page, case_desc, unit, bar_labels),
         }
+
+    def _read_annotations(self, doc: Document, page: int, case_desc: str, unit: str,
+                          bar_labels: tuple[str, ...]) -> list[dict]:
+        """The chart's callout layer, minted and returned. Never raises."""
+        callouts = extract_walk_annotations(
+            self.llm, self.combo.vision, doc, page, case_desc, self.next_id,
+            unit=unit, bar_labels=bar_labels,
+        )
+        self.records.extend(callouts)
+        return [
+            {
+                "evidence_id": r.id,
+                "quote": r.quote,
+                "numbers": [
+                    {"label": n.label, "value": n.value, "unit": n.unit} for n in r.numbers
+                ],
+            }
+            for r in callouts
+        ]
 
     def follow_references(self, doc_id: str, pdf_page: int) -> dict:
         doc = self._doc(doc_id)
@@ -948,15 +1008,16 @@ class Research:
         page = int(pdf_page)
         text = self._page_text(doc, page)
         self.pages_read.add((doc.doc_id, page))
-        cited, rejected = [], []
+        cited, rejected, unprinted = [], [], []
         for item in quotes if isinstance(quotes, list) else []:
             entry = item if isinstance(item, dict) else {"quote": item}
-            record, reason = self._mint_record(doc, page, text, entry)
+            record, reason, dropped = self._mint_record(doc, page, text, entry)
             if record is None:
                 rejected.append({"quote": str(entry.get("quote"))[:120], "reason": reason})
                 continue
             self.records.append(record)
             cited.append({"id": record.id, "quote": record.quote})
+            unprinted.extend(f"{record.id}: {d}" for d in dropped)
         result = {"doc_id": doc.doc_id, "pdf_page": page, "cited": cited}
         if rejected:
             result["rejected"] = rejected
@@ -964,28 +1025,48 @@ class Research:
                 "A rejected quote is not on this page as written. Copy the words from the "
                 "page text exactly, or cite the page that really prints them."
             )
+        if unprinted:
+            result["dropped_numbers"] = unprinted
+            result["numbers_instruction"] = (
+                "A number in the numbers list must be printed by the quote it sits under. "
+                "These were dropped. Quote the row or the sentence that prints the figure, "
+                "then list it."
+            )
         return result
 
     def _mint_record(self, doc: Document, page: int, text: str,
-                     item: dict) -> tuple[EvidenceRecord | None, str]:
-        """One evidence record, or the reason the quote does not support one."""
+                     item: dict) -> tuple[EvidenceRecord | None, str, list[str]]:
+        """One evidence record, or the reason the quote does not support one.
+
+        Returns (record, reason, dropped numbers). A NumberFact is the model's
+        own account of what the quote prints, and nothing checked it: an agent
+        could cite an unrelated verbatim sentence, attach a figure of its own,
+        and every check that reads record.numbers — the column checks, the
+        percent-evidence tests, the citation cap — would then read a number no
+        page states. The quote is verified against the page first, so a figure
+        the quote prints is a figure the PAGE prints.
+        """
         quote = str(item.get("quote") or "").strip()
         if not quote:
-            return None, "no quote was given"
+            return None, "no quote was given", []
         matched, relaxed = match_quote(quote, text)
         if not matched:
-            return None, f"the quote is not on {doc.doc_id} p{page}"
-        numbers = []
+            return None, f"the quote is not on {doc.doc_id} p{page}", []
+        numbers, dropped = [], []
         for number in item.get("numbers") or []:
             try:
-                numbers.append(
-                    NumberFact(
-                        **{k: v for k, v in number.items()
-                           if k in ("label", "value", "unit", "basis")}
-                    )
+                fact = NumberFact(
+                    **{k: v for k, v in number.items()
+                       if k in ("label", "value", "unit", "basis")}
                 )
             except Exception:  # noqa: BLE001 - a malformed number is dropped, not fatal
                 continue
+            if not quote_prints(quote, fact.value, fact.unit):
+                dropped.append(
+                    f"{fact.value:g} {fact.unit} ('{fact.label}') is not printed by that quote"
+                )
+                continue
+            numbers.append(fact)
         return (
             EvidenceRecord(
                 id=self.next_id(),
@@ -1007,6 +1088,7 @@ class Research:
                 provenance=relaxed or None,
             ),
             "",
+            dropped,
         )
 
     def bank_language(self, bank: str | None = None) -> dict:
@@ -1073,7 +1155,7 @@ class Research:
                 id_map[claimed] = claimed
                 continue
             doc, page, text, item = page_source
-            record, _reason = self._mint_record(doc, page, text, item)
+            record, _reason, _dropped = self._mint_record(doc, page, text, item)
             if record is None:  # pragma: no cover - _resolve_evidence checked it
                 continue
             if claimed and claimed not in used:
@@ -1187,7 +1269,9 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
             and _percent_evidenced(to, records)
         ):
             movement["from_value"], movement["to_value"] = frm * 100, to * 100
-            if abs(movement.get("delta", 0) - round((to - frm) * 100, 1)) > 0.51:
+            if abs(movement.get("delta", 0) - round((to - frm) * 100, 1)) > (
+                movement_arithmetic_tolerance(movement.get("unit"))
+            ):
                 movement["delta"] = round((to - frm) * 100, 1)
             reply.setdefault("limitations", []).append(
                 f"Movement endpoints converted from percent ({frm}, {to}) to bps: the unit "
@@ -1196,8 +1280,14 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     if isinstance(movement, dict):
         movement = settle_charge_sign(movement, metric_cfg, reply)
     if isinstance(movement, dict):
+        # The threshold is check_movement's own, indexed by the movement's unit
+        # (author.py carries the same repair and the same reason).
         implied = round(movement["to_value"] - movement["from_value"], 2)
-        if abs(movement["delta"] - implied) > 0.51 and implied != 0:
+        if (
+            abs(movement["delta"] - implied)
+            > movement_arithmetic_tolerance(movement.get("unit"))
+            and implied != 0
+        ):
             reply.setdefault("limitations", []).append(
                 f"Movement delta normalised from {movement['delta']} to {implied} "
                 "(unit slip against the endpoints)."
@@ -1238,28 +1328,9 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
         driver["evidence"] = remap(driver.get("evidence"))
         driver["narrative"] = str(driver.get("narrative") or "")
         prepared.append(driver)
-    dropped: list[str] = []
     # A contribution is a share of THIS movement, so it is stated in the
-    # movement's own unit. A value in another unit is a fact about something
-    # else: the CBA FY26 cash-earnings run claimed the -3 bps margin move as a
-    # component of a $m bridge, where the reconciliation summed it as -3
-    # dollars. The number is not deleted - it stays in the narrative, where it
-    # belongs - but it stops being a quantified contribution.
-    unit = metric_cfg["unit"]
-    for driver in prepared:
-        contribution = driver.get("contribution")
-        if not isinstance(contribution, dict):
-            continue
-        given = str(contribution.get("unit") or unit).strip()
-        if given.lower() == unit.lower():
-            continue
-        driver["contribution"] = None
-        driver["confidence"] = min(int(driver.get("confidence") or 0), 60)
-        dropped.append(
-            f"{driver.get('canonical', '?')} was claimed as "
-            f"{contribution.get('value')} {given}, which is not the movement's unit "
-            f"({unit}); it is reported in the narrative and not as a contribution"
-        )
+    # movement's own unit. One function serves both shells (author.py).
+    dropped: list[str] = drop_off_unit_contributions(prepared, metric_cfg["unit"])
     drivers = _keep_valid(prepared, DriverClaim, dropped, "driver")
     disagreements = _keep_valid(
         reply.get("disagreements"), Disagreement, dropped, "disagreement"
@@ -1331,6 +1402,9 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     primary_view = cross_source_view(primary_walks, label_map)
     context_view = cross_source_view(context_walks, label_map)
 
+    # Ratio-scale corrector first: it restates a movement written in basis
+    # points, and settle_identity_scale then reads the corrected endpoints.
+    settle_ratio_scale(attribution)
     settle_identity_scale(attribution, metric_cfg["method"])
     corroborate(attribution, cross_source)
     # The same evidence-ladder cap the open-loop pipeline applies, from the
@@ -1364,6 +1438,7 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     )
     for check in (
         check_movement(attribution.movement),
+        check_ratio_level(attribution.movement),
         (drivers_passed, drivers_failed),
         check_comparison_leak(attribution, primary_view, context_view),
         check_movement_columns(attribution, period_date, comparator_date, prior_half_date),
@@ -1400,6 +1475,10 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
         attribution.limitations.extend(f"Failed check: {f}" for f in fatal + peripheral)
     if fatal:
         attribution.attribution_confidence = min(attribution.attribution_confidence, 40)
+        # The cap reaches the DRIVERS, not the attribution alone: the
+        # calibration metrics read per-driver confidence, so a failed check that
+        # stopped at the header was invisible to them (validate.py).
+        cap_unreconciled_drivers(attribution, fatal)
     elif metric_cfg["method"] == "walk_extraction" and classified and not primary_walks:
         attribution.limitations.append(
             f"No published walk covers {period} vs {comparator}: the bank's walk for this "
@@ -1557,6 +1636,13 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                 stop = None
                 if research.tool_calls >= combo.max_tool_calls:
                     stop = f"the tool-call budget ({combo.max_tool_calls} calls)"
+                elif llm.usage.cost_usd >= combo.cost_ceiling_usd:
+                    # Cost binds per CALL as well. It was read once a turn, and
+                    # one read_chart now costs TWO vision calls (the bars and
+                    # the annotation layer) while counting as one tool call, so
+                    # a single turn carrying five chart reads issued ten vision
+                    # calls with no cost check between them.
+                    stop = f"the cost ceiling (${combo.cost_ceiling_usd:.2f})"
                 elif time.time() - started >= HARD_STOP_FACTOR * combo.wall_clock_s:
                     stop = f"the wall-clock budget ({combo.wall_clock_s:.0f}s)"
                 if stop is not None:
@@ -1832,6 +1918,18 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = "agent
             "role": "user",
             "content": QUESTION_PROMPT.format(
                 question=question,
+                # The scope note used to reach the reader alone. The agent was
+                # asked about a period the corpus does not hold, handed another
+                # period's documents, and told nothing: it spent budget hunting
+                # for pages that do not exist.
+                period_note=(
+                    "\nSCOPE OF THE DOCUMENTS YOU WERE GIVEN:\n"
+                    + "\n".join(f"- {note}" for note in scope_notes)
+                    + "\nResearch the periods the documents cover, and say which period every\n"
+                    "figure belongs to.\n"
+                    if scope_notes
+                    else ""
+                ),
                 documents="\n".join(
                     f"- {d.doc_id} ({d.period}, {len(d.page_texts())} pages)" for d in docs
                 ),

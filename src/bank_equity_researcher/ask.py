@@ -52,7 +52,7 @@ ANSWER_PROMPT = """You are a first-pass banking-sector equity research analyst.
 TASK: answer this question about {bank} using the periods {periods}:
 
 QUESTION: {question}
-
+{period_note}
 EVIDENCE RECORDS (the only facts you may use; cite records by id):
 {evidence}
 
@@ -215,6 +215,19 @@ def run_ask(bank: str | None, question: str, combo_name: str = "cheap",
             bank=bank,
             periods=", ".join(periods),
             question=question,
+            # The scope note reached the READER and never the answerer: a
+            # question about FY26 was answered from FY25 documents, the note
+            # said so in limitations, and the model was never told. It hunted
+            # for pages that do not exist, and it could report an FY25 figure
+            # under an FY26 label.
+            period_note=(
+                "\nSCOPE OF THE DOCUMENTS YOU WERE GIVEN:\n"
+                + "\n".join(f"- {note}" for note in scope_notes)
+                + "\nAnswer on the periods the documents cover, and say which period every\n"
+                "figure belongs to.\n"
+                if scope_notes
+                else ""
+            ),
             evidence=json.dumps([r.model_dump() for r in records], indent=1),
             rounds_left=MAX_AUTHOR_ROUNDS - round_no,
         )

@@ -58,6 +58,89 @@ COMPONENT_TOL = 2.0
 #   this one is always tighter.
 # --------------------------------------------------------------------------
 
+# --------------------------------------------------------------------------
+# One spelling per unit
+#
+# A tolerance table is a dict keyed by a unit STRING, so "PPT" and "bpts" and
+# "$ m" missed every entry and took the default: a ppt movement measured with
+# the 1.0 reconciliation slack is measured with five times its own size. The
+# scorer already canonicalised aliases and the checks did not, so the two
+# disagreed about the same answer. The vocabulary lives here, beside the
+# tolerances it keys, and evals imports it (the reverse import is a cycle).
+# --------------------------------------------------------------------------
+
+UNIT_ALIASES = {
+    "bps": "bps", "bp": "bps", "bpt": "bps", "bpts": "bps", "basis": "bps",
+    "$m": "$m", "$": "$m", "m": "$m", "$millions": "$m", "$million": "$m",
+    "aud$m": "$m", "a$m": "$m",
+    "$bn": "$bn", "$b": "$bn", "bn": "$bn", "b": "$bn", "$billion": "$bn",
+    "$billions": "$bn",
+    "ppt": "ppt", "ppts": "ppt", "pp": "ppt", "pt": "ppt", "pts": "ppt",
+    "%": "%", "pct": "%", "percent": "%",
+    "ratio": "ratio",
+    "cents": "cents", "cent": "cents", "cps": "cents", "c": "cents",
+}
+
+
+# The ratio family: a level or a movement in any of these units is a ratio's.
+# This estate stores a ratio as printed, so a CET1 rise of 4bps is 0.04 in all
+# three spellings.
+RATIO_UNITS = ("ppt", "%", "ratio")
+
+
+def normalize_unit(unit: str | None) -> str:
+    """'bps of average GLAA' -> 'bps'; '$ m' -> '$m'; 'PPT' -> 'ppt'; None -> ''."""
+    if not unit:
+        return ""
+    token = str(unit).strip().lower().split(" ")[0]
+    return UNIT_ALIASES.get(token, token)
+
+
+def _tolerance_for(table: dict[str, float], unit: str | None, default: float) -> float:
+    """One tolerance lookup, on the unit's canonical spelling."""
+    return table.get(normalize_unit(unit), default)
+
+
+# How a number printed in one unit restates itself in another. The key is
+# (claim unit, grounding unit); a pair the table does not hold cannot ground the
+# claim at all. Every factor is stated in the direction "multiply the grounding
+# number by this to read it in the claim's unit".
+#
+#   ppt, % and ratio are one family: this estate stores a ratio movement as
+#   printed (a CET1 rise of 4bps is 0.04 ratio, 0.04 ppt or 0.04%).
+#   bps is that family divided by 100: a -20 bps fact grounds -0.2 ppt, and
+#   never -20 ppt.
+#   Money and ratios never ground each other, whatever their magnitudes: the
+#   0.0 $m cell of a dollar row grounded a 0.0 ppt claim at confidence 90.
+UNIT_CONVERSIONS: dict[tuple[str, str], float] = {}
+for _claim in ("ppt", "%", "ratio"):
+    for _source in ("ppt", "%", "ratio"):
+        UNIT_CONVERSIONS[(_claim, _source)] = 1.0
+    UNIT_CONVERSIONS[(_claim, "bps")] = 0.01
+    UNIT_CONVERSIONS[("bps", _claim)] = 100.0
+UNIT_CONVERSIONS[("bps", "bps")] = 1.0
+UNIT_CONVERSIONS[("$m", "$m")] = 1.0
+UNIT_CONVERSIONS[("$m", "$bn")] = 1000.0
+UNIT_CONVERSIONS[("$bn", "$bn")] = 1.0
+UNIT_CONVERSIONS[("$bn", "$m")] = 0.001
+UNIT_CONVERSIONS[("cents", "cents")] = 1.0
+del _claim, _source
+
+
+def convert_unit(value: float, source_unit: str | None, claim_unit: str | None) -> float | None:
+    """`value`, printed in source_unit, restated in claim_unit.
+
+    None means the two units cannot ground each other — including the case
+    where either unit is missing, because a number with no unit is no evidence
+    either way.
+    """
+    source, claim = normalize_unit(source_unit), normalize_unit(claim_unit)
+    if not source or not claim:
+        return None
+    factor = UNIT_CONVERSIONS.get((claim, source))
+    return None if factor is None else value * factor
+
+
 RECONCILE_TOL = {"bps": WALK_SUM_TOL_PA, "ppt": RATIO_TOL_PPT, "%": RATIO_TOL_PPT, "$m": 1.0}
 RECONCILE_TOL_DEFAULT = 1.0
 # The endpoint-rounding lift a presentation walk earns (WALK_SUM_TOL_PRESENTATION)
@@ -246,11 +329,11 @@ def walk_sum_tolerance(doc_type: str, unit: str = "bps") -> float:
     entered here a ppt walk was measured against 1.0 or 10.0, and no such walk
     could fail its own sum check.
     """
-    if unit in PRESENTATION_LIFT_UNITS and doc_type in (
+    if normalize_unit(unit) in PRESENTATION_LIFT_UNITS and doc_type in (
         "results_presentation", "investor_discussion_pack", "investor_presentation"
     ):
         return WALK_SUM_TOL_PRESENTATION
-    return RECONCILE_TOL.get(unit, RECONCILE_TOL_DEFAULT)
+    return _tolerance_for(RECONCILE_TOL, unit, RECONCILE_TOL_DEFAULT)
 
 
 def check_walk(walk: dict, doc_type: str, unit: str = "bps") -> tuple[list[str], list[str]]:
@@ -272,11 +355,23 @@ def check_walk(walk: dict, doc_type: str, unit: str = "bps") -> tuple[list[str],
     return passed, failed
 
 
+def movement_arithmetic_tolerance(unit: str | None) -> float:
+    """Slack for "from + delta == to", in the movement's own unit.
+
+    check_movement reads it, and so do the two delta harmonisers that REPAIR a
+    delta before any check sees it. They used to carry a hard-coded 0.51, which
+    is a basis-point quantity: a ppt movement whose delta was out by 0.5 was
+    left alone by the repair and then failed the 0.1 ppt check, so a repairable
+    one-line slip sank the answer to confidence 40 instead of being corrected.
+    """
+    return _tolerance_for(MOVEMENT_ARITHMETIC_TOL, unit, MOVEMENT_ARITHMETIC_TOL_DEFAULT)
+
+
 def check_movement(movement) -> tuple[list[str], list[str]]:
     passed, failed = [], []
     if movement is None:
         return passed, ["movement_missing"]
-    tolerance = MOVEMENT_ARITHMETIC_TOL.get(movement.unit, MOVEMENT_ARITHMETIC_TOL_DEFAULT)
+    tolerance = movement_arithmetic_tolerance(movement.unit)
     if abs(movement.from_value + movement.delta - movement.to_value) <= tolerance:
         passed.append("movement_arithmetic")
     else:
@@ -404,7 +499,7 @@ def check_comparison_leak(
     for driver in attribution.drivers:
         if driver.contribution is None:
             continue
-        tol = LEAK_TOL.get(driver.contribution.unit, 0.5)
+        tol = _tolerance_for(LEAK_TOL, driver.contribution.unit, 0.5)
         value = driver.contribution.value
         primary_bars = [e["value"] for e in primary_view.get(driver.canonical, [])]
         context_bars = [e for e in context_view.get(driver.canonical, []) if abs(e["value"] - value) <= tol]
@@ -477,7 +572,7 @@ def check_movement_columns(
     prior_values = dated(prior, [wanted, current])
     if not comparator_values or not prior_values:
         return passed, failed
-    tolerance = LEAK_TOL.get(movement.unit, 0.5)
+    tolerance = _tolerance_for(LEAK_TOL, movement.unit, 0.5)
 
     def seen(value: float, pool: list[float]) -> bool:
         # Evidence keeps percentages as printed (2.08) while a bps movement
@@ -543,9 +638,10 @@ def _stems_by_period(
     otherwise contribute deltas that mean nothing in dollars.
     """
     stems: dict[str, dict[str, set[float]]] = {}
+    wanted = normalize_unit(unit)
     for record in records:
         for number in record.numbers:
-            if number.unit != unit:
+            if normalize_unit(number.unit) != wanted:
                 continue
             label = _normalize_label(number.label)
             hits = [(key, t) for key, tokens in groups.items() for t in tokens if t in label]
@@ -610,7 +706,7 @@ def check_component_columns(
     passed, failed = [], []
     if attribution.movement is None:
         return passed, failed
-    unit = attribution.movement.unit
+    unit = normalize_unit(attribution.movement.unit)
     groups = {
         "period": _period_tokens(attribution.period, period_date),
         "comparator": _period_tokens(attribution.comparator, comparator_date),
@@ -626,7 +722,7 @@ def check_component_columns(
     correct, wrong = _component_delta_pools(_stems_by_period(attribution.evidence_records, groups, unit))
     if not wrong:
         return passed, failed
-    tolerance = COMPONENT_TOL if unit == "$m" else LEAK_TOL.get(unit, 0.5)
+    tolerance = COMPONENT_TOL if unit == "$m" else _tolerance_for(LEAK_TOL, unit, 0.5)
     for driver in attribution.drivers:
         if driver.contribution is None:
             continue
@@ -813,8 +909,8 @@ def reconcile_tolerance(attribution) -> float:
     slide case), but only where that slack is denominated: it is a quantity in
     basis points, so a ppt or $m answer never earns it.
     """
-    unit = attribution.movement.unit if attribution.movement is not None else None
-    base = RECONCILE_TOL.get(unit or "", RECONCILE_TOL_DEFAULT)
+    unit = normalize_unit(attribution.movement.unit if attribution.movement is not None else None)
+    base = _tolerance_for(RECONCILE_TOL, unit, RECONCILE_TOL_DEFAULT)
     if unit not in PRESENTATION_LIFT_UNITS:
         return base
     presentation_walk = any(
@@ -835,6 +931,21 @@ def reconcile_tolerance(attribution) -> float:
 IDENTITY_SCALE = 100.0
 
 
+def _percent_evidenced(value: float, records) -> bool:
+    """True when the extracted evidence prints this exact value as a percent.
+
+    Both scale correctors are self-evidencing through this one test, so they
+    read the pages the same way: the bps lift asks whether the endpoints the
+    author wrote are printed as percentages, and settle_ratio_scale asks
+    whether the endpoints divided by 100 are.
+    """
+    return any(
+        abs(number.value - value) <= 0.005 and normalize_unit(number.unit) in RATIO_UNITS
+        for record in records
+        for number in record.numbers
+    )
+
+
 def settle_identity_scale(attribution, method: str) -> str | None:
     """Restate a ratio identity that was written 100x too large. Mutates.
 
@@ -851,10 +962,10 @@ def settle_identity_scale(attribution, method: str) -> str | None:
     """
     if method != "two_level_arithmetic" or attribution.movement is None:
         return None
-    unit = attribution.movement.unit
+    unit = normalize_unit(attribution.movement.unit)
     quantified = [
         d for d in attribution.drivers
-        if d.contribution is not None and d.contribution.unit == unit
+        if d.contribution is not None and normalize_unit(d.contribution.unit) == unit
     ]
     if not quantified or len(quantified) != len([d for d in attribution.drivers if d.contribution]):
         return None
@@ -896,21 +1007,138 @@ def settle_identity_scale(attribution, method: str) -> str | None:
 # read. Named for the bridge check it grew out of, and kept as one value so a
 # reader of the artifact sees one rule however the claim was assembled.
 CLAIM_CITATION_CAP = 80
-# A number written inside a quote, as a standalone token. The lookarounds keep
-# a period tag out of the pool: "FY25" must not ground a claim of +25, "1H26"
-# must not ground +26, and "p12" must not ground +12.
-_QUOTE_NUMBER_RE = re.compile(r"(?<![\w.])-?\d[\d,]*(?:\.\d+)?(?![\w])")
+# A number written inside a quote, as a standalone token, WITH the unit a bank
+# glues to it. The lookarounds keep a period tag out of the pool: "FY25" must
+# not ground a claim of +25, "1H26" must not ground +26, and "p12" must not
+# ground +12.
+#
+# The suffix group is what makes the rest of the pattern work at all. Without
+# it the trailing (?![\w]) failed on every glued unit, the engine backtracked,
+# and the pool took a PREFIX of the number: "$10,982m" read as 10, "$2.5bn" as
+# 2, and "5bps" vanished. Both directions of the citation cap inverted at once
+# — the driver whose number the record printed was capped, and a neighbour with
+# a small round value was certified by a digit prefix. 8% of the shipped quotes
+# carry a digit glued to a letter.
+_QUOTE_NUMBER_RE = re.compile(
+    r"(?<![\w.])(-?\d[\d,]*(?:\.\d+)?)"
+    r"\s*(bpts|bps|bp|ppts|ppt|pp|billion|bn|million|m|b|%|c)?(?![\w])",
+    re.IGNORECASE,
+)
+# A bare four-digit integer inside this window is a year, not a quantity: the
+# saved quotes put "2025" in the pool beside a footnote index. A period TAG
+# ("FY25") was already excluded, so this closes the same hole for the spelling
+# a sentence uses. A magnitude the quote states with a separator ("2,025") or a
+# decimal is unaffected.
+_YEAR_RANGE = (1990, 2099)
+# The unit a glued suffix names, in the estate's own spelling. "m" and "bn" are
+# money because that is what a bank glues to a figure; a ratio is glued "%" or
+# "bps".
+_SUFFIX_UNITS = {
+    "bps": "bps", "bpts": "bps", "bp": "bps",
+    "ppt": "ppt", "ppts": "ppt", "pp": "ppt", "%": "%",
+    "m": "$m", "million": "$m",
+    "bn": "$bn", "b": "$bn", "billion": "$bn",
+    "c": "cents",
+}
+# The words a quote uses to name a unit family, for a number the page prints
+# WITHOUT a glued suffix (a table row: "Loan impairment expense 319 406 320").
+# A bare number is read in the claim's own unit only when the quote names that
+# unit family somewhere, so a dollar row can no longer ground a ratio claim.
+_FAMILY_WORDS = {
+    "$m": ("$", "million"),
+    "$bn": ("$", "billion"),
+    "ppt": ("%", "per cent", "percent", "percentage point", "ppt", "pt"),
+    "%": ("%", "per cent", "percent", "percentage point", "ppt", "pt"),
+    "ratio": ("%", "per cent", "percent", "percentage point", "ppt", "pt"),
+    "bps": ("bps", "bpts", "basis point"),
+    "cents": ("cent", "cps"),
+}
 
 
-def _quote_numbers(quote: str | None) -> list[float]:
-    """The magnitudes a verbatim quote states, for the citation test below."""
-    values = []
-    for token in _QUOTE_NUMBER_RE.findall(quote or ""):
+def _quote_numbers(quote: str | None) -> list[tuple[float, str]]:
+    """(magnitude, unit) for every number a verbatim quote states.
+
+    The unit is the one glued to the number, or "" when the quote prints the
+    number bare. The caller decides what a bare number may ground.
+    """
+    values: list[tuple[float, str]] = []
+    for token, suffix in _QUOTE_NUMBER_RE.findall(quote or ""):
         try:
-            values.append(abs(float(token.replace(",", ""))))
+            value = abs(float(token.replace(",", "")))
         except ValueError:  # pragma: no cover - the pattern admits only numbers
             continue
+        unit = _SUFFIX_UNITS.get(suffix.lower(), "") if suffix else ""
+        if (
+            not unit
+            and "," not in token
+            and "." not in token
+            and _YEAR_RANGE[0] <= value <= _YEAR_RANGE[1]
+            and len(token.lstrip("-")) == 4
+        ):
+            continue
+        values.append((value, unit))
     return values
+
+
+def quote_states(quote: str | None, value: float, unit: str | None) -> bool:
+    """Does this quote PRINT this number, read in this unit?
+
+    Three readings, in order of how much the page itself says:
+    1. the number carries its own glued unit, which must convert into the
+       claim's ("a -20 bps fall" grounds -0.2 ppt, never -20 ppt);
+    2. the number is bare and the quote names the claim's unit family
+       elsewhere in the sentence or the row;
+    3. otherwise the quote says nothing about the claim's unit, so it grounds
+       nothing.
+    """
+    tolerance = _tolerance_for(CITATION_TOL, unit, CITATION_TOL_DEFAULT)
+    lowered = (quote or "").lower()
+    family = any(word in lowered for word in _FAMILY_WORDS.get(normalize_unit(unit), ()))
+    for quoted, quoted_unit in _quote_numbers(quote):
+        if quoted_unit:
+            converted = convert_unit(quoted, quoted_unit, unit)
+            if converted is not None and abs(converted - abs(value)) <= tolerance:
+                return True
+            continue
+        if family and abs(quoted - abs(value)) <= tolerance:
+            return True
+    return False
+
+
+def quote_prints(quote: str | None, value: float, unit: str | None = None) -> bool:
+    """Does this quote print this magnitude at all?
+
+    The value question, without the unit question. `quote_states` asks whether
+    a record GROUNDS a claim, and binds the unit to do it. This asks only
+    whether the number is on the page, which is what a model-supplied
+    NumberFact has to answer before anything may rest on it: the agent's `cite`
+    tool took those facts on trust, so an unrelated verbatim sentence could
+    carry an invented {"value": 150, "unit": "$m"} and every check that reads
+    record.numbers would then read a number no page prints.
+    """
+    tolerance = _tolerance_for(CITATION_TOL, unit, CITATION_TOL_DEFAULT)
+    for quoted, quoted_unit in _quote_numbers(quote):
+        if abs(quoted - abs(value)) <= tolerance:
+            return True
+        converted = convert_unit(quoted, quoted_unit, unit) if quoted_unit else None
+        if converted is not None and abs(converted - abs(value)) <= tolerance:
+            return True
+    return False
+
+
+def _states(
+    number: float, number_unit: str | None, value: float, unit: str | None, tolerance: float
+) -> bool:
+    """Does this extracted NumberFact print that claim's number?
+
+    The magnitudes used to be compared with no unit at all, so the `0.0 $m`
+    cell of a dollar row grounded a `+0.0 ppt` claim at confidence 90, and a
+    `-5.0 bps` fact grounded a `-5.0 $m` claim at 95. A fact whose unit cannot
+    be read in the claim's unit is not evidence for the claim, whatever its
+    magnitude; a fact carrying NO unit is not evidence either way.
+    """
+    converted = convert_unit(abs(number), number_unit, unit)
+    return converted is not None and abs(converted - abs(value)) <= tolerance
 
 
 def cap_weakly_cited_claims(attribution) -> list[str]:
@@ -941,17 +1169,14 @@ def cap_weakly_cited_claims(attribution) -> list[str]:
         if driver.contribution is None or driver.confidence <= CLAIM_CITATION_CAP:
             continue
         value = abs(driver.contribution.value)
-        tolerance = CITATION_TOL.get(driver.contribution.unit, CITATION_TOL_DEFAULT)
+        unit = driver.contribution.unit
+        tolerance = _tolerance_for(CITATION_TOL, unit, CITATION_TOL_DEFAULT)
         cited = [by_id[e] for e in driver.evidence if e in by_id]
         stated = any(
-            abs(abs(number.value) - value) <= tolerance
+            _states(number.value, number.unit, value, unit, tolerance)
             for record in cited
             for number in record.numbers
-        ) or any(
-            abs(quoted - value) <= tolerance
-            for record in cited
-            for quoted in _quote_numbers(record.quote)
-        )
+        ) or any(quote_states(record.quote, value, unit) for record in cited)
         if stated:
             continue
         driver.confidence = CLAIM_CITATION_CAP
@@ -969,15 +1194,35 @@ def cap_weakly_cited_claims(attribution) -> list[str]:
 
 
 def check_drivers_reconcile(attribution) -> tuple[list[str], list[str]]:
-    """Quantified drivers + residual should sum to the movement delta."""
+    """Quantified drivers + residual should sum to the movement delta.
+
+    The SUM is unit-typed as well as the tolerance. Round 1 made the slack
+    follow the movement's unit and left the addition unit-blind, so a `+3 bps`
+    bar still reconciled a `$m` bridge: three basis points were added as three
+    dollars-million. A contribution stated in another unit is a fact about
+    something else, so it is named and it never enters the total.
+    """
     passed, failed = [], []
     if attribution.movement is None:
         return passed, failed
-    quantified = [d.contribution.value for d in attribution.drivers if d.contribution]
+    unit = normalize_unit(attribution.movement.unit)
+    contributions = [d.contribution for d in attribution.drivers if d.contribution]
+    off_unit = [c for c in contributions if normalize_unit(c.unit) != unit]
+    residual_fact = attribution.residual
+    if residual_fact is not None and normalize_unit(residual_fact.unit) not in ("", unit):
+        off_unit = [*off_unit, residual_fact]
+    quantified = [c.value for c in contributions if normalize_unit(c.unit) == unit]
+    if off_unit:
+        failed.append(
+            "drivers_unit_mismatch ("
+            + ", ".join(f"{c.value:+g} {c.unit}" for c in off_unit)
+            + f" is not stated in the movement's unit ({attribution.movement.unit}); a "
+            "contribution is a share of THIS movement, so it carries the movement's unit)"
+        )
     if not quantified:
-        return passed, ["no_quantified_drivers"]
+        return passed, [*failed, "no_quantified_drivers"]
     tolerance = reconcile_tolerance(attribution)
-    residual = attribution.residual.value if attribution.residual else 0.0
+    residual = residual_fact.value if residual_fact else 0.0
     total = sum(quantified) + residual
     if abs(total - attribution.movement.delta) <= tolerance:
         passed.append("drivers_reconcile")
@@ -987,3 +1232,169 @@ def check_drivers_reconcile(attribution) -> tuple[list[str], list[str]]:
             f"!= delta {attribution.movement.delta:+.1f}, tol {tolerance})"
         )
     return passed, failed
+
+
+# A ratio's LEVEL, above which the number is not a ratio at all. The largest
+# ratio these banks print is a liquidity coverage ratio near 130% or an NSFR
+# near 115%, and the largest legitimate level in the whole saved set is a
+# Westpac cost-to-income ratio of 53.04. 200 leaves 3.8x headroom above real
+# data and sits 5.8x below the smallest defect it must catch (an ROE of 1160,
+# which is 11.6% written in basis points).
+RATIO_LEVEL_CEILING = 200.0
+
+
+def check_ratio_level(movement) -> tuple[list[str], list[str]]:
+    """A ratio movement's endpoints must be ratio-sized.
+
+    A percent-to-bps lift exists for a bps metric; its mirror never did. So a
+    ppt metric whose endpoints arrived in BASIS POINTS passed every check:
+    movement arithmetic is self-consistent (1160 - 20 = 1140), the drivers
+    reconcile at the same wrong scale, and settle_identity_scale's guard needs
+    a contribution larger than the level, which 1160 never is. The unit-typed
+    tolerances round 1 introduced are only as good as the unit LABEL, and
+    nothing asked whether the label fitted the number.
+    """
+    passed, failed = [], []
+    if movement is None or normalize_unit(movement.unit) not in RATIO_UNITS:
+        return passed, failed
+    level = max(abs(movement.from_value), abs(movement.to_value))
+    if level > RATIO_LEVEL_CEILING:
+        failed.append(
+            f"movement_level_not_ratio_sized ({level:g} {movement.unit} is not the level of a "
+            f"ratio; the ceiling is {RATIO_LEVEL_CEILING:g}. A ratio of 11.6 per cent is 11.6 "
+            "in points and 1160 in basis points: read the endpoints in the metric's own unit, "
+            "and convert a change column printed in basis points by dividing it by 100)"
+        )
+    else:
+        passed.append("movement_level_is_ratio_sized")
+    return passed, failed
+
+
+def settle_ratio_scale(attribution, records=None) -> str | None:
+    """Restate a ratio movement written in basis points. Mutates.
+
+    The mirror of the percent-to-bps lift the bps metrics have: there the
+    author reads "12.20" off a percent column while the metric is bps, here it
+    reads the level to match a change column printed in basis points while the
+    metric is points. NAB's FY25 ROE run read the RIGHT row — "Cash return on
+    equity 11.4% 11.6% (20 bps)" — and then submitted 1160.0 -> 1140.0 ppt.
+
+    The correction is self-evidencing, exactly as the lift is: it fires only
+    when the evidence PRINTS both endpoints, divided by 100, as percentages. A
+    movement already written in points cannot pass that test, because no page
+    prints an ROE of 0.116 per cent.
+    """
+    movement = attribution.movement
+    if movement is None or normalize_unit(movement.unit) not in RATIO_UNITS:
+        return None
+    records = attribution.evidence_records if records is None else records
+    frm, to = movement.from_value / IDENTITY_SCALE, movement.to_value / IDENTITY_SCALE
+    if not (_percent_evidenced(frm, records) and _percent_evidenced(to, records)):
+        return None
+    note = (
+        f"Movement endpoints converted from basis points ({movement.from_value:g}, "
+        f"{movement.to_value:g}) to {movement.unit}: the evidence prints this ratio as "
+        f"{frm:g}% and {to:g}%, and the unit for this metric is {movement.unit}. A change "
+        "column printed in basis points is divided by 100 to enter a movement stated in "
+        "points."
+    )
+    movement.from_value, movement.to_value = round(frm, 4), round(to, 4)
+    movement.delta = round(movement.delta / IDENTITY_SCALE, 4)
+    attribution.limitations.append(note)
+    return note
+
+
+# The failures that condemn the WHOLE quantified driver table rather than one
+# claim. A bridge that does not close proves that one contribution is wrong and
+# not which one; a movement read at the wrong scale is a movement the whole
+# table was written against. Either way code cannot name the offender, so every
+# quantified claim loses its right to near-certainty.
+WHOLE_TABLE_FAILURES = ("drivers_reconcile", "movement_level_not_ratio_sized")
+
+
+def cap_unreconciled_drivers(attribution, failures: list[str]) -> list[str]:
+    """Carry a fatal check down to the DRIVERS. Mutates; returns what it capped.
+
+    A failed check used to lower `attribution_confidence` alone, and every
+    per-driver `confidence` survived it untouched. The calibration metrics read
+    the DRIVER's confidence, so the Brier score and the confidently-wrong rate
+    were blind to every failed check: 22 saved artifacts carry a "Failed check"
+    limitation and ship drivers at 80-90, and the suite's one confidently-wrong
+    claim is exactly this — a bridge that failed drivers_reconcile, an answer
+    that declared 40, and the offending driver still at 85.
+    """
+    hits = [f for f in failures if any(f.startswith(name) for name in WHOLE_TABLE_FAILURES)]
+    if not hits:
+        return []
+    capped = []
+    for driver in attribution.drivers:
+        if driver.contribution is None or driver.confidence <= CLAIM_CITATION_CAP:
+            continue
+        driver.confidence = CLAIM_CITATION_CAP
+        driver.checks_passed.append("unreconciled_bridge_cap_80")
+        capped.append(f"{driver.canonical} {driver.contribution.value:+g} {driver.contribution.unit}")
+    if capped:
+        attribution.limitations.append(
+            f"Capped at {CLAIM_CITATION_CAP}: " + ", ".join(capped) + ". "
+            + hits[0].split(" (")[0]
+            + " failed, so the parts and the whole disagree. That proves one of these claims "
+            "is wrong without saying which, so none of them may claim near-certainty."
+        )
+    return capped
+
+
+def sign_flip_hint(attribution) -> str | None:
+    """A retry hint when the reconciliation gap is exactly twice one claim.
+
+    Nothing converts a COST component's own movement into its effect on
+    earnings. CBA's 1H26 loan impairment expense fell from 320 to 319, which
+    ADDS $1m to cash earnings, and the author copied the change in the charge
+    (-1) into the contribution field. The bridge then missed by +2, which is
+    exactly -2 x the offending contribution.
+
+    This is a HINT and never a correction: it names the driver whose sign to
+    re-read, and it never states a value the author should reach. Where two
+    contributions fit the gap it says so, so an ambiguous case gets a question
+    rather than an answer.
+    """
+    movement = attribution.movement
+    if movement is None:
+        return None
+    quantified = [
+        d for d in attribution.drivers
+        if d.contribution is not None
+        and normalize_unit(d.contribution.unit) == normalize_unit(movement.unit)
+    ]
+    if not quantified:
+        return None
+    residual = attribution.residual.value if attribution.residual else 0.0
+    gap = movement.delta - (sum(d.contribution.value for d in quantified) + residual)
+    tolerance = reconcile_tolerance(attribution)
+    if abs(gap) <= tolerance:
+        return None
+    candidates = [
+        d for d in quantified
+        if d.contribution.value != 0 and abs(gap + 2 * d.contribution.value) <= tolerance
+    ]
+    if not candidates:
+        return None
+    names = ", ".join(
+        f"'{d.canonical}' ({d.contribution.value:+g} {d.contribution.unit})" for d in candidates
+    )
+    if len(candidates) == 1:
+        return (
+            f"The gap between your contributions and the movement delta is exactly TWICE your "
+            f"{names} contribution, with the opposite sign. That is the signature of a sign "
+            "error: check that contribution's direction against the movement's. A line the "
+            "bank prints as a cost or a charge moves the total the OTHER way — a charge that "
+            "falls adds to earnings — so the contribution is not always the change in the row "
+            "as printed. Correct the sign only if the evidence supports it; otherwise declare "
+            "the residual."
+        )
+    return (
+        f"The gap between your contributions and the movement delta is exactly TWICE one of "
+        f"these contributions, with the opposite sign: {names}. One of them may carry the "
+        "wrong direction: a line the bank prints as a cost or a charge moves the total the "
+        "OTHER way, so a charge that falls adds to earnings. Check each against the evidence, "
+        "and declare the residual if the evidence does not settle it."
+    )

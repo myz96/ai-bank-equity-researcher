@@ -37,6 +37,7 @@ from .validate import (
     RATIO_TOL_PPT,
     WALK_BAR_TOL_PA,
     cross_source_view,
+    normalize_unit,
 )
 
 GOLD_DIR = REPO_ROOT / "evals" / "gold"
@@ -388,14 +389,6 @@ def run_question_suite(combo: str, bank: str | None = None, split: str = "dev",
 # a comparison, so the harness and the deterministic checks cannot disagree.
 # ---------------------------------------------------------------------------
 
-UNIT_ALIASES = {
-    "bps": "bps", "bp": "bps", "bpt": "bps", "bpts": "bps", "basis": "bps",
-    "$m": "$m", "$": "$m", "m": "$m", "$millions": "$m", "aud$m": "$m",
-    "ppt": "ppt", "ppts": "ppt", "pp": "ppt",
-    "%": "%", "pct": "%", "percent": "%",
-}
-
-
 @dataclass(frozen=True)
 class Tolerance:
     """A unit-typed match tolerance: max(absolute, relative x |target|)."""
@@ -406,14 +399,6 @@ class Tolerance:
 
     def for_target(self, target: float) -> float:
         return max(self.absolute, self.relative * abs(float(target)))
-
-
-def normalize_unit(unit: str | None) -> str:
-    """'bps of average GLAA' -> 'bps'; '$ m' -> '$m'; None -> ''."""
-    if not unit:
-        return ""
-    token = str(unit).strip().lower().split(" ")[0]
-    return UNIT_ALIASES.get(token, token)
 
 
 def tolerance_for(unit: str | None) -> Tolerance:
@@ -573,6 +558,19 @@ def _score_one_framing(framing: Framing, claims: list[DriverClaim], unit: str) -
         entries.append(entry)
         value = entry["value"]
 
+        # The gold states its values in ONE unit, and the harness used to apply
+        # that unit to every claim whatever the claim said its own unit was: a
+        # "+3 bps" contribution was scored against a "+3 $m" gold slot and
+        # graded correct by tolerance. A claim in another unit is a claim about
+        # something else, so it is wrong, not right.
+        claimed_unit = normalize_unit(claim.contribution.unit)
+        if claimed_unit and claimed_unit != normalize_unit(unit):
+            label(
+                entry,
+                INCORRECT,
+                f"claimed in {claim.contribution.unit}, and this movement is stated in {unit}",
+            )
+            continue
         if canonical in BUCKET_CANONICALS:
             label(entry, UNSCORED, "catch-all bucket: no canonical gold slot verifies it")
             continue

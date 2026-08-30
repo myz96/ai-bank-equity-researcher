@@ -148,3 +148,57 @@ def test_fetched_evidence_reaches_the_artifact_without_a_retry(harness):
     ids = [r.id for r in attribution.evidence_records]
     assert len(ids) == len(set(ids)), "a fetched record must not be added twice"
     assert len(ids) == len(extracted)
+
+
+# ---------------------------------------------------------------------------
+# Review round 2: the retry carries the sign hint and the ratio-scale note
+# ---------------------------------------------------------------------------
+
+
+BRIDGE_WITH_A_SIGN_ERROR = {
+    "movement": {"from_value": 5132.0, "to_value": 5445.0, "delta": 313.0, "unit": "$m"},
+    "basis": "cash",
+    "headline": "Cash earnings rose $313m.",
+    "drivers": [
+        # 312 - 1 = 311 against a delta of 313. The gap is +2.00, which is
+        # exactly -2 x the impairment contribution and nothing else.
+        {"canonical": "nii", "contribution": {"value": 312.0, "unit": "$m"},
+         "narrative": "Volume growth.", "confidence": 85, "evidence": ["ev-1"]},
+        {"canonical": "credit_impairment_charge", "contribution": {"value": -1.0, "unit": "$m"},
+         "narrative": "The charge fell.", "confidence": 85, "evidence": ["ev-1"]},
+    ],
+    "attribution_confidence": 60,
+    "limitations": [],
+}
+
+
+def test_the_retry_asks_about_a_contribution_whose_sign_fits_the_gap(harness):
+    """CBA 1H26: the impairment charge FELL $1m, which ADDS $1m to earnings.
+
+    The author copied the change in the charge (-1) into the contribution
+    field, and the bridge then missed by exactly -2 x that contribution.
+    Nothing converts a cost line's own movement into its effect on earnings, so
+    the retry is handed the question — never the answer.
+    """
+    install, _extracted = harness
+    llm = _LLM([BRIDGE_WITH_A_SIGN_ERROR, BRIDGE_WITH_A_SIGN_ERROR])
+    install(llm)
+    P.run_case("CBA", "cash_earnings", "1H26", "1H25", "cheap")
+
+    retry_prompt = llm.prompts[1]
+    assert "check_this_contribution_sign" in retry_prompt
+    assert "credit_impairment_charge" in retry_prompt
+    # A hint names no value to reach.
+    assert "signature of a sign error" in retry_prompt
+
+
+def test_the_driver_cap_reaches_a_bridge_that_never_closes(harness):
+    """The answer declared 60 and its drivers 85; the calibration metrics read
+    the DRIVERS, so a failed check used to be invisible to them."""
+    install, _extracted = harness
+    llm = _LLM([BRIDGE_WITH_A_SIGN_ERROR, BRIDGE_WITH_A_SIGN_ERROR])
+    install(llm)
+    attribution, _ = P.run_case("CBA", "cash_earnings", "1H26", "1H25", "cheap")
+
+    assert attribution.attribution_confidence <= 40
+    assert all(d.confidence <= 80 for d in attribution.drivers if d.contribution)

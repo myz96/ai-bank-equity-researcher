@@ -11,47 +11,43 @@
     "unit": "ppt"
   },
   "movement_source": "row 'Cash return on equity', column FY24 -> column FY25",
-  "headline": "NAB's Cash ROE declined by 20 bps to 11.4% in FY25 (ev-8). Earnings fell $11m to $7,091m against a flat equity base of ~$62.4bn (ev-4, ev-5), driving a negative earnings effect. Equity growth provided a small offsetting positive contribution.",
+  "headline": "NAB's Cash ROE declined by 20 bps to 11.4% in FY25 (ev-8). Earnings fell slightly (-$11m) while average equity rose ($1.3bn), with the equity effect dominating the decline.",
   "headline_evidence": [
+    "ev-8",
     "ev-4",
-    "ev-5",
-    "ev-6",
-    "ev-8"
+    "ev-5"
   ],
   "drivers": [
     {
       "canonical": "earnings_effect",
       "bank_label": null,
       "contribution": {
-        "value": -0.03,
+        "value": -0.02,
         "unit": "ppt"
       },
       "columns": "FY24 -> FY25",
-      "narrative": "Derived: Prior ROE (11.6%) x Earnings Growth (-0.15%). Earnings fell $11m to $7,091m (ev-4). Contribution is derived, not disclosed.",
+      "narrative": "Derived: Prior ROE (11.6%) x earnings growth rate (-0.15%). Earnings fell $11m (ev-17). Contribution is derived, not disclosed.",
       "confidence": 80,
       "evidence": [
-        "ev-4",
-        "ev-6",
-        "ev-8"
+        "ev-8",
+        "ev-17"
       ],
-      "checks_passed": [
-        "single_source"
-      ],
+      "checks_passed": [],
       "checks_failed": []
     },
     {
       "canonical": "equity_effect",
       "bank_label": null,
       "contribution": {
-        "value": -0.17,
+        "value": -0.18,
         "unit": "ppt"
       },
       "columns": "FY24 -> FY25",
-      "narrative": "Derived: Total delta (-0.2 ppt) minus earnings effect (-0.03 ppt). Equity grew from $61,039m to $62,355m (ev-5). Higher average equity reduced the ratio. Contribution is derived, not disclosed.",
+      "narrative": "Derived: Total delta (-0.2 ppt) minus earnings effect (-0.02 ppt). Equity grew ~2.2% (ev-5), diluting returns. Contribution is derived, not disclosed.",
       "confidence": 80,
       "evidence": [
-        "ev-5",
-        "ev-8"
+        "ev-8",
+        "ev-5"
       ],
       "checks_passed": [
         "single_source"
@@ -60,26 +56,26 @@
     }
   ],
   "residual": {
-    "value": 0.0,
+    "value": -0.0,
     "unit": "ppt"
   },
   "notable_items": [],
   "disagreements": [
     {
-      "topic": "Cash ROE FY25 Level",
+      "topic": "Cash ROE Level",
       "values": [
-        "11.4% (Results Book)",
-        "10.7% (Investor Presentation)"
+        "11.4% (Results Book ev-8)",
+        "10.7% (Investor Presentation ev-11)"
       ],
       "preferred": "11.4%",
       "reason": "definitional",
-      "explanation": "The Results Book (audited source hierarchy) reports 11.4%. The IP likely uses a different denominator or basis."
+      "explanation": "The Results Book (ev-8) is the primary source per hierarchy. The IP (ev-11) likely uses a different denominator or basis."
     }
   ],
   "attribution_confidence": 80,
   "limitations": [
-    "Drivers are mathematically derived using the identity ROE = Earnings/Equity. The bank does not explicitly split the movement into these two canonical components in the provided text.",
-    "Confidence capped at 80 due to derivation and disagreement on the FY25 level between sources."
+    "Drivers are mathematically derived from KPI endpoints and profit/equity movements, not explicitly stated by the bank as a bridge.",
+    "Interaction term is absorbed into the equity effect."
   ],
   "evidence_records": [
     {
@@ -88,7 +84,7 @@
       "pdf_page": 71,
       "printed_page": null,
       "kind": "table",
-      "quote": "Net profit attributable to owners of the Company 6,759 6,960",
+      "quote": "Net profit attributable to owners of the Company 6,759 6,960 3,352 3,407",
       "numbers": [
         {
           "label": "Statutory earnings FY25",
@@ -111,7 +107,7 @@
       "pdf_page": 71,
       "printed_page": null,
       "kind": "table",
-      "quote": "Total average equity (attributable to owners of the Company) 62,355 61,039",
+      "quote": "Total average equity (attributable to owners of the Company) 62,355 61,039 63,375 61,314",
       "numbers": [
         {
           "label": "Average equity statutory FY25",
@@ -134,7 +130,7 @@
       "pdf_page": 71,
       "printed_page": null,
       "kind": "table",
-      "quote": "Statutory return on equity 10.8% 11.4%",
+      "quote": "Statutory return on equity 10.8% 11.4% 10.5% 11.1%",
       "numbers": [
         {
           "label": "ROE statutory FY25",
@@ -157,7 +153,7 @@
       "pdf_page": 71,
       "printed_page": null,
       "kind": "table",
-      "quote": "Cash earnings 7,091 7,102",
+      "quote": "Cash earnings 7,091 7,102 3,508 3,583",
       "numbers": [
         {
           "label": "Cash earnings FY25",
@@ -180,7 +176,7 @@
       "pdf_page": 71,
       "printed_page": null,
       "kind": "table",
-      "quote": "Total average equity (attributable to owners of the Company) ($m) 62,355 61,039",
+      "quote": "Total average equity (attributable to owners of the Company) ($m) 62,355 61,039 63,375 61,314",
       "numbers": [
         {
           "label": "Average equity cash FY25",
@@ -203,7 +199,7 @@
       "pdf_page": 71,
       "printed_page": null,
       "kind": "table",
-      "quote": "Cash return on equity 11.4% 11.6%",
+      "quote": "Cash return on equity 11.4% 11.6% 11.0% 11.7%",
       "numbers": [
         {
           "label": "ROE cash FY25",
@@ -229,21 +225,33 @@
       "quote": "Statutory return on equity 10.8% 11.4% (60 bps) 10.5% 11.1% (60 bps)",
       "numbers": [
         {
-          "label": "Statutory return on equity FY25",
+          "label": "Statutory ROE FY25",
           "value": 10.8,
           "unit": "%",
           "basis": "statutory"
         },
         {
-          "label": "Statutory return on equity FY24",
+          "label": "Statutory ROE FY24",
           "value": 11.4,
           "unit": "%",
           "basis": "statutory"
         },
         {
-          "label": "Statutory return on equity change FY25 vs FY24",
+          "label": "Statutory ROE change FY25 vs FY24",
           "value": -0.6,
           "unit": "ppt",
+          "basis": "statutory"
+        },
+        {
+          "label": "Statutory ROE H1 FY25",
+          "value": 10.5,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "Statutory ROE H1 FY24",
+          "value": 11.1,
+          "unit": "%",
           "basis": "statutory"
         }
       ],
@@ -258,21 +266,33 @@
       "quote": "Cash return on equity 11.4% 11.6% (20 bps) 11.0% 11.7% (70 bps)",
       "numbers": [
         {
-          "label": "Cash return on equity FY25",
+          "label": "Cash ROE FY25",
           "value": 11.4,
           "unit": "%",
           "basis": "cash"
         },
         {
-          "label": "Cash return on equity FY24",
+          "label": "Cash ROE FY24",
           "value": 11.6,
           "unit": "%",
           "basis": "cash"
         },
         {
-          "label": "Cash return on equity change FY25 vs FY24",
+          "label": "Cash ROE change FY25 vs FY24",
           "value": -0.2,
           "unit": "ppt",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash ROE H1 FY25",
+          "value": 11.0,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash ROE H1 FY24",
+          "value": 11.7,
+          "unit": "%",
           "basis": "cash"
         }
       ],
@@ -280,6 +300,88 @@
     },
     {
       "id": "ev-9",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 10,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Cash earnings per share - basic (cents) 231.8 229.2 2.6 114.8 116.9 (2.1)",
+      "numbers": [
+        {
+          "label": "Cash EPS basic FY25",
+          "value": 231.8,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash EPS basic FY24",
+          "value": 229.2,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash EPS basic change FY25 vs FY24",
+          "value": 2.6,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash EPS basic H1 FY25",
+          "value": 114.8,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash EPS basic H1 FY24",
+          "value": 116.9,
+          "unit": "cents",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 10,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Cash earnings per share - diluted (cents) 230.4 227.0 3.4 114.1 114.5 (0.4)",
+      "numbers": [
+        {
+          "label": "Cash EPS diluted FY25",
+          "value": 230.4,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash EPS diluted FY24",
+          "value": 227.0,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash EPS diluted change FY25 vs FY24",
+          "value": 3.4,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash EPS diluted H1 FY25",
+          "value": 114.1,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash EPS diluted H1 FY24",
+          "value": 114.5,
+          "unit": "cents",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 6,
       "printed_page": 6,
@@ -302,7 +404,7 @@
       "provenance": null
     },
     {
-      "id": "ev-10",
+      "id": "ev-12",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 6,
       "printed_page": 6,
@@ -325,7 +427,53 @@
       "provenance": null
     },
     {
-      "id": "ev-11",
+      "id": "ev-13",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 6,
+      "printed_page": 6,
+      "kind": "table",
+      "quote": "Dividend per share and payout ratio (cents) FY24 229 FY25 232",
+      "numbers": [
+        {
+          "label": "Dividend per share FY24",
+          "value": 229.0,
+          "unit": "cents",
+          "basis": null
+        },
+        {
+          "label": "Dividend per share FY25",
+          "value": 232.0,
+          "unit": "cents",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 6,
+      "printed_page": 6,
+      "kind": "table",
+      "quote": "Dividend payout ratio – guided by a range of 65-75% of cash earnings1 FY24 73.7% FY25 73.3%",
+      "numbers": [
+        {
+          "label": "Dividend payout ratio FY24",
+          "value": 73.7,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Dividend payout ratio FY25",
+          "value": 73.3,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-15",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -335,7 +483,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p5 -> page 39"
     },
     {
-      "id": "ev-12",
+      "id": "ev-16",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -345,7 +493,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p5 -> page 39"
     },
     {
-      "id": "ev-13",
+      "id": "ev-17",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -392,7 +540,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p5 -> page 39"
     },
     {
-      "id": "ev-14",
+      "id": "ev-18",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -439,7 +587,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p5 -> page 39"
     },
     {
-      "id": "ev-15",
+      "id": "ev-19",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -486,7 +634,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p5 -> page 39"
     },
     {
-      "id": "ev-16",
+      "id": "ev-20",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -533,7 +681,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p5 -> page 39"
     },
     {
-      "id": "ev-17",
+      "id": "ev-21",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -580,7 +728,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p5 -> page 39"
     },
     {
-      "id": "ev-18",
+      "id": "ev-22",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -627,7 +775,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p5 -> page 39"
     },
     {
-      "id": "ev-19",
+      "id": "ev-23",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -679,10 +827,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-08-30T14:59:36+00:00",
-    "seconds": 34.1,
-    "cost_usd": 0.0016,
-    "tokens": "33504 in / 4433 out",
+    "generated": "2026-08-30T16:31:29+00:00",
+    "seconds": 54.0,
+    "cost_usd": 0.0018,
+    "tokens": "34879 in / 5462 out",
     "orchestration": "pipeline",
     "pages_extracted": 15,
     "reference_follow": [
