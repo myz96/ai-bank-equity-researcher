@@ -1461,7 +1461,7 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     )
     for check in (
         check_movement(attribution.movement),
-        check_ratio_level(attribution.movement),
+        check_ratio_level(attribution.movement, metric_cfg["unit"]),
         (drivers_passed, drivers_failed),
         check_comparison_leak(attribution, primary_view, context_view),
         check_movement_columns(attribution, period_date, comparator_date, prior_half_date),

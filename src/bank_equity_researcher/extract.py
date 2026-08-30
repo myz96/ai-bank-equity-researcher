@@ -8,7 +8,7 @@ import re
 from .corpus import Document
 from .llm import LLM
 from .schema import EvidenceRecord, NumberFact
-from .validate import _quote_numbers, quote_prints, walk_sum_tolerance
+from .validate import printed_numbers, quote_prints, walk_sum_tolerance
 
 TEXT_PROMPT = """You extract evidence for bank equity research. Today's task: {case}.
 
@@ -224,6 +224,13 @@ def _numbers_the_quote_prints(quote: str, raw_numbers) -> list[NumberFact]:
     impairment expense was $554 million, a decrease of $1,964 million" carried
     a fact of 2,518, and "Treasury & Markets impact on NIM 0.13% 0.13%"
     carried a fact of 0 bps. Those are dropped.
+
+    The digits of a LABEL are not numbers the quote prints (round 4). Banks
+    number their capital levels, their tiers and their credit stages, so
+    "Level 2 common equity Tier 1 capital ratio" parses as [2, 1]: the gate
+    switched on over a pure label and dropped the 12.53%/12.49% facts the
+    record was cited for. `printed_numbers` states the rule that separates an
+    index inside a label from a figure in the row.
     """
     facts: list[NumberFact] = []
     for number in raw_numbers if isinstance(raw_numbers, list) else []:
@@ -233,9 +240,12 @@ def _numbers_the_quote_prints(quote: str, raw_numbers) -> list[NumberFact]:
             facts.append(NumberFact(**number))
         except Exception:  # noqa: BLE001, S112 - a malformed number is dropped, not fatal
             continue
-    if not _quote_numbers(quote):
-        return facts
-    return [fact for fact in facts if quote_prints(quote, fact.value, fact.unit)]
+    return [
+        fact
+        for fact in facts
+        if not printed_numbers(quote, fact.value, fact.unit)
+        or quote_prints(quote, fact.value, fact.unit)
+    ]
 
 
 def annotation_records(

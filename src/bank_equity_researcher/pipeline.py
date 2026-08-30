@@ -411,7 +411,7 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         scale_note = settle_identity_scale(attribution, metric_cfg["method"])
         output_failures = (
             check_movement(attribution.movement)[1]
-            + check_ratio_level(attribution.movement)[1]
+            + check_ratio_level(attribution.movement, metric_cfg["unit"])[1]
             + check_drivers_reconcile(attribution)[1]
             + check_comparison_leak(attribution, primary_view, context_view)[1]
             + check_movement_columns(
@@ -524,7 +524,7 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     drivers_passed, drivers_failed = check_drivers_reconcile(attribution)
     for check in (
         check_movement(attribution.movement),
-        check_ratio_level(attribution.movement),
+        check_ratio_level(attribution.movement, metric_cfg["unit"]),
         (drivers_passed, drivers_failed),
         check_comparison_leak(attribution, primary_view, context_view),
         check_movement_columns(attribution, period_date, comparator_date, prior_half_date),

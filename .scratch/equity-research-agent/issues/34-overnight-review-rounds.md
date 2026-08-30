@@ -552,3 +552,157 @@ three.
 - The ROE identity split itself, and the underlying/notable expense framing,
   which supplies every wrong claim in every run of this round.
 - Nothing was committed, per the brief.
+
+## Round 4 (2026-08-31, Codex reviewer) — the unit-declaration round
+
+Reviewer: one Codex session, read-only over `src/` at commit 5b4e890, with an
+executed repro for every item. Four findings, all inside round-2 and round-3
+fresh code. Three tighten a unit test; the fourth repairs a round-3
+overcorrection and is the only one with a LIVE footprint in the saved set.
+
+The finding count converges: 18 -> 15 -> 6 -> 4.
+
+Result: 4 fixed, 0 refuted. Every item was shown RED first by executing the
+reviewer's own repro against the round-3 tree.
+
+**Live suite deferred: credits exhausted.** OpenRouter credits ran out during
+the overnight head-to-head (commit 15e52f5), so this round made NO model call
+of any kind. Every number below comes from pytest, from an executed repro, or
+from a replay over the 79 saved `out/*/attribution.json`. The suite re-run is
+owed before this round is called done.
+
+### Per item
+
+| # | Finding | Verdict | Evidence |
+|---|---|---|---|
+| 1 | HIGH — a row-header unit bypasses NumberFact verification | fixed | Repro re-executed: `quote_prints("Net interest margin (%) 2.05 2.08", 2.05, "$m")` -> `True`, so `_mint_record` kept an invented `{"value": 2.05, "unit": "$m"}` and a `+2.05 $m` driver stayed at 95. Round 3 bound the unit of a number that carries its unit GLUED to it, and a table row does not: it prints the unit once, in the header, and the cells bare. New `_declarations` reads the units the quote's own WORDS declare, and a bare number is read in those units through `UNIT_CONVERSIONS` and nothing else. After: the mint drops the fact, the record ships with no numbers, and `cap_weakly_cited_claims` takes the driver to 80. |
+| 2 | HIGH — `settle_ratio_scale` corrects the numbers and keeps a conflicting movement unit | fixed | Repro re-executed: an ROE submitted `1160 -> 1140, -20, unit bps` against a ppt metric came out of the corrector as `11.6 -> 11.4, -0.2, bps` — the gold movement written in a unit 100x out. `check_ratio_level` then keyed off the retained `"bps"`, saw a non-ratio unit, and stayed silent; the `no_quantified_drivers` exemption left confidence 95. Two parts: the corrector settles the UNIT with the numbers and records the change in its note (`bps -> ppt`), and `check_ratio_level` takes the METRIC's unit, exactly as the corrector does. After: `11.6 -> 11.4, -0.2, ppt`; and an UNCORRECTED `1160 bps` against a ppt metric now fires `movement_level_not_ratio_sized`, which is a `WHOLE_TABLE_FAILURE`. Both call sites already held `metric_cfg["unit"]`. |
+| 3 | MED-HIGH — the money family test collapses `$m` and `$bn` | fixed | Repro re-executed: `quote_states("Assets ($bn) 2.5", 2.5, "$m")` -> `True`, because `_FAMILY_WORDS` held the generic token `"$"` for both units. The declaration table now keys on the canonical unit — `$m` and `$bn` are separate patterns — and a bare cell reaches the claim only through `convert_unit`. After: `2.5 $m` is refused and `2500 $m` grounds. A quote that writes `"$"` and never names a scale still grounds either money unit 1:1, which is the reading a plain `$` column has always had. |
+| 4 | MED-HIGH — the narrowed extractor gate parses label digits as numbers | fixed | Repro re-executed: `_quote_numbers("Level 2 common equity Tier 1 capital ratio")` -> `[(2.0, ""), (1.0, "")]`, so the quote looked like one that prints numbers, the no-number exemption was lost, and the 12.53%/12.49% facts the record was cited for were dropped. Visible in `out/wbc-cet1-fy25-vs-fy24-cheap/attribution.json` as `ev-16` with an empty `numbers` list. New `validate.printed_numbers` states the rule; the gate asks it instead of `_quote_numbers`. |
+
+### The label-index rule, stated exactly
+
+A number in a quote is a LABEL INDEX, and not a quantity the quote prints, when
+ALL five hold. The conjunction is what keeps a real figure out.
+
+1. It carries no glued unit. A bank never writes "Level 2bps".
+2. It is one or two digits, with no decimal point and no thousands separator.
+3. Its magnitude is at most 99.
+4. A word ends immediately before it AND a word starts immediately after it, so
+   it sits inside the label rather than in the row's run of figures. "Stage 2
+   4,504" is a figure with an index in front of it, and the figure keeps the
+   gate on.
+5. It is unlike the fact being checked — outside that claim's citation
+   tolerance. A digit the fact itself claims is not an absence of evidence
+   about that fact: the row may yet declare a unit the fact conflicts with, so
+   the exemption is not handed out on it. ("Segment 3 income ($bn) by division"
+   still refuses a fact of `3.0 $m`.)
+
+Replayed over all 79 artifacts, 2,569 records: the gate turns OFF on **12
+records** and on no others. Every one is a label, a date or a footnote index —
+"Level 2 common equity Tier 1 capital ratio", "Jun 21 Pro-forma", "for the 6
+months ended 30 June 2026", "Net interest margin 4 Total Group", "APRA Common
+Equity Tier 1 ratios". None is a measurement.
+
+### Verification
+
+`uv run python -m pytest tests/ -q` — **430 passed** (403 before; +27, all in
+the new `tests/test_review_round4.py`). All four items were RED first: 8
+failures against the round-3 tree, one or more per finding.
+
+`uv run ruff check src/ tests/` — back to the 29-finding baseline, byte for
+byte. No prompt string changed in this round; `author.py` is untouched.
+
+#### Replay over saved artifacts — 79 artifacts, 2,569 records, 5,564 facts
+
+A worktree at 15e52f5 supplies the "before" and the working tree the "after".
+The same script runs against both and the two blobs are diffed.
+
+**The extractor gate, per fact: 13 lost, 2 regained.** Both directions were
+inspected one by one.
+
+- The 13 losses are one class, and it is finding 3's class exactly: a `($bn)`
+  row whose fact claims the same magnitude in `$m`. "Risk weighted assets
+  ($bn) 482 496 505" carrying `482 $m`; "Total assets ($bn) 1,409" carrying
+  `1409 $m`; "Average interest earning assets ($bn) 1,001.2 978.7" carrying
+  `1001.2 $m`. Every one is wrong by a factor of 1000. Each is a test case in
+  `test_a_billions_row_does_not_print_the_same_number_in_millions`.
+- The 2 regains are `cba-nim-fy26-vs-fy25-normal` `ev-5`: the quote is "Net
+  interest margin 4 Total Group" — a row label with footnote index 4 — and the
+  facts are the NIM row's own 2.08% and 2.05%.
+
+**`quote_states`: 158 grounding pairs after, 153 before. 0 lost, 5 gained.**
+The five are `nab-cet1-fy25-vs-fy24-cheap` `ev-2`, a walk table headed
+"Movements in CET1 capital ratio (%)" printing 0.82, (0.61), (0.45), 0.01,
+(0.08), whose drivers claim +82, -61, -45, +1, -8 bps. The page prints those
+numbers; the old family test could not read a "(%)" header into a bps claim, so
+five correct claims were denied their citation. This is a widening of ONE
+reading — a declared unit converted through `UNIT_CONVERSIONS` — and it changes
+no confidence anywhere in the saved set.
+
+**Every deterministic verdict is unchanged on all 79.** `cap_weakly_cited_claims`
+with all driver confidences reset to 95 caps the same 90 claims before and
+after. `settle_ratio_scale`, `check_ratio_level` and `check_drivers_reconcile`
+return the identical result on all 79.
+
+#### The over-tightening this round found in its own first cut, and how
+
+The first implementation read a declared unit over the WHOLE quote. Replayed,
+it dropped **92 facts**, and **75 of them were real**:
+
+- **54** were multi-row quotes. A quote spans four rows of one table — "Average
+  net assets 78,004 ... ROE - cash basis (%) 13.8" — and the header of the last
+  row was read backwards over the cells of the first.
+- **10** were percent-change columns. A bank prints the change beside the dollar
+  columns of the same row, under the one "($M)" header: "Corporate tax expense
+  ($M) 4,699 4,491 5 2,332 2,367 (1)".
+- **11** were a cents row whose fact named "%" or "bps" ("Dividends per share -
+  fully franked (cents) 235 260 225" carrying `235 %`). Those facts ARE wrong,
+  but the rule that caught them is the rule that caught the 64 above, so it is
+  not the rule.
+- **17** were the `$bn`/`$m` class finding 3 exists for.
+
+The refined rule loses 13 and restores 79: all 75 real facts, plus 4 of the 17
+`$bn` cases it cannot reach — a chart annotation that prints its "($bn)" label
+AFTER its bars ("5 40 42 12 (10) Jun 25 ... IRRBB RWA ($bn)"), where no
+declaration stands before the number.
+
+So the denial is positional and one-directional, and both halves are measured
+facts about how a bank prints a table:
+
+- Only a declaration STANDING BEFORE the number binds it.
+- A row that declares the claim's own FAMILY has already had its say through
+  the conversion ("Assets ($bn) 2.5" denies 2.5 $m).
+- A row that declares a RATIO denies a MONEY claim outright (finding 1).
+- A row that declares MONEY does NOT deny a ratio claim (the change column).
+
+`test_a_declaration_binds_only_what_stands_after_it` holds both halves with the
+saved quotes verbatim.
+
+#### The three named live cases, before -> after
+
+| case | before | after |
+|---|---|---|
+| `wbc-cet1-fy25-vs-fy24-cheap` `ev-16` — "Level 2 common equity Tier 1 capital ratio: - APRA" | `_quote_numbers` -> `[2, 1]`, gate ON, both gold facts (12.53%, 12.49%) DROPPED | `printed_numbers` -> `[]`, gate OFF, both facts KEPT. The sibling `wbc-cet1-fy25-vs-fy24-agentic-cheap` `ev-5` quotes the same row WITH its figures, so its gate stays ON and keeps the same two facts by printing them. |
+| `nab-roe-fy25` / `cba-roe-fy26` ratio artifacts | the corrector returned `11.6 -> 11.4, -0.2 bps` and `14.0 -> 13.5, 0.5 bps` — right numbers, wrong unit; `check_ratio_level` silent | `-0.2 ppt` and `0.5 ppt`, and the uncorrected `1160 bps` against a ppt metric now fires `movement_level_not_ratio_sized`. The six SAVED roe artifacts already carry `ppt` movements (the model labelled them correctly), so **no saved artifact changes**: this defect is latent in the saved set and proved by the repro. |
+| `cba-cti-fy26-vs-fy25-*` (the 0.0 ppt residual) | agentic: `drivers_reconcile` PASS, residual 0.0 ppt, cap-at-95 takes all three drivers; cheap: PASS; agentic-cheap: `no_quantified_drivers` | identical in every field. The round does not touch it. |
+
+### Left undone
+
+- **The live suite re-run.** Owed as soon as OpenRouter credits return: dev and
+  questions, both shells, against `agentic-dev-merged` and the frozen baseline.
+  Until then the round's claim is "no deterministic verdict moves on 79 saved
+  artifacts", which is weaker than "the suite holds".
+- **The percent-to-bps lift does not settle the movement's unit either.**
+  `author.py:425` multiplies the endpoints by 100 for a bps metric and leaves
+  the model's own label in place, which is finding 2's defect in the mirror
+  position. It is out of this round's brief and untouched. Note that
+  `check_ratio_level` keying on the METRIC's unit already stops the false
+  positive it used to cause (a lifted `1220` labelled `"%"` failed the ratio
+  ceiling on a metric whose unit is bps).
+- A cents row still grounds a "%" fact of the same magnitude ("Dividends per
+  share (cents) 235 260 225" carrying `235 %`). The asymmetric rule above lets
+  it through deliberately: the same row prints its percentage change column,
+  and no shape rule separates the two. It was let through before this round as
+  well, so nothing regressed; it is a candidate for a later round.
+- Everything left undone by round 3 stands.

@@ -1078,50 +1078,50 @@ _SUFFIX_UNITS = {
     "bn": "$bn", "b": "$bn", "billion": "$bn",
     "c": "cents",
 }
-# The words a quote uses to name a unit family, for a number the page prints
-# WITHOUT a glued suffix (a table row: "Loan impairment expense 319 406 320").
-# A bare number is read in the claim's own unit only when the quote names that
-# unit family somewhere, so a dollar row can no longer ground a ratio claim.
+# The unit a quote DECLARES for the bare numbers in it — the header of a table
+# row ("Net interest margin (%) 2.05 2.08", "Assets ($bn) 2.5", "Movement in
+# CET1 (bps) 12 34") or a unit word standing in the sentence ("Cost to income
+# ratio, per cent 45.0 46.2"). A table prints its unit once, above the column
+# or beside the row, and the cells bare; the declaration is how a bare cell is
+# read at all.
 #
-# The test is on a WORD, not on a substring, and the two-letter tokens are
-# gone. "pt" is inside "bpts", so a table headed "Movements in bpts" named the
-# POINTS family and a bare 34 grounded a claim of 34 ppt — the basis-point
-# reading is 0.34, so the citation cap was inverted by a factor of 100. "pt" is
-# also inside "September", "accepted", "adopted" and "except", and "cent" is
-# inside "recent" and inside "per cent" itself.
-_FAMILY_WORDS = {
-    "$m": ("$", "million"),
-    "$bn": ("$", "billion"),
-    "ppt": ("%", "per cent", "percent", "percentage point", "ppt"),
-    "%": ("%", "per cent", "percent", "percentage point", "ppt"),
-    "ratio": ("%", "per cent", "percent", "percentage point", "ppt"),
-    "bps": ("bps", "bpts", "bpt", "basis point"),
-    "cents": ("cents", "cps"),
+# The key is the unit's canonical spelling, so a declaration reaches a claim
+# through UNIT_CONVERSIONS and through nothing else. The generic "$" is not a
+# key here: it names the money family and no scale inside it, and holding it
+# for both "$m" and "$bn" is what let "Assets ($bn) 2.5" state 2.5 $m without
+# the 1000x conversion.
+#
+# The test is on a WORD, not on a substring. "pt" is inside "bpts", so a table
+# headed "Movements in bpts" named the POINTS family and a bare 34 grounded a
+# claim of 34 ppt — the basis-point reading is 0.34, so the citation cap was
+# inverted by a factor of 100. "pt" is also inside "September", "accepted",
+# "adopted" and "except", and "cent" is inside "recent" and inside "per cent"
+# itself. "$" and "%" are not word characters, so they stay plain substrings.
+_DECLARED_UNIT_PATTERNS = {
+    "$m": re.compile(r"\$\s?m\b|\bmillions?\b", re.IGNORECASE),
+    "$bn": re.compile(r"\$\s?bn?\b|\bbillions?\b", re.IGNORECASE),
+    "bps": re.compile(r"\bbp(?:s|t|ts)?\b|\bbasis point", re.IGNORECASE),
+    "%": re.compile(r"%|\bper\s?cent|\bpercent|\bpercentage point|\bppts?\b", re.IGNORECASE),
+    "cents": re.compile(r"\bcents\b|\bcps\b", re.IGNORECASE),
 }
-# One pattern per family. A word that starts with a letter or a digit must
-# start at a word BOUNDARY; "$" and "%" are not word characters, so they stay
-# plain substrings. There is no closing boundary, so "basis point" still reads
-# "basis points" and "ppt" still reads "ppts".
-_FAMILY_PATTERNS = {
-    unit: re.compile(
-        "|".join(
-            (r"\b" + re.escape(word) if word[0].isalnum() else re.escape(word))
-            for word in words
-        ),
-        re.IGNORECASE,
-    )
-    for unit, words in _FAMILY_WORDS.items()
-}
+# A quote that writes "$" and never says which scale. It names the money family
+# and leaves the scale to the row, so a bare number under it reads 1:1 in
+# whichever money unit the claim is stated in — the reading a plain "$" column
+# has always had.
+MONEY_SCALE_UNSTATED = "$"
+_MONEY_MARK = re.compile(r"\$")
 
 
-def _quote_numbers(quote: str | None) -> list[tuple[float, str]]:
-    """(magnitude, unit) for every number a verbatim quote states.
+def _scan_numbers(quote: str | None) -> list[tuple[float, str, re.Match[str]]]:
+    """(magnitude, unit, match) for every number a verbatim quote states.
 
     The unit is the one glued to the number, or "" when the quote prints the
-    number bare. The caller decides what a bare number may ground.
+    number bare. The caller decides what a bare number may ground. The match is
+    kept so a caller can read the words around the number.
     """
-    values: list[tuple[float, str]] = []
-    for token, suffix in _QUOTE_NUMBER_RE.findall(quote or ""):
+    values: list[tuple[float, str, re.Match[str]]] = []
+    for match in _QUOTE_NUMBER_RE.finditer(quote or ""):
+        token, suffix = match.group(1), match.group(2)
         try:
             value = abs(float(token.replace(",", "")))
         except ValueError:  # pragma: no cover - the pattern admits only numbers
@@ -1137,8 +1137,170 @@ def _quote_numbers(quote: str | None) -> list[tuple[float, str]]:
             and len(token.lstrip("-")) == 4
         ):
             continue
-        values.append((value, unit))
+        values.append((value, unit, match))
     return values
+
+
+def _quote_numbers(quote: str | None) -> list[tuple[float, str]]:
+    """(magnitude, unit) for every number a verbatim quote states."""
+    return [(value, unit) for value, unit, _ in _scan_numbers(quote)]
+
+
+def _declarations(quote: str | None) -> tuple[tuple[int, str], ...]:
+    """(position, unit) for every unit the quote's own WORDS declare.
+
+    A unit token that a number has already taken as its glued suffix declares
+    nothing: it belongs to that one figure. "Operating expenses 6,000 5,800
+    3.4%" prints a percentage CHANGE beside two dollar cells, and reading its
+    "%" as the row's unit would refuse the cells their own. So a token inside
+    the span of a number is skipped, and what remains is the row label and the
+    column headers.
+    """
+    text = quote or ""
+    spans = [match.span() for match in _QUOTE_NUMBER_RE.finditer(text)]
+
+    def taken(start: int, end: int) -> bool:
+        return any(start < span_end and end > span_start for span_start, span_end in spans)
+
+    found: list[tuple[int, str]] = []
+    money = False
+    for unit, pattern in _DECLARED_UNIT_PATTERNS.items():
+        for match in pattern.finditer(text):
+            if taken(*match.span()):
+                continue
+            found.append((match.start(), unit))
+            money = money or unit in ("$m", "$bn")
+    if not money:
+        # A "$" that a number has taken as its own currency mark ("$554m") is
+        # that figure's, not the row's.
+        found += [
+            (match.start(), MONEY_SCALE_UNSTATED)
+            for match in _MONEY_MARK.finditer(text)
+            if not taken(match.start(), match.end() + 1)
+        ]
+    return tuple(sorted(found))
+
+
+def _declared_grounds(
+    declared: tuple[tuple[int, str], ...], quoted: float, value: float, unit: str | None
+) -> bool:
+    """Does a BARE number, read in a unit the quote declares, state this claim?
+
+    Every declared unit is tried, wherever it stands, because one quote can
+    carry several ("Net interest margin (%) 2.05 2.08 (3)bpts", and a quote
+    that spans four rows of a table carries one per row). A reading through
+    UNIT_CONVERSIONS is the only reading there is: a cell under a "($bn)"
+    header states 2500 $m and never 2.5 $m.
+    """
+    for _position, family in declared:
+        if family == MONEY_SCALE_UNSTATED:
+            if normalize_unit(unit) in ("$m", "$bn") and abs(quoted - abs(value)) <= _tolerance_for(
+                CITATION_TOL, unit, CITATION_TOL_DEFAULT
+            ):
+                return True
+            continue
+        if _converted_prints(quoted, family, value, unit):
+            return True
+    return False
+
+
+def _same_family(declared_unit: str, claim_unit: str | None) -> bool:
+    """Do a declared unit and a claimed unit restate each other?"""
+    claim = normalize_unit(claim_unit)
+    if declared_unit == MONEY_SCALE_UNSTATED:
+        return claim in ("$m", "$bn")
+    return convert_unit(1.0, declared_unit, claim) is not None
+
+
+def _declaration_refuses(
+    declared: tuple[tuple[int, str], ...], start: int, unit: str | None
+) -> bool:
+    """Does the row this bare number sits in deny it to this claim?
+
+    Asked only after `_declared_grounds` has failed, and measured over the 79
+    saved artifacts, because both halves of it are a fact about how banks print
+    a table.
+
+    Only a declaration STANDING BEFORE the number binds it. A quote often spans
+    four rows of one table — "Average net assets 78,004 ... ROE - cash basis
+    (%) 13.8" — and the header of the last row says nothing about the cells of
+    the first. Reading the "(%)" backwards over the whole quote dropped 54 real
+    dollar facts in the saved set.
+
+    The denial is one-directional, and that too is how the pages read:
+
+    - A row that declares the claim's own FAMILY has already had its say
+      through the conversion. "Assets ($bn) 2.5" prints 2500 $m, so it denies a
+      claim of 2.5 $m; "Movement in CET1 (bps) 12 34" denies 34 ppt.
+    - A row that declares a RATIO or a rate denies a MONEY claim outright.
+      "Net interest margin (%) 2.05 2.08" carries no dollar column, and reading
+      its cells as dollars is what minted an invented 2.05 $m fact and left a
+      driver at 95.
+    - A row that declares MONEY does NOT deny a ratio claim: a bank prints the
+      percentage change beside the dollar columns of the same row, under the
+      one "($M)" header ("Corporate tax expense ($M) 4,699 4,491 5"). Denying
+      it dropped 10 real change-column facts.
+    """
+    before = [family for position, family in declared if position < start]
+    if not before:
+        return False
+    if any(_same_family(family, unit) for family in before):
+        return True
+    return normalize_unit(unit) in ("$m", "$bn")
+
+
+# A one- or two-digit index inside a label ("Level 2 common equity Tier 1
+# capital ratio", "Stage 3 provisions"). Banks number their capital levels,
+# their credit stages and their tiers, and a row LABEL is what the extractor
+# most often quotes.
+_LABEL_INDEX_CEILING = 99
+_ENDS_IN_A_WORD = re.compile(r"[A-Za-z][ \t]*$")
+_STARTS_A_WORD = re.compile(r"[ \t]*[A-Za-z]")
+
+
+def printed_numbers(quote: str | None, value: float, unit: str | None) -> list[tuple[float, str]]:
+    """The numbers a quote prints as QUANTITIES, for a claim of `value` `unit`.
+
+    `_quote_numbers` minus the digits that belong to a label. The difference
+    matters to one caller: the gate that asks whether a quote prints any number
+    at all, and keeps every fact beside a quote that prints none (absence of
+    evidence is not a conflict). "Level 2 common equity Tier 1 capital ratio"
+    parses as [2, 1], so the gate switched on over a pure label and dropped the
+    12.53%/12.49% facts the record was cited for — visible in the saved WBC
+    FY25 CET1 artifact as a record with an empty `numbers` list.
+
+    A number is a label index when ALL of these hold, and the conjunction is
+    what keeps a real figure out:
+      1. it carries no glued unit — a bank never writes "Level 2bps";
+      2. it is one or two digits with no decimal point and no separator;
+      3. a WORD ends immediately before it and a WORD starts immediately after
+         it, so it sits inside the label rather than in the row's run of
+         figures ("Stage 2 4,504" is a figure with an index in front of it, and
+         the figure keeps the gate on);
+      4. it is unlike the fact being checked. A digit the fact itself claims is
+         not an absence of evidence about that fact — the row may yet declare a
+         unit the fact conflicts with — so the exemption is not handed out on
+         it.
+    """
+    kept: list[tuple[float, str]] = []
+    text = quote or ""
+    tolerance = _tolerance_for(CITATION_TOL, unit, CITATION_TOL_DEFAULT)
+    for quoted, quoted_unit, match in _scan_numbers(text):
+        token = match.group(1)
+        label_index = (
+            not quoted_unit
+            and "." not in token
+            and "," not in token
+            and len(token.lstrip("-")) <= 2
+            and quoted <= _LABEL_INDEX_CEILING
+            and bool(_ENDS_IN_A_WORD.search(text[: match.start(1)]))
+            and bool(_STARTS_A_WORD.match(text[match.end() :]))
+            and abs(quoted - abs(value)) > tolerance
+        )
+        if label_index:
+            continue
+        kept.append((quoted, quoted_unit))
+    return kept
 
 
 def _converted_prints(quoted: float, quoted_unit: str, value: float, unit: str | None) -> bool:
@@ -1178,15 +1340,13 @@ def quote_states(quote: str | None, value: float, unit: str | None) -> bool:
     3. otherwise the quote says nothing about the claim's unit, so it grounds
        nothing.
     """
-    tolerance = _tolerance_for(CITATION_TOL, unit, CITATION_TOL_DEFAULT)
-    pattern = _FAMILY_PATTERNS.get(normalize_unit(unit))
-    family = bool(pattern and pattern.search(quote or ""))
+    declared = _declarations(quote)
     for quoted, quoted_unit in _quote_numbers(quote):
         if quoted_unit:
             if _converted_prints(quoted, quoted_unit, value, unit):
                 return True
             continue
-        if family and abs(quoted - abs(value)) <= tolerance:
+        if _declared_grounds(declared, quoted, value, unit):
             return True
     return False
 
@@ -1209,12 +1369,26 @@ def quote_prints(quote: str | None, value: float, unit: str | None = None) -> bo
     fact's unit: the value check alone let "decreased 5 basis points" mint
     {"value": 5, "unit": "$m"}, and B3's conversion table then bound a unit the
     page never printed.
+
+    Round 4: a row does say which unit it is in, whenever it prints a header.
+    "Net interest margin (%) 2.05 2.08" minted an invented {"value": 2.05,
+    "unit": "$m"} off a percent cell, and the weak-citation cap then left a
+    +2.05 $m driver at 95. So a bare number is read first in the units the
+    quote declares, through UNIT_CONVERSIONS and through nothing else, and the
+    row that denies the claim (`_declaration_refuses`) ends it there. A bare
+    number under no unit signal at all is untouched: a plain table cell still
+    grounds a claim of an unstated unit.
     """
     tolerance = _tolerance_for(CITATION_TOL, unit, CITATION_TOL_DEFAULT)
-    for quoted, quoted_unit in _quote_numbers(quote):
+    declared = _declarations(quote)
+    for quoted, quoted_unit, match in _scan_numbers(quote):
         if quoted_unit:
             if _converted_prints(quoted, quoted_unit, value, unit):
                 return True
+            continue
+        if _declared_grounds(declared, quoted, value, unit):
+            return True
+        if _declaration_refuses(declared, match.start(1), unit):
             continue
         if abs(quoted - abs(value)) <= tolerance:
             return True
@@ -1346,7 +1520,7 @@ def check_drivers_reconcile(attribution) -> tuple[list[str], list[str]]:
 RATIO_LEVEL_CEILING = 200.0
 
 
-def check_ratio_level(movement) -> tuple[list[str], list[str]]:
+def check_ratio_level(movement, metric_unit: str | None = None) -> tuple[list[str], list[str]]:
     """A ratio movement's endpoints must be ratio-sized.
 
     A percent-to-bps lift exists for a bps metric; its mirror never did. So a
@@ -1356,15 +1530,25 @@ def check_ratio_level(movement) -> tuple[list[str], list[str]]:
     a contribution larger than the level, which 1160 never is. The unit-typed
     tolerances round 1 introduced are only as good as the unit LABEL, and
     nothing asked whether the label fitted the number.
+
+    The gate is the METRIC's unit, which the taxonomy fixes, exactly as it is
+    in settle_ratio_scale. Keyed on the movement's unit, which the model
+    writes, the check went silent on the very submission it exists for: an ROE
+    of "1160 -> 1140" labelled "bps" is not a ratio unit, so nothing asked
+    whether 1160 is the level of a ratio. `metric_unit` defaults to the
+    movement's own unit for a caller that has no taxonomy to hand.
     """
     passed, failed = [], []
-    if movement is None or normalize_unit(movement.unit) not in RATIO_UNITS:
+    if movement is None:
+        return passed, failed
+    gate = normalize_unit(metric_unit) if metric_unit else normalize_unit(movement.unit)
+    if gate not in RATIO_UNITS:
         return passed, failed
     level = max(abs(movement.from_value), abs(movement.to_value))
     if level > RATIO_LEVEL_CEILING:
         failed.append(
-            f"movement_level_not_ratio_sized ({level:g} {movement.unit} is not the level of a "
-            f"ratio; the ceiling is {RATIO_LEVEL_CEILING:g}. A ratio of 11.6 per cent is 11.6 "
+            f"movement_level_not_ratio_sized ({level:g} is not the level of a ratio stated in "
+            f"{gate}; the ceiling is {RATIO_LEVEL_CEILING:g}. A ratio of 11.6 per cent is 11.6 "
             "in points and 1160 in basis points: read the endpoints in the metric's own unit, "
             "and convert a change column printed in basis points by dividing it by 100)"
         )
@@ -1403,15 +1587,28 @@ def settle_ratio_scale(attribution, metric_unit: str | None, records=None) -> st
     frm, to = movement.from_value / IDENTITY_SCALE, movement.to_value / IDENTITY_SCALE
     if not (_percent_evidenced(frm, records) and _percent_evidenced(to, records)):
         return None
+    # The UNIT is settled with the numbers, because the two travel together and
+    # this corrector is the one thing that knows both. An ROE submitted as
+    # "1160 -> 1140, -20, bps" against a ppt metric came out of here as
+    # "11.6 -> 11.4, -0.2, bps" — the gold movement, written in a unit 100x out
+    # — and every downstream check then keyed off the retained label:
+    # check_ratio_level saw a non-ratio unit and stayed silent, and the scorer
+    # read the answer in basis points. A movement restated on the metric's own
+    # scale is stated in the metric's own unit.
+    was = movement.unit
+    settled = normalize_unit(metric_unit)
     note = (
         f"Movement endpoints converted from basis points ({movement.from_value:g}, "
-        f"{movement.to_value:g}) to {movement.unit}: the evidence prints this ratio as "
-        f"{frm:g}% and {to:g}%, and the unit for this metric is {normalize_unit(metric_unit)}. "
+        f"{movement.to_value:g}) to {settled}: the evidence prints this ratio as "
+        f"{frm:g}% and {to:g}%, and the unit for this metric is {settled}. "
         "A change column printed in basis points is divided by 100 to enter a movement "
         "stated in points."
     )
+    if normalize_unit(was) != settled:
+        note += f" The movement's unit is restated with its numbers ({was} -> {settled})."
     movement.from_value, movement.to_value = round(frm, 4), round(to, 4)
     movement.delta = round(movement.delta / IDENTITY_SCALE, 4)
+    movement.unit = settled
     attribution.limitations.append(note)
     return note
 
