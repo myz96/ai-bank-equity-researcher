@@ -119,6 +119,24 @@ COMBOS: dict[str, Combo] = {
 }
 
 
+def runner_for(combo_name: str):
+    """The case runner a combo's orchestration selects (ADR-0005).
+
+    Every caller that answers a case — the CLI and the eval harness — must go
+    through this one function, or `evals run --combo agentic` silently
+    measures the pipeline while wearing the agent's label (Codex architecture
+    critique 2026-08-30, finding 1). Imports are lazy so config stays free of
+    shell dependencies.
+    """
+    if COMBOS[combo_name].orchestration == "agent":
+        from .research_agent import run_agent_case
+
+        return run_agent_case
+    from .pipeline import run_case
+
+    return run_case
+
+
 def openrouter_api_key() -> str:
     key = os.environ.get("OPENROUTER_API_KEY")
     if not key:

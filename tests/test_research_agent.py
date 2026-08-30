@@ -922,3 +922,17 @@ def test_the_tool_surface_is_the_documented_one():
     for spec in [*RA.TOOL_SPECS, RA.SUBMIT_SPEC]:
         assert spec["function"]["parameters"]["type"] == "object"
         assert spec["function"]["description"]
+
+
+def test_runner_for_routes_on_orchestration():
+    """Codex critique finding 1: evals and the CLI must select the runner
+    through one function, or `evals run --combo agentic` silently measures
+    the pipeline while wearing the agent's label."""
+    from bank_equity_researcher.config import runner_for
+    from bank_equity_researcher.pipeline import run_case
+    from bank_equity_researcher.research_agent import run_agent_case
+
+    assert runner_for("agentic") is run_agent_case
+    assert runner_for("agentic-cheap") is run_agent_case
+    assert runner_for("cheap") is run_case
+    assert runner_for("normal") is run_case

@@ -93,13 +93,9 @@ def main() -> int:
     # A combo chooses its own orchestration shell (ADR-0005): "agent" is the
     # closed-loop research agent, anything else is the open-loop pipeline. Both
     # shells write the same artifacts, so every downstream reader is unchanged.
-    from .config import COMBOS
+    from .config import runner_for
 
-    if COMBOS[args.combo].orchestration == "agent":
-        from .research_agent import run_agent_case as run_case
-    else:
-        from .pipeline import run_case
-
+    run_case = runner_for(args.combo)
     attribution, out_dir = run_case(args.bank.upper(), args.metric, args.period, args.comparator, args.combo)
     print((out_dir / "report.md").read_text())
     print(f"\n[saved to {out_dir}]")

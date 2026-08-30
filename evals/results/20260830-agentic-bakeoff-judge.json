@@ -1,0 +1,1405 @@
+{
+ "stamp": "20260830-agentic",
+ "judges": [
+  "deepseek/deepseek-v4-pro-0813",
+  "qwen/qwen3.7-flash"
+ ],
+ "max_answer_chars": 20000,
+ "arms": {
+  "agentic": {
+   "cba-nim-fy26": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 4,
+    "passed": 3,
+    "failed": 0,
+    "flagged": 1,
+    "flagged_split": 1,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 0,
+    "not_stated": 0,
+    "fact_accuracy": "3/4",
+    "accuracy_fraction": 0.75,
+    "answer_truncated": false,
+    "quotes_used": 20,
+    "facts": [
+     {
+      "fact": "home lending pricing competition (-4 bps within asset pricing; PA p28 text)",
+      "verdict": "flagged_for_human",
+      "stated": null,
+      "entailed": "entailed",
+      "reason": "judges disagree \u2014 stated: judges answered ['partial', 'stated']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note says home lending pricing down 4 bps within asset pricing, matching fact's number and period.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 3 states home lending pricing decreased margin by 4bps, matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states -5 bps for asset pricing, not the specific -4 bps.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 3 explicitly states home lending pricing decreased by 4 basis points due to competition.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "business and institutional lending pricing (-1 bp within asset pricing; PA p28 text)",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note states business and institutional lending pricing decreased margin by 1 basis point within asset pricing.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 3 states business and institutional lending pricing decreased margin by 1 basis point, matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly states business and institutional lending pricing decreased by 1 basis point.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 3 explicitly states business and institutional lending pricing decreased by 1 basis point.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "liquids growth has broadly neutral impact on net interest income (PA p28 text)",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note quotes the exact fact: liquid assets have broadly neutral impacts on net interest income.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 2 states liquid assets growth has broadly neutral impacts on net interest income.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly states liquids have broadly neutral impacts on net interest income.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 2 explicitly states liquid asset growth has broadly neutral impacts on net interest income.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "portfolio mix from business lending growth and favourable deposit mix (PA p28 text)",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note states portfolio mix contributed +2bps from business lending growth and favourable deposit mix.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 5 states portfolio mix increased margin from business lending growth and favourable deposit mix, matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly attributes +2bps to favourable business-lending and deposit mix.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 5 and 16 explicitly state NIM mix impact from business lending growth and favourable deposit mix.",
+        "error": ""
+       }
+      ]
+     }
+    ],
+    "movement_reported": {
+     "from_value": 208.0,
+     "to_value": 205.0,
+     "delta": -3.0,
+     "unit": "bps"
+    },
+    "movement_gold": {
+     "from": 208,
+     "to": 205,
+     "delta": -3,
+     "unit": "bps",
+     "provenance": "FY26 PA PDF p28 table: 'Net interest margin (%) 2.05 | 2.08 | (3)bpts'"
+    },
+    "artifact_dir": "out/cba-nim-fy26-vs-fy25-agentic"
+   },
+   "cba-cash-earnings-fy26": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 3,
+    "passed": 1,
+    "failed": 1,
+    "flagged": 1,
+    "flagged_split": 1,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 1,
+    "not_stated": 0,
+    "fact_accuracy": "1/3",
+    "accuracy_fraction": 0.333,
+    "answer_truncated": false,
+    "quotes_used": 24,
+    "facts": [
+     {
+      "fact": "operating income growth +6.2% (slide 24)",
+      "verdict": "flagged_for_human",
+      "stated": "stated",
+      "entailed": null,
+      "reason": "judges disagree \u2014 entailed: judges answered ['entailed', 'not-entailed']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note says total operating income of $30,224m, up 6.2% on FY25's $28,465m.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show operating income growth of 6% or 6.2%, but not specifically +6.2% from slide 24.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly states operating income up 6.2% on FY25.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 19 explicitly states operating income growth is 6.2%.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "operating performance $16,469m, +6.5% (slide 24)",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note states operating performance of $16,469m, up 6.5% from $15,469m.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 20 shows operating performance 16,469 and +6.5%; quote 21 confirms 15,469 to 16,469 +6.5%.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly states operating performance of $16,469m, up 6.5%.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 14, 20, and 21 explicitly state operating performance is $16,469m with a +6.5% increase.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "statutory NPAT 10,866 vs cash 10,982; non-cash items are hedging/IFRS volatility and disposals (PA p16/p17)",
+      "verdict": "fail",
+      "stated": "stated",
+      "entailed": "not-entailed",
+      "reason": "stated=stated; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note states statutory NPAT 10,866 vs cash 10,982 and non-cash items as hedging/IFRS volatility and disposals.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show NPAT figures but do not state non-cash items are hedging/IFRS volatility and disposals.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly states statutory NPAT 10,866 and cash 10,982, attributing the gap to hedging/IFRS volatility and disposals.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes do not mention hedging/IFRS volatility or disposals as non-cash items.",
+        "error": ""
+       }
+      ]
+     }
+    ],
+    "movement_reported": {
+     "from_value": 10252.0,
+     "to_value": 10982.0,
+     "delta": 730.0,
+     "unit": "$m"
+    },
+    "movement_gold": {
+     "from": 10252,
+     "to": 10982,
+     "delta": 730,
+     "unit": "$m",
+     "provenance": "FY26 PA PDF p16 Group Performance Summary: 'Net profit after tax from continuing operations \u2013 cash basis 10,982 | 10,252 | 7'"
+    },
+    "artifact_dir": "out/cba-cash_earnings-fy26-vs-fy25-agentic"
+   },
+   "cba-impairment-fy26": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 3,
+    "passed": 0,
+    "failed": 2,
+    "flagged": 1,
+    "flagged_split": 1,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 0,
+    "not_stated": 2,
+    "fact_accuracy": "0/3",
+    "accuracy_fraction": 0.0,
+    "answer_truncated": false,
+    "quotes_used": 24,
+    "facts": [
+     {
+      "fact": "divisional deltas vs FY25: RBS +106 to 378; NZ +11 to 66; BB -45 to 310; IB&M -16 to 33 (PA p34)",
+      "verdict": "flagged_for_human",
+      "stated": "stated",
+      "entailed": null,
+      "reason": "judges disagree \u2014 entailed: judges answered ['entailed', 'not-entailed']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note lists all four divisional deltas exactly matching the fact's numbers and directions.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Fact's FY25 baseline values (272, 355, 49, 55) are absent from quotes.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly lists all four divisional deltas and ending values matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 9-12 explicitly state the exact divisional delta and FY25 values for all four segments.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "half-year: 2H26 $469m, +$150m or +47% on prior half, Business Banking +$128m on collective provision charges (PA p34)",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed (judges split ['absent', 'partial'], both short of stated)",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states the $150m collective rise but not the half-year 2H26 $469m or Business Banking +$128m.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack 2H26 $469m, +$150m/+47%, and Business Banking +$128m collective provision figures.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "absent",
+        "why": "Note discusses full-year data; fact specifies half-year 2H26.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show Business Banking expense decreased, contradicting the fact that it increased by $128m.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "half-year loss rate annualised 9bps (PA p34)",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed (judges split ['absent', 'partial'], both short of stated)",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "absent",
+        "why": "Note states full-year loss rate of 8bps, not half-year annualised 9bps.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack any half-year loss rate annualised 9bps figure or data to derive it.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states 8bps, not 9bps. It does not mention annualisation or half-year.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show 8bps, not 9bps. The specific fact is unsupported.",
+        "error": ""
+       }
+      ]
+     }
+    ],
+    "movement_reported": {
+     "from_value": 726.0,
+     "to_value": 788.0,
+     "delta": 62.0,
+     "unit": "$m"
+    },
+    "movement_gold": {
+     "from": 726,
+     "to": 788,
+     "delta": 62,
+     "unit": "$m",
+     "provenance": "FY26 PA PDF p34: 'Loan impairment expense/(benefit) 788 | 726 | 9' and text '+$62 million or 9%'"
+    },
+    "artifact_dir": "out/cba-impairment-fy26-vs-fy25-agentic"
+   },
+   "cba-nim-fy21": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 5,
+    "passed": 0,
+    "failed": 3,
+    "flagged": 2,
+    "flagged_split": 2,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 2,
+    "not_stated": 1,
+    "fact_accuracy": "0/5",
+    "accuracy_fraction": 0.0,
+    "answer_truncated": false,
+    "quotes_used": 17,
+    "facts": [
+     {
+      "fact": "liquids bar has minimal impact on NII (slide 63 annotation)",
+      "verdict": "flagged_for_human",
+      "stated": "stated",
+      "entailed": null,
+      "reason": "judges disagree \u2014 entailed: judges answered ['entailed', 'not-entailed']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note says higher liquids cost 4 bpts and CBA says 'Minimal impact on NII'.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quote 11 says 'Minimal impact on NII' but does not specify 'liquids bar' or link it to slide 63 annotation.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note explicitly states liquids had minimal impact on NII.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 14 explicitly states 'Flat ex liquids', supporting the minimal impact claim.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "deposit pricing & funding -3: cash rate cut -8, investment +1, replicating portfolio +2, wholesale +2 (slide 63 annotations)",
+      "verdict": "flagged_for_human",
+      "stated": null,
+      "entailed": "not-entailed",
+      "reason": "judges disagree \u2014 stated: judges answered ['partial', 'stated']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states deposit pricing & funding -3, cash rate -7, replicating portfolio +2, wholesale +2; fact says cash rate -8, investment +1.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quote 4 supports funding costs but no quote contains deposit pricing, investment, or slide 63 annotations.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note attributes -3 bps to deposit pricing/funding, driven by cash rate cut (-7/8), replicating portfolio (+2), and wholesale (+2).",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quote 4 states cash rate cut impact is -7 bps, not -8 as in the fact.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "asset pricing -2: home loans net flat (pricing +9, switching -5, discounting -4), business lending -1, consumer finance -1 (slide 63)",
+      "verdict": "fail",
+      "stated": "stated",
+      "entailed": "not-entailed",
+      "reason": "stated=stated; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note states home loans net flat with pricing +9, switching -5, discounting -4, business lending -1, consumer finance -1.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quote 2 says asset pricing decreased 2 bps, not -2; quote 3 supports home loans but not business/consumer -1 each.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note confirms home loans net flat, business lending -1, consumer finance -1.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quote 2 states business lending down 1 bpt, but fact claims -1 (ambiguous) and lacks specific breakdown for consumer finance vs asset pricing total.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "low-rate environment and TFF cited as the FY22 considerations (slide 63)",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note mentions low-rate environment and TFF but not as FY22 considerations or slide 63.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes mention TFF and low-rate environment separately, but none cite both as FY22 considerations on slide 63.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note mentions lower interest rates but omits TFF as a specific FY22 consideration.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes do not mention FY22 or slide 63.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "the Profit Announcement of this era carries the drivers as prose, not a chart (printed pp12-13)",
+      "verdict": "fail",
+      "stated": "stated",
+      "entailed": "not-entailed",
+      "reason": "stated=stated; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note says the FY20 to FY21 decomposition is narrative paragraphs, not a chart, in the results book.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show margin drivers as prose but never state they appear on printed pages 12-13 instead of a chart.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note explicitly states the decomposition is narrative paragraphs, not a chart.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes contain no mention of 'Profit Announcement' or page numbers pp12-13.",
+        "error": ""
+       }
+      ]
+     }
+    ],
+    "movement_reported": {
+     "from_value": 207.0,
+     "to_value": 203.0,
+     "delta": -4.0,
+     "unit": "bps"
+    },
+    "movement_gold": {
+     "from": 207,
+     "to": 203,
+     "delta": -4,
+     "unit": "bps",
+     "provenance": "FY21 presentation slide 63: FY20 207 -> FY21 203, '(4)bpts', continuing operations basis"
+    },
+    "artifact_dir": "out/cba-nim-fy21-vs-fy20-agentic"
+   }
+  },
+  "agentic-cheap": {
+   "cba-nim-fy26": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 4,
+    "passed": 3,
+    "failed": 0,
+    "flagged": 1,
+    "flagged_split": 1,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 0,
+    "not_stated": 0,
+    "fact_accuracy": "3/4",
+    "accuracy_fraction": 0.75,
+    "answer_truncated": false,
+    "quotes_used": 9,
+    "facts": [
+     {
+      "fact": "home lending pricing competition (-4 bps within asset pricing; PA p28 text)",
+      "verdict": "flagged_for_human",
+      "stated": null,
+      "entailed": "entailed",
+      "reason": "judges disagree \u2014 stated: judges answered ['partial', 'stated']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note says home lending pricing down 4 bps, primarily reflecting competition.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 2 states home lending pricing decreased margin by 4 bps due to competition.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states -4 bps for home lending but does not mention asset pricing.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 2 explicitly states home lending pricing decreased by 4 basis points.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "business and institutional lending pricing (-1 bp within asset pricing; PA p28 text)",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note explicitly states business/institutional lending pricing down 1 bps under asset pricing.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 2 explicitly states business and institutional lending pricing decreased margin by 1 basis point.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly states business/institutional lending pricing down 1 bps.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 2 explicitly states business and institutional lending pricing decreased by 1 basis point.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "liquids growth has broadly neutral impact on net interest income (PA p28 text)",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note says liquids have broadly neutral impacts on NII, matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 1 explicitly states liquid asset growth has broadly neutral impacts on net interest income.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly states liquids have broadly neutral impacts on NII.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 1 explicitly states liquid assets have broadly neutral impacts on net interest income.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "portfolio mix from business lending growth and favourable deposit mix (PA p28 text)",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note attributes +2 bps to favourable portfolio mix from business lending growth and deposit growth.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 4 directly states portfolio mix increased margin from business lending growth and favourable deposit mix.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly cites favourable portfolio mix from business lending growth and deposit mix.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 4 explicitly states portfolio mix increased margin due to business lending growth and favourable deposit mix.",
+        "error": ""
+       }
+      ]
+     }
+    ],
+    "movement_reported": {
+     "from_value": 208.0,
+     "to_value": 205.0,
+     "delta": -3.0,
+     "unit": "bps"
+    },
+    "movement_gold": {
+     "from": 208,
+     "to": 205,
+     "delta": -3,
+     "unit": "bps",
+     "provenance": "FY26 PA PDF p28 table: 'Net interest margin (%) 2.05 | 2.08 | (3)bpts'"
+    },
+    "artifact_dir": "out/cba-nim-fy26-vs-fy25-agentic-cheap"
+   },
+   "cba-cash-earnings-fy26": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 3,
+    "passed": 1,
+    "failed": 1,
+    "flagged": 1,
+    "flagged_split": 1,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 0,
+    "not_stated": 1,
+    "fact_accuracy": "1/3",
+    "accuracy_fraction": 0.333,
+    "answer_truncated": false,
+    "quotes_used": 19,
+    "facts": [
+     {
+      "fact": "operating income growth +6.2% (slide 24)",
+      "verdict": "flagged_for_human",
+      "stated": "partial",
+      "entailed": null,
+      "reason": "judges disagree \u2014 entailed: judges answered ['entailed', 'not-entailed']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note says total operating income grew 6%, not 6.2%, and omits slide 24 reference.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show total operating income growth of 6%, not operating income growth of +6.2%.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states operating income grew 6%, not +6.2%.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 19 explicitly states operating income increased by 6%, supporting the fact.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "operating performance $16,469m, +6.5% (slide 24)",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note states operating performance increased 6% to $16,469 million, matching the fact's number and direction.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 15 shows operating performance 16,469, with 6% growth, but the fact's +6.5% is unsupported.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly states operating performance increased to $16,469 million or 6%.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 15 explicitly states 'Operating performance' is $16,469m with a +6% change.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "statutory NPAT 10,866 vs cash 10,982; non-cash items are hedging/IFRS volatility and disposals (PA p16/p17)",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note says statutory NPAT 10,911m vs cash 10,982m, not 10,866m; non-cash items described but not as hedging/IFRS volatility and disposals.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Fact says statutory NPAT 10,866 but quotes show 10,911; no quote supports 10,866.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note cites statutory NPAT 10,911, not the fact's 10,866.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack specific hedging/IFRS volatility and disposal details.",
+        "error": ""
+       }
+      ]
+     }
+    ],
+    "movement_reported": {
+     "from_value": 10252.0,
+     "to_value": 10982.0,
+     "delta": 730.0,
+     "unit": "$m"
+    },
+    "movement_gold": {
+     "from": 10252,
+     "to": 10982,
+     "delta": 730,
+     "unit": "$m",
+     "provenance": "FY26 PA PDF p16 Group Performance Summary: 'Net profit after tax from continuing operations \u2013 cash basis 10,982 | 10,252 | 7'"
+    },
+    "artifact_dir": "out/cba-cash_earnings-fy26-vs-fy25-agentic-cheap"
+   },
+   "cba-impairment-fy26": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 3,
+    "passed": 0,
+    "failed": 3,
+    "flagged": 0,
+    "flagged_split": 0,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 1,
+    "not_stated": 2,
+    "fact_accuracy": "0/3",
+    "accuracy_fraction": 0.0,
+    "answer_truncated": false,
+    "quotes_used": 2,
+    "facts": [
+     {
+      "fact": "divisional deltas vs FY25: RBS +106 to 378; NZ +11 to 66; BB -45 to 310; IB&M -16 to 33 (PA p34)",
+      "verdict": "fail",
+      "stated": "stated",
+      "entailed": "not-entailed",
+      "reason": "stated=stated; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note lists all four divisional deltas and totals matching the fact exactly.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes mention loan impairment expense and credit impairment charge, not divisional deltas or the specific figures listed.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly lists all four divisional deltas and values matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes discuss total impairment, not divisional deltas for RBS, NZ, BB, or IB&M.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "half-year: 2H26 $469m, +$150m or +47% on prior half, Business Banking +$128m on collective provision charges (PA p34)",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed (judges split ['absent', 'partial'], both short of stated)",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states +$150m collective provision funding but not the 2H26 half-year period or Business Banking +$128m detail.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack half-year figures, Business Banking charges, and the $469m/$150m/47% values.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "absent",
+        "why": "Note discusses FY26 vs FY25, not 2H26 half-year data.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack specific half-year data, $469m figure, and Business Banking details.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "half-year loss rate annualised 9bps (PA p34)",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note says loss rate increased 1 bps to 8 bps, not annualised 9bps.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show impairment expense and credit charge, not a 9bps annualised half-year loss rate.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states 8 bps loss rate, not the specific 9bps annualised half-year figure.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack 'half-year', 'annualised', and '9bps' metrics required by the fact.",
+        "error": ""
+       }
+      ]
+     }
+    ],
+    "movement_reported": {
+     "from_value": 726.0,
+     "to_value": 788.0,
+     "delta": 62.0,
+     "unit": "$m"
+    },
+    "movement_gold": {
+     "from": 726,
+     "to": 788,
+     "delta": 62,
+     "unit": "$m",
+     "provenance": "FY26 PA PDF p34: 'Loan impairment expense/(benefit) 788 | 726 | 9' and text '+$62 million or 9%'"
+    },
+    "artifact_dir": "out/cba-impairment-fy26-vs-fy25-agentic-cheap"
+   },
+   "cba-nim-fy21": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 5,
+    "passed": 1,
+    "failed": 2,
+    "flagged": 2,
+    "flagged_split": 2,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 0,
+    "not_stated": 2,
+    "fact_accuracy": "1/5",
+    "accuracy_fraction": 0.2,
+    "answer_truncated": false,
+    "quotes_used": 11,
+    "facts": [
+     {
+      "fact": "liquids bar has minimal impact on NII (slide 63 annotation)",
+      "verdict": "flagged_for_human",
+      "stated": "partial",
+      "entailed": null,
+      "reason": "judges disagree \u2014 entailed: judges answered ['entailed', 'not-entailed']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "absent",
+        "why": "The note says liquids contributed -4 bps, not that it had minimal impact on NII.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show liquid assets decreased margin by 4 basis points, not minimal impact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note quantifies impact as -4 bps, not 'minimal impact'.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 11 explicitly states higher liquid assets decreased NIM, supporting the minimal impact claim.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "deposit pricing & funding -3: cash rate cut -8, investment +1, replicating portfolio +2, wholesale +2 (slide 63 annotations)",
+      "verdict": "flagged_for_human",
+      "stated": null,
+      "entailed": "not-entailed",
+      "reason": "judges disagree \u2014 stated: judges answered ['partial', 'stated']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note's funding section states cash rate cuts -7, replicating portfolio +2, wholesale +2, netting -3 bps.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quote 3 supports funding costs but not deposit pricing, investment, or wholesale as separate line items; slide 63 annotations absent.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note splits fact into separate drivers, omitting the combined 'deposit pricing & funding' label.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes do not mention investment (+1) or replicating portfolio (+2) impacts on margin.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "asset pricing -2: home loans net flat (pricing +9, switching -5, discounting -4), business lending -1, consumer finance -1 (slide 63)",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note states home loans net flat with pricing +9, switching -5, discounting -4, business lending -1, consumer finance -1.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 2 states asset pricing -2, home loans net flat with +9, -5, -4, business -1, consumer -1.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note matches asset pricing -2 bps and home loan components (+9, -5, -4).",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 2 explicitly lists all specified components and their exact basis point impacts for asset pricing.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "low-rate environment and TFF cited as the FY22 considerations (slide 63)",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed (judges split ['absent', 'partial'], both short of stated)",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "absent",
+        "why": "The note discusses FY21 drivers but does not mention low-rate environment or TFF as FY22 considerations.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes mention low-rate environment and TFF separately, but none cite both as FY22 considerations on slide 63.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note mentions cash rate cuts but omits TFF as a specific FY22 consideration.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes do not mention 'FY22' or cite TFF as a consideration for that year.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "the Profit Announcement of this era carries the drivers as prose, not a chart (printed pp12-13)",
+      "verdict": "fail",
+      "stated": "absent",
+      "entailed": "not-entailed",
+      "reason": "stated=absent; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "absent",
+        "why": "The note describes drivers as prose and a table, not as a chart on printed pages 12-13.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show NIM drivers as prose but never state they appear as prose rather than a chart on pp12-13.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "absent",
+        "why": "The note uses a table for drivers, contradicting the fact that they are prose.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes 1-7 are prose, but Quote 8 is a chart, contradicting the 'not a chart' claim.",
+        "error": ""
+       }
+      ]
+     }
+    ],
+    "movement_reported": {
+     "from_value": 207.0,
+     "to_value": 203.0,
+     "delta": -4.0,
+     "unit": "bps"
+    },
+    "movement_gold": {
+     "from": 207,
+     "to": 203,
+     "delta": -4,
+     "unit": "bps",
+     "provenance": "FY21 presentation slide 63: FY20 207 -> FY21 203, '(4)bpts', continuing operations basis"
+    },
+    "artifact_dir": "out/cba-nim-fy21-vs-fy20-agentic-cheap"
+   }
+  }
+ },
+ "judge_cost_usd": 0.0997
+}

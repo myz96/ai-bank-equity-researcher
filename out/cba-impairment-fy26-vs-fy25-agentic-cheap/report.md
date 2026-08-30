@@ -1,61 +1,62 @@
 # CBA — impairment — FY26 vs FY25
 
-**Movement (cash basis):** 726$m → 788$m (+62$m) | **Attribution confidence:** 40/100
+**Movement (cash basis):** 726$m → 788$m (+62$m) | **Attribution confidence:** 75/100
 
-*Read from: row 'Loan impairment expense/(benefit)', column Full Year Ended 30 Jun 25 $M -> column Full Year Ended 30 Jun 26 $M*
+*Read from: row 'Total loan impairment expense', column Full Year Ended 30 Jun 25 $M -> column Full Year Ended 30 Jun 26 $M*
 
-CBA’s credit impairment charge rose to $788 million in FY26 from $726 million in FY25, an increase of $62 million (+9%). The loss rate against average GLAA increased 1 bps to 8 bps. The movement is attributable to: +$150m in net collective provision funding (driven by portfolio growth and macro/geopolitical uncertainty), +$17m in net new/increased individual provisions (partly offset by larger write-backs of -$71m). Divisionally, Retail drove the increase (+$106m to $378m), while Business Banking (-$45m to $310m) and IB&M (-$16m to $33m) improved, partially offset by higher NZ impairment (+$11m to $66m).
+CBA’s credit impairment charge (loan impairment expense) rose to $788 million in FY26 from $726 million in FY25, an increase of $62 million (9%). The loss rate against average gross loans and acceptances increased 1 bps to 8 bps. The movement was driven by higher net collective provision funding (+$150m), partially offset by lower write-backs of individually assessed provisions (more negative by $71m) and roughly flat net new/individual provisioning (-$17m). Divisionally, Retail Banking Services drove the increase (+$106m to $378m), partly offset by decreases in Business Banking (-$45m to $310m) and Institutional Banking & Markets (-$16m to $33m), with a smaller increase in New Zealand (+$11m to $66m).
 
 ## Drivers
 
 | Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
 |---|---|---|---|---|---|
-| `collective.volume` | — | +150 $m | 85 | 1 (single_source) | ev-4, ev-3 |
-| `individual_provisions` | — | -54 $m | 85 | 1 (single_source) | ev-4, ev-7, ev-8 |
+| `collective.volume` | — | +150 $m | 85 | 1 (single_source) | ev-1, ev-2 |
+| `individual_provisions` | — | -17 $m | 85 | 1 (single_source) | ev-1, ev-2 |
+| `write_backs_recoveries` | — | -71 $m | 85 | 1 (single_source) | ev-1 |
 
 ### collective.volume
 *+150 $m | confidence 85/100*
 
-Net collective provision funding rose $150m to $606m (FY25: $456m). The bank states this reflects 'portfolio growth, increased geopolitical risk and macroeconomic uncertainty' (ev-3, ev-6, ev-7, ev-8).
-> [ev-4] CBA/FY26/profit_announcement, PDF p65: "Loan impairment expense was $378 million, an increase of $106 million or 39% on the prior year. The result was mainly driven by increased geopolitical risk, macroeconomic uncertainty, and rising cost-of-living pressures."
-> [ev-3] CBA/FY26/profit_announcement, printed p3: "Loan impairment expense (LIE) increased $62 million, with higher collective provisions mainly reflecting portfolio growth, increased geopolitical risk and macroeconomic uncertainty."
+Net collective provision funding increased $150 million to $606 million (from $456 million in FY25). The bank attributes higher collective provisions to portfolio growth, increased geopolitical risk, and macroeconomic uncertainty across both consumer and corporate segments. Corporate collective provisions grew $172 million to $2,797 million, while consumer collective provisions fell $48 million to $2,888 million due to rising house prices and more targeted FLAs for higher-risk cohorts, partly offset by higher arrears and cost-of-living pressures.
+> [ev-1] CBA/FY26/results_presentation, printed p29: "[walk chart] Loan impairment expense: FY25 72.60000000000001 -> FY26 78.80000000000001"
+> [ev-2] CBA/FY26/results_presentation, printed p24: "[walk chart] CBA credit impairment charge in FY26 vs FY25: FY25 0.0 -> FY26 0.071"
 
 ### individual_provisions
-*-54 $m | confidence 85/100*
+*-17 $m | confidence 85/100*
 
-Net new and increased individual provisioning was $422m (FY25: $439m), a decrease of $17m. Write-backs of individually assessed provisions were ($240m) in FY26 vs ($169m) in FY25, an additional $71m benefit. The net effect on charge from IAP movements is -$54m (i.e., lower charge). Business Banking noted 'lower individually assessed provision charges, including an increase in write-backs' (ev-7) and IB&M cited 'release of individually assessed provisions' (ev-8).
-> [ev-4] CBA/FY26/profit_announcement, PDF p65: "Loan impairment expense was $378 million, an increase of $106 million or 39% on the prior year. The result was mainly driven by increased geopolitical risk, macroeconomic uncertainty, and rising cost-of-living pressures."
-> [ev-7] CBA/FY26/profit_announcement, PDF p69: "Loan impairment expense as a percentage of average gross loans and acceptances decreased 3 basis points to 0.11%."
-> [ev-8] CBA/FY26/profit_announcement, PDF p73: "Loan impairment expense was $33 million, a decrease of $16 million or 33% on the prior year. This was primarily driven by release of individually assessed provisions, partly offset by higher collective provisions reflecting increased geopolitical risk, macroeconomic uncertainty, and portfolio growth."
+Net new and increased individual provisioning decreased $17 million to $422 million (from $439 million in FY25). Consumer individually assessed provisions decreased $19 million to $97 million, and corporate individually assessed provisions decreased $6 million to $694 million, driven by write-backs and write-offs.
+> [ev-1] CBA/FY26/results_presentation, printed p29: "[walk chart] Loan impairment expense: FY25 72.60000000000001 -> FY26 78.80000000000001"
+> [ev-2] CBA/FY26/results_presentation, printed p24: "[walk chart] CBA credit impairment charge in FY26 vs FY25: FY25 0.0 -> FY26 0.071"
+
+### write_backs_recoveries
+*-71 $m | confidence 85/100*
+
+
+> [ev-1] CBA/FY26/results_presentation, printed p29: "[walk chart] Loan impairment expense: FY25 72.60000000000001 -> FY26 78.80000000000001"
 
 ### other_unmapped
-*unquantified | confidence 40/100*
+*unquantified | confidence 70/100*
 
-The provision-type bridge sums to $150m (collective) - $17m (IAP new) + $71m (IAP write-back delta) = $204m positive contribution. However, the total LIE movement is only $62m. The remaining $142m difference is unexplained by the three canonical provision-type rows published. The bank does not provide a fourth row (e.g., direct write-offs impacting P&L separately, FX, or other adjustments) that reconciles the $788m total to the sum of these three components. Corporate Centre showed a $6m swing from ($5m) benefit to $1m expense, contributing $6m.
-> [ev-4] CBA/FY26/profit_announcement, PDF p65: "Loan impairment expense was $378 million, an increase of $106 million or 39% on the prior year. The result was mainly driven by increased geopolitical risk, macroeconomic uncertainty, and rising cost-of-living pressures."
-> [ev-5] CBA/FY26/profit_announcement, PDF p65: "Loan impairment expense as a percentage of average gross loans and acceptances increased 2 basis points on the prior year to 0.07%."
-
-## Notable items
-- Corporate Centre and Other swung from a $5m benefit in FY25 to a $1m expense in FY26, a $6m negative contribution to the movement.
-- The loss rate increased 1 bps to 8 bps on average GLAA.
+Divisional movements not fully explained by provision-type drivers: Retail +$106m to $378m (driven by geopolitical risk, macro uncertainty, cost-of-living); NZ +$11m to $66m (higher collective provisions from unemployment outlook deterioration); Business Banking -$45m to $310m (lower individual charges, higher collective from growth/geopolitical); IB&M -$16m to $33m (release of individual provisions, higher collective). Corporate Centre showed a benefit of $1m vs $(5)m prior year. These divisional deltas sum to $62m total movement.
+> [ev-2] CBA/FY26/results_presentation, printed p24: "[walk chart] CBA credit impairment charge in FY26 vs FY25: FY25 0.0 -> FY26 0.071"
 
 ## Limitations
-- No primary-period walk/bridge chart found in the results presentation; the quantified bridge is built from the appendix table on p118 which lists the three provision-type components but does not explicitly state they sum to the $788m total. The sum of the deltas (Collective +$150m, IAP new -$17m, IAP write-back +$71m) equals +$204m, which exceeds the $62m actual movement by $142m. This residual gap is not explained by any disclosed component.
-- Divisional deltas sum to $106m (RBS) - $45m (BB) - $16m (IB&M) + $11m (NZ) + $6m (Corp) = $62m, which matches the headline movement exactly. The divisional breakdown is therefore internally consistent, but the provision-type split does not reconcile to the total without an unquantified residual.
-- Confidence is limited by the inability to fully reconcile the provision-type bridge to the reported LIE total. The bank's narrative attributes the overall increase to 'higher collective provisions' but does not quantify the offsetting factors that reduce the $204m provision-type delta to $62m.
+- No walk/bridge chart with quantified bars for the FY26 vs FY25 impairment movement was found in the results presentation; the bridge is built from the provision-type table on page 118 of the profit announcement.
+- The provision-type components (net collective funding +$150m, net individual +$422m, write-backs -$240m) sum to $332m, which does not equal the $62m total movement. This is because the table includes all components but the 'Total loan impairment expense' line also implicitly captures other items like discount unwind, write-offs, recoveries, and other adjustments that are part of the provision rollforward but not separately listed in the LIE table. The $62m movement is the stated figure.
+- Divisional breakdown provides the where-layer but the provision-type bridge does not decompose by division, so there is no direct mapping between provision-type drivers and divisional movements.
+- Confidence is limited by the absence of a primary walk chart with summed bars; the driver contributions are derived from the provision-type table deltas rather than a published bridge.
 - Research stopped early: the tool-call budget (40 calls) was reached, so the evidence behind this answer is less complete than a full run's.
-- Failed check: drivers_reconcile (drivers +96.0 + residual +0.0 != delta +62.0, tol 1.0)
 
 ## Provenance
 - combo: agentic-cheap
 - models: agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash
 - documents: CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)
-- generated: 2026-08-30T12:34:55+00:00
-- seconds: 133.2
-- cost_usd: 0.0332
-- tokens: 961251 in / 6020 out
+- generated: 2026-08-30T12:59:56+00:00
+- seconds: 142.2
+- cost_usd: 0.0318
+- tokens: 987865 in / 4671 out
 - orchestration: agent
 - tool_calls: 40
 - pages_read: 23
-- charts_read: 0
+- charts_read: 3
 - budget_exhausted: the tool-call budget (40 calls)

@@ -36,6 +36,33 @@ say what they are — agent, tools, validation, judging, evals.
    (keep the frozen baseline, the bake-off files, and the latest cards at the
    top level); prune `tmp/`; check `prototypes/` is labelled as history.
 
+## Input: the Codex architecture critique (2026-08-30)
+
+The user commissioned an independent Codex critique in a parallel session;
+it is saved at `docs/reviews/codex-architecture-critique-2026-08-30.md`
+(brief beside it) with file:line evidence per finding. It IS this ticket's
+backlog. Highlights:
+
+- Finding 1 (eval routing bug) was FIXED immediately (runner_for in
+  config.py, test added) because it corrupted any suite-level agent eval.
+- The "delete or merge today" list (findings 2-8): merge the two shells'
+  finalisation policy (~180-260 lines), restrict submit citations to
+  cite-minted ids, generate tool schemas with Pydantic, delete dead
+  contract fields, drop automatic corroboration-disagreement synthesis,
+  prune unused registry metadata, move baseline-only retry helpers out of
+  shared validate.py.
+- NOT to delete without ablation: refs.py (the Note 2.2 regression is the
+  must-pass), metric prompt trims, extraction scoring.
+- The "load-bearing: do not cut" list at the end of the critique is the
+  cleanup round's guardrail — paste it into every cleanup subagent brief.
+- Under-tested validators named by the critique (annotate_walks,
+  corroborate, check_comparison_leak, ...) get table-driven tests BEFORE
+  they are moved.
+
+The user expects SEVERAL critique passes ("we will have to run a few of
+these to make sure we actually capture everything") — re-run the critique
+after the cleanup round and after the head-to-head settles the shells.
+
 ## Constraints
 
 - Moves and logic changes NEVER share a commit. Restructure commits are

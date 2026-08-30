@@ -804,7 +804,9 @@ def run_suite(suite: str, combo: str, bank: str | None = None, only: str | None 
     metric names and/or bank-metric-period fragments, matched case-insensitively
     against "BANK-metric-PERIOD" (e.g. "cash_earnings", "nim-1H26",
     "NAB,WBC-cti"). Full suites remain the gate at the end of a round."""
-    from .pipeline import run_case
+    from .config import runner_for
+
+    run_case = runner_for(combo)
 
     gold_cases = load_gold(suite, bank)
     if only:
