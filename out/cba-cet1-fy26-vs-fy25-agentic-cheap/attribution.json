@@ -1,0 +1,461 @@
+{
+  "bank": "CBA",
+  "metric": "cet1",
+  "period": "FY26",
+  "comparator": "FY25",
+  "basis": "cash",
+  "movement": {
+    "from_value": 1230.0,
+    "to_value": 1200.0,
+    "delta": -30.0,
+    "unit": "bps"
+  },
+  "movement_source": "row 'Common Equity Tier 1 (APRA) (%)', column 30 Jun 25 column -> column 30 Jun 26 column",
+  "headline": "CBA's APRA Level 2 CET1 ratio fell 30 bps to 12.0% in FY26 from 12.3% in FY25. The decline was driven by full-year dividends (final $2.70 + interim $2.70 per share, totalling $8.3bn including DRP buybacks) which reduced CET1, partly offset by capital generated from earnings (cash NPAT of $11.0bn, up 7% on FY25). Higher Credit Risk RWA (+$23.8bn to $422.7bn) and IRRBB RWA (+$1.8bn to $41.7bn) diluted the ratio, partially offset by lower Traded Market Risk RWA (-$2.7bn to $7.0bn). Operational Risk RWA rose to $51.0bn. No buy-back activity occurred in FY26. Excluding the interim dividend payment, CET1 increased 52 bps in H1, demonstrating strong organic capital generation.",
+  "headline_evidence": [
+    "ev-1",
+    "ev-2",
+    "ev-11"
+  ],
+  "drivers": [
+    {
+      "canonical": "earnings_generation",
+      "bank_label": null,
+      "contribution": null,
+      "columns": null,
+      "narrative": "Cash NPAT from continuing operations was $10,982 million, up $730 million or 7% on FY25 ($10,252 million). Retail Banking Services generated $4,145 million of organic capital contributing 81 bpts to CET1; Business Banking generated $2,716 million contributing 54 bpts; New Zealand generated $1,021 million contributing 20 bpts. In H1, Cash NPAT added +106 bpts to the CET1 walk.",
+      "confidence": 75,
+      "evidence": [
+        "ev-8",
+        "ev-5"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "dividend_net_drp",
+      "bank_label": null,
+      "contribution": null,
+      "columns": null,
+      "narrative": "Full-year dividend was $5.05 per share ($7,111 million cash component: interim $3,403 million + final $3,708 million; plus $1,173 million DRP buybacks: interim $530 million + final $643 million). The interim DRP buyback alone had a -10 bpts CET1 impact. No buy-back activity was undertaken during FY26 under the announced $1 billion programme.",
+      "confidence": 70,
+      "evidence": [
+        "ev-17",
+        "ev-18",
+        "ev-19",
+        "ev-20",
+        "ev-3",
+        "ev-4"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "rwa.credit",
+      "bank_label": null,
+      "contribution": null,
+      "columns": null,
+      "narrative": "Credit Risk RWA increased $23.8 billion (6%) to $422.7 billion, driven by volume growth in commercial portfolios and domestic residential mortgages, partly offset by credit quality improvement. In H1, Credit Risk RWA added -38 bpts to the CET1 walk.",
+      "confidence": 70,
+      "evidence": [
+        "ev-13",
+        "ev-5"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "rwa.irrbb",
+      "bank_label": null,
+      "contribution": null,
+      "columns": null,
+      "narrative": "IRRBB RWA increased $1.8 billion (5%) to $41.7 billion, largely driven by higher swap rates and deposit and equity hedge settings calibrated for stronger earnings stability through a rate cycle. In H1, IRRBB added -16 bpts to the CET1 walk.",
+      "confidence": 70,
+      "evidence": [
+        "ev-14",
+        "ev-5"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "rwa.market",
+      "bank_label": null,
+      "contribution": null,
+      "columns": null,
+      "narrative": "Traded Market Risk RWA decreased $2.7 billion (28%) to $7.0 billion, primarily driven by the securities financing portfolio. In H1, Market Risk added +8 bpts to the CET1 walk.",
+      "confidence": 70,
+      "evidence": [
+        "ev-15",
+        "ev-5"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "other_unmapped",
+      "bank_label": null,
+      "contribution": null,
+      "columns": null,
+      "narrative": "Includes intangibles, FX impact on Credit RWA, equity accounted profits/losses and impairments from associates, movements in reserves and other regulatory adjustments. In H1, 'Other' contributed -8 bpts to the CET1 walk.",
+      "confidence": 60,
+      "evidence": [
+        "ev-5"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    }
+  ],
+  "residual": null,
+  "notable_items": [],
+  "disagreements": [],
+  "attribution_confidence": 65,
+  "limitations": [
+    "No full-year (Jun 25 to Jun 26) CET1 walk chart is published by CBA; only a half-on-half walk (Dec 25 to Jun 26) is provided, so driver contributions are unquantified for the full-year comparison.",
+    "The half-on-half CET1 walk shows Cash NPAT +106 bpts, Dividend -76 bpts, RWA -46 bpts, Other -8 bpts, but these bars apply to the 6-month period and cannot be directly attributed to the full-year movement.",
+    "Full-year dividend impact on CET1 in bpts is not explicitly disclosed; only the interim DRP buyback (-10 bpts) is quantified.",
+    "Organic capital contributions by division (Retail 81 bpts, Business Banking 54 bpts, NZ 20 bpts) are stated for the full year but represent divisional contribution to CET1, not the net earnings-generation driver after RWA dilution.",
+    "The bank states that excluding the interim dividend, CET1 increased 52 bpts in H1, but does not provide an equivalent full-year framing.",
+    "Failed check: no_quantified_drivers",
+    "No published walk covers FY26 vs FY25: the bank's walk for this metric describes another comparison, so the driver split is not walk-verified for this comparison. Confidence is capped at 85."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Common Equity Tier 1 (CET1) 12.0 12.3 12.3 (30)bpts (30)bpts",
+      "numbers": [
+        {
+          "label": "CET1 as at 30 Jun 26",
+          "value": 12.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 as at 31 Dec 25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 as at 30 Jun 25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The Group's CET1 Capital ratio was 12.0% as at 30 June 2026, a decrease of 30 basis points from 31 December 2025 and 30 June 2025.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Key drivers of the change in CET1 for the 6 months ended 30 June 2026 were: • Capital generated from earnings; partly offset by • Payment of the 1H26 dividend; • Higher Credit Risk and IRRBB RWA, partly offset by lower Traded Market Risk RWA; and • Other regulatory adjustments and movement in reserves.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 3,
+      "kind": "text",
+      "quote": "Cash net profit after tax (cash NPAT or cash profit) from continuing operations increased $730 million or 7% on the prior year to $10,982 million.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 3,
+      "kind": "text",
+      "quote": "CET1 was 12.0% as at 30 June 2026, compared to 12.3% as at 31 December 2025, well above APRA's regulatory requirements. Excluding the impact of the payment of the 2026 interim dividend, CET1 increased 52 basis points, driven by capital generated from earnings, partly offset by higher Credit and IRRBB RWA and other regulatory adjustments.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "table",
+      "quote": "Common Equity Tier 1 (CET1) 12.3 12.2 12.3 10 bpts –",
+      "numbers": [
+        {
+          "label": "CET1 as at 30 Jun 25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Common Equity Tier 1 (APRA) (%) 12.0 12.3 (30)bpts 12.0 12.3 (30)bpts",
+      "numbers": [
+        {
+          "label": "CET1 as at 30 Jun 26",
+          "value": 12.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 as at 30 Jun 25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 122,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Total risk weighted assets 522,407 505,310 496,145",
+      "numbers": [
+        {
+          "label": "Total RWA as at 30 Jun 26",
+          "value": 522407.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total RWA as at 30 Jun 25",
+          "value": 496145.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 122,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Total RWA for Credit Risk Exposures 422,703 409,119 398,928",
+      "numbers": [
+        {
+          "label": "Credit Risk RWA as at 30 Jun 26",
+          "value": 422703.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Credit Risk RWA as at 30 Jun 25",
+          "value": 398928.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 122,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Interest rate risk in the banking book 41,659 35,179 39,841",
+      "numbers": [
+        {
+          "label": "IRRBB RWA as at 30 Jun 26",
+          "value": 41659.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "IRRBB RWA as at 30 Jun 25",
+          "value": 39841.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 122,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Traded market risk 7,004 9,971 9,752",
+      "numbers": [
+        {
+          "label": "Traded Market Risk RWA as at 30 Jun 26",
+          "value": 7004.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Traded Market Risk RWA as at 30 Jun 25",
+          "value": 9752.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 122,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operational risk 51,041 51,041 47,624",
+      "numbers": [
+        {
+          "label": "Operational Risk RWA as at 30 Jun 26",
+          "value": 51041.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operational Risk RWA as at 30 Jun 25",
+          "value": 47624.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 123,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Interim dividend – cash component (3,403) (3,083) (3,403)",
+      "numbers": [
+        {
+          "label": "Interim dividend cash FY26",
+          "value": 3403.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 123,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Final dividend – cash component (3,708) (3,426)",
+      "numbers": [
+        {
+          "label": "Final dividend cash FY26",
+          "value": 3708.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 123,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Interim dividend – dividend reinvestment plan ³ (530) (682) (530)",
+      "numbers": [
+        {
+          "label": "Interim DRP FY26",
+          "value": 530.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 123,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Final dividend – dividend reinvestment plan ³ (643) (758)",
+      "numbers": [
+        {
+          "label": "Final DRP FY26",
+          "value": 643.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 32,
+      "printed_page": 32,
+      "kind": "text",
+      "quote": "Strong capital position maintained, supporting franchise growth and dividends",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "No buy-back activity was undertaken during FY26.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The 2026 interim dividend included the on-market purchase of $530 million of shares (CET1 impact of -10 bpts) in respect of the Dividend Reinvestment Plan.",
+      "numbers": [],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "agentic-cheap",
+    "models": "agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash",
+    "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
+    "generated": "2026-08-30T14:14:59+00:00",
+    "seconds": 226.3,
+    "cost_usd": 0.0685,
+    "tokens": "1646300 in / 11618 out",
+    "orchestration": "agent",
+    "tool_calls": 53,
+    "pages_read": 19,
+    "charts_read": 2,
+    "budget_exhausted": "no"
+  }
+}

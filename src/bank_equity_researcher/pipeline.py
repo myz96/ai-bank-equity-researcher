@@ -26,6 +26,7 @@ from .taxonomy import METRIC_ALIASES, TAXONOMY
 from .validate import (
     MONTH_NUMBERS,
     annotate_walks,
+    cap_weakly_cited_claims,
     check_comparison_leak,
     check_component_columns,
     check_drivers_reconcile,
@@ -254,7 +255,9 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         except Exception as exc:  # noqa: BLE001
             validation["failed"].append(f"walk_extraction_error p{page}: {exc}")
         else:
-            passed, failed = check_walk(walk, doc_by_id[doc_id].doc_type)
+            passed, failed = check_walk(
+                walk, doc_by_id[doc_id].doc_type, metric_cfg["unit"]
+            )
             walk["source"] = f"{doc_id} PDF p{page} ({record.id})"
             walk["record_id"] = record.id
             walk["checks_passed"] = passed
@@ -322,6 +325,13 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
                 if (doc.doc_id, page) not in candidates:
                     candidates[(doc.doc_id, page)] = score
                     extra.extend(extract_text_evidence(llm, combo.extract, doc, page, text_case_desc, next_id))
+        # The fetched records join the SHARED pool, not just this attempt's
+        # copy of it. `candidates` is never reset, so the page can never be
+        # fetched a second time; without this line attempt 2 lost every record
+        # attempt 1 had asked for, and asked again to be told nothing. It also
+        # made the citation cap misjudge a driver that cited a fetched record,
+        # because the record was not in the pool the cap resolves against.
+        records.extend(extra)
         return extra
 
     # 4b. The cross-source view: walk bars mapped to canonical drivers across
@@ -449,24 +459,14 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
 
     # 6. Corroboration annotation, then output-level validation.
     corroborate(attribution, cross_source)
+    # Evidence-ladder cap, made mechanical (ticket 27, widened in review round
+    # 1). Prompt rule 4 caps a delta the model computed itself at 80; the model
+    # does not always obey it. This ran for bridge metrics only, so impairment
+    # (note_decomposition) and ROE/CTI (two_level_arithmetic) never faced it,
+    # and the CBA FY26 impairment run shipped +150 / -17 / -71 at 85 citing
+    # records that state none of those numbers.
+    cap_weakly_cited_claims(attribution)
     if is_bridge:
-        # Evidence-ladder cap, made mechanical for bridge components (ticket
-        # 27). Prompt rule 4 caps a delta the model computed itself at 80; the
-        # model does not always obey it. A component delta counts as STATED
-        # only when a record the driver cites prints that delta as a number —
-        # otherwise the arithmetic is the model's own and 80 is the ceiling.
-        for driver in attribution.drivers:
-            if driver.contribution is None or driver.confidence <= 80:
-                continue
-            cited = [r for r in records if r.id in driver.evidence]
-            stated = any(
-                abs(abs(number.value) - abs(driver.contribution.value)) <= 0.5
-                for record in cited
-                for number in record.numbers
-            )
-            if not stated:
-                driver.confidence = 80
-                driver.checks_passed.append("computed_delta_cap_80")
         # Framing-uncertainty cap. A bank that prints BOTH an underlying and a
         # headline expense row publishes two valid framings of one component.
         # An author that claims the split (underlying expenses plus a separate

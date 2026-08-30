@@ -214,7 +214,7 @@ def score_crossref(
         "cost_usd": ask_output.get("provenance", {}).get("cost_usd"),
         "seconds": ask_output.get("provenance", {}).get("seconds"),
     }
-    row["passes"] = crossref_passes(coverage_fraction, fact_check.get("accuracy_fraction"))
+    row["passes"] = crossref_passes(coverage_fraction, fact_check)
     return row
 
 
@@ -228,15 +228,38 @@ def score_crossref(
 # answer; missing one means part of the answer was never sighted.
 CROSSREF_COVERAGE_PASS = 1.0
 # Fact accuracy allows one flagged or judge-split fact in a four-fact case
-# without failing the whole case, and no more.
+# without failing the whole case, and no more. The allowance covers a fact the
+# judges could not settle — a split, or a judge that could not be read. It has
+# never covered a fact the judges SETTLED AGAINST the answer.
 CROSSREF_FACT_PASS = 0.75
 
 
-def crossref_passes(coverage_fraction: float | None, accuracy_fraction: float | None) -> bool | None:
-    """None means "not decidable": an unjudged case is not a passing case."""
-    if coverage_fraction is None or accuracy_fraction is None:
+def crossref_passes(coverage_fraction: float | None, fact_check: dict | None) -> bool | None:
+    """None means "not decidable": an unjudged case is not a passing case.
+
+    Three states, not two. A flagged fact is neither a pass nor a fail
+    (judge.judge_facts), and the 0.75 allowance is what "neither" costs. A
+    FAILED fact is the answer stating something the judges ruled absent or
+    unentailed, and no allowance covers that.
+
+    The rule used to read `accuracy_fraction` alone, which collapses all three
+    states into passed/total. A case with three passes and one unanimous FAIL
+    scored 0.75 and passed, though nothing about it was uncertain.
+    """
+    if coverage_fraction is None or not fact_check:
         return None
-    return coverage_fraction >= CROSSREF_COVERAGE_PASS and accuracy_fraction >= CROSSREF_FACT_PASS
+    total = fact_check.get("total") or 0
+    if not total or fact_check.get("accuracy_fraction") is None:
+        return None
+    flagged = fact_check.get("flagged") or 0
+    failed = fact_check.get("failed")
+    if failed is None:
+        failed = total - (fact_check.get("passed") or 0) - flagged
+    return (
+        coverage_fraction >= CROSSREF_COVERAGE_PASS
+        and failed == 0
+        and (total - flagged) / total >= CROSSREF_FACT_PASS
+    )
 
 
 def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
@@ -295,9 +318,12 @@ def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
             "retriever: did the answer cite the pages that carry the answer? "
             "**Fact accuracy** measures the answer: did the judges rule each gold "
             "fact both STATED by the answer and ENTAILED by its cited quotes? A "
-            f"case PASSES only when coverage is {CROSSREF_COVERAGE_PASS:.0%} and "
-            f"fact accuracy is at least {CROSSREF_FACT_PASS:.0%}. Coverage alone "
-            "is not correctness (ticket 29, finding 7)."
+            f"case PASSES only when coverage is {CROSSREF_COVERAGE_PASS:.0%}, NO "
+            "fact failed, and the facts the judges could not settle stay inside "
+            f"{1 - CROSSREF_FACT_PASS:.0%} of the case. A flagged fact is neither "
+            "a pass nor a fail; a failed fact is the answer getting it wrong, and "
+            "no allowance covers that. Coverage alone is not correctness "
+            "(ticket 29, finding 7)."
         ),
         "",
     ]
@@ -404,9 +430,19 @@ def tolerance_for(unit: str | None) -> Tolerance:
 
 
 def values_match(value: float, target: float, unit: str | None) -> bool:
-    """A sign flip is never a rounding difference, so it never matches."""
+    """A sign flip is never a rounding difference, so it never matches.
+
+    The sign rule used to be gated on `abs(target) > tol`, which made it dead
+    code: opposite signs put the two numbers at least `|value| + |target|`
+    apart, so wherever the gate was open the distance check below had already
+    returned False. Inside the gate — a target smaller than its own tolerance,
+    which the $10m money floor makes common — a claim of the OPPOSITE
+    DIRECTION scored correct. Two live dev gold targets sit there: CBA 1H26
+    impairment moved -1 $m, and an answer of +9 $m was graded a match, so a
+    charge that fell was credited to an answer that said it rose.
+    """
     tol = tolerance_for(unit).for_target(target)
-    if abs(target) > tol and value * target < 0:
+    if value * target < 0:
         return False
     return abs(value - target) <= tol
 

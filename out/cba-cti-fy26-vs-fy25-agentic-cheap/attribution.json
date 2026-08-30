@@ -1,0 +1,360 @@
+{
+  "bank": "CBA",
+  "metric": "cti",
+  "period": "FY26",
+  "comparator": "FY25",
+  "basis": "cash",
+  "movement": {
+    "from_value": 45.7,
+    "to_value": 45.5,
+    "delta": -0.2,
+    "unit": "ppt"
+  },
+  "movement_source": "row 'Operating expenses to total operating income (%)', column 30 Jun 25 column -> column 30 Jun 26 column",
+  "headline": "CBA’s cost-to-income ratio (cash basis) improved 20bps to 45.5% in FY26 from 45.7% in FY25. The improvement was driven by operating income growing 6.2% to $30,224m, outpacing operating expense growth of 5.8% to $13,755m. Income growth reflected disciplined franchise volume expansion across home loans, business lending and deposits, alongside higher insurance and equities income. Expense growth was driven by wage inflation, technology investment, and frontline staffing, partly offset by productivity initiatives and favourable FX. Restructuring and notable items rose $40m year-on-year to $170m, partially offsetting the jaws benefit.",
+  "headline_evidence": [
+    "ev-3",
+    "ev-6",
+    "ev-7",
+    "ev-8"
+  ],
+  "drivers": [
+    {
+      "canonical": "income_growth",
+      "bank_label": "Operating income growth",
+      "contribution": {
+        "value": -0.17,
+        "unit": "ppt"
+      },
+      "columns": "30 Jun 26 vs 30 Jun 25",
+      "narrative": "Operating income grew 6.2% ($28,465m to $30,224m), driven by average lending volume growth of 6.8%, deposit volume growth of 8.2%, higher insurance income, higher CommSec equities income, and one-off gains including a milestone payment from CommInsure GI sale and a fair value gain on Gemini IPO, partly offset by lower retail foreign exchange income. The faster income growth versus expense growth lowered the ratio.",
+      "confidence": 80,
+      "evidence": [
+        "ev-4",
+        "ev-7",
+        "ev-21"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "expense_growth",
+      "bank_label": "Operating expense growth",
+      "contribution": {
+        "value": 0.15,
+        "unit": "ppt"
+      },
+      "columns": "30 Jun 26 vs 30 Jun 25",
+      "narrative": "Underlying operating expenses grew 5.6% ($12,866m to $13,585m) per the primary walk chart: inflation contributed +$455m (wage inflation including higher super guarantee, vendor IT inflation +5%, cloud consumption and software licensing); technology investment +$444m (infrastructure, resilience and AI capabilities); frontline and operations investment +$128m; other costs +$96m; partially offset by productivity savings -$404m. Headline operating expenses including restructuring and notable items grew 5.8% to $13,755m.",
+      "confidence": 90,
+      "evidence": [
+        "ev-2",
+        "ev-11",
+        "ev-17"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "notable_items",
+      "bank_label": "Restructuring and notable items",
+      "contribution": {
+        "value": 0.13,
+        "unit": "ppt"
+      },
+      "columns": "30 Jun 26 vs 30 Jun 25",
+      "narrative": "Restructuring and notable items increased $40m to $170m (FY26: NZ legal proceedings settlement, ASIC Better Banking review goodwill payment, domestic customer remediation; FY25: domestic and NZ customer remediation, Bankwest restructuring provision). This added $40m to expenses, raising the ratio by approximately $40m/$30,224m = 0.13ppt.",
+      "confidence": 80,
+      "evidence": [
+        "ev-14",
+        "ev-12"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": -0.11,
+    "unit": "ppt"
+  },
+  "notable_items": [],
+  "disagreements": [],
+  "attribution_confidence": 75,
+  "limitations": [
+    "No dedicated CTI walk/breakdown chart provided by the bank; jaws contributions computed from income and expense growth rates rather than a formal CTI decomposition.",
+    "Driver contributions do not sum exactly to the -0.2ppt movement due to interaction effects between income and expense growth and rounding of reported ratio levels.",
+    "The expense growth contribution is based on the underlying operating expenses walk (ev-2) which excludes restructuring and notable items; headline expense growth includes an additional $40m of notable items."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 18,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Operating expenses to total operating income (%) 45.5 45.7 (20)bpts",
+      "numbers": [
+        {
+          "label": "30 Jun 26",
+          "value": 45.5,
+          "unit": "ppt",
+          "basis": null
+        },
+        {
+          "label": "30 Jun 25",
+          "value": 45.7,
+          "unit": "ppt",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Total operating income 30,224 28,465 6",
+      "numbers": [
+        {
+          "label": "30 Jun 26",
+          "value": 30224.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "30 Jun 25",
+          "value": 28465.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Total operating expenses (13,755) (12,996) 6",
+      "numbers": [
+        {
+          "label": "30 Jun 26",
+          "value": 13755.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "30 Jun 25",
+          "value": 12996.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 54,
+      "printed_page": 54,
+      "kind": "text",
+      "quote": "Cost to income 45.5% (20bpts)",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 54,
+      "printed_page": 54,
+      "kind": "text",
+      "quote": "Operating income ($m) 30,224 +6.2%",
+      "numbers": [
+        {
+          "label": "Operating income",
+          "value": 30224.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 54,
+      "printed_page": 54,
+      "kind": "text",
+      "quote": "Operating expenses ($m) 13,755 +5.8%",
+      "numbers": [
+        {
+          "label": "Operating expenses",
+          "value": 13755.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Operating expenses: FY25 12866 -> FY26 13585",
+      "numbers": [
+        {
+          "label": "Inflation",
+          "value": 455.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Investment in technology",
+          "value": 444.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Investment in frontline and operations",
+          "value": 128.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Other",
+          "value": 96.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Productivity",
+          "value": -404.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Underlying operating expenses 13,585 12,866 6",
+      "numbers": [
+        {
+          "label": "30 Jun 26",
+          "value": 13585.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "30 Jun 25",
+          "value": 12866.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Total operating expenses 13,755 12,996 6",
+      "numbers": [
+        {
+          "label": "30 Jun 26",
+          "value": 13755.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "30 Jun 25",
+          "value": 12996.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Restructuring and notable items ¹ 170 130 31",
+      "numbers": [
+        {
+          "label": "30 Jun 26",
+          "value": 170.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "30 Jun 25",
+          "value": 130.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "$13,755m (45.5% cost-to-income)",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Operating expenses increased 6% driven by inflation, investment in technology, fraud, scams and financial crime, partly offset by productivity initiatives and favourable foreign exchange.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 25,
+      "printed_page": 25,
+      "kind": "text",
+      "quote": "Higher income from disciplined franchise growth",
+      "numbers": [],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "agentic-cheap",
+    "models": "agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash",
+    "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
+    "generated": "2026-08-30T14:21:53+00:00",
+    "seconds": 297.5,
+    "cost_usd": 0.0658,
+    "tokens": "1925853 in / 12863 out",
+    "orchestration": "agent",
+    "tool_calls": 62,
+    "pages_read": 13,
+    "charts_read": 2,
+    "budget_exhausted": "no"
+  }
+}

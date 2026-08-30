@@ -10,26 +10,25 @@
     "delta": -0.24,
     "unit": "ppt"
   },
-  "movement_source": "row 'ROTE ex-notables', column FY24 -> column FY25",
-  "headline": "Westpac's headline ROTE ex Notable Items declined by 24 basis points (11.21% to 10.97%) in FY25 versus FY24. This decline is primarily driven by a reduction in cash earnings at constant equity levels, as average tangible equity remained broadly stable with a slight increase. The movement reflects the impact of lower core profitability relative to the capital base.",
+  "movement_source": "row 'ROTE ex-notables', column FY24 (Sep 2024) -> column FY25 (Sep 2025)",
+  "headline": "Westpac's headline ROTE ex Notable Items declined by 24 bps to 10.97% in FY25 from 11.21% in FY24. This decline is driven primarily by a reduction in cash earnings at constant equity, partially offset by a small increase in average tangible equity.",
   "headline_evidence": [
-    "ev-4",
-    "ev-6"
+    "ev-4"
   ],
   "drivers": [
     {
       "canonical": "earnings_effect",
       "bank_label": null,
       "contribution": {
-        "value": -0.38,
+        "value": -0.08,
         "unit": "ppt"
       },
       "columns": "FY24 -> FY25",
-      "narrative": "Derived: Earnings effect = Prior ROE x Earnings Growth. Avg Ordinary Equity rose ~0.07% (ev-5). Core profit growth was negative/flat, implying earnings growth < 0%. Contribution approx -0.38 ppt. Derived from ev-4 and ev-5.",
-      "confidence": 75,
+      "narrative": "Derived: Prior-period ROE (11.21%) multiplied by the EPS growth rate (-0.39%). Earnings fell from 204.4c to 203.6c (ev-8), yielding a negative contribution of approx -0.08 ppt.",
+      "confidence": 80,
       "evidence": [
         "ev-4",
-        "ev-5"
+        "ev-8"
       ],
       "checks_passed": [
         "single_source"
@@ -40,15 +39,17 @@
       "canonical": "equity_effect",
       "bank_label": null,
       "contribution": {
-        "value": 0.14,
+        "value": -0.16,
         "unit": "ppt"
       },
       "columns": "FY24 -> FY25",
-      "narrative": "Derived: Equity effect = Total Delta - Earnings Effect. Residual positive contribution due to denominator expansion (Avg Equity up slightly per ev-5) partially offsetting the earnings drag. Derived from ev-4 and ev-5.",
-      "confidence": 75,
+      "narrative": "Derived: Total delta (-0.24) minus earnings effect (-0.08). Average tangible equity rose slightly (ev-5/ev-6 imply ~0.7% growth), which dilutes ROE when earnings fall. Value is derived, not disclosed.",
+      "confidence": 80,
       "evidence": [
         "ev-4",
-        "ev-5"
+        "ev-5",
+        "ev-6",
+        "ev-8"
       ],
       "checks_passed": [
         "single_source"
@@ -62,9 +63,9 @@
   },
   "notable_items": [],
   "disagreements": [],
-  "attribution_confidence": 75,
+  "attribution_confidence": 80,
   "limitations": [
-    "Exact core profit dollar movement for FY25 vs FY24 not explicitly provided in evidence records, requiring derivation of earnings growth rate from ROE and Equity data. Confidence capped due to derived nature of driver split."
+    "Drivers are quantified via arithmetic derivation (Level 1) rather than direct disclosure. The bank does not provide a bridge for this specific metric."
   ],
   "evidence_records": [
     {
@@ -73,7 +74,7 @@
       "pdf_page": 10,
       "printed_page": null,
       "kind": "table",
-      "quote": "Return on average ordinary equity",
+      "quote": "Return on average ordinary equity 9.66% 9.77% (11 bps) 9.89% 9.42% 47 bps",
       "numbers": [
         {
           "label": "ROE statutory FY25",
@@ -96,7 +97,7 @@
       "pdf_page": 10,
       "printed_page": null,
       "kind": "table",
-      "quote": "Return on average tangible equity (ROTE)",
+      "quote": "Return on average tangible equity (ROTE) 10.89% 11.01% (12 bps) 11.13% 10.63% 50 bps",
       "numbers": [
         {
           "label": "ROTE statutory FY25",
@@ -119,7 +120,7 @@
       "pdf_page": 10,
       "printed_page": null,
       "kind": "table",
-      "quote": "Return on average ordinary equity",
+      "quote": "Return on average ordinary equity 9.74% 9.94% (20 bps) 9.66% 9.81% (15 bps)",
       "numbers": [
         {
           "label": "ROE ex-notables FY25",
@@ -142,7 +143,7 @@
       "pdf_page": 10,
       "printed_page": null,
       "kind": "table",
-      "quote": "ROTE",
+      "quote": "ROTE 10.97% 11.21% (24 bps) 10.87% 11.08% (21 bps)",
       "numbers": [
         {
           "label": "ROTE ex-notables FY25",
@@ -165,7 +166,7 @@
       "pdf_page": 10,
       "printed_page": null,
       "kind": "table",
-      "quote": "Average ordinary equity ($m)",
+      "quote": "Average ordinary equity ($m) 71,544 71,493 - 72,499 70,584 3",
       "numbers": [
         {
           "label": "Avg Ordinary Equity FY25",
@@ -188,7 +189,7 @@
       "pdf_page": 10,
       "printed_page": null,
       "kind": "table",
-      "quote": "Average total equity ($m)",
+      "quote": "Average total equity ($m) 71,885 71,549 - 72,837 70,928 3",
       "numbers": [
         {
           "label": "Avg Total Equity FY25",
@@ -204,6 +205,52 @@
         }
       ],
       "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 10,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Basic earnings per ordinary share (cents) 201.9 200.9 - 105.2 96.7 9",
+      "numbers": [
+        {
+          "label": "Basic EPS statutory FY25",
+          "value": 201.9,
+          "unit": "cents",
+          "basis": "statutory"
+        },
+        {
+          "label": "Basic EPS statutory FY24",
+          "value": 200.9,
+          "unit": "cents",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 10,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Basic earnings per ordinary share (cents) 203.6 204.4 - 102.8 100.8 2",
+      "numbers": [
+        {
+          "label": "Basic EPS ex-notables FY25",
+          "value": 203.6,
+          "unit": "cents",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Basic EPS ex-notables FY24",
+          "value": 204.4,
+          "unit": "cents",
+          "basis": "ex_notables"
+        }
+      ],
+      "provenance": null
     }
   ],
   "suggested_registry_patches": [],
@@ -211,10 +258,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
-    "generated": "2026-08-30T12:44:50+00:00",
-    "seconds": 25.4,
-    "cost_usd": 0.0011,
-    "tokens": "30711 in / 1455 out",
+    "generated": "2026-08-30T15:12:25+00:00",
+    "seconds": 51.4,
+    "cost_usd": 0.0017,
+    "tokens": "43233 in / 3208 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": []

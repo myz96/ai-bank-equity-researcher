@@ -357,7 +357,11 @@ def extract_walk(llm: LLM, model: str, doc: Document, page_no: int, case: str, n
         quote=f"[walk chart] {walk.get('title', '')}: {walk.get('start_label')} "
         f"{walk.get('start_bps')} -> {walk.get('end_label')} {walk.get('end_bps')}",
         numbers=[
-            NumberFact(label=bar.get("label", "?"), value=float(bar.get("bps", 0)), unit="bps")
+            # The bar's unit is the METRIC's unit, not the "bps" the dict key
+            # is named after. Stamping bps on every walk labelled a $455m
+            # cash-earnings bridge bar as basis points, and the checks that
+            # filter evidence by unit then skipped those numbers in silence.
+            NumberFact(label=bar.get("label", "?"), value=float(bar.get("bps", 0)), unit=unit)
             for bar in walk.get("bars", [])
         ],
     )

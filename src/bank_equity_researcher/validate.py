@@ -38,6 +38,44 @@ LEAK_TOL = {"bps": 0.5, "$m": 10.0, "ppt": 0.1}
 # neighbouring component's nearby PCP delta.
 COMPONENT_TOL = 2.0
 
+# --------------------------------------------------------------------------
+# Unit-typed tolerances
+#
+# A tolerance means nothing without the unit it is stated in. Every constant
+# above was calibrated in BASIS POINTS, and the checks below applied them to
+# whatever unit the answer happened to use: 1.0 is a rounding step in bps and
+# five times the whole movement in percentage points. The shipped CBA FY26
+# cost-to-income artifact carried drivers summing to 0.0 ppt against a -0.2 ppt
+# movement and passed drivers_reconcile, because the movement it claimed to
+# explain was smaller than the slack it was measured with.
+#
+# One table per QUESTION the checks ask, because the two questions have
+# different answers:
+#
+#   RECONCILE_TOL - do these parts sum to that whole? Endpoint rounding on
+#   each side, so one print step of the unit.
+#   CITATION_TOL - does this record print that number? A repeat is exact, so
+#   this one is always tighter.
+# --------------------------------------------------------------------------
+
+RECONCILE_TOL = {"bps": WALK_SUM_TOL_PA, "ppt": RATIO_TOL_PPT, "%": RATIO_TOL_PPT, "$m": 1.0}
+RECONCILE_TOL_DEFAULT = 1.0
+# The endpoint-rounding lift a presentation walk earns (WALK_SUM_TOL_PRESENTATION)
+# is a quantity in BASIS POINTS: the slide rounds a ratio to 0.1% and the metric
+# is stated in bps there. The same slide prints a ppt ratio to 0.1 ppt and a
+# dollar figure to the million, so neither unit earns the lift. Granting it to
+# them made 10.0 the slack on a movement of 0.2.
+PRESENTATION_LIFT_UNITS = ("bps",)
+# Self-consistency of the three numbers the author states for one movement
+# (from + delta == to). All three are printed at the unit's own precision.
+MOVEMENT_ARITHMETIC_TOL = {"bps": 0.51, "ppt": RATIO_TOL_PPT, "%": RATIO_TOL_PPT, "$m": 0.51}
+MOVEMENT_ARITHMETIC_TOL_DEFAULT = 0.51
+# "This record prints that number." Bars and table cells are printed exactly,
+# so the match is tight in every unit; only the ratio units move, and they move
+# tighter.
+CITATION_TOL = {"bps": 0.5, "ppt": RATIO_TOL_PPT, "%": RATIO_TOL_PPT, "$m": 0.5}
+CITATION_TOL_DEFAULT = 0.5
+
 
 # --------------------------------------------------------------------------
 # Comparison classification (defect 24)
@@ -200,22 +238,36 @@ def walks_for_view(walks: list[dict]) -> tuple[list[dict], str]:
     )
 
 
-def walk_sum_tolerance(doc_type: str) -> float:
-    if doc_type in ("results_presentation", "investor_discussion_pack", "investor_presentation"):
+def walk_sum_tolerance(doc_type: str, unit: str = "bps") -> float:
+    """Slack for "these bars sum to that endpoint gap", in the walk's own unit.
+
+    The presentation lift is a bps quantity, so a ppt or $m walk keeps the
+    ratio or money tolerance however the walk was published. Before the unit
+    entered here a ppt walk was measured against 1.0 or 10.0, and no such walk
+    could fail its own sum check.
+    """
+    if unit in PRESENTATION_LIFT_UNITS and doc_type in (
+        "results_presentation", "investor_discussion_pack", "investor_presentation"
+    ):
         return WALK_SUM_TOL_PRESENTATION
-    return WALK_SUM_TOL_PA
+    return RECONCILE_TOL.get(unit, RECONCILE_TOL_DEFAULT)
 
 
-def check_walk(walk: dict, doc_type: str) -> tuple[list[str], list[str]]:
-    """walk: {start_bps, bars: [{label, bps}], end_bps}. Returns (passed, failed)."""
+def check_walk(walk: dict, doc_type: str, unit: str = "bps") -> tuple[list[str], list[str]]:
+    """walk: {start_bps, bars: [{label, bps}], end_bps}. Returns (passed, failed).
+
+    The dict keys say bps for history; the values carry the METRIC's unit, so
+    the caller passes it in.
+    """
     passed, failed = [], []
+    tolerance = walk_sum_tolerance(doc_type, unit)
     total = walk["start_bps"] + sum(b["bps"] for b in walk["bars"])
-    if abs(total - walk["end_bps"]) <= walk_sum_tolerance(doc_type):
+    if abs(total - walk["end_bps"]) <= tolerance:
         passed.append("walk_sum")
     else:
         failed.append(
             f"walk_sum (start {walk['start_bps']} + bars {sum(b['bps'] for b in walk['bars']):+.1f} "
-            f"= {total:.1f} != end {walk['end_bps']}, tol {walk_sum_tolerance(doc_type)})"
+            f"= {total:.1f} != end {walk['end_bps']}, tol {tolerance} {unit})"
         )
     return passed, failed
 
@@ -224,11 +276,13 @@ def check_movement(movement) -> tuple[list[str], list[str]]:
     passed, failed = [], []
     if movement is None:
         return passed, ["movement_missing"]
-    if abs(movement.from_value + movement.delta - movement.to_value) <= 0.51:
+    tolerance = MOVEMENT_ARITHMETIC_TOL.get(movement.unit, MOVEMENT_ARITHMETIC_TOL_DEFAULT)
+    if abs(movement.from_value + movement.delta - movement.to_value) <= tolerance:
         passed.append("movement_arithmetic")
     else:
         failed.append(
-            f"movement_arithmetic ({movement.from_value} + {movement.delta} != {movement.to_value})"
+            f"movement_arithmetic ({movement.from_value} + {movement.delta} != {movement.to_value}, "
+            f"tol {tolerance} {movement.unit})"
         )
     return passed, failed
 
@@ -754,14 +808,20 @@ def implied_residual(attribution) -> float | None:
 def reconcile_tolerance(attribution) -> float:
     """The slack check_drivers_reconcile allows, and the scale normaliser reads.
 
-    Tolerance follows the evidence: drivers sourced from a presentation walk
-    inherit its endpoint-rounding slack (the CBA CET1 slide case).
+    Tolerance follows the UNIT first and the evidence second. Drivers sourced
+    from a presentation walk inherit its endpoint-rounding slack (the CBA CET1
+    slide case), but only where that slack is denominated: it is a quantity in
+    basis points, so a ppt or $m answer never earns it.
     """
+    unit = attribution.movement.unit if attribution.movement is not None else None
+    base = RECONCILE_TOL.get(unit or "", RECONCILE_TOL_DEFAULT)
+    if unit not in PRESENTATION_LIFT_UNITS:
+        return base
     presentation_walk = any(
         r.kind == "walk_vision" and ("presentation" in r.doc_id or "discussion" in r.doc_id)
         for r in attribution.evidence_records
     )
-    return WALK_SUM_TOL_PRESENTATION if presentation_walk else 1.0
+    return WALK_SUM_TOL_PRESENTATION if presentation_walk else base
 
 
 # A ratio identity is stated in the RATIO's own unit. ROE is profit divided by
@@ -830,6 +890,82 @@ def settle_identity_scale(attribution, method: str) -> str | None:
         attribution.limitations.append(note)
         return note
     return None
+
+
+# The evidence ladder's ceiling for a number the model worked out rather than
+# read. Named for the bridge check it grew out of, and kept as one value so a
+# reader of the artifact sees one rule however the claim was assembled.
+CLAIM_CITATION_CAP = 80
+# A number written inside a quote, as a standalone token. The lookarounds keep
+# a period tag out of the pool: "FY25" must not ground a claim of +25, "1H26"
+# must not ground +26, and "p12" must not ground +12.
+_QUOTE_NUMBER_RE = re.compile(r"(?<![\w.])-?\d[\d,]*(?:\.\d+)?(?![\w])")
+
+
+def _quote_numbers(quote: str | None) -> list[float]:
+    """The magnitudes a verbatim quote states, for the citation test below."""
+    values = []
+    for token in _QUOTE_NUMBER_RE.findall(quote or ""):
+        try:
+            values.append(abs(float(token.replace(",", ""))))
+        except ValueError:  # pragma: no cover - the pattern admits only numbers
+            continue
+    return values
+
+
+def cap_weakly_cited_claims(attribution) -> list[str]:
+    """Cap a quantified claim whose own citations do not state its number.
+
+    The evidence gate (schema.enforce_evidence_gate) asks whether a citation
+    RESOLVES. That is a structural question, and a claim passes it while the
+    records it points at say nothing like the number claimed: the CBA FY26
+    impairment run shipped +150 / -17 / -71 $m at confidence 85 citing two
+    chart reads whose only numbers were 6.2, -5.6, 0.0, -8.5 and -1.4. The
+    bridge metrics already asked the second question; impairment is a
+    note_decomposition and ROE a two_level_arithmetic, so for them nobody did.
+
+    A record supports a quantified claim when it PRINTS that number - as an
+    extracted NumberFact, or in the words of the quote itself, because prose
+    evidence carries its number in the sentence ("Decreased margin by 5 basis
+    points" grounds a -5 bps claim exactly as well as an extracted bar does).
+    Anything else is the model's own arithmetic over the evidence, which is
+    what the evidence ladder caps at 80.
+
+    The cap never raises a confidence and never strips a claim: a computed
+    delta is still an answer, it is just not a reading. Returns the claims it
+    capped; mutates the attribution.
+    """
+    capped: list[str] = []
+    by_id = {record.id: record for record in attribution.evidence_records}
+    for driver in attribution.drivers:
+        if driver.contribution is None or driver.confidence <= CLAIM_CITATION_CAP:
+            continue
+        value = abs(driver.contribution.value)
+        tolerance = CITATION_TOL.get(driver.contribution.unit, CITATION_TOL_DEFAULT)
+        cited = [by_id[e] for e in driver.evidence if e in by_id]
+        stated = any(
+            abs(abs(number.value) - value) <= tolerance
+            for record in cited
+            for number in record.numbers
+        ) or any(
+            abs(quoted - value) <= tolerance
+            for record in cited
+            for quoted in _quote_numbers(record.quote)
+        )
+        if stated:
+            continue
+        driver.confidence = CLAIM_CITATION_CAP
+        driver.checks_passed.append("computed_delta_cap_80")
+        capped.append(
+            f"{driver.canonical} {driver.contribution.value:+g} {driver.contribution.unit}"
+        )
+    if capped:
+        attribution.limitations.append(
+            f"Capped at {CLAIM_CITATION_CAP}: " + ", ".join(capped) + ". The records these "
+            "claims cite do not state those numbers, so each one is arithmetic over the "
+            "evidence rather than a figure read from it."
+        )
+    return capped
 
 
 def check_drivers_reconcile(attribution) -> tuple[list[str], list[str]]:

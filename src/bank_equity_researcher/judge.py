@@ -148,7 +148,11 @@ class Verdict:
     reason: str
     replies: list[JudgeReply] = field(default_factory=list)
     answer_truncated: bool = False
+    # How many quotes the judge actually read, and whether the character budget
+    # dropped any. A verdict reached on a cut evidence window is a weaker
+    # verdict, and the scorecard cannot say so unless the count is the true one.
     quotes_used: int = 0
+    quotes_truncated: bool = False
 
 
 def _truncate(text: str, limit: int) -> tuple[str, bool]:
@@ -160,6 +164,33 @@ def _truncate(text: str, limit: int) -> tuple[str, bool]:
 
 def _format_quotes(quotes: list[str]) -> str:
     return "\n".join(f'{i}. "{quote}"' for i, quote in enumerate(quotes, start=1))
+
+
+def _fit_quotes(quotes: list[str], char_limit: int) -> tuple[str, int, bool]:
+    """The quote block, how many quotes it holds, and whether any were dropped.
+
+    A character budget cuts the block; the count of quotes must follow it. The
+    block used to be truncated mid-sentence and the count taken from the list
+    BEFORE the cut, so a verdict reached on twelve quotes was reported as
+    reached on forty-eight, and the half-quote at the cut could only push a
+    judge towards NOT_ENTAILED. Whole quotes only, and the count is what the
+    judge actually read.
+    """
+    lines: list[str] = []
+    used = 0
+    for index, quote in enumerate(quotes, start=1):
+        line = f'{index}. "{quote}"'
+        length = len(line) + (1 if lines else 0)
+        if lines and sum(len(x) for x in lines) + len(lines) - 1 + length > char_limit:
+            return "\n".join(lines) + _TRUNCATION_MARK, used, True
+        lines.append(line)
+        used += 1
+    block = "\n".join(lines)
+    # A single quote longer than the whole budget is still shown, cut, because
+    # some grounding beats none. It is reported as truncated all the same.
+    if len(block) > char_limit:
+        return block[:char_limit] + _TRUNCATION_MARK, used, True
+    return block, used, False
 
 
 def _read_answer(reply, key: str, allowed: tuple[str, ...]) -> str:
@@ -216,7 +247,7 @@ def judge_fact(
     char_limit = MAX_QUOTE_CHARS * max(1, (limit + MAX_QUOTES - 1) // MAX_QUOTES)
     answer, truncated = _truncate(answer_text, MAX_ANSWER_CHARS)
     quotes = [q for q in (cited_quotes or []) if str(q).strip()][:limit]
-    quote_block, _ = _truncate(_format_quotes(quotes), char_limit)
+    quote_block, quotes_used, quotes_truncated = _fit_quotes(quotes, char_limit)
 
     replies: list[JudgeReply] = []
     for model in judges:
@@ -240,7 +271,7 @@ def judge_fact(
                 )
             )
 
-    return _combine(fact_text, replies, bool(quotes), truncated, len(quotes))
+    return _combine(fact_text, replies, bool(quotes), truncated, quotes_used, quotes_truncated)
 
 
 def _combine(
@@ -249,6 +280,7 @@ def _combine(
     has_quotes: bool,
     truncated: bool,
     quotes_used: int,
+    quotes_truncated: bool = False,
 ) -> Verdict:
     def answers(question: str) -> set[str]:
         return {r.answer for r in replies if r.question == question and r.answer}
@@ -263,6 +295,7 @@ def _combine(
             replies=replies,
             answer_truncated=truncated,
             quotes_used=quotes_used,
+            quotes_truncated=quotes_truncated,
         )
 
     errors = [f"{r.model} ({r.question}): {r.error}" for r in replies if r.error]
@@ -353,6 +386,7 @@ def judge_facts(
         "accuracy_fraction": round(passed / total, 3) if total else None,
         "answer_truncated": any(v.answer_truncated for v in verdicts),
         "quotes_used": verdicts[0].quotes_used if verdicts else 0,
+        "quotes_truncated": any(v.quotes_truncated for v in verdicts),
         "facts": [_verdict_dict(v) for v in verdicts],
     }
 

@@ -145,6 +145,20 @@ TOLERANCE_TABLE = [
     ("money_absolute_arm_fails", "$m", 62.0, 80.0, False),
     # A sign flip is never a rounding difference.
     ("sign_flip_never_matches", "$m", 1964.0, -1964.0, False),
+    # ...including the small values the absolute arm used to swallow whole. The
+    # sign rule was gated on `abs(target) > tol`, which only fires where the
+    # distance check already fails, so the rule was dead code. Two live dev
+    # gold targets sit in the hole: CBA 1H26 cash_earnings
+    # credit_impairment_charge (+1 $m) and CBA 1H26 impairment movement delta
+    # (-1 $m). A charge that FELL by 1 scored correct against a claim it ROSE
+    # by 9.
+    ("sign_flip_inside_the_money_floor", "$m", 5.0, -5.0, False),
+    ("sign_flip_gold_plus_one", "$m", 1.0, -9.0, False),
+    ("sign_flip_inside_the_bps_floor", "bps", 0.3, -0.2, False),
+    ("sign_flip_inside_the_ppt_floor", "ppt", 0.05, -0.05, False),
+    # A zero endpoint has no sign to flip, so the distance rule still decides.
+    ("zero_target_still_matches_by_distance", "$m", 0.0, -5.0, True),
+    ("zero_value_still_matches_by_distance", "$m", -5.0, 0.0, True),
 ]
 
 

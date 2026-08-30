@@ -149,6 +149,7 @@ def enforce_answer_gate(
     """
     kept: list[dict] = []
     limitations = list(limitations)
+    stripped: list[str] = []
     for item in key_facts or []:
         if not isinstance(item, dict):
             continue
@@ -160,9 +161,22 @@ def enforce_answer_gate(
         resolved = [str(e) for e in cited if str(e) in known_ids]
         fact = str(item.get("fact", ""))
         if re.search(r"\d", fact) and not resolved:
+            stripped.append(fact[:80])
             limitations.append(f'Stripped unsupported quantified fact: "{fact[:80]}"')
             continue
         kept.append({"fact": fact, "evidence": resolved})
+    # The gate strips the FACT LIST. It does not touch the answer's prose,
+    # because rewriting an answer to remove a number is a second authoring
+    # pass, and this gate is deterministic by design. So the prose can still
+    # state a number whose fact was just deleted, and a reader who reads only
+    # the answer would never know. Say so, once, naming the claims.
+    if stripped:
+        limitations.append(
+            f"{len(stripped)} unsupported quantified claim(s) were removed from the key "
+            "facts, but the answer's prose was NOT rewritten and may still state those "
+            "numbers: " + "; ".join(f'"{s}"' for s in stripped)
+            + ". Treat any number above that carries no citation as unsupported."
+        )
     if not kept:
         confidence = min(int(confidence or 0), ANSWER_GATE_CONFIDENCE_CAP)
     return kept, limitations, int(confidence or 0)

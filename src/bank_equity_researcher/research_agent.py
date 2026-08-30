@@ -38,7 +38,7 @@ from .author import (
 )
 from .config import COMBOS, OUT_DIR, REGISTRY_DIR
 from .corpus import Document, documents_for_period, documents_for_question
-from .extract import extract_walk, printed_page_of
+from .extract import extract_walk, extract_walk_annotations, printed_page_of
 from .llm import LLM
 from .refs import scan_page
 from .render import render_report
@@ -55,6 +55,7 @@ from .schema import (
 from .taxonomy import METRIC_ALIASES, TAXONOMY
 from .validate import (
     annotate_walks,
+    cap_weakly_cited_claims,
     check_comparison_leak,
     check_component_columns,
     check_drivers_reconcile,
@@ -428,7 +429,12 @@ TOOL_SPECS: list[dict] = [
                     "pdf_page": {"type": "integer", "description": "1-based PDF page number"},
                     "unit": {
                         "type": "string",
-                        "description": "bps | $m | % | ppt; defaults to the metric's unit",
+                        "description": (
+                            "bps | $m | % | ppt — the unit the CHART's bars are printed "
+                            "in. A metric case defaults to that metric's unit. A free-form "
+                            "question has no metric, so name the unit yourself; the reply "
+                            "echoes back the unit the bars were read and checked in."
+                        ),
                     },
                 },
                 "required": ["doc_id", "pdf_page"],
@@ -675,6 +681,48 @@ _PUNCTUATION = str.maketrans(
 )
 
 
+# A standalone one- or two-digit token: the shape a footnote or reference
+# marker takes where a bank prints it INSIDE a table row. The CBA FY26 Profit
+# Announcement p2 text layer reads "Revenue from ordinary activities 2 3
+# 30,153"; the 2 and the 3 are markers pointing at notes, and a reader of the
+# page sees the row as "Revenue from ordinary activities 30,153". A quote
+# faithful to what the reader sees was rejected as not on the page.
+_MARKER_RE = re.compile(r"(?<!\S)\d{1,2}(?!\S)")
+
+
+def strip_markers(text: str) -> str:
+    """The page as a reader sees it, with interleaved footnote markers gone."""
+    return _MARKER_RE.sub(" ", str(text or ""))
+
+
+MARKER_RELAXATION = (
+    "quote_match:markers_stripped — matched this page once its interleaved "
+    "footnote markers were removed"
+)
+
+
+def match_quote(quote: str, text: str) -> tuple[bool, str]:
+    """Is this quote on this page, and under which test?
+
+    Returns (matched, relaxation). The strict test compares the characters
+    themselves. The second test removes footnote markers from the PAGE only,
+    never from the quote: that lets a quote OMIT a marker the page prints,
+    while still refusing a quote that STATES a number the page does not.
+    Relaxing both sides would erase every one- and two-digit number from the
+    comparison, so "the margin fell 5 basis points" would match a page saying 3.
+
+    One function, because the gate is applied twice - when `cite` mints a
+    record, and again when a submission's evidence list is resolved. Two copies
+    of it drifted into two different rules for the same question.
+    """
+    key = quote_key(quote)
+    if key in quote_key(text):
+        return True, ""
+    if key in quote_key(strip_markers(text)):
+        return True, MARKER_RELAXATION
+    return False, ""
+
+
 def quote_key(text: str) -> str:
     """The comparable form of a quote: no whitespace, one spelling per mark.
 
@@ -790,7 +838,21 @@ class Research:
     def read_chart(self, doc_id: str, pdf_page: int, unit: str | None = None) -> dict:
         doc = self._doc(doc_id)
         page = int(pdf_page)
-        unit = str(unit or self.metric_cfg["unit"])
+        # A metric case knows its unit. A free-form question does not have a
+        # metric, and the question shell used to hand every chart "$m" — so a
+        # margin walk came back with its bars stamped as dollars, and the
+        # unit-typed checks then measured basis points against a money
+        # tolerance. There is no unit to default to here, so the agent names
+        # it and the reply echoes what the bars were read and checked in.
+        unit = str(unit).strip() if unit else (self.metric_cfg.get("unit") or "")
+        if not unit:
+            return {
+                "error": (
+                    f"name the unit of the bars on {doc.doc_id} p{page} and call read_chart "
+                    "again: pass unit as one of bps, $m, % or ppt. This question fixes no "
+                    "metric, so the chart's unit cannot be assumed."
+                )
+            }
         case_desc = self.case["description"]
         try:
             walk, record = extract_walk(
@@ -799,7 +861,7 @@ class Research:
         except Exception as exc:  # noqa: BLE001 - an unreadable chart is a gap, not a crash
             self.validation["failed"].append(f"walk_extraction_error p{page}: {exc}")
             return {"error": f"the chart on {doc.doc_id} p{page} could not be read: {exc}"}
-        passed, failed = check_walk(walk, doc.doc_type)
+        passed, failed = check_walk(walk, doc.doc_type, unit)
         walk["source"] = f"{doc.doc_id} PDF p{page} ({record.id})"
         walk["record_id"] = record.id
         walk["checks_passed"] = passed
@@ -822,12 +884,34 @@ class Research:
         self.walks.append(walk)
         self.records.append(record)
         self.pages_read.add((doc.doc_id, page))
+        # The chart's ANNOTATION layer, exactly as the open-loop pipeline reads
+        # it. Without this the two shells were not evidence-comparable: the
+        # pipeline's author saw the bank's own sub-split of each bar and the
+        # agent never could, so a difference in their answers measured the
+        # tools, not the orchestration. One extra vision call per chart, and it
+        # degrades to nothing on any failure.
+        bar_labels = tuple(str(bar.get("label", "")) for bar in walk.get("bars", []))
+        callouts = extract_walk_annotations(
+            self.llm, self.combo.vision, doc, page, case_desc, self.next_id,
+            unit=unit, bar_labels=bar_labels,
+        )
+        self.records.extend(callouts)
         return {
             "doc_id": doc.doc_id,
             "pdf_page": page,
             "evidence_id": record.id,
             "unit": unit,
             "walk": {k: v for k, v in walk.items() if k != "record_id"},
+            "annotations": [
+                {
+                    "evidence_id": r.id,
+                    "quote": r.quote,
+                    "numbers": [
+                        {"label": n.label, "value": n.value, "unit": n.unit} for n in r.numbers
+                    ],
+                }
+                for r in callouts
+            ],
         }
 
     def follow_references(self, doc_id: str, pdf_page: int) -> dict:
@@ -888,7 +972,8 @@ class Research:
         quote = str(item.get("quote") or "").strip()
         if not quote:
             return None, "no quote was given"
-        if quote_key(quote) not in quote_key(text):
+        matched, relaxed = match_quote(quote, text)
+        if not matched:
             return None, f"the quote is not on {doc.doc_id} p{page}"
         numbers = []
         for number in item.get("numbers") or []:
@@ -916,6 +1001,10 @@ class Research:
                 # quotes reads that prefix.
                 quote=" ".join(quote.split())[:600],
                 numbers=numbers,
+                # The relaxation is recorded on the record, so a reader and the
+                # grounding judge both see that this quote matched its page
+                # under a weaker test than the others.
+                provenance=relaxed or None,
             ),
             "",
         )
@@ -1019,7 +1108,7 @@ class Research:
             except Exception as exc:  # noqa: BLE001
                 rejections.append(f"{claimed or '(no id)'}: {exc}")
                 continue
-            if quote_key(str(item.get("quote"))) not in quote_key(text):
+            if not match_quote(str(item.get("quote")), text)[0]:
                 rejections.append(
                     f"{claimed or '(no id)'}: the quote is not on {doc.doc_id} p{page}. "
                     "Re-read that page and copy the words exactly, or cite the page that "
@@ -1244,19 +1333,11 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
 
     settle_identity_scale(attribution, metric_cfg["method"])
     corroborate(attribution, cross_source)
+    # The same evidence-ladder cap the open-loop pipeline applies, from the
+    # same function: a claim is scored by what its own citations state,
+    # whichever shell assembled it.
+    cap_weakly_cited_claims(attribution)
     if is_bridge:
-        for driver in attribution.drivers:
-            if driver.contribution is None or driver.confidence <= 80:
-                continue
-            cited = [r for r in attribution.evidence_records if r.id in driver.evidence]
-            stated = any(
-                abs(abs(number.value) - abs(driver.contribution.value)) <= 0.5
-                for record in cited
-                for number in record.numbers
-            )
-            if not stated:
-                driver.confidence = 80
-                driver.checks_passed.append("computed_delta_cap_80")
         split = {
             d.canonical: d
             for d in attribution.drivers
@@ -1389,9 +1470,19 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
         # out latches and stops being re-read. These two bounds cannot be
         # talked past: they end the loop whatever the reply says.
         turns += 1
-        if turns > combo.max_tool_calls + MAX_TURNS_AFTER_BUDGET or (
-            spent >= HARD_STOP_FACTOR * combo.wall_clock_s
-        ):
+        turn_cap = combo.max_tool_calls + MAX_TURNS_AFTER_BUDGET
+        if turns > turn_cap:
+            # A model that ignores the submit request, turn after turn. That is
+            # a different stop from running out of time, and it used to report
+            # itself as the wall clock — a bound such a run never comes near.
+            # The budget that latched first is kept beside it: it is why the
+            # model was being asked to submit at all.
+            exhausted = (
+                f"the turn cap ({turn_cap} turns)" if exhausted is None
+                else f"the turn cap ({turn_cap} turns), after {exhausted}"
+            )
+            break
+        if spent >= HARD_STOP_FACTOR * combo.wall_clock_s:
             exhausted = exhausted or f"the wall-clock budget ({combo.wall_clock_s:.0f}s)"
             break
         if exhausted is None:
@@ -1441,15 +1532,47 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
             name = (call.get("function") or {}).get("name") or ""
             call_id = call.get("id") or name
             arguments = _arguments(call)
-            if name != "submit":
-                research.tool_calls += 1
-                messages.append(_tool_result(call_id, research.dispatch(name, arguments)))
-                continue
+            # An accepted answer is FINAL. Every remaining call in the turn is
+            # ANSWERED, so the transcript the provider sees stays complete, but
+            # none of them RUNS. A tool dispatched after acceptance writes into
+            # the same research state the accepted answer is built from: a cite
+            # placed after submit minted the very record the answer cited, and
+            # a dangling citation the evidence gate had stripped came back as a
+            # quantified claim at confidence 85. The same two calls in the
+            # other order behaved correctly, so the artifact turned on how the
+            # provider happened to order one turn's calls.
             if payload is not None:
                 messages.append(
-                    _tool_result(call_id, {"accepted": False,
-                                           "reason": "the answer was already submitted"})
+                    _tool_result(call_id, {
+                        "accepted": False,
+                        "reason": "the answer was already submitted; this call was not run",
+                    })
                 )
+                continue
+            if name != "submit":
+                # Budgets bind per CALL, not per turn. They were read once at
+                # the top of a turn, so a turn that began one call inside the
+                # budget dispatched every call it carried — measured at 25
+                # calls against a budget of 2.
+                stop = None
+                if research.tool_calls >= combo.max_tool_calls:
+                    stop = f"the tool-call budget ({combo.max_tool_calls} calls)"
+                elif time.time() - started >= HARD_STOP_FACTOR * combo.wall_clock_s:
+                    stop = f"the wall-clock budget ({combo.wall_clock_s:.0f}s)"
+                if stop is not None:
+                    exhausted = exhausted or stop
+                    messages.append(
+                        _tool_result(call_id, {
+                            "accepted": False,
+                            "reason": (
+                                f"{stop} ran out, so this call was not run. Call submit with "
+                                "the answer your evidence already supports."
+                            ),
+                        })
+                    )
+                    continue
+                research.tool_calls += 1
+                messages.append(_tool_result(call_id, research.dispatch(name, arguments)))
                 continue
             submit_attempts += 1
             rejections = research.check_citations(arguments.get("evidence"))
@@ -1606,7 +1729,10 @@ def question_scope(question: str, docs: list[Document]) -> tuple[dict, dict, dic
     }
     metric_cfg = {
         "name": "the question",
-        "unit": "$m",
+        # No metric, so no unit. "$m" sat here and every chart a question read
+        # was stamped as dollars, whatever it showed. An empty unit makes
+        # read_chart ask for one instead of inventing it.
+        "unit": "",
         "method": "free_form",
         "retrieval_queries": [str(question)],
         "drivers": {},
@@ -1687,7 +1813,8 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = "agent
         raise ValueError(f"combo {combo_name} declares no agent model")
     llm = LLM()
 
-    docs = documents_for_question(question, bank, periods)
+    scope_notes: list[str] = []
+    docs = documents_for_question(question, bank, periods, notes=scope_notes)
     if not docs:
         raise RuntimeError(
             f"no documents in corpus for {bank or 'the banks named'} "
@@ -1728,6 +1855,9 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = "agent
             ],
         }
     output = build_answer(payload, research, question, docs)
+    # A period the corpus does not hold was substituted silently before this;
+    # the note travels with the answer that rests on it.
+    output["limitations"] = scope_notes + list(output["limitations"])
     if exhausted:
         output["limitations"].append(
             f"Research stopped early: {exhausted} was reached, so the evidence behind this "

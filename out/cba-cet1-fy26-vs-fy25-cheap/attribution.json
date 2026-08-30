@@ -10,11 +10,11 @@
     "delta": -30.0,
     "unit": "bps"
   },
-  "movement_source": "row 'Common Equity Tier 1 (CET1)', column 30 Jun 25 -> column 30 Jun 26",
-  "headline": "CBA's Level 2 CET1 ratio decreased by 30 bps to 12.0% in FY26 from 12.3% in FY25. The bank did not publish a full-year capital walk for this period; the published half-on-half walk shows earnings (+106 bps) and RWA (-46 bps) as primary drivers. For the full year, the net impact is unquantified due to missing H2 data.",
+  "movement_source": "row 'Common Equity Tier 1', column 30 Jun 25 -> column 30 Jun 26",
+  "headline": "CBA's CET1 ratio declined by 30 bps to 12.0% in FY26 (Level 2). The bank did not publish a capital walk for the full-year period; published walks cover the half-on-half movement (Dec 25 to Jun 26) and are used here only as context. Quantified drivers for the full year are unavailable from the provided evidence.",
   "headline_evidence": [
-    "ev-14",
     "ev-15",
+    "ev-16",
     "ev-17",
     "ev-23"
   ],
@@ -24,11 +24,11 @@
       "bank_label": "Cash NPAT",
       "contribution": null,
       "columns": null,
-      "narrative": "The bank states 'Capital generated from earnings' was a key driver (ev-16). However, the only quantified figure is +106 bps for the first half (ev-1), which does not cover the full FY26 period.",
-      "confidence": 60,
+      "narrative": "The bank does not disclose the specific Cash NPAT contribution to the full-year CET1 movement. Context: the Dec 25 to Jun 26 walk shows +106 bps (ev-1).",
+      "confidence": 40,
       "evidence": [
         "ev-1",
-        "ev-16"
+        "ev-8"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -38,11 +38,12 @@
       "bank_label": "Dividend",
       "contribution": null,
       "columns": null,
-      "narrative": "The bank cites 'Payment of the 1H26 dividend' as a driver (ev-16). The quantified impact of -76 bps applies only to the first half (ev-1). The second half dividend impact is not disclosed.",
-      "confidence": 60,
+      "narrative": "The bank does not disclose the specific dividend impact on the full-year CET1 movement. Context: the Dec 25 to Jun 26 walk shows -76 bps (ev-1), including a -10 bps DRP buyback (ev-20).",
+      "confidence": 40,
       "evidence": [
         "ev-1",
-        "ev-16"
+        "ev-7",
+        "ev-20"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -52,12 +53,14 @@
       "bank_label": "RWA",
       "contribution": null,
       "columns": null,
-      "narrative": "The bank notes 'Higher Credit Risk and IRRBB RWA' offset by 'lower Traded Market Risk RWA' (ev-16). Quantified sub-components (-38, -16, +8 bps) are provided only for the first half (ev-19).",
-      "confidence": 60,
+      "narrative": "The bank does not disclose the specific RWA contribution to the full-year CET1 movement. Context: the Dec 25 to Jun 26 walk shows -46 bps, driven by Credit Risk (-38 bps) and IRRBB (-16 bps) partially offset by Market Risk (+8 bps) (ev-1, ev-2, ev-3, ev-4).",
+      "confidence": 40,
       "evidence": [
         "ev-1",
-        "ev-16",
-        "ev-19"
+        "ev-9",
+        "ev-10",
+        "ev-11",
+        "ev-12"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -67,11 +70,11 @@
       "bank_label": "Other",
       "contribution": null,
       "columns": null,
-      "narrative": "The bank lists 'Other regulatory adjustments and movement in reserves' (ev-16). A quantified impact of -8 bps is reported for the first half only (ev-1).",
-      "confidence": 60,
+      "narrative": "The bank does not disclose the specific 'Other' contribution to the full-year CET1 movement. Context: the Dec 25 to Jun 26 walk shows -8 bps (ev-1).",
+      "confidence": 40,
       "evidence": [
         "ev-1",
-        "ev-16"
+        "ev-14"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -79,23 +82,11 @@
   ],
   "residual": null,
   "notable_items": [],
-  "disagreements": [
-    {
-      "topic": "Period Mismatch",
-      "values": [
-        "-30 bps (FY25 vs FY26, ev-14)",
-        "-30 bps (Dec 25 vs Jun 26, ev-1)"
-      ],
-      "preferred": "FY25 vs FY26",
-      "reason": "timing",
-      "explanation": "The bank's published capital walk covers Dec 2025 to Jun 2026. While the delta matches the FY25-FY26 change numerically, the drivers inside the walk apply only to the H1 period."
-    }
-  ],
+  "disagreements": [],
   "attribution_confidence": 40,
   "limitations": [
-    "No full-year capital walk is published for FY26 vs FY25.",
-    "All quantified driver contributions (-76, +106, -46, -8 bps) relate to the half ended Dec 2025 -> Jun 2026.",
-    "Second half movements are unquantified.",
+    "No capital walk was published for the FY25 to FY26 comparison; all available walks describe the half-on-half period (Dec 25 to Jun 26).",
+    "Quantified driver contributions for the full year are not disclosed in the provided evidence records.",
     "Failed check: no_quantified_drivers",
     "No published walk covers FY26 vs FY25: the bank's walk for this metric describes another comparison, so the driver split is not walk-verified for this comparison. Confidence is capped at 85."
   ],
@@ -106,7 +97,7 @@
       "pdf_page": 32,
       "printed_page": 32,
       "kind": "walk_vision",
-      "quote": "[walk chart] CBA CET1 ratio in FY26 vs FY25: Dec 25 Level 2 1230 -> Jun 26 Level 2 1200",
+      "quote": "[walk chart] CET1 ratio waterfall (Dec 25 Level 2 to Jun 26 Level 2): Dec 25 Level 2 1230 -> Jun 26 Level 2 1200",
       "numbers": [
         {
           "label": "1H26 dividend (DRP neutralised)",
@@ -244,7 +235,7 @@
       "pdf_page": 106,
       "printed_page": 106,
       "kind": "walk_annotation",
-      "quote": "[chart annotation] 1H26 dividend (DRP neutralised): (DRP neutralised)²",
+      "quote": "[chart annotation] 1H26 dividend (DRP neutralised): footnote 2",
       "numbers": [],
       "provenance": null
     },
@@ -254,7 +245,7 @@
       "pdf_page": 106,
       "printed_page": 106,
       "kind": "walk_annotation",
-      "quote": "[chart annotation] Cash NPAT: Cash NPAT³",
+      "quote": "[chart annotation] Cash NPAT: footnote 3",
       "numbers": [],
       "provenance": null
     },
@@ -264,10 +255,10 @@
       "pdf_page": 106,
       "printed_page": 106,
       "kind": "walk_annotation",
-      "quote": "[chart annotation] RWA: Credit Risk⁴ -38",
+      "quote": "[chart annotation] RWA: Credit Risk -38",
       "numbers": [
         {
-          "label": "RWA Credit Risk⁴",
+          "label": "RWA Credit Risk",
           "value": -38.0,
           "unit": "bps",
           "basis": null
@@ -277,6 +268,16 @@
     },
     {
       "id": "ev-10",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 106,
+      "printed_page": 106,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] RWA: footnote 4",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 106,
       "printed_page": 106,
@@ -293,7 +294,7 @@
       "provenance": null
     },
     {
-      "id": "ev-11",
+      "id": "ev-12",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 106,
       "printed_page": 106,
@@ -310,7 +311,7 @@
       "provenance": null
     },
     {
-      "id": "ev-12",
+      "id": "ev-13",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 106,
       "printed_page": 106,
@@ -327,17 +328,17 @@
       "provenance": null
     },
     {
-      "id": "ev-13",
+      "id": "ev-14",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 106,
       "printed_page": 106,
       "kind": "walk_annotation",
-      "quote": "[chart annotation] Other: Other⁵",
+      "quote": "[chart annotation] Other: footnote 5",
       "numbers": [],
       "provenance": null
     },
     {
-      "id": "ev-14",
+      "id": "ev-15",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 48,
       "printed_page": null,
@@ -378,7 +379,7 @@
       "provenance": null
     },
     {
-      "id": "ev-15",
+      "id": "ev-16",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 48,
       "printed_page": null,
@@ -401,16 +402,6 @@
       "provenance": null
     },
     {
-      "id": "ev-16",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 48,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Key drivers of the change in CET1 for the 6 months ended 30 June 2026 were: • Capital generated from earnings; partly offset by • Payment of the 1H26 dividend; • Higher Credit Risk and IRRBB RWA, partly offset by lower Traded Market Risk RWA; and • Other regulatory adjustments and movement in reserves.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
       "id": "ev-17",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 120,
@@ -425,7 +416,7 @@
           "basis": null
         },
         {
-          "label": "CET1 ratio PRIOR HALF",
+          "label": "CET1 ratio Dec 25",
           "value": 12.3,
           "unit": "%",
           "basis": null
@@ -555,9 +546,57 @@
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 106,
       "printed_page": 106,
-      "kind": "text",
-      "quote": "CET1 capital ratio movements1 • Level 2 CET1 capital ratio of 12.0% • 1H26 interim dividend – DRP neutralised • Strong capital position supporting franchise growth and dividends bpts",
-      "numbers": [],
+      "kind": "table",
+      "quote": "Level 1 CET1 ratio",
+      "numbers": [
+        {
+          "label": "Level 1 CET1 ratio Jun 25",
+          "value": 12.4,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Level 1 CET1 ratio Dec 25",
+          "value": 12.2,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Level 1 CET1 ratio Jun 26",
+          "value": 12.1,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 106,
+      "printed_page": 106,
+      "kind": "table",
+      "quote": "International ratios CET1 capital ratio",
+      "numbers": [
+        {
+          "label": "International CET1 capital ratio Jun 25",
+          "value": 18.7,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "International CET1 capital ratio Dec 25",
+          "value": 18.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "International CET1 capital ratio Jun 26",
+          "value": 18.3,
+          "unit": "%",
+          "basis": null
+        }
+      ],
       "provenance": null
     }
   ],
@@ -566,10 +605,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-30T12:36:09+00:00",
-    "seconds": 64.5,
+    "generated": "2026-08-30T14:55:39+00:00",
+    "seconds": 73.8,
     "cost_usd": 0.0023,
-    "tokens": "57184 in / 4467 out",
+    "tokens": "57610 in / 4520 out",
     "orchestration": "pipeline",
     "pages_extracted": 16,
     "reference_follow": [

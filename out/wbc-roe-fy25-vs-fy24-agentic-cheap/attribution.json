@@ -1,0 +1,241 @@
+{
+  "bank": "WBC",
+  "metric": "roe",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "ex_notables",
+  "movement": {
+    "from_value": 11.21,
+    "to_value": 10.97,
+    "delta": -0.24,
+    "unit": "ppt"
+  },
+  "movement_source": "row 'ROTE row, Shareholder value - excluding Notable Items block', column Full Year Sept 2024 column -> column Full Year Sept 2025 column",
+  "headline": "Westpac's return on average tangible equity excluding Notable Items (ROTE ex Notable Items) fell 24 basis points to 10.97% in FY25 from 11.21% in FY24. The decline was almost entirely driven by a 2% fall in net profit excluding Notable Items ($6,966m vs $7,106m), which reduced ROTE by approximately 22 ppt at constant equity. Average tangible ordinary equity rose marginally by $61m (0.1%) to $63,476m, contributing roughly 2 ppt of headwind as the interaction term. Higher operating expenses (+9%, including a $273m restructuring charge) more than offset higher net interest income (+3%) and lower impairment charges, driving the earnings decline.",
+  "headline_evidence": [
+    "ev-1",
+    "ev-12",
+    "ev-6"
+  ],
+  "drivers": [
+    {
+      "canonical": "earnings_effect",
+      "bank_label": "Net profit excluding Notable Items movement",
+      "contribution": {
+        "value": -0.22,
+        "unit": "ppt"
+      },
+      "columns": "Full Year Sept 2025 vs Full Year Sept 2024",
+      "narrative": "Derived: prior-period ROTE (11.21%) multiplied by earnings growth rate (-1.97%, from $7,106m to $6,966m). Net profit excl. Notable Items fell 2% as higher operating expenses (+9%, incl. $273m restructuring under Fit for Growth) more than offset higher NII (+3%) and lower impairment charges (5bps vs 7bps of avg loans). Bank does not disclose a separate ROTE walk.",
+      "confidence": 80,
+      "evidence": [
+        "ev-1",
+        "ev-12",
+        "ev-13",
+        "ev-5"
+      ],
+      "checks_passed": [
+        "identity_scale_normalised",
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "equity_effect",
+      "bank_label": "Average tangible ordinary equity movement",
+      "contribution": {
+        "value": -0.02,
+        "unit": "ppt"
+      },
+      "columns": "Full Year Sept 2025 vs Full Year Sept 2024",
+      "narrative": "Derived: total delta (-24 ppt) minus earnings effect (-22 ppt). Average tangible ordinary equity rose $61m to $63,476m (+0.1%), nearly flat YoY. The DRP for the final dividend was satisfied via third-party market purchase (neutralising share count), while the bank continued its ongoing share buyback program. Retained earnings from $6,966m profit less $153m dividends provided limited equity accretion.",
+      "confidence": 75,
+      "evidence": [
+        "ev-8",
+        "ev-9"
+      ],
+      "checks_passed": [
+        "identity_scale_normalised",
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
+  "notable_items": [],
+  "disagreements": [],
+  "attribution_confidence": 75,
+  "limitations": [
+    "No dedicated ROTE bridge/walk chart published by Westpac; both driver contributions are arithmetic derivations per the task method, not bank-disclosed decompositions.",
+    "The equity_effect captures both the pure equity effect and the interaction residual between earnings and equity movements.",
+    "The bank discusses expense growth and NIM drivers narratively but does not attribute specific ROTE components to individual business segments.",
+    "Movement delta normalised from -24 to -0.24 (unit slip against the endpoints).",
+    "Basis normalised from 'cash' to 'ex_notables': no page in evidence prints 'cash' beside the movement, and the registry names ex_notables as the bank's headline basis.",
+    "Identity contributions restated from -24.00 to -0.2400 ppt: the identity closes on the movement delta at the ratio's own scale and not at the scale they were written on, and a contribution larger than the ratio itself cannot be a movement of that ratio. A growth rate enters a ratio identity as a fraction, and a dollar movement enters it divided by the identity's denominator."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 10,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "ROTE 10.97% 11.21% (24 bps)",
+      "numbers": [
+        {
+          "label": "Full Year Sept 2025",
+          "value": 10.97,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Full Year Sept 2024",
+          "value": 11.21,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 58,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Return on average tangible ordinary equity (excluding Notable Items) 10.97% 11.21%",
+      "numbers": [
+        {
+          "label": "Full Year Sept 2025",
+          "value": 10.97,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Full Year Sept 2024",
+          "value": 11.21,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 58,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit attributable to owners of WBC (adjusted for RSP dividends) excluding Notable Items 6,966 7,106",
+      "numbers": [
+        {
+          "label": "Full Year Sept 2025",
+          "value": 6966.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Full Year Sept 2024",
+          "value": 7106.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 58,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Average tangible ordinary equity 63,476 63,415 64,429 62,519",
+      "numbers": [
+        {
+          "label": "Full Year Sept 2025",
+          "value": 63476.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Full Year Sept 2024",
+          "value": 63415.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit excluding Notable Items 6,972 7,113 (2) 3,515 3,457 2",
+      "numbers": [
+        {
+          "label": "Full Year Sept 2025",
+          "value": 6972.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Full Year Sept 2024",
+          "value": 7113.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Net profit excluding Notable Items was $6,972 million, a decrease of 2%, with higher operating income and lower credit impairment charges more than offset by higher expenses.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The Board has determined to satisfy the DRP for the 2025 final ordinary dividend by arranging for the purchase of shares in the market by a third party.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 6,
+      "printed_page": 6,
+      "kind": "text",
+      "quote": "11.0% ROTE ex Notable Items1 24bps to FY24",
+      "numbers": [],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "agentic-cheap",
+    "models": "agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash",
+    "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
+    "generated": "2026-08-30T14:47:14+00:00",
+    "seconds": 192.1,
+    "cost_usd": 0.0497,
+    "tokens": "1722831 in / 9304 out",
+    "orchestration": "agent",
+    "tool_calls": 64,
+    "pages_read": 31,
+    "charts_read": 0,
+    "budget_exhausted": "no"
+  }
+}

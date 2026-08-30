@@ -499,13 +499,36 @@ def test_an_unjudged_case_is_not_a_pass():
     assert row["passes"] is None
 
 
+def _fact_check(total: int, passed: int, flagged: int = 0) -> dict:
+    return {
+        "total": total,
+        "passed": passed,
+        "failed": total - passed - flagged,
+        "flagged": flagged,
+        "accuracy_fraction": round(passed / total, 3) if total else None,
+    }
+
+
 @pytest.mark.parametrize(
-    "coverage,accuracy,expected",
-    [(1.0, 1.0, True), (1.0, 0.75, True), (1.0, 0.5, False), (0.5, 1.0, False),
-     (None, 1.0, None), (1.0, None, None)],
+    "name,coverage,fact_check,expected",
+    [
+        ("all four facts pass", 1.0, _fact_check(4, 4), True),
+        # The 0.75 allowance exists for ONE FLAGGED fact in a four-fact case.
+        ("one flagged of four", 1.0, _fact_check(4, 3, flagged=1), True),
+        ("two flagged of four", 1.0, _fact_check(4, 2, flagged=2), False),
+        # ...and never for an outright failure. A judged, unanimous FAIL is the
+        # answer getting the fact WRONG, which no allowance covers. The old
+        # rule read one blended number, so it could not tell these two apart.
+        ("one unanimous fail of four", 1.0, _fact_check(4, 3), False),
+        ("one fail and one flag", 1.0, _fact_check(5, 3, flagged=1), False),
+        ("coverage short", 0.5, _fact_check(4, 4), False),
+        ("no coverage figure", None, _fact_check(4, 4), None),
+        ("no facts judged", 1.0, {"total": 0, "accuracy_fraction": None}, None),
+    ],
+    ids=lambda v: v if isinstance(v, str) else "",
 )
-def test_crossref_pass_needs_both(coverage, accuracy, expected):
-    assert crossref_passes(coverage, accuracy) is expected
+def test_crossref_pass_needs_both(name, coverage, fact_check, expected):
+    assert crossref_passes(coverage, fact_check) is expected
 
 
 # ---------------------------------------------------------------------------
@@ -615,3 +638,50 @@ def test_judge_fact_max_quotes_widens_the_window():
     llm = FakeLLM()
     J.judge_fact(llm, "a fact", "the note", quotes, ("j1", "j2"), max_quotes=48)
     assert any("quote number 39" in p for p in llm.prompts)
+
+
+def test_quotes_dropped_by_the_character_budget_are_reported():
+    """quotes_used must count what the judge SAW, not what it was offered.
+
+    The count came from the pre-truncation list while a separate character
+    budget silently cut the block, so a scorecard could report 48 quotes
+    behind a verdict the judge reached on 12. An entailment ruling made on
+    quotes the judge never read is the failure this number exists to expose.
+    """
+    from bank_equity_researcher import judge as J
+
+    class FakeLLM:
+        def __init__(self):
+            self.prompts = []
+
+        def chat_json(self, model, prompt, max_tokens=None):
+            self.prompts.append(prompt)
+            if '"stated"' in prompt or "does the NOTE state" in prompt:
+                return {"stated": "stated", "why": ""}
+            return {"entailed": "entailed", "why": ""}
+
+    # Twenty quotes of 500 characters overrun the 4000-character budget.
+    quotes = [f"q{i} " + "x" * 500 for i in range(20)]
+    llm = FakeLLM()
+    verdict = J.judge_fact(llm, "a fact", "the note", quotes, ("j1", "j2"))
+    assert verdict.quotes_truncated is True
+    assert 0 < verdict.quotes_used < 20
+    entailment = next(p for p in llm.prompts if "q0" in p)
+    # Every quote the count claims is whole and present; none beyond it is.
+    for i in range(verdict.quotes_used):
+        assert f"q{i} " in entailment
+    assert f"q{verdict.quotes_used} " not in entailment
+
+
+def test_quotes_inside_the_budget_are_not_flagged():
+    from bank_equity_researcher import judge as J
+
+    class FakeLLM:
+        def chat_json(self, model, prompt, max_tokens=None):
+            if '"stated"' in prompt or "does the NOTE state" in prompt:
+                return {"stated": "stated", "why": ""}
+            return {"entailed": "entailed", "why": ""}
+
+    verdict = J.judge_fact(FakeLLM(), "a fact", "the note", ["short one", "short two"], ("j1",))
+    assert verdict.quotes_truncated is False
+    assert verdict.quotes_used == 2

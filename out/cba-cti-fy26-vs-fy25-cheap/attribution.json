@@ -11,47 +11,45 @@
     "unit": "ppt"
   },
   "movement_source": "row 'Operating expenses to total operating income (%)', column FY25 -> column FY26",
-  "headline": "CBA's headline cost-to-income ratio (cash basis) improved by 20 basis points to 45.5% in FY26 from 45.7% in FY25. This improvement was driven by operating income growth of 6.2% outpacing underlying operating expense growth of 5.6%. The bank also reported an underlying cost-to-income ratio of 44.9%, down 30 basis points from 45.2%.",
+  "headline": "CBA's headline cost-to-income ratio (cash basis) improved by 20 basis points to 45.5% in FY26 from 45.7% in FY25. This improvement was driven by operating income growth of 6.2% outpacing underlying operating expense growth of 5.6%, resulting in a positive JAWS effect. The bank also reported an underlying cost-to-income ratio of 44.9% (down 30 bps), reflecting the impact of notable items.",
   "headline_evidence": [
-    "ev-2",
-    "ev-23",
+    "ev-3",
+    "ev-12",
+    "ev-15",
     "ev-29",
     "ev-30"
   ],
   "drivers": [
     {
       "canonical": "income_growth",
-      "bank_label": "Total operating income",
+      "bank_label": null,
       "contribution": {
-        "value": -0.12,
+        "value": 0.8,
         "unit": "ppt"
       },
-      "columns": "FY25 -> FY26",
-      "narrative": "",
-      "confidence": 90,
+      "columns": "stated vs FY25",
+      "narrative": "Operating income grew 6.2% ($28,465m to $30,224m). Income growth exceeding expense growth lowers the ratio. Positive contribution estimated at +0.8 ppt based on jaws arithmetic.",
+      "confidence": 80,
       "evidence": [
-        "ev-29",
-        "ev-12"
+        "ev-12",
+        "ev-29"
       ],
       "checks_passed": [],
       "checks_failed": []
     },
     {
       "canonical": "expense_growth",
-      "bank_label": "Underlying operating expenses",
+      "bank_label": null,
       "contribution": {
-        "value": 0.12,
+        "value": -1.0,
         "unit": "ppt"
       },
-      "columns": "FY25 -> FY26",
-      "narrative": "Underlying operating expenses grew 5.6% ($12,866m to $13,585m). Key drivers included IT services (+11%) and occupancy (+2%), partially offset by staff expense decreases (-$20m in H1).",
-      "confidence": 85,
+      "columns": "stated vs FY25",
+      "narrative": "Underlying operating expenses grew 5.6% ($12,866m to $13,585m). Expense growth lagging income growth lowers the ratio. Negative contribution estimated at -1.0 ppt based on jaws arithmetic.",
+      "confidence": 80,
       "evidence": [
-        "ev-30",
         "ev-13",
-        "ev-10",
-        "ev-9",
-        "ev-8"
+        "ev-30"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -63,12 +61,11 @@
         "value": 0.0,
         "unit": "ppt"
       },
-      "columns": "FY25 -> FY26",
-      "narrative": "Notable items were $170m in FY26 vs $130m in FY25. While these affect statutory results, the headline cash CTI excludes them. The net impact on the cash ratio is zero as they are excluded from both numerator and denominator.",
-      "confidence": 85,
+      "columns": "stated vs FY25",
+      "narrative": "Notable items were $170m in FY26 vs $130m in FY25. While these affect the underlying vs statutory split, the headline cash ratio movement is fully explained by jaws. No separate quantified contribution assigned to avoid double counting with jaws drivers.",
+      "confidence": 60,
       "evidence": [
-        "ev-14",
-        "ev-2"
+        "ev-14"
       ],
       "checks_passed": [
         "single_source"
@@ -83,10 +80,21 @@
   "notable_items": [
     "Restructuring and notable items increased from $130m to $170m."
   ],
-  "disagreements": [],
-  "attribution_confidence": 90,
+  "disagreements": [
+    {
+      "topic": "Underlying CTI definition variance",
+      "values": [
+        "45.2% -> 44.9% (ev-2)",
+        "44.7% -> 45.2% (ev-6)"
+      ],
+      "preferred": "45.2% -> 44.9%",
+      "reason": "restatement",
+      "explanation": "The Profit Announcement table (ev-2) states the ratio decreased from 45.2% to 44.9%. However, ev-6 claims it increased from 44.7% to 45.2%. Given the source hierarchy and the explicit 'decreased' narrative in ev-5 accompanying ev-2, ev-2 is preferred as the restated/correct figure for the primary comparison."
+    }
+  ],
+  "attribution_confidence": 80,
   "limitations": [
-    "The Jaws decomposition is calculated manually as no walk chart was provided for the Group Cash CTI. The narrative cites H1 expense details which may not fully represent the full year mix."
+    "The precise ppt split between income and expense contributions is not explicitly provided by the bank; it is derived from jaws arithmetic using disclosed levels. Confidence is capped at 80 due to this derivation."
   ],
   "evidence_records": [
     {
@@ -95,42 +103,18 @@
       "pdf_page": 31,
       "printed_page": null,
       "kind": "table",
-      "quote": "Underlying operating expenses to underlying operating income (%) 44.9 45.2 (30)bpts 45.2 44.7 50 bpts",
+      "quote": "Total operating expenses 13,755 12,996 6",
       "numbers": [
         {
-          "label": "cost to income ratio underlying FY26",
-          "value": 44.9,
-          "unit": "%",
+          "label": "Total operating expenses FY26",
+          "value": 13755.0,
+          "unit": "$m",
           "basis": null
         },
         {
-          "label": "cost to income ratio underlying FY25",
-          "value": 45.2,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio underlying change FY26 vs FY25",
-          "value": -0.3,
-          "unit": "ppt",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio underlying H1 FY26",
-          "value": 45.2,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio underlying H1 FY25",
-          "value": 44.7,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio underlying change H1 FY26 vs H1 FY25",
-          "value": 0.5,
-          "unit": "ppt",
+          "label": "Total operating expenses FY25",
+          "value": 12996.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -142,42 +126,18 @@
       "pdf_page": 31,
       "printed_page": null,
       "kind": "table",
-      "quote": "Operating expenses to total operating income (%) 45.5 45.7 (20)bpts 45.2 45.9 (70)bpts",
+      "quote": "Underlying operating expenses to underlying operating income (%) 44.9 45.2 (30)bpts",
       "numbers": [
         {
-          "label": "cost to income ratio total FY26",
-          "value": 45.5,
+          "label": "Cost-to-income ratio (underlying) FY26",
+          "value": 44.9,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "cost to income ratio total FY25",
-          "value": 45.7,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio total change FY26 vs FY25",
-          "value": -0.2,
-          "unit": "ppt",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio total H1 FY26",
+          "label": "Cost-to-income ratio (underlying) FY25",
           "value": 45.2,
           "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio total H1 FY25",
-          "value": 45.9,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio total change H1 FY26 vs H1 FY25",
-          "value": -0.7,
-          "unit": "ppt",
           "basis": null
         }
       ],
@@ -189,41 +149,17 @@
       "pdf_page": 31,
       "printed_page": null,
       "kind": "table",
-      "quote": "Total operating expenses 13,755 12,996 6 6,865 6,890 –",
+      "quote": "Operating expenses to total operating income (%) 45.5 45.7 (20)bpts",
       "numbers": [
         {
-          "label": "total operating expenses FY26",
-          "value": 13755.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "total operating expenses FY25",
-          "value": 12996.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "total operating expenses change FY26 vs FY25",
-          "value": 6.0,
+          "label": "Cost-to-income ratio (total) FY26",
+          "value": 45.5,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "total operating expenses H1 FY26",
-          "value": 6865.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "total operating expenses H1 FY25",
-          "value": 6890.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "total operating expenses change H1 FY26 vs H1 FY25",
-          "value": 0.0,
+          "label": "Cost-to-income ratio (total) FY25",
+          "value": 45.7,
           "unit": "%",
           "basis": null
         }
@@ -239,21 +175,15 @@
       "quote": "Underlying operating expenses were $13,585 million, an increase of $719 million or 6% on the prior year.",
       "numbers": [
         {
-          "label": "underlying operating expenses level FY26",
-          "value": 13585.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "underlying operating expenses delta FY26 vs FY25",
+          "label": "Underlying operating expenses delta FY26 vs FY25",
           "value": 719.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "underlying operating expenses growth FY26 vs FY25",
-          "value": 6.0,
-          "unit": "%",
+          "label": "Underlying operating expenses level FY26",
+          "value": 13585.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -268,21 +198,15 @@
       "quote": "Underlying operating expenses to underlying operating income ratio decreased 30 basis points from 45.2% to 44.9%.",
       "numbers": [
         {
-          "label": "underlying cost to income ratio level FY26",
-          "value": 44.9,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "underlying cost to income ratio level FY25",
-          "value": 45.2,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "underlying cost to income ratio change FY26 vs FY25",
+          "label": "Cost-to-income ratio (underlying) change FY26 vs FY25",
           "value": -0.3,
           "unit": "ppt",
+          "basis": null
+        },
+        {
+          "label": "Cost-to-income ratio (underlying) level FY26",
+          "value": 44.9,
+          "unit": "%",
           "basis": null
         }
       ],
@@ -326,7 +250,7 @@
           "basis": "underlying"
         },
         {
-          "label": "underlying operating expense H1 FY25 (Dec 25)",
+          "label": "underlying operating expense H2 FY25",
           "value": 6720.0,
           "unit": "$m",
           "basis": "underlying"
@@ -349,7 +273,7 @@
           "basis": "null"
         },
         {
-          "label": "staff expense H1 FY25 (Dec 25)",
+          "label": "staff expense H2 FY25",
           "value": 4139.0,
           "unit": "$m",
           "basis": "null"
@@ -372,7 +296,7 @@
           "basis": "null"
         },
         {
-          "label": "occupancy and equipment expense H1 FY25 (Dec 25)",
+          "label": "occupancy and equipment expense H2 FY25",
           "value": 465.0,
           "unit": "$m",
           "basis": "null"
@@ -395,7 +319,7 @@
           "basis": "null"
         },
         {
-          "label": "IT services expense H1 FY25 (Dec 25)",
+          "label": "IT services expense H2 FY25",
           "value": 1321.0,
           "unit": "$m",
           "basis": "null"
@@ -418,7 +342,7 @@
           "basis": "null"
         },
         {
-          "label": "other expense H1 FY25 (Dec 25)",
+          "label": "other expense H2 FY25",
           "value": 795.0,
           "unit": "$m",
           "basis": "null"
@@ -432,7 +356,7 @@
       "pdf_page": 27,
       "printed_page": 2,
       "kind": "table",
-      "quote": "Total operating income",
+      "quote": "Group Performance Summary",
       "numbers": [
         {
           "label": "Total operating income FY26",
@@ -455,7 +379,7 @@
       "pdf_page": 27,
       "printed_page": 2,
       "kind": "table",
-      "quote": "Underlying operating expenses",
+      "quote": "Underlying operating expenses (13,585) (12,866) 6",
       "numbers": [
         {
           "label": "Underlying operating expenses FY26",
@@ -478,7 +402,7 @@
       "pdf_page": 27,
       "printed_page": 2,
       "kind": "table",
-      "quote": "Restructuring and notable items ¹",
+      "quote": "Restructuring and notable items ¹ (170) (130) 31",
       "numbers": [
         {
           "label": "Restructuring and notable items FY26",
@@ -501,7 +425,7 @@
       "pdf_page": 27,
       "printed_page": 2,
       "kind": "table",
-      "quote": "Total operating expenses",
+      "quote": "Total operating expenses (13,755) (12,996) 6",
       "numbers": [
         {
           "label": "Total operating expenses FY26",
@@ -520,16 +444,6 @@
     },
     {
       "id": "ev-16",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 27,
-      "printed_page": 2,
-      "kind": "text",
-      "quote": "In order to present a transparent view of the business’ performance, operating expenses is shown both on an underlying and headline basis.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-17",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 76,
       "printed_page": null,
@@ -552,7 +466,7 @@
       "provenance": null
     },
     {
-      "id": "ev-18",
+      "id": "ev-17",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 76,
       "printed_page": null,
@@ -575,7 +489,7 @@
       "provenance": null
     },
     {
-      "id": "ev-19",
+      "id": "ev-18",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 76,
       "printed_page": null,
@@ -598,7 +512,7 @@
       "provenance": null
     },
     {
-      "id": "ev-20",
+      "id": "ev-19",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 79,
       "printed_page": null,
@@ -621,7 +535,7 @@
       "provenance": null
     },
     {
-      "id": "ev-21",
+      "id": "ev-20",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 79,
       "printed_page": null,
@@ -644,7 +558,7 @@
       "provenance": null
     },
     {
-      "id": "ev-22",
+      "id": "ev-21",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 79,
       "printed_page": null,
@@ -661,12 +575,12 @@
       "provenance": null
     },
     {
-      "id": "ev-23",
+      "id": "ev-22",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 18,
       "printed_page": 3,
       "kind": "table",
-      "quote": "Operating expenses to total operating income (%) | 45.5 | 45.7 | (20)bpts",
+      "quote": "Operating expenses to total operating income (%) 45.5 45.7 (20)bpts 45.2 45.9 (70)bpts",
       "numbers": [
         {
           "label": "cost to income ratio FY26",
@@ -684,24 +598,47 @@
       "provenance": null
     },
     {
-      "id": "ev-24",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 18,
-      "printed_page": 3,
+      "id": "ev-23",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 72,
+      "printed_page": 72,
       "kind": "table",
-      "quote": "Operating expenses to total operating income (%) | 45.5 | 45.7 | (20)bpts",
+      "quote": "Cost to income 39.3% 42.5% FY25 FY26",
       "numbers": [
         {
-          "label": "cost to income ratio FY26",
-          "value": 45.5,
+          "label": "cost to income ratio RBS FY25",
+          "value": 39.3,
           "unit": "%",
-          "basis": "null"
+          "basis": null
         },
         {
-          "label": "cost to income ratio FY25",
-          "value": 45.7,
+          "label": "cost to income ratio RBS FY26",
+          "value": 42.5,
           "unit": "%",
-          "basis": "null"
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 72,
+      "printed_page": 72,
+      "kind": "table",
+      "quote": "Cost to income 39.3% 46.4% FY25 FY26",
+      "numbers": [
+        {
+          "label": "cost to income ratio BB FY25",
+          "value": 39.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "cost to income ratio BB FY26",
+          "value": 46.4,
+          "unit": "%",
+          "basis": null
         }
       ],
       "provenance": null
@@ -712,17 +649,17 @@
       "pdf_page": 72,
       "printed_page": 72,
       "kind": "table",
-      "quote": "Cost to income 39.3% 39.3% FY25 FY26",
+      "quote": "Cost to income 41.0% 40.6% FY25 FY26",
       "numbers": [
         {
-          "label": "Cost to income RBS FY25",
-          "value": 39.3,
+          "label": "cost to income ratio IB&M FY25",
+          "value": 41.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Cost to income RBS FY26",
-          "value": 39.3,
+          "label": "cost to income ratio IB&M FY26",
+          "value": 40.6,
           "unit": "%",
           "basis": null
         }
@@ -735,17 +672,17 @@
       "pdf_page": 72,
       "printed_page": 72,
       "kind": "table",
-      "quote": "Cost to income 42.5% 46.4% FY25 FY26",
+      "quote": "Cost to income 32.3% 32.2% FY25 FY26",
       "numbers": [
         {
-          "label": "Cost to income BB FY25",
-          "value": 42.5,
+          "label": "cost to income ratio ASB FY25",
+          "value": 32.3,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Cost to income BB FY26",
-          "value": 46.4,
+          "label": "cost to income ratio ASB FY26",
+          "value": 32.2,
           "unit": "%",
           "basis": null
         }
@@ -758,18 +695,30 @@
       "pdf_page": 72,
       "printed_page": 72,
       "kind": "table",
-      "quote": "Cost to income 41.0% 40.6% FY25 FY26",
+      "quote": "Income 10,052 3,548 Expenses 3,241 1,645 LIE 310 78 NPAT 4,544 1,318",
       "numbers": [
         {
-          "label": "Cost to income IB&M FY25",
-          "value": 41.0,
-          "unit": "%",
+          "label": "total operating income RBS FY26",
+          "value": 10052.0,
+          "unit": "$m",
           "basis": null
         },
         {
-          "label": "Cost to income IB&M FY26",
-          "value": 40.6,
-          "unit": "%",
+          "label": "total operating expense RBS FY26",
+          "value": 3241.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "total operating income RBS FY25",
+          "value": 3548.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "total operating expense RBS FY25",
+          "value": 1645.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -781,18 +730,30 @@
       "pdf_page": 72,
       "printed_page": 72,
       "kind": "table",
-      "quote": "Cost to income 32.3% 32.2% FY25 FY26",
+      "quote": "Income 2,969 13,783 Expenses 1,206 5,417 LIE 33 378 NPAT 1,258 5,587",
       "numbers": [
         {
-          "label": "Cost to income ASB (NZD) FY25",
-          "value": 32.3,
-          "unit": "%",
+          "label": "total operating income IB&M FY26",
+          "value": 2969.0,
+          "unit": "$m",
           "basis": null
         },
         {
-          "label": "Cost to income ASB (NZD) FY26",
-          "value": 32.2,
-          "unit": "%",
+          "label": "total operating expense IB&M FY26",
+          "value": 1206.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "total operating income IB&M FY25",
+          "value": 13783.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "total operating expense IB&M FY25",
+          "value": 5417.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -896,17 +857,17 @@
       "pdf_page": 56,
       "printed_page": 56,
       "kind": "table",
-      "quote": "Cost to income 32.3% 32.2%",
+      "quote": "Cost to income",
       "numbers": [
         {
-          "label": "cost to income ratio RBS FY25",
-          "value": 32.3,
+          "label": "CBA cost to income ratio FY26",
+          "value": 32.2,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "cost to income ratio RBS FY26",
-          "value": 32.2,
+          "label": "CBA cost to income ratio FY25",
+          "value": 32.3,
           "unit": "%",
           "basis": null
         }
@@ -915,75 +876,6 @@
     },
     {
       "id": "ev-34",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 56,
-      "printed_page": 56,
-      "kind": "table",
-      "quote": "43.4% 47.1%",
-      "numbers": [
-        {
-          "label": "cost to income ratio BB FY25",
-          "value": 43.4,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio BB FY26",
-          "value": 47.1,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-35",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 56,
-      "printed_page": 56,
-      "kind": "table",
-      "quote": "39.3% 39.3%",
-      "numbers": [
-        {
-          "label": "cost to income ratio IB&M FY25",
-          "value": 39.3,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio IB&M FY26",
-          "value": 39.3,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-36",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 56,
-      "printed_page": 56,
-      "kind": "table",
-      "quote": "41.0% 40.6%",
-      "numbers": [
-        {
-          "label": "cost to income ratio NZ (NZD) FY25",
-          "value": 41.0,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "cost to income ratio NZ (NZD) FY26",
-          "value": 40.6,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-37",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 27,
       "printed_page": 27,
@@ -1006,7 +898,7 @@
       "provenance": null
     },
     {
-      "id": "ev-38",
+      "id": "ev-35",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 27,
       "printed_page": 27,
@@ -1029,7 +921,7 @@
       "provenance": null
     },
     {
-      "id": "ev-39",
+      "id": "ev-36",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -1038,27 +930,21 @@
       "numbers": [
         {
           "label": "Operating income FY25",
-          "value": 28457.9,
+          "value": 28457.55,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Operating income FY26 vs FY25 change",
-          "value": 6.2,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Operating income 2H26 vs 1H26 change",
-          "value": 1.2,
-          "unit": "%",
+          "label": "Operating income FY26",
+          "value": 30224.0,
+          "unit": "$m",
           "basis": null
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-40",
+      "id": "ev-37",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -1067,27 +953,21 @@
       "numbers": [
         {
           "label": "Underlying operating expenses FY25",
-          "value": 12860.5,
+          "value": 12863.96,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Underlying operating expenses FY26 vs FY25 change",
-          "value": 5.6,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Underlying operating expenses 2H26 vs 1H26 change",
-          "value": 2.2,
-          "unit": "%",
+          "label": "Underlying operating expenses FY26",
+          "value": 13585.0,
+          "unit": "$m",
           "basis": null
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-41",
+      "id": "ev-38",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -1104,7 +984,7 @@
       "provenance": null
     },
     {
-      "id": "ev-42",
+      "id": "ev-39",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -1113,20 +993,14 @@
       "numbers": [
         {
           "label": "Operating performance FY25",
-          "value": 15461.0,
+          "value": 15467.96,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Operating performance FY26 vs FY25 change",
-          "value": 6.5,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Operating performance 2H26 vs 1H26 change",
-          "value": 2.5,
-          "unit": "%",
+          "label": "Operating performance FY26",
+          "value": 16469.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -1138,10 +1012,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-30T12:37:56+00:00",
-    "seconds": 51.0,
-    "cost_usd": 0.0021,
-    "tokens": "38119 in / 7366 out",
+    "generated": "2026-08-30T14:57:17+00:00",
+    "seconds": 45.6,
+    "cost_usd": 0.002,
+    "tokens": "37082 in / 6852 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": [

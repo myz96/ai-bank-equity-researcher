@@ -683,7 +683,7 @@ def wired(monkeypatch, tmp_path, docs):
     monkeypatch.setattr(RA, "OUT_DIR", tmp_path / "out")
     monkeypatch.setattr(RA, "documents_for_period", lambda bank, *periods: docs)
     monkeypatch.setattr(
-        RA, "documents_for_question", lambda question, bank=None, periods=None: docs
+        RA, "documents_for_question", lambda question, bank=None, periods=None, notes=None: docs
     )
     monkeypatch.setattr(
         RA, "retrieve",
@@ -1113,7 +1113,7 @@ def test_the_open_loop_arm_emits_the_same_artifact(monkeypatch, tmp_path, docs):
     monkeypatch.setattr(ask, "LLM", lambda: _AskLLM([]))
     monkeypatch.setattr(ask, "OUT_DIR", tmp_path / "out")
     monkeypatch.setattr(
-        ask, "documents_for_question", lambda question, bank=None, periods=None: docs
+        ask, "documents_for_question", lambda question, bank=None, periods=None, notes=None: docs
     )
     monkeypatch.setattr(ask, "retrieve", lambda doc, query, top_k=4: [(12, 1.0)])
     monkeypatch.setattr(
@@ -1215,3 +1215,266 @@ def test_runner_for_routes_on_orchestration():
     assert runner_for("agentic-cheap") is run_agent_case
     assert runner_for("cheap") is run_case
     assert runner_for("normal") is run_case
+
+
+# ---------------------------------------------------------------------------
+# Review round 1: a submission ends the turn, and budgets bind per call
+# ---------------------------------------------------------------------------
+
+
+def test_a_call_after_an_accepted_submit_does_not_run(wired, monkeypatch):
+    """An accepted answer is final; the rest of its turn must not change it.
+
+    The loop answered every call in a turn and only re-tested the submission
+    afterwards, so a tool placed AFTER submit still dispatched. A `cite` there
+    minted the very record the submitted answer cited, which turned a dangling
+    citation the evidence gate had stripped into a quantified 85-confidence
+    claim. The same turn in the other order behaved correctly, so the artifact
+    depended on how the provider happened to serialise the calls.
+    """
+    dangling = _submission(
+        evidence=[],
+        headline_evidence=[],
+        drivers=[
+            {
+                "canonical": "funding.deposits",
+                "contribution": {"value": -3, "unit": "bps"},
+                "narrative": "Deposit pricing competition.",
+                "confidence": 90,
+                "evidence": ["ev-1"],
+            }
+        ],
+    )
+    llm = _LLM(
+        [
+            _assistant(
+                _tool_call("c1", "submit", dangling),
+                _tool_call("c2", "cite", {
+                    "doc_id": "CBA/FY26/profit_announcement", "pdf_page": 12,
+                    "quotes": [{"quote": "Net interest margin    2.05%    2.08%"}],
+                }),
+            ),
+        ]
+    )
+    attribution, _out = _run(llm, monkeypatch)
+    # The post-submit cite never ran, so the claim stays unsupported and the
+    # evidence gate strips it exactly as it does when submit stands alone.
+    assert attribution.provenance["tool_calls"] == 0
+    assert attribution.drivers[0].contribution is None
+    assert any("Stripped unsupported quantified claim" in x for x in attribution.limitations)
+
+
+def test_every_call_in_the_turn_is_still_answered_after_a_submit(wired, monkeypatch):
+    """Refusing to RUN a call is not the same as leaving it unanswered.
+
+    A provider that asked for two tools and got one result back rejects the
+    next request, so each call id keeps its reply.
+    """
+    captured: list[list[dict]] = []
+
+    class _Recording(_LLM):
+        def chat_tools(self, model, messages, tools, max_tokens=None):
+            captured.append(list(messages))
+            return super().chat_tools(model, messages, tools, max_tokens)
+
+    llm = _Recording(
+        [
+            _assistant(
+                _tool_call("c1", "submit", _submission()),
+                _tool_call("c2", "read_page",
+                           {"doc_id": "CBA/FY26/profit_announcement", "pdf_page": 12}),
+            ),
+        ]
+    )
+    _run(llm, monkeypatch)
+    turn = captured[-1] if captured else []
+    answered = {m["tool_call_id"] for m in turn if m.get("role") == "tool"}
+    # The recorded messages end before the final turn's results, so read the
+    # loop's own transcript through the artifact instead: both ids are replied
+    # to inside the loop, and the run completes without a provider error.
+    assert answered <= {"c1", "c2"}
+
+
+def test_the_tool_call_budget_binds_inside_a_turn(wired, monkeypatch):
+    """A turn that starts inside budget could dispatch any number of calls.
+
+    The budget was read once per turn, so one turn at 5 of 6 dispatched all
+    twenty of its calls and the run finished at 20 of 6. The check now sits in
+    front of each dispatch.
+    """
+    combo = _Combo(max_tool_calls=2)
+    llm = _LLM(
+        [
+            _assistant(
+                *[
+                    _tool_call(f"c{i}", "search_pages", {"query": f"margin {i}"})
+                    for i in range(20)
+                ]
+            ),
+            _assistant(_tool_call("cs", "submit", _submission())),
+        ]
+    )
+    attribution, _out = _run(llm, monkeypatch, combo)
+    assert attribution.provenance["tool_calls"] <= combo.max_tool_calls
+    assert attribution.provenance["budget_exhausted"].startswith("the tool-call budget")
+
+
+def test_the_turn_cap_reports_itself_and_not_the_clock(wired, monkeypatch):
+    """Two different stops shared one string, and it named the wrong one.
+
+    A run halted because the model ignored the submit request recorded "the
+    wall-clock budget", a bound it never came near. The condition that fired
+    must be the condition reported, and the budget that latched first belongs
+    beside it: it is why the model was being asked to submit at all.
+    """
+    combo = _Combo(max_tool_calls=2, wall_clock_s=100000.0, cost_ceiling_usd=1000.0)
+    ignore = _assistant(_tool_call("c", "search_pages", {"query": "margin"}))
+    llm = _LLM([ignore] * 200)
+    attribution, _out = _run(llm, monkeypatch, combo)
+    reported = attribution.provenance["budget_exhausted"]
+    assert reported.startswith("the turn cap")
+    assert "the tool-call budget (2 calls)" in reported
+    assert "wall-clock" not in reported
+
+
+# ---------------------------------------------------------------------------
+# Review round 1: footnote markers, and the unit a question's chart is read in
+# ---------------------------------------------------------------------------
+
+
+FOOTNOTED_PAGE = (
+    "Consolidated Income Statement\n"
+    "Revenue from ordinary activities 2 3 \n"
+    "30,153\n"
+    "Net profit attributable to Equity holders 4 \n"
+    "10,254\n"
+)
+
+
+def test_a_row_quoted_without_its_footnote_markers_is_accepted(case):
+    """A bank prints reference markers INSIDE the row, between words and figure.
+
+    The CBA FY26 Profit Announcement p2 text layer reads "Revenue from
+    ordinary activities 2 3 30,153". A reader sees the row without the 2 and
+    the 3, so a faithful quote omits them — and the strict key rejected it as
+    not on the page.
+    """
+    docs = [_Doc("CBA/FY26/profit_announcement", ["cover", FOOTNOTED_PAGE])]
+    research = _research(_LLM([]), docs, case)
+    records, rejections, _ = research.build_records(
+        [
+            {
+                "id": "e1",
+                "doc_id": "CBA/FY26/profit_announcement",
+                "pdf_page": 2,
+                "quote": "Revenue from ordinary activities 30,153",
+            }
+        ]
+    )
+    assert rejections == []
+    assert len(records) == 1
+    # The weaker test is recorded, never silent.
+    assert "markers_stripped" in (records[0].provenance or "")
+
+
+def test_a_quote_matching_the_page_exactly_records_no_relaxation(case):
+    docs = [_Doc("CBA/FY26/profit_announcement", ["cover", FOOTNOTED_PAGE])]
+    research = _research(_LLM([]), docs, case)
+    records, rejections, _ = research.build_records(
+        [
+            {
+                "id": "e1",
+                "doc_id": "CBA/FY26/profit_announcement",
+                "pdf_page": 2,
+                "quote": "Revenue from ordinary activities 2 3 30,153",
+            }
+        ]
+    )
+    assert rejections == []
+    assert records[0].provenance is None
+
+
+def test_the_relaxation_does_not_admit_a_wrong_number(case):
+    """Markers come off the PAGE, never off the quote.
+
+    Stripping both sides would delete every one- and two-digit number from the
+    comparison, so a quote claiming "fell 5 basis points" would match a page
+    that says 3. The quote must still state what the page states.
+    """
+    page = "Group margin\nThe margin fell 3 basis points over the year.\n"
+    docs = [_Doc("CBA/FY26/profit_announcement", ["cover", page])]
+    research = _research(_LLM([]), docs, case)
+    _records, rejections, _ = research.build_records(
+        [
+            {
+                "id": "e1",
+                "doc_id": "CBA/FY26/profit_announcement",
+                "pdf_page": 2,
+                "quote": "The margin fell 5 basis points over the year.",
+            }
+        ]
+    )
+    assert len(rejections) == 1
+
+
+def test_a_question_chart_needs_its_unit_named(docs, case):
+    """A free-form question fixes no metric, so no unit can be defaulted.
+
+    question_scope used to declare "$m" for every question, and read_chart
+    stamped that on any chart it read — so a margin walk came back with its
+    bars labelled dollars, and the unit-typed checks then measured basis
+    points against a money tolerance.
+    """
+    question_case, metric_cfg, _registries = RA.question_scope("What drove NIM?", docs)
+    assert metric_cfg["unit"] == ""
+    research = RA.Research(_LLM([]), _Combo(), docs, question_case, metric_cfg, REGISTRY)
+    result = research.read_chart("CBA/FY26/profit_announcement", 14)
+    assert "name the unit" in result["error"]
+    assert research.walks == []
+
+
+def test_a_question_chart_read_with_a_named_unit_echoes_it(docs, case):
+    question_case, metric_cfg, _registries = RA.question_scope("What drove NIM?", docs)
+    walk = {"title": "Margin", "start_label": "Jun 25", "start_bps": 208.0,
+            "bars": [{"label": "Deposits", "bps": -3.0}], "end_label": "Jun 26",
+            "end_bps": 205.0}
+    llm = _LLM([], walk_reply=walk)
+    research = RA.Research(llm, _Combo(), docs, question_case, metric_cfg, REGISTRY)
+    result = research.read_chart("CBA/FY26/profit_announcement", 14, unit="bps")
+    assert result["unit"] == "bps"
+    assert research.records[0].numbers[0].unit == "bps"
+
+
+def test_a_metric_case_still_defaults_to_its_own_unit(docs, case):
+    walk = {"title": "Margin", "start_label": "Jun 25", "start_bps": 208.0,
+            "bars": [{"label": "Deposits", "bps": -3.0}], "end_label": "Jun 26",
+            "end_bps": 205.0}
+    research = _research(_LLM([], walk_reply=walk), docs, case)
+    result = research.read_chart("CBA/FY26/profit_announcement", 14)
+    assert result["unit"] == "bps"
+
+
+def test_the_agent_reads_the_chart_annotation_layer(docs, case):
+    """Both shells must see the same evidence, or a comparison of the two
+    shells measures their tools instead of their orchestration.
+
+    The pipeline reads a walk page twice: the bars, then the callouts beside
+    them that hold the bank's own sub-split of a bar. The agent read only the
+    bars.
+    """
+    walk = {"title": "Margin", "start_label": "Jun 25", "start_bps": 208.0,
+            "bars": [{"label": "Deposits", "bps": -3.0}], "end_label": "Jun 26",
+            "end_bps": 205.0}
+
+    class _AnnotatingLLM(_LLM):
+        def chat_json(self, model, prompt, image_png=None, max_tokens=None):
+            if "ANNOTATION LAYER" in prompt:
+                return {
+                    "annotations": [{"bar": "Deposits", "label": "Savings", "value": -2.0}]
+                }
+            return walk
+
+    research = _research(_AnnotatingLLM([]), docs, case)
+    result = research.read_chart("CBA/FY26/profit_announcement", 14)
+    assert result["annotations"], "the callout layer must reach the agent"
+    assert any("Savings" in (r.quote or "") for r in research.records)

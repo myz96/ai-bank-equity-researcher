@@ -27,6 +27,17 @@ class Document:
         return f"{self.bank}/{self.period}/{self.doc_type}"
 
     def page_texts(self) -> list[str]:
+        # CACHE-KEY INVARIANT: the page-text cache here and the embedding cache
+        # in retrieve.py are both keyed by the FILENAME STEM, so two documents
+        # that share a stem share a cache entry, and one bank's pages would be
+        # served for another's. The manifests hold this by convention — every
+        # filename is "BANK-PERIOD-doctype.pdf" and all 32 stems are distinct —
+        # but nothing in code enforces it, and discover.py copies a filename
+        # straight out of a model reply, where a generic basename such as
+        # "results-announcement.pdf" is exactly what an IR page offers. The
+        # guard in all_documents() below turns a collision into an error
+        # instead of wrong text. Neither cache invalidates on content change,
+        # so a PDF replaced in place keeps serving its old text.
         cache = DATA_DIR / "cache" / "pages" / (Path(self.filename).stem + ".json")
         if cache.exists():
             return json.loads(cache.read_text())
@@ -62,7 +73,22 @@ def manifest_banks() -> list[str]:
 
 
 def all_documents() -> list[Document]:
-    return [doc for bank in manifest_banks() for doc in load_documents(bank)]
+    docs = [doc for bank in manifest_banks() for doc in load_documents(bank)]
+    # The cache-key invariant, checked where the whole corpus is assembled.
+    # Two documents with one stem would silently share cached page text and
+    # cached embeddings; an error naming both beats an answer sourced from the
+    # wrong bank's document.
+    stems: dict[str, str] = {}
+    for doc in docs:
+        stem = Path(doc.filename).stem
+        if stems.get(stem, doc.doc_id) != doc.doc_id:
+            raise RuntimeError(
+                f"two documents share the filename stem {stem!r} ({stems[stem]} and "
+                f"{doc.doc_id}); the page-text and embedding caches are keyed by that "
+                "stem, so rename one in its manifest before running"
+            )
+        stems[stem] = doc.doc_id
+    return docs
 
 
 # ---------------------------------------------------------------------------
@@ -101,11 +127,35 @@ def bank_name_words() -> dict[str, str]:
     return words
 
 
+@lru_cache(maxsize=1)
+def bank_name_phrases() -> dict[str, str]:
+    """Full names as written -> ticker, for the names built ONLY from generic
+    words.
+
+    "National Australia Bank" is three words, and every one of them names some
+    Australian bank, so the distinctive-word index holds nothing for NAB and a
+    question that spelled the name out raised "the question names no bank in
+    the corpus". A phrase is distinctive where its words are not, so the whole
+    name is matched too. This reads the registry like everything else here: no
+    bank is named in code.
+    """
+    phrases: dict[str, str] = {}
+    for bank in manifest_banks():
+        path = REGISTRY_DIR / f"{bank.lower()}.json"
+        if not path.exists():
+            continue
+        full_name = str(json.loads(path.read_text()).get("full_name") or "").strip()
+        if full_name:
+            phrases[full_name.lower()] = bank
+    return phrases
+
+
 def banks_named(text: str) -> list[str]:
     """The banks a question names, in the order it names them.
 
     A ticker matches case-sensitively, because "nab" is an English verb and
-    "anz" is not a word at all; a name word matches case-insensitively.
+    "anz" is not a word at all; a name word or a full name matches
+    case-insensitively.
     """
     found: list[tuple[int, str]] = []
     for bank in manifest_banks():
@@ -114,6 +164,11 @@ def banks_named(text: str) -> list[str]:
             found.append((match.start(), bank))
     for word, bank in bank_name_words().items():
         match = re.search(rf"\b{word}\b", text or "", re.IGNORECASE)
+        if match and bank not in [b for _, b in found]:
+            found.append((match.start(), bank))
+    for phrase, bank in bank_name_phrases().items():
+        pattern = r"\b" + r"\s+".join(re.escape(w) for w in phrase.split()) + r"\b"
+        match = re.search(pattern, text or "", re.IGNORECASE)
         if match and bank not in [b for _, b in found]:
             found.append((match.start(), bank))
     return [bank for _, bank in sorted(found)]
@@ -143,7 +198,10 @@ def latest_period(bank: str) -> str | None:
 
 
 def documents_for_question(
-    question: str, bank: str | None = None, periods: list[str] | None = None
+    question: str,
+    bank: str | None = None,
+    periods: list[str] | None = None,
+    notes: list[str] | None = None,
 ) -> list[Document]:
     """The documents one question may read.
 
@@ -151,6 +209,11 @@ def documents_for_question(
     they are absent the question's own words decide. A period the manifest does
     not hold is dropped rather than refused: a question about FY26 guidance is
     answered out of the FY25 documents that publish it.
+
+    That substitution used to be SILENT. An answer then read as though it came
+    from the period the reader asked about, when the corpus held no document of
+    that period at all. `notes` collects one line per substitution, and both
+    shells put those lines in the answer's limitations.
     """
     banks = [bank.upper()] if bank else banks_named(question)
     if not banks:
@@ -163,8 +226,15 @@ def documents_for_question(
     for name in banks:
         available = load_documents(name)
         held = [p for p in wanted if any(d.period == p for d in available)]
+        missing = [p for p in wanted if p not in held]
         if not held:
             held = [p for p in [latest_period(name)] if p]
+        if missing and notes is not None:
+            notes.append(
+                f"The corpus holds no {name} document for "
+                f"{', '.join(missing)}; this answer was researched in "
+                f"{', '.join(held) or 'no document'} instead."
+            )
         docs += [d for d in available if d.period in held]
     return docs
 
@@ -196,9 +266,26 @@ def doc_alias_index(documents: list[Document] | None = None) -> dict[str, str]:
 
 
 def resolve_doc_name(name: str, index: dict[str, str]) -> str | None:
-    """The doc_id one written document name means, or None when it is unclear."""
+    """The doc_id one written document name means, or None when it is unclear.
+
+    An exact alias decides on its own. Otherwise the containment pass needs the
+    written name to agree with the document's BANK and PERIOD: a bare
+    "results-book" is inside exactly one alias whenever one bank happens to
+    file its book under that word, and the old code returned that document
+    though the name identified no bank and no period. A name that does not say
+    which bank it means is unclear, and unclear returns None.
+    """
     key = _doc_key(name)
+    if not key:
+        return None
     if key in index:
         return index[key]
-    matches = {doc_id for alias, doc_id in index.items() if key and (key in alias or alias in key)}
+    tokens = set(key.split("-"))
+    matches = set()
+    for alias, doc_id in index.items():
+        if not (key in alias or alias in key):
+            continue
+        doc_bank, doc_period, _ = doc_id.split("/", 2)
+        if _doc_key(doc_bank) in tokens and _doc_key(doc_period) in tokens:
+            matches.add(doc_id)
     return matches.pop() if len(matches) == 1 else None

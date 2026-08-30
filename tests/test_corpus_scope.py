@@ -1,0 +1,220 @@
+"""Question scoping: which bank, which period, which document (review round 1).
+
+Three ways a free-form question reached the wrong corpus, or none at all:
+
+- a bank whose full name is built only from generic words could not be named;
+- a period the corpus does not hold was swapped for another one in silence;
+- a document name that identified no bank still resolved to a document.
+"""
+
+from __future__ import annotations
+
+import pytest
+
+from bank_equity_researcher import corpus as C
+from bank_equity_researcher.schema import enforce_answer_gate
+
+
+# ---------------------------------------------------------------------------
+# Item 13: a full name made only of generic words
+# ---------------------------------------------------------------------------
+
+
+def test_a_bank_named_in_full_is_recognised():
+    """"National Australia Bank" is national + australia + bank.
+
+    Every one of those words names some Australian bank, so each is generic
+    and the distinctive-word index held nothing for NAB. A question that
+    spelled the name out raised "the question names no bank in the corpus" —
+    a RuntimeError on a valid question.
+    """
+    assert C.banks_named("What drove National Australia Bank's FY25 margin?") == ["NAB"]
+
+
+def test_the_ticker_and_the_full_name_agree():
+    assert C.banks_named("NAB's FY25 result") == ["NAB"]
+    both = C.banks_named("National Australia Bank (NAB) FY25")
+    assert both == ["NAB"], "one bank named twice is still one bank"
+
+
+def test_a_full_name_does_not_swallow_its_neighbours():
+    named = C.banks_named(
+        "Compare National Australia Bank with Westpac and Commonwealth Bank of Australia."
+    )
+    assert named == ["NAB", "WBC", "CBA"]
+
+
+def test_generic_words_alone_still_name_no_bank():
+    """The phrase must be the WHOLE name, not any bank-ish word in a sentence."""
+    assert C.banks_named("the Australian banking group reported a national result") == []
+
+
+# ---------------------------------------------------------------------------
+# Item 14: a substituted period is declared
+# ---------------------------------------------------------------------------
+
+
+class _Doc:
+    def __init__(self, period: str) -> None:
+        self.period = period
+        self.bank = "CBA"
+        self.doc_id = f"CBA/{period}/profit_announcement"
+
+
+@pytest.fixture
+def only_fy25(monkeypatch):
+    monkeypatch.setattr(C, "load_documents", lambda bank: [_Doc("FY25")])
+    monkeypatch.setattr(C, "latest_period", lambda bank: "FY25")
+
+
+def test_a_period_the_corpus_lacks_is_declared(only_fy25):
+    """The answer must say which period it was actually researched in.
+
+    A question about FY26 fell back to the newest documents held, and nothing
+    recorded the swap, so the answer read as though it came from FY26.
+    """
+    notes: list[str] = []
+    docs = C.documents_for_question("CBA FY26 margin", "CBA", ["FY26"], notes=notes)
+    assert [d.period for d in docs] == ["FY25"]
+    assert len(notes) == 1
+    assert "FY26" in notes[0] and "FY25" in notes[0]
+
+
+def test_a_period_the_corpus_holds_is_not_declared(only_fy25):
+    notes: list[str] = []
+    C.documents_for_question("CBA FY25 margin", "CBA", ["FY25"], notes=notes)
+    assert notes == []
+
+
+def test_the_note_is_optional(only_fy25):
+    """Callers that do not ask for notes keep the old signature."""
+    assert C.documents_for_question("CBA FY26 margin", "CBA", ["FY26"])
+
+
+# ---------------------------------------------------------------------------
+# Item 15: a document name must identify its bank
+# ---------------------------------------------------------------------------
+
+
+INDEX = {
+    "cba-fy26-profit-announcement": "CBA/FY26/profit_announcement",
+    "nab-fy25-results-book": "NAB/FY25/results_book",
+    "wbc-fy25-presentation-and-idp": "WBC/FY25/investor_discussion_pack",
+}
+
+
+def test_an_exact_alias_resolves():
+    assert C.resolve_doc_name("CBA/FY26/profit-announcement", INDEX) == (
+        "CBA/FY26/profit_announcement"
+    )
+
+
+def test_a_partial_name_that_agrees_on_bank_and_period_resolves():
+    assert C.resolve_doc_name("WBC/FY25/presentation", INDEX) == (
+        "WBC/FY25/investor_discussion_pack"
+    )
+
+
+def test_a_bank_less_name_does_not_resolve():
+    """"results-book" sits inside exactly one alias, so it used to resolve.
+
+    It names no bank and no period. One bank filing its book under that word
+    is not a reason to hand the reader that bank's document.
+    """
+    assert C.resolve_doc_name("results-book", INDEX) is None
+
+
+def test_a_name_with_the_wrong_bank_does_not_resolve():
+    assert C.resolve_doc_name("CBA/FY25/results-book", INDEX) is None
+
+
+def test_a_name_with_the_wrong_period_does_not_resolve():
+    assert C.resolve_doc_name("NAB/FY26/results-book", INDEX) is None
+
+
+def test_an_empty_name_does_not_resolve():
+    assert C.resolve_doc_name("", INDEX) is None
+
+
+# ---------------------------------------------------------------------------
+# Item 16: the gate strips facts, not prose
+# ---------------------------------------------------------------------------
+
+
+def test_stripping_a_fact_warns_that_the_prose_still_states_it():
+    """The gate deletes the fact and leaves the sentence that made the claim.
+
+    Rewriting the prose would be a second authoring pass, so the gate does not
+    try. It must say so instead: a reader of the answer alone would otherwise
+    see an unsupported number with nothing marking it.
+    """
+    facts = [
+        {"fact": "CET1 was 12.3%.", "citations": ["ev-1"]},
+        {"fact": "Impairments rose $150m.", "citations": ["ev-9"]},
+    ]
+    kept, limitations, confidence = enforce_answer_gate(facts, [], 85, {"ev-1"})
+    assert [f["fact"] for f in kept] == ["CET1 was 12.3%."]
+    assert any("Stripped unsupported quantified fact" in x for x in limitations)
+    warning = [x for x in limitations if "prose was NOT rewritten" in x]
+    assert len(warning) == 1
+    assert "Impairments rose $150m." in warning[0]
+    # One surviving fact means the answer is still an answer, so the
+    # nothing-survived cap does not fire.
+    assert confidence == 85
+
+
+def test_no_warning_when_nothing_is_stripped():
+    facts = [{"fact": "CET1 was 12.3%.", "citations": ["ev-1"]}]
+    _kept, limitations, _confidence = enforce_answer_gate(facts, [], 85, {"ev-1"})
+    assert not any("prose was NOT rewritten" in x for x in limitations)
+
+
+# ---------------------------------------------------------------------------
+# Item 17: the cache-key invariant is enforced, not assumed
+# ---------------------------------------------------------------------------
+
+
+def test_two_documents_sharing_a_filename_stem_are_refused(monkeypatch):
+    """The page-text and embedding caches are keyed by the filename stem.
+
+    Two documents with one stem would share both caches, so one bank's pages
+    would be served for another's. The manifests hold the convention today;
+    discover.py copies a filename out of a model reply, where a generic
+    basename is exactly what a bank's IR page offers.
+    """
+
+    class _Stemmed:
+        def __init__(self, bank, filename):
+            self.bank = bank
+            self.filename = filename
+            self.period = "FY25"
+            self.doc_id = f"{bank}/FY25/results_announcement"
+
+    monkeypatch.setattr(C, "manifest_banks", lambda: ["CBA", "NAB"])
+    monkeypatch.setattr(
+        C, "load_documents",
+        lambda bank: [_Stemmed(bank, "results-announcement.pdf")],
+    )
+    with pytest.raises(RuntimeError, match="share the filename stem"):
+        C.all_documents()
+
+
+def test_distinct_stems_are_accepted(monkeypatch):
+    class _Stemmed:
+        def __init__(self, bank, filename):
+            self.bank = bank
+            self.filename = filename
+            self.period = "FY25"
+            self.doc_id = f"{bank}/FY25/results_announcement"
+
+    monkeypatch.setattr(C, "manifest_banks", lambda: ["CBA", "NAB"])
+    monkeypatch.setattr(
+        C, "load_documents",
+        lambda bank: [_Stemmed(bank, f"{bank}-FY25-results-announcement.pdf")],
+    )
+    assert len(C.all_documents()) == 2
+
+
+def test_the_real_corpus_holds_the_invariant():
+    """The committed manifests must keep their stems distinct."""
+    C.all_documents()

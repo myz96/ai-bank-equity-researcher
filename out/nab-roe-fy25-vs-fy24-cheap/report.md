@@ -4,52 +4,52 @@
 
 *Read from: row 'Cash return on equity', column FY24 -> column FY25*
 
-NAB's Cash ROE declined by 20 bps to 11.4% in FY25 (ev-6). Earnings fell slightly (-$11m) while average equity rose ($1.3bn), with the equity effect dominating the decline.
+NAB's Cash ROE declined by 20 bps to 11.4% in FY25 (ev-8). Earnings fell $11m to $7,091m against a flat equity base of ~$62.4bn (ev-4, ev-5), driving a negative earnings effect. Equity growth provided a small offsetting positive contribution.
 
-> [ev-6] NAB/FY25/results_book, PDF p71: "Cash return on equity 11.4% 11.6%"
 > [ev-4] NAB/FY25/results_book, PDF p71: "Cash earnings 7,091 7,102"
 > [ev-5] NAB/FY25/results_book, PDF p71: "Total average equity (attributable to owners of the Company) ($m) 62,355 61,039"
+> [ev-6] NAB/FY25/results_book, PDF p71: "Cash return on equity 11.4% 11.6%"
+> [ev-8] NAB/FY25/results_book, printed p8: "Cash return on equity 11.4% 11.6% (20 bps) 11.0% 11.7% (70 bps)"
 
 ## Drivers
 
 | Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
 |---|---|---|---|---|---|
-| `earnings_effect` | — | -0.02 ppt | 80 | 2 () | ev-4, ev-5, ev-6, ev-23 |
-| `equity_effect` | — | -0.18 ppt | 80 | 1 (single_source) | ev-5, ev-6 |
+| `earnings_effect` | — | -0.03 ppt | 80 | 1 (single_source) | ev-4, ev-6, ev-8 |
+| `equity_effect` | — | -0.17 ppt | 80 | 1 (single_source) | ev-5, ev-8 |
 | *residual (unexplained)* | — | +0 ppt | — | — |
 
 ### earnings_effect
-*-0.02 ppt | confidence 80/100*
+*-0.03 ppt | confidence 80/100*
 
-Derived: Prior ROE (11.6%) x earnings growth (-0.15%). Cash earnings fell $11m (ev-4, ev-23). Contribution is derived, not disclosed.
+Derived: Prior ROE (11.6%) x Earnings Growth (-0.15%). Earnings fell $11m to $7,091m (ev-4). Contribution is derived, not disclosed.
 > [ev-4] NAB/FY25/results_book, PDF p71: "Cash earnings 7,091 7,102"
-> [ev-5] NAB/FY25/results_book, PDF p71: "Total average equity (attributable to owners of the Company) ($m) 62,355 61,039"
 > [ev-6] NAB/FY25/results_book, PDF p71: "Cash return on equity 11.4% 11.6%"
-> [ev-23] NAB/FY25/investor_presentation, printed p39: "Cash earnings FY25 7,091 FY24 7,102 FY25 v FY24 (11) 2H25 3,508 1H25 3,583 2H25 v 1H25 (75)"
+> [ev-8] NAB/FY25/results_book, printed p8: "Cash return on equity 11.4% 11.6% (20 bps) 11.0% 11.7% (70 bps)"
 
 ### equity_effect
-*-0.18 ppt | confidence 80/100*
+*-0.17 ppt | confidence 80/100*
 
-Derived: Total delta minus earnings effect. Average equity rose $1.3bn (ev-5). Higher denominator reduced ROE. Driven by retained earnings and buybacks.
+Derived: Total delta (-0.2 ppt) minus earnings effect (-0.03 ppt). Equity grew from $61,039m to $62,355m (ev-5). Higher average equity reduced the ratio. Contribution is derived, not disclosed.
 > [ev-5] NAB/FY25/results_book, PDF p71: "Total average equity (attributable to owners of the Company) ($m) 62,355 61,039"
-> [ev-6] NAB/FY25/results_book, PDF p71: "Cash return on equity 11.4% 11.6%"
+> [ev-8] NAB/FY25/results_book, printed p8: "Cash return on equity 11.4% 11.6% (20 bps) 11.0% 11.7% (70 bps)"
 
 ## Source disagreements
-- **Cash ROE Level** (definitional): 11.4% (Results Book) vs 10.7% (Investor Presentation)
-  Preferred: 11.4%. The Results Book (ev-6) is the primary source per hierarchy. The IP figure (ev-15) likely uses a different equity basis or period definition.
+- **Cash ROE FY25 Level** (definitional): 11.4% (Results Book) vs 10.7% (Investor Presentation)
+  Preferred: 11.4%. The Results Book (audited source hierarchy) reports 11.4%. The IP likely uses a different denominator or basis.
 
 ## Limitations
-- Drivers are arithmetic derivations, not bank-disclosed splits.
-- IP table shows conflicting ROE level.
+- Drivers are mathematically derived using the identity ROE = Earnings/Equity. The bank does not explicitly split the movement into these two canonical components in the provided text.
+- Confidence capped at 80 due to derivation and disagreement on the FY25 level between sources.
 
 ## Provenance
 - combo: cheap
 - models: extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash
 - documents: NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)
-- generated: 2026-08-30T12:40:27+00:00
-- seconds: 43.9
-- cost_usd: 0.0018
-- tokens: 35580 in / 5851 out
+- generated: 2026-08-30T14:59:36+00:00
+- seconds: 34.1
+- cost_usd: 0.0016
+- tokens: 33504 in / 4433 out
 - orchestration: pipeline
 - pages_extracted: 15
 - reference_follow: ['NAB/FY25/investor_presentation p39 <- p5 page 39', 'NAB/FY25/investor_presentation p10 <- p39 page 10 [added]']

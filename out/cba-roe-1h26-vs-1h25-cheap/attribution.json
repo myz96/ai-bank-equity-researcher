@@ -11,28 +11,31 @@
     "unit": "ppt"
   },
   "movement_source": "row 'Return on equity (cash basis)', column 31 Dec 24 -> column 31 Dec 25",
-  "headline": "CBA's cash ROE rose 10 bps to 13.8% in 1H26 vs 1H25, driven by a 6% increase in cash NPAT ($5,445m), partially offset by higher average net assets ($78.0bn). The earnings effect lifted ROE by ~81 bps, while the equity effect reduced it by ~80 bps.",
+  "headline": "CBA's cash ROE rose 10 bps to 13.8% in 1H26 vs 1H25, driven by a 6% increase in cash NPAT ($5,445m), partially offset by higher average net assets ($78,004m). The earnings effect contributed approximately +9 bps, while the equity effect reduced ROE by approximately -8 bps.",
   "headline_evidence": [
     "ev-1",
     "ev-2",
     "ev-3",
-    "ev-4"
+    "ev-6",
+    "ev-13",
+    "ev-16"
   ],
   "drivers": [
     {
       "canonical": "earnings_effect",
       "bank_label": null,
       "contribution": {
-        "value": 0.81,
+        "value": 0.09,
         "unit": "ppt"
       },
       "columns": "stated vs 1H25",
-      "narrative": "Derived: prior-period ROE (13.7%) x earnings growth (6%). Cash NPAT grew $313m to $5,445m (ev-2). This contribution is derived from arithmetic, not disclosed directly.",
+      "narrative": "Derived: Prior-period ROE (13.7%) multiplied by cash NPAT growth rate (6%). Cash NPAT increased $313 million or 6% to $5,445 million (ev-2). This represents the lift at constant equity.",
       "confidence": 80,
       "evidence": [
         "ev-1",
         "ev-2",
-        "ev-3"
+        "ev-3",
+        "ev-12"
       ],
       "checks_passed": [
         "single_source"
@@ -43,16 +46,16 @@
       "canonical": "equity_effect",
       "bank_label": null,
       "contribution": {
-        "value": -0.71,
+        "value": -0.08,
         "unit": "ppt"
       },
       "columns": "stated vs 1H25",
-      "narrative": "Derived: total delta (0.1 ppt) minus earnings effect (0.81 ppt). Higher average net assets ($78.0bn vs $74.2bn) diluted returns (ev-4). This contribution is derived from arithmetic.",
+      "narrative": "Derived: Total delta (0.1 ppt) minus earnings effect (+0.09 ppt). Net average equity grew from $74,176 million to $78,004 million (ev-3). Higher net assets partly offset the profit gain as stated in the narrative (ev-1).",
       "confidence": 80,
       "evidence": [
         "ev-1",
         "ev-3",
-        "ev-4"
+        "ev-11"
       ],
       "checks_passed": [
         "single_source"
@@ -61,15 +64,26 @@
     }
   ],
   "residual": {
-    "value": -0.0,
+    "value": 0.0,
     "unit": "ppt"
   },
   "notable_items": [],
-  "disagreements": [],
+  "disagreements": [
+    {
+      "topic": "Statutory ROE levels",
+      "values": [
+        "13.6% (ev-4, ev-5)",
+        "13.8% (ev-15)"
+      ],
+      "preferred": "13.6%",
+      "reason": "rounding",
+      "explanation": "The KPI table (ev-4) and summary table (ev-5) report 13.6%, while the detailed reconciliation table (ev-15) reports 13.8%. Given the source hierarchy, the KPI/summary tables are preferred for headline figures, likely due to rounding conventions in the detailed view."
+    }
+  ],
   "attribution_confidence": 80,
   "limitations": [
-    "Earnings and equity effects are quantified via arithmetic derivation rather than bank disclosure.",
-    "Residual is negligible but non-zero due to rounding of inputs."
+    "Earnings and equity effects are derived using an arithmetic identity, not disclosed directly by the bank.",
+    "Residual is zero due to the derivation method; interaction terms are embedded in the equity effect."
   ],
   "evidence_records": [
     {
@@ -87,9 +101,9 @@
           "basis": "cash"
         },
         {
-          "label": "ROE change 31 Dec 25 vs 30 Jun 24",
-          "value": 0.1,
-          "unit": "ppt",
+          "label": "ROE cash 31 Dec 24",
+          "value": 13.7,
+          "unit": "%",
           "basis": "cash"
         }
       ],
@@ -104,21 +118,27 @@
       "quote": "Cash net profit after tax (“cash NPAT” or “cash profit”) from continuing operations increased $313 million or 6% on the prior comparative period to $5,445 million.",
       "numbers": [
         {
+          "label": "Cash NPAT change 31 Dec 25 vs 31 Dec 24",
+          "value": 313.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash NPAT growth rate 31 Dec 25 vs 31 Dec 24",
+          "value": 6.0,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
           "label": "Cash NPAT 31 Dec 25",
           "value": 5445.0,
           "unit": "$m",
           "basis": "cash"
         },
         {
-          "label": "Cash NPAT change 31 Dec 25 vs 30 Jun 24",
-          "value": 313.0,
+          "label": "Cash NPAT 31 Dec 24",
+          "value": 5132.0,
           "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Cash NPAT growth 31 Dec 25 vs 30 Jun 24",
-          "value": 6.0,
-          "unit": "%",
           "basis": "cash"
         }
       ],
@@ -130,275 +150,7 @@
       "pdf_page": 169,
       "printed_page": null,
       "kind": "table",
-      "quote": "Return on Equity - \"cash basis\" Net profit after tax - \"cash basis\" 5,445 5,120 5,133 ROE - \"cash basis\" (%) 13.8 13.4 13.7",
-      "numbers": [
-        {
-          "label": "Net profit after tax cash 31 Dec 25",
-          "value": 5445.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Net profit after tax cash 30 Jun 25",
-          "value": 5120.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Net profit after tax cash 31 Dec 24",
-          "value": 5133.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "ROE cash 31 Dec 25",
-          "value": 13.8,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "ROE cash 30 Jun 25",
-          "value": 13.4,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "ROE cash 31 Dec 24",
-          "value": 13.7,
-          "unit": "%",
-          "basis": "cash"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-4",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 169,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on Equity - \"cash basis\" Average net assets 78,004 77,020 74,176 Less: Average non-controlling interests – – – Net average equity 78,004 77,020 74,176",
-      "numbers": [
-        {
-          "label": "Average net equity cash 31 Dec 25",
-          "value": 78004.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Average net equity cash 30 Jun 25",
-          "value": 77020.0,
-          "unit": "$m",
-          "basis": "cash"
-        },
-        {
-          "label": "Average net equity cash 31 Dec 24",
-          "value": 74176.0,
-          "unit": "$m",
-          "basis": "cash"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-5",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 169,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on Equity - \"statutory basis\" Net profit after tax - \"statutory basis\" 5,367 4,982 5,134 ROE - \"statutory basis\" (%) 13.6 13.0 13.7",
-      "numbers": [
-        {
-          "label": "Net profit after tax statutory 31 Dec 25",
-          "value": 5367.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "Net profit after tax statutory 30 Jun 25",
-          "value": 4982.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "Net profit after tax statutory 31 Dec 24",
-          "value": 5134.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "ROE statutory 31 Dec 25",
-          "value": 13.6,
-          "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "ROE statutory 30 Jun 25",
-          "value": 13.0,
-          "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "ROE statutory 31 Dec 24",
-          "value": 13.7,
-          "unit": "%",
-          "basis": "statutory"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-6",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 169,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on Equity - \"statutory basis\" Average net assets 78,004 77,020 74,176 Less: Average non-controlling interests – – – Net average equity 78,004 77,020 74,176",
-      "numbers": [
-        {
-          "label": "Average net equity statutory 31 Dec 25",
-          "value": 78004.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "Average net equity statutory 30 Jun 25",
-          "value": 77020.0,
-          "unit": "$m",
-          "basis": "statutory"
-        },
-        {
-          "label": "Average net equity statutory 31 Dec 24",
-          "value": 74176.0,
-          "unit": "$m",
-          "basis": "statutory"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-7",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 19,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on equity (ROE) (%) Statutory basis 13.8 13.1 13.8",
-      "numbers": [
-        {
-          "label": "ROE statutory 31 Dec 25",
-          "value": 13.8,
-          "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "ROE statutory 30 Jun 25",
-          "value": 13.1,
-          "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "ROE statutory 31 Dec 24",
-          "value": 13.8,
-          "unit": "%",
-          "basis": "statutory"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-8",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 19,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on equity (ROE) (%) Cash basis 13.8 13.4 13.7",
-      "numbers": [
-        {
-          "label": "ROE cash 31 Dec 25",
-          "value": 13.8,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "ROE cash 30 Jun 25",
-          "value": 13.4,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "ROE cash 31 Dec 24",
-          "value": 13.7,
-          "unit": "%",
-          "basis": "cash"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-9",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 19,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on equity (ROE) (%) Statutory basis 13.6 13.0 13.7",
-      "numbers": [
-        {
-          "label": "ROE statutory incl disc 31 Dec 25",
-          "value": 13.6,
-          "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "ROE statutory incl disc 30 Jun 25",
-          "value": 13.0,
-          "unit": "%",
-          "basis": "statutory"
-        },
-        {
-          "label": "ROE statutory incl disc 31 Dec 24",
-          "value": 13.7,
-          "unit": "%",
-          "basis": "statutory"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-10",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 19,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on equity (ROE) (%) Cash basis 13.8 13.4 13.7",
-      "numbers": [
-        {
-          "label": "ROE cash incl disc 31 Dec 25",
-          "value": 13.8,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "ROE cash incl disc 30 Jun 25",
-          "value": 13.4,
-          "unit": "%",
-          "basis": "cash"
-        },
-        {
-          "label": "ROE cash incl disc 31 Dec 24",
-          "value": 13.7,
-          "unit": "%",
-          "basis": "cash"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-11",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 168,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on Equity - \"cash basis\" Average net assets 78,004 77,020 74,176 Less: Average non-controlling interests – – – Net average equity 78,004 77,020 74,176 Net profit after tax - \"cash basis\" 5,445 5,120 5,132 ROE - \"cash basis\" (%) 13.8 13.4 13.7",
+      "quote": "Return on Equity - \"cash basis\" Average net assets 78,004 77,020 74,176 Less: Average non-controlling interests – – – Net average equity 78,004 77,020 74,176 Net profit after tax - \"cash basis\" 5,445 5,120 5,133 ROE - \"cash basis\" (%) 13.8 13.4 13.7",
       "numbers": [
         {
           "label": "Average net assets 31 Dec 25",
@@ -450,7 +202,7 @@
         },
         {
           "label": "Net profit after tax - cash basis 31 Dec 24",
-          "value": 5132.0,
+          "value": 5133.0,
           "unit": "$m",
           "basis": "cash"
         },
@@ -476,12 +228,12 @@
       "provenance": null
     },
     {
-      "id": "ev-12",
+      "id": "ev-4",
       "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 168,
+      "pdf_page": 169,
       "printed_page": null,
       "kind": "table",
-      "quote": "Return on Equity - \"statutory basis\" Average net assets 78,004 77,020 74,176 Less: Average non-controlling interests – – – Net average equity 78,004 77,020 74,176 Net profit after tax - \"statutory basis\" 5,412 4,991 5,142 ROE - \"statutory basis\" (%) 13.8 13.1 13.8",
+      "quote": "Return on Equity - \"statutory basis\" Average net assets 78,004 77,020 74,176 Less: Average non-controlling interests – – – Net average equity 78,004 77,020 74,176 Net profit after tax - \"statutory basis\" 5,367 4,982 5,134 ROE - \"statutory basis\" (%) 13.6 13.0 13.7",
       "numbers": [
         {
           "label": "Average net assets 31 Dec 25",
@@ -521,6 +273,314 @@
         },
         {
           "label": "Net profit after tax - statutory basis 31 Dec 25",
+          "value": 5367.0,
+          "unit": "$m",
+          "basis": "statutory"
+        },
+        {
+          "label": "Net profit after tax - statutory basis 30 Jun 25",
+          "value": 4982.0,
+          "unit": "$m",
+          "basis": "statutory"
+        },
+        {
+          "label": "Net profit after tax - statutory basis 31 Dec 24",
+          "value": 5134.0,
+          "unit": "$m",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE - statutory basis 31 Dec 25",
+          "value": 13.6,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE - statutory basis 30 Jun 25",
+          "value": 13.0,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE - statutory basis 31 Dec 24",
+          "value": 13.7,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) Statutory basis 13.8 13.1 13.8",
+      "numbers": [
+        {
+          "label": "ROE statutory 31 Dec 25",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE statutory 30 Jun 25",
+          "value": 13.1,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "ROE statutory 31 Dec 24",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) Cash basis 13.8 13.4 13.7",
+      "numbers": [
+        {
+          "label": "ROE cash 31 Dec 25",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE cash 30 Jun 25",
+          "value": 13.4,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE cash 31 Dec 24",
+          "value": 13.7,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Cash basis - basic EPS 325.7 306.2 306.9",
+      "numbers": [
+        {
+          "label": "EPS cash 31 Dec 25",
+          "value": 325.7,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "EPS cash 30 Jun 25",
+          "value": 306.2,
+          "unit": "cents",
+          "basis": "cash"
+        },
+        {
+          "label": "EPS cash 31 Dec 24",
+          "value": 306.9,
+          "unit": "cents",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Dividend cover - \"cash basis\" (times) 1.4 1.2 1.4",
+      "numbers": [
+        {
+          "label": "Dividend cover cash 31 Dec 25",
+          "value": 1.4,
+          "unit": "ratio",
+          "basis": "cash"
+        },
+        {
+          "label": "Dividend cover cash 30 Jun 25",
+          "value": 1.2,
+          "unit": "ratio",
+          "basis": "cash"
+        },
+        {
+          "label": "Dividend cover cash 31 Dec 24",
+          "value": 1.4,
+          "unit": "ratio",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Average net assets 78,004 77,020 74,176",
+      "numbers": [
+        {
+          "label": "Average net assets 31 Dec 25",
+          "value": 78004.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average net assets 30 Jun 25",
+          "value": 77020.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average net assets 31 Dec 24",
+          "value": 74176.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Less: Average non-controlling interests – – –",
+      "numbers": [
+        {
+          "label": "Average non-controlling interests 31 Dec 25",
+          "value": 0.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average non-controlling interests 30 Jun 25",
+          "value": 0.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average non-controlling interests 31 Dec 24",
+          "value": 0.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net average equity 78,004 77,020 74,176",
+      "numbers": [
+        {
+          "label": "Net average equity 31 Dec 25",
+          "value": 78004.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net average equity 30 Jun 25",
+          "value": 77020.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net average equity 31 Dec 24",
+          "value": 74176.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit after tax - \"cash basis\" 5,445 5,120 5,132",
+      "numbers": [
+        {
+          "label": "Net profit after tax - cash basis 31 Dec 25",
+          "value": 5445.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Net profit after tax - cash basis 30 Jun 25",
+          "value": 5120.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Net profit after tax - cash basis 31 Dec 24",
+          "value": 5132.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "ROE - \"cash basis\" (%) 13.8 13.4 13.7",
+      "numbers": [
+        {
+          "label": "ROE - cash basis 31 Dec 25",
+          "value": 13.8,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE - cash basis 30 Jun 25",
+          "value": 13.4,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "ROE - cash basis 31 Dec 24",
+          "value": 13.7,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net profit after tax - \"statutory basis\" 5,412 4,991 5,142",
+      "numbers": [
+        {
+          "label": "Net profit after tax - statutory basis 31 Dec 25",
           "value": 5412.0,
           "unit": "$m",
           "basis": "statutory"
@@ -536,7 +596,18 @@
           "value": 5142.0,
           "unit": "$m",
           "basis": "statutory"
-        },
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 168,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "ROE - \"statutory basis\" (%) 13.8 13.1 13.8",
+      "numbers": [
         {
           "label": "ROE - statutory basis 31 Dec 25",
           "value": 13.8,
@@ -559,7 +630,7 @@
       "provenance": null
     },
     {
-      "id": "ev-13",
+      "id": "ev-16",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 53,
       "printed_page": 53,
@@ -573,7 +644,7 @@
           "basis": "cash"
         },
         {
-          "label": "ROE cash change vs 31 Dec 24",
+          "label": "ROE cash change vs prior year",
           "value": 0.1,
           "unit": "ppt",
           "basis": null
@@ -587,10 +658,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
-    "generated": "2026-08-30T12:22:41+00:00",
-    "seconds": 35.3,
-    "cost_usd": 0.0017,
-    "tokens": "35602 in / 4849 out",
+    "generated": "2026-08-30T14:40:03+00:00",
+    "seconds": 48.5,
+    "cost_usd": 0.0022,
+    "tokens": "45335 in / 6124 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": []

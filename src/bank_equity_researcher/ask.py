@@ -144,7 +144,8 @@ def run_ask(bank: str | None, question: str, combo_name: str = "cheap",
     combo = COMBOS[combo_name]
     llm = LLM()
 
-    docs = documents_for_question(question, bank, periods)
+    scope_notes: list[str] = []
+    docs = documents_for_question(question, bank, periods, notes=scope_notes)
     if not docs:
         raise RuntimeError(
             f"no documents in corpus for {bank or 'the banks named'} "
@@ -233,7 +234,9 @@ def run_ask(bank: str | None, question: str, combo_name: str = "cheap",
         raw_limitations = [raw_limitations]
     key_facts, limitations, confidence = enforce_answer_gate(
         reply.get("key_facts", []),
-        [str(item) for item in raw_limitations],
+        # A period the corpus does not hold was substituted silently before
+        # this; the note travels with the answer that rests on it.
+        scope_notes + [str(item) for item in raw_limitations],
         int(reply.get("confidence", 0) or 0),
         {record.id for record in records},
     )

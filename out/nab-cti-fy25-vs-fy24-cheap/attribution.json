@@ -11,12 +11,10 @@
     "unit": "ppt"
   },
   "movement_source": "row 'Cost to income ratio', column FY24 -> column FY25",
-  "headline": "NAB's cash cost-to-income ratio (CTI) increased by 80 basis points (0.8 ppt) in FY25 to 47.3%, up from 46.5% in FY24. This deterioration was driven by operating expense growth of 4.6% outpacing the implied operating income growth. A key driver was a $130 million increase in payroll review and remediation costs; excluding this, underlying expenses grew only 3.2%. The statutory CTI also rose, increasing by 110 bps to 49.6%.",
+  "headline": "NAB's cash cost-to-income ratio (CTI) increased by 80 basis points (0.8 ppt) in FY25 to 47.3%, up from 46.5% in FY24. This deterioration was driven by operating expense growth of 4.6% outpacing the implied operating income growth. Excluding $130 million in payroll review and remediation costs, underlying expenses grew only 3.2%. The statutory CTI also rose, increasing by 110 bps to 49.6%.",
   "headline_evidence": [
     "ev-1",
-    "ev-2",
-    "ev-3",
-    "ev-4"
+    "ev-2"
   ],
   "drivers": [
     {
@@ -24,7 +22,7 @@
       "bank_label": "Operating expenses",
       "contribution": null,
       "columns": "stated vs FY24",
-      "narrative": "Total operating expenses increased by $435 million or 4.6% to $9,848 million (ev-3, ev-4). Excluding $130 million for payroll review and remediation, underlying expenses grew 3.2% (ev-4). Expense growth exceeded income growth, raising the ratio.",
+      "narrative": "Total operating expenses increased by $435 million or 4.6% to $9,848 million (ev-3, ev-4). This expense growth exceeded income growth, widening the ratio. Excluding $130 million for payroll review and remediation, underlying expenses grew 3.2% (ev-4).",
       "confidence": 80,
       "evidence": [
         "ev-3",
@@ -38,37 +36,40 @@
       "bank_label": "Operating income",
       "contribution": null,
       "columns": "derived vs FY24",
-      "narrative": "Income growth is derived from the CTI movement and expense levels. With CTI rising 0.8 ppt on $9,413m FY24 expenses, implied income growth was approximately 2.5%, trailing expense growth of 4.6% (ev-1, ev-2, ev-3).",
+      "narrative": "Implied operating income growth was approximately 3.8%, calculated from the statutory CTI movement (ev-1) and statutory expense growth (ev-3). This growth rate was lower than the 4.6% expense growth, contributing positively to the ratio increase.",
       "confidence": 60,
       "evidence": [
         "ev-1",
-        "ev-2",
         "ev-3"
       ],
       "checks_passed": [],
       "checks_failed": []
     }
   ],
-  "residual": null,
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
   "notable_items": [
-    "Payroll review and remediation costs ($130m)"
+    "$130 million increase in payroll review and remediation costs"
   ],
   "disagreements": [
     {
-      "topic": "Basis of CTI Movement",
+      "topic": "Basis of Headline Ratio",
       "values": [
         "0.8 ppt increase (Cash basis)",
         "1.1 ppt increase (Statutory basis)"
       ],
       "preferred": "Cash basis",
       "reason": "definitional",
-      "explanation": "The bank reports two CTI measures. Cash earnings is the primary basis per vocabulary. Statutory CTI moved differently due to notable items."
+      "explanation": "The bank reports both Cash and Statutory CTI. Per instructions, the primary basis (Cash) is used for the headline movement. The Statutory basis shows a larger deterioration of 1.1 ppt."
     }
   ],
-  "attribution_confidence": 75,
+  "attribution_confidence": 80,
   "limitations": [
-    "No explicit operating income level provided for FY24/FY25 to calculate exact jaws contribution.",
-    "Quantified driver contributions are unquantified as evidence does not provide a walk chart or explicit income growth rate.",
+    "No walk chart provided for FY25 vs FY24; drivers are inferred from narrative and table data rather than a published bridge.",
+    "Income growth is derived/implied rather than explicitly stated as a driver contribution in the provided text.",
+    "Quantified ppt contributions for individual drivers are not available due to lack of explicit breakdown in the source evidence.",
     "Failed check: no_quantified_drivers"
   ],
   "evidence_records": [
@@ -91,6 +92,24 @@
           "value": 48.5,
           "unit": "%",
           "basis": "statutory"
+        },
+        {
+          "label": "cost to income ratio statutory change FY25 vs FY24",
+          "value": 1.1,
+          "unit": "ppt",
+          "basis": "statutory"
+        },
+        {
+          "label": "cost to income ratio statutory H1 FY25",
+          "value": 50.2,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "cost to income ratio statutory H1 FY24",
+          "value": 48.9,
+          "unit": "%",
+          "basis": "statutory"
         }
       ],
       "provenance": null
@@ -107,13 +126,31 @@
           "label": "cost to income ratio cash FY25",
           "value": 47.3,
           "unit": "%",
-          "basis": "cash earnings basis"
+          "basis": "cash"
         },
         {
           "label": "cost to income ratio cash FY24",
           "value": 46.5,
           "unit": "%",
-          "basis": "cash earnings basis"
+          "basis": "cash"
+        },
+        {
+          "label": "cost to income ratio cash change FY25 vs FY24",
+          "value": 0.8,
+          "unit": "ppt",
+          "basis": "cash"
+        },
+        {
+          "label": "cost to income ratio cash H1 FY25",
+          "value": 47.8,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "cost to income ratio cash H1 FY24",
+          "value": 46.8,
+          "unit": "%",
+          "basis": "cash"
         }
       ],
       "provenance": null
@@ -170,10 +207,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-08-30T12:40:56+00:00",
-    "seconds": 28.9,
-    "cost_usd": 0.0013,
-    "tokens": "35010 in / 2006 out",
+    "generated": "2026-08-30T15:00:03+00:00",
+    "seconds": 27.7,
+    "cost_usd": 0.0014,
+    "tokens": "35608 in / 2523 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": []

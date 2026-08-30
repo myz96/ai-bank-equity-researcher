@@ -1,57 +1,50 @@
 # WBC — cti — FY25 vs FY24
 
-**Movement (ex_notables basis):** 50.3ppt → 53ppt (+2.7ppt) | **Attribution confidence:** 75/100
+**Movement (ex_notables basis):** 50.3ppt → 53ppt (+2.7ppt) | **Attribution confidence:** 80/100
 
-*Read from: row 'Expense to income ratio, ex Notable Items', column FY24 (12 months ended Sep 2024) -> column FY25 (12 months ended Sep 2025)*
+*Read from: row 'Expense to income ratio, ex Notable Items', column FY24 -> column FY25*
 
-Westpac's cost-to-income ratio (ex Notable Items) widened by 270 basis points to 53.0% in FY25 from 50.3% in FY24. This deterioration was driven by operating expenses growing faster than net operating income. Expenses rose 9% overall and 6% excluding restructuring charges, while net operating income grew only 3%. The bank attributes the expense growth primarily to restructuring costs and inflationary pressures.
+Westpac's cost-to-income ratio (ex Notable Items) widened by 270 basis points to 53.0% in FY25 from 50.3% in FY24. This deterioration was driven by operating expenses growing faster than operating income. Total operating expenses rose 9% to $11,916 million, while net operating income grew approximately 3% to $22,464 million.
 
 > [ev-1] WBC/FY25/results_announcement, PDF p18: "The expense to income ratio excluding Notable Items was 53.0%, up from 50.3%."
 > [ev-2] WBC/FY25/results_announcement, PDF p18: "Total operating expenses increased 9% to $11,916 million."
-> [ev-3] WBC/FY25/results_announcement, PDF p18: "Excluding this charge, operating expenses increased by 6%"
-> [ev-5] WBC/FY25/results_announcement, PDF p33: "Excluding Notable Items, $m ... Net operating income ... Group ... 2025 22,464 ... 2024 21,763"
-> [ev-6] WBC/FY25/results_announcement, PDF p33: "Excluding Notable Items, $m ... Operating expenses ... Group ... 2025 (11,916) ... 2024 (10,944)"
+> [ev-3] WBC/FY25/results_announcement, PDF p18: "Operating expenses ... Total operating expenses (11,916) (10,944)"
+> [ev-5] WBC/FY25/results_announcement, PDF p33: "Net operating income 2025 8,424 6,110 3,808 2,814 1,308 22,464"
+> [ev-7] WBC/FY25/results_announcement, PDF p33: "Net operating income 2024 8,160 6,136 3,505 2,645 1,317 21,763"
 
 ## Drivers
 
 | Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
 |---|---|---|---|---|---|
-| `expense_growth` | Operating expense growth | +2 ppt | 85 | 1 (single_source) | ev-2, ev-3, ev-4, ev-6 |
-| `income_growth` | Net operating income growth | -0.7 ppt | 85 | 1 (single_source) | ev-5 |
-| *residual (unexplained)* | — | +1.4 ppt | — | — |
+| `expense_growth` | Operating expense growth | +4.8 ppt | 80 | 1 (single_source) | ev-2, ev-3 |
+| `income_growth` | Operating income growth | -2.1 ppt | 80 | 1 (single_source) | ev-5, ev-7 |
+| *residual (unexplained)* | — | +0 ppt | — | — |
 
 ### expense_growth — "Operating expense growth"
-*+2 ppt | confidence 85/100*
+*+4.8 ppt | confidence 80/100*
 
-
+Total operating expenses increased 9% ($972m) to $11,916m (ev-2, ev-3). This outpaced income growth, raising the ratio. The bank does not provide a specific ppt attribution for this driver in the narrative.
 > [ev-2] WBC/FY25/results_announcement, PDF p18: "Total operating expenses increased 9% to $11,916 million."
-> [ev-3] WBC/FY25/results_announcement, PDF p18: "Excluding this charge, operating expenses increased by 6%"
-> [ev-4] WBC/FY25/results_announcement, PDF p18: "Total operating expenses (11,916) (10,944)"
-> [ev-6] WBC/FY25/results_announcement, PDF p33: "Excluding Notable Items, $m ... Operating expenses ... Group ... 2025 (11,916) ... 2024 (10,944)"
+> [ev-3] WBC/FY25/results_announcement, PDF p18: "Operating expenses ... Total operating expenses (11,916) (10,944)"
 
-### income_growth — "Net operating income growth"
-*-0.7 ppt | confidence 85/100*
+### income_growth — "Operating income growth"
+*-2.1 ppt | confidence 80/100*
 
-Net operating income (ex Notable Items) grew 3% ($22,464m vs $21,763m). Slower income growth relative to expenses contributed negatively to the ratio improvement.
-> [ev-5] WBC/FY25/results_announcement, PDF p33: "Excluding Notable Items, $m ... Net operating income ... Group ... 2025 22,464 ... 2024 21,763"
-
-## Source disagreements
-- **Cost to Income Ratio Value** (definitional): 53.0% (Results Announcement ev-1) vs 42.4% (Investor Discussion Pack ev-10)
-  Preferred: 53.0%. The Results Announcement (ev-1) explicitly states the 'expense to income ratio excluding Notable Items' was 53.0%. The Investor Discussion Pack (ev-10) lists a different value of 42.4% for the same label. Given the source hierarchy (Profit Announcement > Presentation), the 53.0% figure is preferred. The 42.4% figure may refer to a different period or basis not fully clarified in the snippet, or represents a discrepancy.
+Net operating income grew ~3% to $22,464m (ev-5, ev-7), lagging behind expense growth. This slower income growth contributed to the ratio widening.
+> [ev-5] WBC/FY25/results_announcement, PDF p33: "Net operating income 2025 8,424 6,110 3,808 2,814 1,308 22,464"
+> [ev-7] WBC/FY25/results_announcement, PDF p33: "Net operating income 2024 8,160 6,136 3,505 2,645 1,317 21,763"
 
 ## Limitations
-- The JAWS decomposition is approximate. The residual of 1.4 ppt suggests that the simple percentage growth rates provided (9% exp, 3% inc) do not perfectly map to the ppt movement due to base effects or other minor components not detailed in the text snippets.
-- The evidence record ev-10 presents a conflicting ratio value (42.4%) which is significantly lower than the headline 53.0%. This disagreement is noted but the higher value from the primary announcement is used.
-- Detailed breakdown of expense drivers (e.g., specific cost categories) beyond 'restructuring' is not available in the provided evidence records.
+- The bank does not publish a formal JAWS bridge or walk chart for the cost-to-income ratio movement. Contributions are derived mechanically from headline income and expense levels rather than stated driver attributions.
 
 ## Provenance
 - combo: cheap
 - models: extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash
 - documents: WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)
-- generated: 2026-08-30T12:45:23+00:00
-- seconds: 33.2
+- generated: 2026-08-30T15:04:36+00:00
+- seconds: 26.8
 - cost_usd: 0.0013
-- tokens: 31761 in / 2429 out
+- tokens: 32773 in / 2679 out
 - orchestration: pipeline
 - pages_extracted: 15
 - reference_follow: ['WBC/FY25/investor_discussion_pack p125 <- p26 page 125 [added]']
