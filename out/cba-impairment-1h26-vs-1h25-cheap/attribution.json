@@ -11,49 +11,45 @@
     "unit": "$m"
   },
   "movement_source": "row 'Total loan impairment expense', column 31 Dec 24 -> column 31 Dec 25",
-  "headline": "CBA's credit impairment charge was essentially flat at $319 million in 1H26 (ended Dec 2025), a decrease of $1 million from the $320 million reported in 1H25 (ended Dec 2024). The annualised loss rate decreased by 1 basis point to 6 bps on average gross loans and acceptances. This stability masked significant offsetting movements: Retail Banking Services saw a $153 million increase in charges driven by consumer finance losses, while Business Banking reduced its charge by $129 million.",
+  "headline": "CBA's credit impairment charge was broadly flat at $319 million in 1H26 (Dec 2025), a decrease of $1 million from $320 million in 1H25 (Dec 2024). The loss rate remained stable at 6 basis points on average gross loans and acceptances. The movement was driven by offsetting divisional shifts: Retail Banking Services saw a significant increase in expense (+$153 million) due to losses in the consumer finance portfolio, while Business Banking experienced a substantial decrease (-$129 million). Institutional Banking and Markets also decreased (-$17 million) to a benefit, and New Zealand decreased (-$12 million).",
   "headline_evidence": [
     "ev-1",
-    "ev-5",
-    "ev-10",
-    "ev-9",
-    "ev-6"
+    "ev-2",
+    "ev-7"
   ],
   "drivers": [
     {
-      "canonical": "individual_provisions",
-      "bank_label": "Net new and increased individual provisioning",
+      "canonical": "collective.asset_quality",
+      "bank_label": "Retail Banking Services",
       "contribution": {
-        "value": 76.0,
+        "value": 153.0,
         "unit": "$m"
       },
       "columns": "31 Dec 24 -> 31 Dec 25",
-      "narrative": "Increased by $76 million to $245 million (from $169 million). Driven by downgrades for a small number of single-name customers in Corporate banking, where individually assessed provisions rose $56 million to $694 million (ev-16). Consumer individually assessed provisions also rose slightly by $2 million to $99 million (ev-17).",
+      "narrative": "Expense increased $153 million to $232 million. This was mainly driven by losses within the consumer finance portfolio.",
       "confidence": 80,
       "evidence": [
-        "ev-3",
-        "ev-16",
-        "ev-17"
+        "ev-6",
+        "ev-19"
       ],
       "checks_passed": [
-        "single_source"
+        "single_source",
+        "unreconciled_bridge_cap_80"
       ],
       "checks_failed": []
     },
     {
-      "canonical": "collective.asset_quality",
-      "bank_label": "Net collective provision funding",
+      "canonical": "individual_provisions",
+      "bank_label": "Business Banking",
       "contribution": {
-        "value": -3.0,
+        "value": -129.0,
         "unit": "$m"
       },
       "columns": "31 Dec 24 -> 31 Dec 25",
-      "narrative": "Decreased by $3 million to $218 million (from $221 million). In Consumer banking, collective provisions increased $55 million to $2,961 million due to elevated geopolitical tensions and global macroeconomic uncertainty, partly offset by rising house prices and lower interest rates (ev-14). In Corporate banking, collective provisions decreased $5 million to $2,581 million reflecting improvements in credit quality, offset by portfolio growth and macro uncertainty (ev-15).",
+      "narrative": "Expense decreased $129 million to $91 million. While the bank does not explicitly attribute this specific delta to individual vs collective drivers in the text, the sharp reduction is consistent with improved asset quality or lower individual provisions compared to the prior period.",
       "confidence": 80,
       "evidence": [
-        "ev-2",
-        "ev-14",
-        "ev-15"
+        "ev-3"
       ],
       "checks_passed": [
         "single_source"
@@ -62,16 +58,34 @@
     },
     {
       "canonical": "write_backs_recoveries",
-      "bank_label": "Write-back of individually assessed provisions",
+      "bank_label": "Institutional Banking and Markets",
       "contribution": {
-        "value": -74.0,
+        "value": -17.0,
         "unit": "$m"
       },
       "columns": "31 Dec 24 -> 31 Dec 25",
-      "narrative": "The write-back benefit increased by $74 million to $(144) million (from $(70) million). This larger reduction in expense partially offset the increases in new individual and collective provisions.",
+      "narrative": "Moved to a benefit of $8 million (expense of -$8 million), a decrease of $17 million. This likely reflects recoveries or write-backs outweighing new charges.",
       "confidence": 80,
       "evidence": [
         "ev-4"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "other_unmapped",
+      "bank_label": "New Zealand",
+      "contribution": {
+        "value": -12.0,
+        "unit": "$m"
+      },
+      "columns": "31 Dec 24 -> 31 Dec 25",
+      "narrative": "Expense decreased $12 million to $4 million. No specific driver breakdown provided for this division in the text.",
+      "confidence": 80,
+      "evidence": [
+        "ev-5"
       ],
       "checks_passed": [
         "single_source"
@@ -85,10 +99,11 @@
   },
   "notable_items": [],
   "disagreements": [],
-  "attribution_confidence": 80,
+  "attribution_confidence": 40,
   "limitations": [
-    "Confidence is capped at 80 because the quantified driver contributions were computed by subtracting period-end levels found in separate table rows rather than reading a pre-calculated bridge or movement column directly provided by the bank.",
-    "The narrative does not explicitly map the divisional movements (Retail +$153m, Business -$129m) to specific provision types (individual vs collective) within the provided evidence records."
+    "The bank does not provide a granular split of the Business Banking, IB&M, and NZ movements into canonical provision types (e.g., volume vs asset quality). Drivers are attributed based on the most likely component given the direction and magnitude, but exact attribution is inferred.",
+    "Failed check: drivers_reconcile (drivers -5.0 + residual +0.0 != delta -1.0, tol 1.0)",
+    "Capped at 80: collective.asset_quality +153 $m. drivers_reconcile failed, so the parts and the whole disagree. That proves one of these claims is wrong without saying which, so none of them may claim near-certainty."
   ],
   "evidence_records": [
     {
@@ -123,93 +138,6 @@
     {
       "id": "ev-2",
       "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 109,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Net collective provision funding",
-      "numbers": [
-        {
-          "label": "Net collective provision funding 31 Dec 25",
-          "value": 218.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net collective provision funding 30 Jun 25",
-          "value": 235.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net collective provision funding 31 Dec 24",
-          "value": 221.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-3",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 109,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Net new and increased individual provisioning",
-      "numbers": [
-        {
-          "label": "Net new and increased individual provisioning 31 Dec 25",
-          "value": 245.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net new and increased individual provisioning 30 Jun 25",
-          "value": 270.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net new and increased individual provisioning 31 Dec 24",
-          "value": 169.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-4",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 109,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Write-back of individually assessed provisions",
-      "numbers": [
-        {
-          "label": "Write-back of individually assessed provisions 31 Dec 25",
-          "value": -144.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Write-back of individually assessed provisions 30 Jun 25",
-          "value": -99.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Write-back of individually assessed provisions 31 Dec 24",
-          "value": -70.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-5",
-      "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 34,
       "printed_page": 18,
       "kind": "text",
@@ -231,7 +159,7 @@
       "provenance": null
     },
     {
-      "id": "ev-6",
+      "id": "ev-3",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 34,
       "printed_page": 18,
@@ -254,7 +182,7 @@
       "provenance": null
     },
     {
-      "id": "ev-7",
+      "id": "ev-4",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 34,
       "printed_page": 18,
@@ -277,7 +205,7 @@
       "provenance": null
     },
     {
-      "id": "ev-8",
+      "id": "ev-5",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 34,
       "printed_page": 18,
@@ -300,7 +228,7 @@
       "provenance": null
     },
     {
-      "id": "ev-9",
+      "id": "ev-6",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 34,
       "printed_page": 18,
@@ -323,7 +251,7 @@
       "provenance": null
     },
     {
-      "id": "ev-10",
+      "id": "ev-7",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 34,
       "printed_page": 18,
@@ -346,17 +274,68 @@
       "provenance": null
     },
     {
+      "id": "ev-8",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": 18,
+      "kind": "text",
+      "quote": "Half Year Ended December 2025 versus June 2025\nLoan impairment expense decreased $87 million on the prior half.",
+      "numbers": [
+        {
+          "label": "Loan impairment expense change Dec 25 vs Jun 25",
+          "value": -87.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": 18,
+      "kind": "text",
+      "quote": "A decrease in Institutional Banking and Markets of $48 million",
+      "numbers": [
+        {
+          "label": "Institutional Banking and Markets Loan impairment expense change Dec 25 vs Jun 25",
+          "value": -48.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": 18,
+      "kind": "text",
+      "quote": "A decrease in Business Banking of $44 million",
+      "numbers": [
+        {
+          "label": "Business Banking Loan impairment expense change Dec 25 vs Jun 25",
+          "value": -44.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
       "id": "ev-11",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 34,
       "printed_page": 18,
-      "kind": "table",
-      "quote": "Half Year Loan Impairment Expense annualised as a percentage of average GLAAs (bpts) ... Dec 25 6",
+      "kind": "text",
+      "quote": "A decrease in New Zealand of $35 million",
       "numbers": [
         {
-          "label": "Loan impairment expense annualised % GLAAs Dec 25",
-          "value": 6.0,
-          "unit": "bps",
+          "label": "New Zealand Loan impairment expense change Dec 25 vs Jun 25",
+          "value": -35.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -517,19 +496,19 @@
         {
           "label": "Loan impairment expense annualised as a % of average GLAAs 31 Dec 25",
           "value": 0.06,
-          "unit": "ratio",
+          "unit": "bpts",
           "basis": null
         },
         {
           "label": "Loan impairment expense annualised as a % of average GLAAs 30 Jun 25",
           "value": 0.08,
-          "unit": "ratio",
+          "unit": "bpts",
           "basis": null
         },
         {
           "label": "Loan impairment expense annualised as a % of average GLAAs 31 Dec 24",
           "value": 0.07,
-          "unit": "ratio",
+          "unit": "bpts",
           "basis": null
         }
       ],
@@ -537,35 +516,6 @@
     },
     {
       "id": "ev-19",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 45,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Total provisions for impairment losses as a % of TCE",
-      "numbers": [
-        {
-          "label": "Total provisions for impairment losses as a % of TCE 31 Dec 25",
-          "value": 0.41,
-          "unit": "ratio",
-          "basis": null
-        },
-        {
-          "label": "Total provisions for impairment losses as a % of TCE 30 Jun 25",
-          "value": 0.43,
-          "unit": "ratio",
-          "basis": null
-        },
-        {
-          "label": "Total provisions for impairment losses as a % of TCE 31 Dec 24",
-          "value": 0.43,
-          "unit": "ratio",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-20",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 45,
       "printed_page": null,
@@ -588,7 +538,7 @@
       "provenance": null
     },
     {
-      "id": "ev-21",
+      "id": "ev-20",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 68,
       "printed_page": 68,
@@ -598,12 +548,35 @@
       "provenance": null
     },
     {
+      "id": "ev-21",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 68,
+      "printed_page": 68,
+      "kind": "table",
+      "quote": "Loan loss rate by business unit1,2 bpts 1H26 1H25 RBS 3 3 BB 17 2 IB&M 2 3 ASB 7 8 Group 6 6",
+      "numbers": [
+        {
+          "label": "Loan loss rate Group 1H26",
+          "value": 6.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Loan loss rate Group 1H25",
+          "value": 6.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
       "id": "ev-22",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 68,
       "printed_page": 68,
       "kind": "table",
-      "quote": "Loan loss rate by business unit1,2 bpts 1H26 1H25 RBS 3 6 BB 7 8 IB&M 6 (2) ASB 1 6 Group 7 8",
+      "quote": "RBS 1H26 3 1H25 3",
       "numbers": [
         {
           "label": "Loan loss rate RBS 1H26",
@@ -613,55 +586,7 @@
         },
         {
           "label": "Loan loss rate RBS 1H25",
-          "value": 6.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Loan loss rate BB 1H26",
-          "value": 7.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Loan loss rate BB 1H25",
-          "value": 8.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Loan loss rate IB&M 1H26",
-          "value": 6.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Loan loss rate IB&M 1H25",
-          "value": -2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Loan loss rate ASB 1H26",
-          "value": 1.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Loan loss rate ASB 1H25",
-          "value": 6.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Loan loss rate Group 1H26",
-          "value": 7.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Loan loss rate Group 1H25",
-          "value": 8.0,
+          "value": 3.0,
           "unit": "bps",
           "basis": null
         }
@@ -671,27 +596,21 @@
     {
       "id": "ev-23",
       "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 29,
-      "printed_page": 29,
+      "pdf_page": 68,
+      "printed_page": 68,
       "kind": "table",
-      "quote": "Loan impairment expense\n1H25 7\n2H25 8\n1H26 6",
+      "quote": "BB 1H26 17 1H25 2",
       "numbers": [
         {
-          "label": "Loan impairment expense 31 Dec 24",
-          "value": 7.0,
-          "unit": "bpts",
+          "label": "Loan loss rate BB 1H26",
+          "value": 17.0,
+          "unit": "bps",
           "basis": null
         },
         {
-          "label": "Loan impairment expense 30 Jun 25",
-          "value": 8.0,
-          "unit": "bpts",
-          "basis": null
-        },
-        {
-          "label": "Loan impairment expense 31 Dec 25",
-          "value": 6.0,
-          "unit": "bpts",
+          "label": "Loan loss rate BB 1H25",
+          "value": 2.0,
+          "unit": "bps",
           "basis": null
         }
       ],
@@ -700,27 +619,21 @@
     {
       "id": "ev-24",
       "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 29,
-      "printed_page": 29,
+      "pdf_page": 68,
+      "printed_page": 68,
       "kind": "table",
-      "quote": "Consumer\n1H25 3\n2H25 6\n1H26 7",
+      "quote": "IB&M 1H26 2 1H25 3",
       "numbers": [
         {
-          "label": "Consumer loan impairment expense 31 Dec 24",
+          "label": "Loan loss rate IB&M 1H26",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Loan loss rate IB&M 1H25",
           "value": 3.0,
-          "unit": "bpts",
-          "basis": null
-        },
-        {
-          "label": "Consumer loan impairment expense 30 Jun 25",
-          "value": 6.0,
-          "unit": "bpts",
-          "basis": null
-        },
-        {
-          "label": "Consumer loan impairment expense 31 Dec 25",
-          "value": 7.0,
-          "unit": "bpts",
+          "unit": "bps",
           "basis": null
         }
       ],
@@ -729,27 +642,21 @@
     {
       "id": "ev-25",
       "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 29,
-      "printed_page": 29,
+      "pdf_page": 68,
+      "printed_page": 68,
       "kind": "table",
-      "quote": "Corporate\n1H25 16\n2H25 13\n1H26 4",
+      "quote": "ASB 1H26 7 1H25 8",
       "numbers": [
         {
-          "label": "Corporate loan impairment expense 31 Dec 24",
-          "value": 16.0,
-          "unit": "bpts",
+          "label": "Loan loss rate ASB 1H26",
+          "value": 7.0,
+          "unit": "bps",
           "basis": null
         },
         {
-          "label": "Corporate loan impairment expense 30 Jun 25",
-          "value": 13.0,
-          "unit": "bpts",
-          "basis": null
-        },
-        {
-          "label": "Corporate loan impairment expense 31 Dec 25",
-          "value": 4.0,
-          "unit": "bpts",
+          "label": "Loan loss rate ASB 1H25",
+          "value": 8.0,
+          "unit": "bps",
           "basis": null
         }
       ],
@@ -761,24 +668,24 @@
       "pdf_page": 29,
       "printed_page": 29,
       "kind": "table",
-      "quote": "Personal loans\n$m\n1H25 320\n2H25 406\n1H26 319",
+      "quote": "Loan impairment expense\n1H25 2H25 1H26\nTotal 7 8 6",
       "numbers": [
         {
-          "label": "Personal loans impairment expense 31 Dec 24",
-          "value": 320.0,
-          "unit": "$m",
+          "label": "Loan impairment expense Total 1H25",
+          "value": 7.0,
+          "unit": "%",
           "basis": null
         },
         {
-          "label": "Personal loans impairment expense 30 Jun 25",
-          "value": 406.0,
-          "unit": "$m",
+          "label": "Loan impairment expense Total 2H25",
+          "value": 8.0,
+          "unit": "%",
           "basis": null
         },
         {
-          "label": "Personal loans impairment expense 31 Dec 25",
-          "value": 319.0,
-          "unit": "$m",
+          "label": "Loan impairment expense Total 1H26",
+          "value": 6.0,
+          "unit": "%",
           "basis": null
         }
       ],
@@ -790,24 +697,42 @@
       "pdf_page": 29,
       "printed_page": 29,
       "kind": "table",
-      "quote": "Home loans\n$m\n1H25 406\n2H25 319\n1H26 319",
+      "quote": "Loan loss rate, bpts1\n1H25 2H25 1H26\nConsumer 3 6 7\nCorporate 16 13 4",
       "numbers": [
         {
-          "label": "Home loans impairment expense 31 Dec 24",
-          "value": 406.0,
-          "unit": "$m",
+          "label": "Loan loss rate Consumer 1H25",
+          "value": 3.0,
+          "unit": "bps",
           "basis": null
         },
         {
-          "label": "Home loans impairment expense 30 Jun 25",
-          "value": 319.0,
-          "unit": "$m",
+          "label": "Loan loss rate Consumer 2H25",
+          "value": 6.0,
+          "unit": "bps",
           "basis": null
         },
         {
-          "label": "Home loans impairment expense 31 Dec 25",
-          "value": 319.0,
-          "unit": "$m",
+          "label": "Loan loss rate Consumer 1H26",
+          "value": 7.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Loan loss rate Corporate 1H25",
+          "value": 16.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Loan loss rate Corporate 2H25",
+          "value": 13.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Loan loss rate Corporate 1H26",
+          "value": 4.0,
+          "unit": "bps",
           "basis": null
         }
       ],
@@ -819,22 +744,22 @@
       "pdf_page": 29,
       "printed_page": 29,
       "kind": "table",
-      "quote": "Credit cards\n$m\n1H25 320\n2H25 406\n1H26 319",
+      "quote": "$m\n1H25 2H25 1H26\nCorporate non-performing 320 406 319\nCorporate troublesome 406 319 1H25 2H25 1H26",
       "numbers": [
         {
-          "label": "Credit cards impairment expense 31 Dec 24",
+          "label": "Corporate non-performing $m 1H25",
           "value": 320.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Credit cards impairment expense 30 Jun 25",
+          "label": "Corporate non-performing $m 2H25",
           "value": 406.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Credit cards impairment expense 31 Dec 25",
+          "label": "Corporate non-performing $m 1H26",
           "value": 319.0,
           "unit": "$m",
           "basis": null
@@ -845,26 +770,20 @@
     {
       "id": "ev-29",
       "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 29,
-      "printed_page": 29,
+      "pdf_page": 69,
+      "printed_page": 69,
       "kind": "table",
-      "quote": "Corporate non-performing\n$m\n1H25 320\n2H25 406\n1H26 319",
+      "quote": "Credit provisions $m Jun 25 Dec 25 Stage 1 1,824 1,982",
       "numbers": [
         {
-          "label": "Corporate non-performing impairment expense 31 Dec 24",
-          "value": 320.0,
+          "label": "Stage 1 credit provisions 30 Jun 25",
+          "value": 1824.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Corporate non-performing impairment expense 30 Jun 25",
-          "value": 406.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Corporate non-performing impairment expense 31 Dec 25",
-          "value": 319.0,
+          "label": "Stage 1 credit provisions 31 Dec 25",
+          "value": 1982.0,
           "unit": "$m",
           "basis": null
         }
@@ -874,26 +793,20 @@
     {
       "id": "ev-30",
       "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 29,
-      "printed_page": 29,
+      "pdf_page": 69,
+      "printed_page": 69,
       "kind": "table",
-      "quote": "Corporate troublesome\n$m\n1H25 320\n2H25 406\n1H26 319",
+      "quote": "Credit provisions $m Jun 25 Dec 25 Stage 2 3,036 2,890",
       "numbers": [
         {
-          "label": "Corporate troublesome impairment expense 31 Dec 24",
-          "value": 320.0,
+          "label": "Stage 2 credit provisions 30 Jun 25",
+          "value": 3036.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Corporate troublesome impairment expense 30 Jun 25",
-          "value": 406.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Corporate troublesome impairment expense 31 Dec 25",
-          "value": 319.0,
+          "label": "Stage 2 credit provisions 31 Dec 25",
+          "value": 2890.0,
           "unit": "$m",
           "basis": null
         }
@@ -902,6 +815,52 @@
     },
     {
       "id": "ev-31",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 69,
+      "printed_page": 69,
+      "kind": "table",
+      "quote": "Credit provisions $m Jun 25 Dec 25 Stage 3 701 670",
+      "numbers": [
+        {
+          "label": "Stage 3 credit provisions 30 Jun 25",
+          "value": 701.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 3 credit provisions 31 Dec 25",
+          "value": 670.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-32",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 69,
+      "printed_page": 69,
+      "kind": "table",
+      "quote": "Credit provisions $m Jun 25 Dec 25 Total 6,377 6,335",
+      "numbers": [
+        {
+          "label": "Total credit provisions 30 Jun 25",
+          "value": 6377.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total credit provisions 31 Dec 25",
+          "value": 6335.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-33",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
@@ -930,7 +889,7 @@
       "provenance": null
     },
     {
-      "id": "ev-32",
+      "id": "ev-34",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 8,
       "printed_page": 8,
@@ -940,12 +899,12 @@
       "provenance": null
     },
     {
-      "id": "ev-33",
+      "id": "ev-35",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 8,
       "printed_page": 8,
       "kind": "table",
-      "quote": "Operating income 14,097 14,368 15,021",
+      "quote": "Operating income 14,097 14,368 15,021 1H25 2H25 1H26",
       "numbers": [
         {
           "label": "Operating income 1H25",
@@ -969,12 +928,12 @@
       "provenance": null
     },
     {
-      "id": "ev-34",
+      "id": "ev-36",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 8,
       "printed_page": 8,
       "kind": "table",
-      "quote": "Operating expenses 6,372 6,494 6,720",
+      "quote": "Operating expenses 6,372 6,494 6,720 1H25 2H25 1H26",
       "numbers": [
         {
           "label": "Operating expenses 1H25",
@@ -998,12 +957,12 @@
       "provenance": null
     },
     {
-      "id": "ev-35",
+      "id": "ev-37",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 8,
       "printed_page": 8,
       "kind": "table",
-      "quote": "Pre-provision profit 7,725 7,744 8,131",
+      "quote": "Pre-provision profit 7,725 7,744 8,131 1H25 2H25 1H26",
       "numbers": [
         {
           "label": "Pre-provision profit 1H25",
@@ -1032,10 +991,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
-    "generated": "2026-08-30T16:13:13+00:00",
-    "seconds": 47.0,
-    "cost_usd": 0.0021,
-    "tokens": "37495 in / 7580 out",
+    "generated": "2026-08-30T18:43:54+00:00",
+    "seconds": 51.5,
+    "cost_usd": 0.0025,
+    "tokens": "49351 in / 8186 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": []

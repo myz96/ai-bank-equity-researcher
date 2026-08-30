@@ -5,46 +5,30 @@
   "comparator": "1H25",
   "basis": "cash",
   "movement": {
-    "from_value": 1220.0,
+    "from_value": 1260.0,
     "to_value": 1230.0,
-    "delta": 10.0,
+    "delta": -30.0,
     "unit": "bps"
   },
   "movement_source": "row 'Common Equity Tier 1 (CET1)', column 31 Dec 24 -> column 31 Dec 25",
-  "headline": "CBA's CET1 ratio increased by 10 bps to 12.3% in 1H26 vs 1H25. The movement is driven by a +24 bps regulatory model change (APS 117) and organic earnings generation, partially offset by dividends and RWA growth. No half-on-half walk covers this period; the bank's published Jun-Dec walk shows -87 bps dividend and +107 bps NPAT.",
+  "headline": "CBA's CET1 ratio declined by 30 bps to 12.3% in 1H26 (vs 12.6% in 1H25). The bank does not publish a capital walk for this specific period; the available Jun-Dec walk shows offsetting earnings and RWA movements.",
   "headline_evidence": [
-    "ev-17",
+    "ev-11",
+    "ev-15",
     "ev-22",
-    "ev-41"
+    "ev-23"
   ],
   "drivers": [
-    {
-      "canonical": "regulatory_model_changes",
-      "bank_label": "APRA Overlay Release / APS 117",
-      "contribution": {
-        "value": 24.0,
-        "unit": "bps"
-      },
-      "columns": "stated vs 1H25",
-      "narrative": "Adoption of revised APS 117 framework effective 1 Oct 2025 reduced IRRBB RWA by ~$10bn, impacting CET1 by +24 bps (ev-20). This is the primary positive driver for the 1H26 vs 1H25 delta.",
-      "confidence": 85,
-      "evidence": [
-        "ev-20",
-        "ev-24"
-      ],
-      "checks_passed": [],
-      "checks_failed": []
-    },
     {
       "canonical": "earnings_generation",
       "bank_label": "Cash NPAT",
       "contribution": null,
       "columns": null,
-      "narrative": "Organic earnings generation contributed positively. The bank's published Jun-Dec walk (context only) shows Cash NPAT at +107 bps (ev-1). For the 1H26 vs 1H25 period, the specific contribution is not explicitly quantified in the text, but implied as part of the net movement alongside the regulatory change.",
-      "confidence": 60,
+      "narrative": "The bank does not disclose the specific Cash NPAT contribution to the CET1 ratio for the 1H25-to-1H26 comparison. Narrative evidence is limited to the headline ratio levels.",
+      "confidence": 40,
       "evidence": [
-        "ev-1",
-        "ev-9"
+        "ev-11",
+        "ev-15"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -54,11 +38,11 @@
       "bank_label": "Dividends",
       "contribution": null,
       "columns": null,
-      "narrative": "Dividends reduced CET1. The Jun-Dec walk shows -87 bps for '2H25 dividend (DRP neutralised)' (ev-1). The 1H26 final dividend included a $643m on-market purchase impacting CET1 by -13 bps (ev-19). The total 1H26 vs 1H25 impact is not separately quantified from the interim dividend.",
-      "confidence": 60,
+      "narrative": "The bank does not disclose the specific dividend impact on the CET1 ratio for the 1H25-to-1H26 comparison. Narrative evidence is limited to the headline ratio levels.",
+      "confidence": 40,
       "evidence": [
-        "ev-1",
-        "ev-19"
+        "ev-11",
+        "ev-15"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -68,40 +52,26 @@
       "bank_label": "RWA",
       "contribution": null,
       "columns": null,
-      "narrative": "RWA movements were negative in the Jun-Dec context (-33 bps, ev-1), driven by Credit Risk (-34 bps, ev-4) and Operational Risk (-9 bps, ev-5), partially offset by IRRBB (+11 bps, ev-7). The specific 1H26 vs 1H25 RWA contribution is not isolated.",
-      "confidence": 60,
+      "narrative": "The bank does not disclose the specific RWA movement contribution to the CET1 ratio for the 1H25-to-1H26 comparison. Narrative evidence is limited to the headline ratio levels.",
+      "confidence": 40,
       "evidence": [
-        "ev-1",
-        "ev-4",
-        "ev-5",
-        "ev-7"
+        "ev-11",
+        "ev-15"
       ],
       "checks_passed": [],
       "checks_failed": []
     }
   ],
   "residual": {
-    "value": -14.0,
+    "value": -30.0,
     "unit": "bps"
   },
   "notable_items": [],
-  "disagreements": [
-    {
-      "topic": "Walk Period Mismatch",
-      "values": [
-        "Context Walk: Jun 25 -> Dec 25 (ev-1)",
-        "Task Comparison: Dec 24 -> Dec 25"
-      ],
-      "preferred": "Task Comparison",
-      "reason": "timing",
-      "explanation": "The bank provides a capital walk for the half-on-half period (Jun 2025 to Dec 2025) but does not provide a direct walk for the year-on-year period (Dec 2024 to Dec 2025). The drivers listed in the context walk cannot be directly attributed to the task comparison."
-    }
-  ],
-  "attribution_confidence": 60,
+  "disagreements": [],
+  "attribution_confidence": 40,
   "limitations": [
-    "No direct capital walk provided for 1H25 -> 1H26. Drivers are inferred or taken from the Jun-Dec context walk.",
-    "Residual of -14 bps exists after accounting for the known +24 bps regulatory change and the implied net of other factors.",
-    "Specific contributions of NPAT and Dividends for the 1H25->1H26 window are not explicitly stated, only for the Jun-Dec window.",
+    "No capital walk published for the 1H25-to-1H26 comparison. Quantified drivers are unavailable; the residual captures the full -30 bpts movement.",
+    "Failed check: no_quantified_drivers",
     "No published walk covers 1H26 vs 1H25: the bank's walk for this metric describes another comparison, so the driver split is not walk-verified for this comparison. Confidence is capped at 85."
   ],
   "evidence_records": [
@@ -146,26 +116,6 @@
       "pdf_page": 33,
       "printed_page": 33,
       "kind": "walk_annotation",
-      "quote": "[chart annotation] 2H25 dividend (DRP neutralised): 2",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-3",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 33,
-      "printed_page": 33,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Cash NPAT: 3",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-4",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 33,
-      "printed_page": 33,
-      "kind": "walk_annotation",
       "quote": "[chart annotation] RWA: Credit Risk⁴ -34",
       "numbers": [
         {
@@ -178,7 +128,7 @@
       "provenance": null
     },
     {
-      "id": "ev-5",
+      "id": "ev-3",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 33,
       "printed_page": 33,
@@ -195,7 +145,7 @@
       "provenance": null
     },
     {
-      "id": "ev-6",
+      "id": "ev-4",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 33,
       "printed_page": 33,
@@ -212,7 +162,7 @@
       "provenance": null
     },
     {
-      "id": "ev-7",
+      "id": "ev-5",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 33,
       "printed_page": 33,
@@ -229,17 +179,7 @@
       "provenance": null
     },
     {
-      "id": "ev-8",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 33,
-      "printed_page": 33,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Dec 25 Level 2: 10.25% APRA minimum⁵",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-9",
+      "id": "ev-6",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 103,
       "printed_page": 103,
@@ -274,27 +214,7 @@
       "provenance": null
     },
     {
-      "id": "ev-10",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 103,
-      "printed_page": 103,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] 2H25 dividend (DRP neutralised): footnote marker 2",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-11",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 103,
-      "printed_page": 103,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Cash NPAT: footnote marker 3",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-12",
+      "id": "ev-7",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 103,
       "printed_page": 103,
@@ -311,7 +231,7 @@
       "provenance": null
     },
     {
-      "id": "ev-13",
+      "id": "ev-8",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 103,
       "printed_page": 103,
@@ -328,7 +248,7 @@
       "provenance": null
     },
     {
-      "id": "ev-14",
+      "id": "ev-9",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 103,
       "printed_page": 103,
@@ -345,7 +265,7 @@
       "provenance": null
     },
     {
-      "id": "ev-15",
+      "id": "ev-10",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 103,
       "printed_page": 103,
@@ -362,37 +282,27 @@
       "provenance": null
     },
     {
-      "id": "ev-16",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 103,
-      "printed_page": 103,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] RWA: footnote marker 4",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-17",
+      "id": "ev-11",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 48,
       "printed_page": 28,
       "kind": "table",
-      "quote": "Summary Group Capital Adequacy Ratios ... Common Equity Tier 1 (CET1) ... 31 Dec 25: 12.3% ... 30 Jun 25: 12.3% ... 31 Dec 24: 12.2%",
+      "quote": "Summary Group Capital Adequacy Ratios Common Equity Tier 1 (CET1) 12.3 12.3 12.2 – 10 bpts",
       "numbers": [
         {
-          "label": "CET1 ratio 31 Dec 25",
+          "label": "CET1 31 Dec 25",
           "value": 12.3,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "CET1 ratio 30 Jun 25",
+          "label": "CET1 30 Jun 25",
           "value": 12.3,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "CET1 ratio 31 Dec 24",
+          "label": "CET1 31 Dec 24",
           "value": 12.2,
           "unit": "%",
           "basis": null
@@ -401,152 +311,112 @@
       "provenance": null
     },
     {
-      "id": "ev-18",
+      "id": "ev-12",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 48,
       "printed_page": 28,
       "kind": "text",
       "quote": "The Group’s CET1 Capital ratio was 12.3% as at 31 December 2025, in line with 30 June 2025.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-19",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 48,
-      "printed_page": 28,
-      "kind": "text",
-      "quote": "The 2025 final dividend included the on-market purchase of $643 million of shares (CET1 impact of -13 bpts) in respect of the Dividend Reinvestment Plan.",
       "numbers": [
         {
-          "label": "DRP share purchase value",
-          "value": 643.0,
-          "unit": "$m",
+          "label": "CET1 31 Dec 25",
+          "value": 12.3,
+          "unit": "%",
           "basis": null
         },
         {
-          "label": "CET1 impact DRP",
-          "value": -13.0,
-          "unit": "bps",
+          "label": "CET1 30 Jun 25",
+          "value": 12.3,
+          "unit": "%",
           "basis": null
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-20",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 48,
-      "printed_page": 28,
-      "kind": "text",
-      "quote": "Includes the impact of the reduction to IRRBB RWA of ~$10 billion (CET1 impact of +24 bpts) on adoption of the revised APS 117 framework effective 1 October 2025.",
-      "numbers": [
-        {
-          "label": "IRRBB RWA reduction",
-          "value": 10000.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "CET1 impact IRRBB RWA",
-          "value": 24.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-21",
+      "id": "ev-13",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 48,
       "printed_page": 28,
       "kind": "table",
-      "quote": "Jun 25 Level 2 9 (87) (33) 12.3% ... Dec 25 Level 2 6 3 (34) Credit 4 11 IRRBB 5 (1) Market (9) Operational 2 12.3%",
+      "quote": "Dec 25 vs Dec 24 % 10 bpts",
       "numbers": [
         {
-          "label": "CET1 level 30 Jun 25",
-          "value": 12.3,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 level 31 Dec 25",
-          "value": 12.3,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Dividend impact CET1 30 Jun 25",
-          "value": -87.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "NPAT impact CET1 30 Jun 25",
-          "value": -33.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "RWA impact CET1 30 Jun 25",
-          "value": 9.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Other impact CET1 30 Jun 25",
-          "value": -33.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Dividend impact CET1 31 Dec 25",
-          "value": -34.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "NPAT impact CET1 31 Dec 25",
-          "value": 3.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "RWA impact CET1 31 Dec 25",
-          "value": 6.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Credit risk impact CET1 31 Dec 25",
-          "value": 11.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "IRRBB impact CET1 31 Dec 25",
-          "value": -1.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Market risk impact CET1 31 Dec 25",
-          "value": -9.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Operational risk impact CET1 31 Dec 25",
-          "value": 2.0,
-          "unit": "bps",
+          "label": "CET1 change Dec 25 vs Dec 24",
+          "value": 10.0,
+          "unit": "bpts",
           "basis": null
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-22",
+      "id": "ev-14",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "table",
+      "quote": "Level 2 6 3 (34) Credit 4 11 IRRBB 5 (1) Market (9) Operational 2 12.3% 12.3%",
+      "numbers": [
+        {
+          "label": "CET1 Level 2 30 Jun 25",
+          "value": 6.0,
+          "unit": "bpts",
+          "basis": null
+        },
+        {
+          "label": "CET1 Dividend 30 Jun 25",
+          "value": 3.0,
+          "unit": "bpts",
+          "basis": null
+        },
+        {
+          "label": "CET1 Cash NPAT 30 Jun 25",
+          "value": -34.0,
+          "unit": "bpts",
+          "basis": null
+        },
+        {
+          "label": "CET1 Other 30 Jun 25",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 Level 2 31 Dec 25",
+          "value": 6.0,
+          "unit": "bpts",
+          "basis": null
+        },
+        {
+          "label": "CET1 Credit 31 Dec 25",
+          "value": 11.0,
+          "unit": "bpts",
+          "basis": null
+        },
+        {
+          "label": "CET1 IRRBB 31 Dec 25",
+          "value": -1.0,
+          "unit": "bpts",
+          "basis": null
+        },
+        {
+          "label": "CET1 Market 31 Dec 25",
+          "value": -9.0,
+          "unit": "bpts",
+          "basis": null
+        },
+        {
+          "label": "CET1 Operational 31 Dec 25",
+          "value": 2.0,
+          "unit": "bpts",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-15",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 157,
       "printed_page": null,
@@ -575,7 +445,7 @@
       "provenance": null
     },
     {
-      "id": "ev-23",
+      "id": "ev-16",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 26,
       "printed_page": 2,
@@ -598,7 +468,7 @@
       "provenance": null
     },
     {
-      "id": "ev-24",
+      "id": "ev-17",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 105,
       "printed_page": 105,
@@ -606,66 +476,24 @@
       "quote": "CET1 impact Net Impact",
       "numbers": [
         {
-          "label": "CET1 impact 30 Jun 25",
-          "value": 48.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "CET1 impact 1 Oct 25 (pro-forma)",
-          "value": -24.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "CET1 impact 31 Dec 25",
-          "value": 24.0,
-          "unit": "bps",
+          "label": "CET1 impact +24bpts",
+          "value": 0.24,
+          "unit": "ratio",
           "basis": null
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-25",
+      "id": "ev-18",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 105,
       "printed_page": 105,
       "kind": "table",
-      "quote": "Total RWA: % of RWA:",
+      "quote": "31 Dec 25 CET1 7.0%",
       "numbers": [
         {
-          "label": "Total RWA 30 Jun 25",
-          "value": 496.0,
-          "unit": "$bn",
-          "basis": null
-        },
-        {
-          "label": "% of RWA 30 Jun 25",
-          "value": 8.0,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Total RWA 1 Oct 25 (pro-forma)",
-          "value": 491.0,
-          "unit": "$bn",
-          "basis": null
-        },
-        {
-          "label": "% of RWA 1 Oct 25 (pro-forma)",
-          "value": 6.1,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Total RWA 31 Dec 25",
-          "value": 505.0,
-          "unit": "$bn",
-          "basis": null
-        },
-        {
-          "label": "% of RWA 31 Dec 25",
+          "label": "CET1 31 Dec 25",
           "value": 7.0,
           "unit": "%",
           "basis": null
@@ -674,22 +502,50 @@
       "provenance": null
     },
     {
-      "id": "ev-26",
+      "id": "ev-19",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 105,
+      "printed_page": 105,
+      "kind": "table",
+      "quote": "30 Jun 25 CET1 8.0%",
+      "numbers": [
+        {
+          "label": "CET1 30 Jun 25",
+          "value": 8.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 105,
+      "printed_page": 105,
+      "kind": "table",
+      "quote": "1 Oct 25 (pro-forma) CET1 6.1%",
+      "numbers": [
+        {
+          "label": "CET1 1 Oct 25 (pro-forma)",
+          "value": 6.1,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 101,
       "printed_page": 101,
       "kind": "table",
-      "quote": "CET1 International Level 1 APRA 150 175 210 215 225 235 67% 62% 68% 72% 73% 72% 50% 60% 70% 80% 90% 100% 110% 120% 130% 1H21 1H22 1H23 1H24 1H25 1H26",
+      "quote": "CET1 Dec 25 18.3%",
       "numbers": [
         {
-          "label": "CET1 ratio 1H25",
-          "value": 15.1,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 ratio 1H26",
-          "value": 15.0,
+          "label": "CET1 ratio Dec 2025",
+          "value": 18.3,
           "unit": "%",
           "basis": null
         }
@@ -697,16 +553,16 @@
       "provenance": null
     },
     {
-      "id": "ev-27",
+      "id": "ev-22",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 101,
       "printed_page": 101,
-      "kind": "text",
-      "quote": "CET1 18.3 18.3 17.6 17.1 16.1 15.3 15.1 15.1 15.0 15.0 14.7 14.6 14.5 14.4 14.3 14.2 14.1 14.1 14.0 13.9 13.9 13.6 13.5 13.3 13.2 13.2 12.8 12.6 12.6 12.3 11.4 11.4 11.4 11.2 10.9 10.6 Sumitomo Mitsui Bank of Comm. Agric. Bank of China Toronto Dominion Mizuho Mitsubishi UFJ Bank of China Bank of America CBA HSBC 3 Lloyds 3 ING 3 ANZ WBC NAB NatWest Group 3 Deutsche 3 UBS 3 ICBC Citi JP Morgan Intesa Sanpaolo 3 SocGen 3 BNP Paribas 3 Barclays 3 RBC Scotiabank UniCredit 3 Santander 3 BBVA 3 China Construct. Bank China Merchants Bank Bank of Montreal Standard Chartered 3 Wells Fargo Credit Agrico",
+      "kind": "table",
+      "quote": "CET1 1H26 12.3%",
       "numbers": [
         {
-          "label": "CET1 ratio CBA Dec 25",
-          "value": 15.0,
+          "label": "CET1 ratio 1H26",
+          "value": 12.3,
           "unit": "%",
           "basis": null
         }
@@ -714,30 +570,51 @@
       "provenance": null
     },
     {
-      "id": "ev-28",
+      "id": "ev-23",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 101,
+      "printed_page": 101,
+      "kind": "table",
+      "quote": "CET1 1H25 12.6%",
+      "numbers": [
+        {
+          "label": "CET1 ratio 1H25",
+          "value": 12.6,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 101,
+      "printed_page": 101,
+      "kind": "table",
+      "quote": "CBA 12.3",
+      "numbers": [
+        {
+          "label": "CET1 ratio CBA",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 115,
       "printed_page": 115,
       "kind": "table",
       "quote": "CET1 (Level 1)1",
-      "numbers": [
-        {
-          "label": "CET1 (Level 1) Dec 25",
-          "value": 12.2,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 (Level 1) Jun 25",
-          "value": 12.4,
-          "unit": "%",
-          "basis": null
-        }
-      ],
+      "numbers": [],
       "provenance": null
     },
     {
-      "id": "ev-29",
+      "id": "ev-26",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 115,
       "printed_page": 115,
@@ -754,12 +631,12 @@
       "provenance": null
     },
     {
-      "id": "ev-30",
+      "id": "ev-27",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 33,
       "printed_page": 33,
       "kind": "table",
-      "quote": "12.3%",
+      "quote": "12.3% Dec 25 Level 2",
       "numbers": [
         {
           "label": "CET1 ratio Dec 25",
@@ -771,17 +648,68 @@
       "provenance": null
     },
     {
-      "id": "ev-31",
+      "id": "ev-28",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 33,
       "printed_page": 33,
       "kind": "table",
-      "quote": "10.25%",
+      "quote": "10.25% APRA minimum5 Level 1",
       "numbers": [
         {
-          "label": "APRA minimum",
+          "label": "APRA minimum CET1 ratio",
           "value": 10.25,
           "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-29",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 33,
+      "printed_page": 33,
+      "kind": "text",
+      "quote": "Movements in bpts Credit Risk4 (34)",
+      "numbers": [
+        {
+          "label": "Credit Risk movement",
+          "value": -34.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-30",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 33,
+      "printed_page": 33,
+      "kind": "text",
+      "quote": "Operational Risk (9)",
+      "numbers": [
+        {
+          "label": "Operational Risk movement",
+          "value": -9.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-31",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 33,
+      "printed_page": 33,
+      "kind": "text",
+      "quote": "Market Risk (1)",
+      "numbers": [
+        {
+          "label": "Market Risk movement",
+          "value": -1.0,
+          "unit": "bps",
           "basis": null
         }
       ],
@@ -793,11 +721,11 @@
       "pdf_page": 33,
       "printed_page": 33,
       "kind": "text",
-      "quote": "Movements in bpts Credit Risk (34)",
+      "quote": "IRRBB 11",
       "numbers": [
         {
-          "label": "Credit Risk impact on CET1",
-          "value": -34.0,
+          "label": "IRRBB movement",
+          "value": 11.0,
           "unit": "bps",
           "basis": null
         }
@@ -810,11 +738,11 @@
       "pdf_page": 33,
       "printed_page": 33,
       "kind": "text",
-      "quote": "Operational Risk (9)",
+      "quote": "RWA 3",
       "numbers": [
         {
-          "label": "Operational Risk impact on CET1",
-          "value": -9.0,
+          "label": "RWA movement",
+          "value": 3.0,
           "unit": "bps",
           "basis": null
         }
@@ -827,11 +755,11 @@
       "pdf_page": 33,
       "printed_page": 33,
       "kind": "text",
-      "quote": "Market Risk (1)",
+      "quote": "Other (87)",
       "numbers": [
         {
-          "label": "Market Risk impact on CET1",
-          "value": -1.0,
+          "label": "Other movement",
+          "value": -87.0,
           "unit": "bps",
           "basis": null
         }
@@ -844,11 +772,11 @@
       "pdf_page": 33,
       "printed_page": 33,
       "kind": "text",
-      "quote": "IRRBB 11",
+      "quote": "2H25 dividend (DRP neutralised) 9",
       "numbers": [
         {
-          "label": "IRRBB impact on CET1",
-          "value": 11.0,
+          "label": "2H25 dividend movement",
+          "value": 9.0,
           "unit": "bps",
           "basis": null
         }
@@ -861,11 +789,11 @@
       "pdf_page": 33,
       "printed_page": 33,
       "kind": "text",
-      "quote": "3",
+      "quote": "Cash NPAT (33)",
       "numbers": [
         {
-          "label": "Other impact on CET1",
-          "value": 3.0,
+          "label": "Cash NPAT movement",
+          "value": -33.0,
           "unit": "bps",
           "basis": null
         }
@@ -875,66 +803,15 @@
     {
       "id": "ev-37",
       "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 33,
-      "printed_page": 33,
-      "kind": "text",
-      "quote": "2H25 dividend (DRP neutralised) (87)",
-      "numbers": [
-        {
-          "label": "2H25 dividend impact on CET1",
-          "value": -87.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-38",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 33,
-      "printed_page": 33,
-      "kind": "text",
-      "quote": "Cash NPAT 9",
-      "numbers": [
-        {
-          "label": "Cash NPAT impact on CET1",
-          "value": 9.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-39",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 33,
-      "printed_page": 33,
-      "kind": "text",
-      "quote": "RWA (33)",
-      "numbers": [
-        {
-          "label": "RWA impact on CET1",
-          "value": -33.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-40",
-      "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 103,
       "printed_page": 103,
-      "kind": "text",
+      "kind": "table",
       "quote": "CET1 capital ratio movements1",
       "numbers": [],
       "provenance": null
     },
     {
-      "id": "ev-41",
+      "id": "ev-38",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 103,
       "printed_page": 103,
@@ -952,12 +829,6 @@
           "value": 12.3,
           "unit": "%",
           "basis": null
-        },
-        {
-          "label": "Level 2 CET1 capital ratio Dec 24",
-          "value": 12.2,
-          "unit": "%",
-          "basis": null
         }
       ],
       "provenance": null
@@ -968,10 +839,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
-    "generated": "2026-08-30T16:51:02+00:00",
-    "seconds": 93.5,
-    "cost_usd": 0.0029,
-    "tokens": "65139 in / 7202 out",
+    "generated": "2026-08-30T18:43:03+00:00",
+    "seconds": 60.1,
+    "cost_usd": 0.0026,
+    "tokens": "62140 in / 5543 out",
     "orchestration": "pipeline",
     "pages_extracted": 16,
     "reference_follow": [

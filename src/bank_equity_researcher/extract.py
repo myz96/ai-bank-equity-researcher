@@ -8,7 +8,7 @@ import re
 from .corpus import Document
 from .llm import LLM
 from .schema import EvidenceRecord, NumberFact
-from .validate import walk_sum_tolerance
+from .validate import _quote_numbers, quote_prints, walk_sum_tolerance
 
 TEXT_PROMPT = """You extract evidence for bank equity research. Today's task: {case}.
 
@@ -180,6 +180,7 @@ def extract_text_evidence(
     )
     records = []
     for item in raw if isinstance(raw, list) else []:
+        quote = str(item.get("quote", ""))[:600]
         try:
             records.append(
                 EvidenceRecord(
@@ -188,14 +189,53 @@ def extract_text_evidence(
                     pdf_page=page_no,
                     printed_page=printed_page_of(text, page_no, doc.doc_type),
                     kind=item.get("kind", "text"),
-                    quote=str(item.get("quote", ""))[:600],
-                    numbers=[NumberFact(**n) for n in item.get("numbers", []) if "value" in n],
+                    quote=quote,
+                    numbers=_numbers_the_quote_prints(quote, item.get("numbers", [])),
                     provenance=provenance,
                 )
             )
         except Exception:  # noqa: BLE001 - a malformed record is dropped, not fatal
             continue
     return records
+
+
+def _numbers_the_quote_prints(quote: str, raw_numbers) -> list[NumberFact]:
+    """The NumberFacts of one record, minus the ones its own quote contradicts.
+
+    A NumberFact is the model's own account of what the quote states, and this
+    stage took it on trust: an extractor could pair a real verbatim sentence
+    with a figure of its own, and every check that reads record.numbers — the
+    column checks, the percent-evidence tests, the citation cap — would then
+    read a number no page prints. The agent shell verifies the same thing at
+    its own mint point (research_agent._mint_record), from the same function.
+
+    The gate is narrower here than there, and measurement is why. The agent's
+    `cite` verifies the quote against the PAGE first and hands every drop back
+    to the model, which re-quotes. This stage does neither, and its quote is
+    often a row LABEL with the row's figures in `numbers`: applied at full
+    strength the gate dropped 18.6% of the shipped facts, and the WBC FY25 ROE
+    case lost its movement outright because all six of its records quoted a
+    label ("ROTE", "Average ordinary equity ($m)").
+
+    So a quote that prints NO number says nothing about the numbers beside it,
+    and they are kept — absence of evidence is not a conflict. A quote that
+    DOES print numbers is the model quoting the row, and a fact that row does
+    not carry is the model's own arithmetic or another row's column: "Loan
+    impairment expense was $554 million, a decrease of $1,964 million" carried
+    a fact of 2,518, and "Treasury & Markets impact on NIM 0.13% 0.13%"
+    carried a fact of 0 bps. Those are dropped.
+    """
+    facts: list[NumberFact] = []
+    for number in raw_numbers if isinstance(raw_numbers, list) else []:
+        if not isinstance(number, dict) or "value" not in number:
+            continue
+        try:
+            facts.append(NumberFact(**number))
+        except Exception:  # noqa: BLE001, S112 - a malformed number is dropped, not fatal
+            continue
+    if not _quote_numbers(quote):
+        return facts
+    return [fact for fact in facts if quote_prints(quote, fact.value, fact.unit)]
 
 
 def annotation_records(

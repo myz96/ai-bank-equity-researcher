@@ -10,31 +10,48 @@
     "delta": 62.0,
     "unit": "$m"
   },
-  "movement_source": "row 'Total loan impairment expense', column FY25 (30 Jun 2025) -> column FY26 (30 Jun 2026)",
-  "headline": "CBA's credit impairment charge increased $62 million to $788 million in FY26 (ev-14). The loss rate rose 1 basis point to 8 bps on average GLAA (ev-19). This increase was primarily driven by higher expenses in Retail Banking Services (+$106m) and New Zealand (+$11m), partially offset by decreases in Business Banking (-$45m) and Institutional Banking (-$16m). The movement reflects portfolio growth and macroeconomic uncertainty.",
+  "movement_source": "row 'Total loan impairment expense', column FY25 (12 months ended Jun 2025) -> column FY26 (12 months ended Jun 2026)",
+  "headline": "CBA's credit impairment charge increased $62 million to $788 million in FY26 (ev-16). The loss rate rose 1 basis point to 8 bps on average GLAA (ev-19). This increase was driven by a $106 million rise in Retail Banking Services provisions, partially offset by a $45 million decrease in Business Banking and a $16 million decrease in Institutional Banking and Markets (ev-17, ev-18, ev-13). Corporate collective provisions grew $172 million due to portfolio growth and macro uncertainty, while consumer collective provisions fell $48 million (ev-6, ev-7).",
   "headline_evidence": [
-    "ev-14",
-    "ev-19",
-    "ev-15",
     "ev-16",
+    "ev-19",
     "ev-17",
-    "ev-18"
+    "ev-18",
+    "ev-13",
+    "ev-6",
+    "ev-7"
   ],
   "drivers": [
     {
       "canonical": "collective.volume",
-      "bank_label": "Retail Banking Services",
+      "bank_label": "Portfolio growth",
       "contribution": {
-        "value": 106.0,
+        "value": 172.0,
         "unit": "$m"
       },
-      "columns": "FY25 -> FY26",
-      "narrative": "Retail Banking Services LIE increased $106 million to $378 million (ev-15). This rise is attributed to portfolio growth and rising arrears in the well-secured home lending portfolio (ev-3, ev-5).",
+      "columns": "stated vs FY25",
+      "narrative": "Corporate collective provisions increased $172 million or 7% to $2,797 million, mainly reflecting portfolio growth (ev-6).",
       "confidence": 85,
       "evidence": [
-        "ev-15",
-        "ev-3",
-        "ev-5"
+        "ev-6"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "collective.asset_quality",
+      "bank_label": "Risk migration / Macro uncertainty",
+      "contribution": {
+        "value": -48.0,
+        "unit": "$m"
+      },
+      "columns": "stated vs FY25",
+      "narrative": "Consumer collective provisions decreased $48 million or 2% to $2,888 million, reflecting rising house prices and more targeted forward-looking adjustments for higher risk customer cohorts (ev-7).",
+      "confidence": 85,
+      "evidence": [
+        "ev-7"
       ],
       "checks_passed": [
         "single_source"
@@ -43,69 +60,47 @@
     },
     {
       "canonical": "individual_provisions",
-      "bank_label": "New Zealand",
+      "bank_label": "Individually assessed provisions",
       "contribution": {
-        "value": 11.0,
+        "value": -25.0,
         "unit": "$m"
       },
-      "columns": "FY25 -> FY26",
-      "narrative": "New Zealand LIE increased $11 million to $66 million (ev-16). The bank attributes this to increased global macroeconomic uncertainty affecting its offshore operations (ev-27).",
-      "confidence": 85,
-      "evidence": [
-        "ev-16",
-        "ev-27"
-      ],
-      "checks_passed": [],
-      "checks_failed": []
-    },
-    {
-      "canonical": "collective.asset_quality",
-      "bank_label": "Business Banking",
-      "contribution": {
-        "value": -45.0,
-        "unit": "$m"
-      },
-      "columns": "FY25 -> FY26",
-      "narrative": "Business Banking LIE decreased $45 million to $310 million (ev-17). This reduction reflects lower collective provision charges as house prices rose, partly offsetting risk migration (ev-10).",
+      "columns": "stated vs FY25",
+      "narrative": "Consumer individually assessed provisions decreased $19 million to $97 million, and corporate individually assessed provisions decreased $6 million to $694 million, driven by write-backs and write-offs (ev-8, ev-9).",
       "confidence": 80,
       "evidence": [
-        "ev-17",
-        "ev-10"
+        "ev-8",
+        "ev-9"
       ],
       "checks_passed": [
-        "single_source"
-      ],
-      "checks_failed": []
-    },
-    {
-      "canonical": "write_backs_recoveries",
-      "bank_label": "Institutional Banking and Markets",
-      "contribution": {
-        "value": -16.0,
-        "unit": "$m"
-      },
-      "columns": "FY25 -> FY26",
-      "narrative": "Institutional Banking and Markets LIE decreased $16 million to $33 million (ev-18). Corporate individually assessed provisions decreased $6 million due to write-backs and write-offs (ev-12).",
-      "confidence": 80,
-      "evidence": [
-        "ev-18",
-        "ev-12"
-      ],
-      "checks_passed": [
-        "single_source"
+        "single_source",
+        "computed_delta_cap_80"
       ],
       "checks_failed": []
     }
   ],
   "residual": {
-    "value": 6.0,
+    "value": -37.0,
     "unit": "$m"
   },
   "notable_items": [],
-  "disagreements": [],
+  "disagreements": [
+    {
+      "topic": "Divisional Bridge Sum",
+      "values": [
+        "Sum of stated provision drivers: $99m (ev-6, ev-7, ev-8, ev-9)",
+        "Stated P&L LIE delta: $62m (ev-16)"
+      ],
+      "preferred": "P&L LIE delta ($62m)",
+      "reason": "definitional",
+      "explanation": "The sum of the specific provision balance changes cited ($172m - $48m - $19m - $6m = $99m) exceeds the reported Loan Impairment Expense movement ($62m). This discrepancy arises because provision balance movements include non-P&L items such as foreign exchange translation differences, direct write-offs against provisions, and recoveries that do not flow through the current period's impairment expense line."
+    }
+  ],
   "attribution_confidence": 85,
   "limitations": [
-    "The sum of quantified divisional drivers ($106m + $11m - $45m - $16m = $56m) leaves a residual of $6m against the total delta of $62m. This residual likely represents the Corporate Centre or other unallocated items not explicitly broken out in the divisional table."
+    "The quantified bridge is based on the net change in provision balances rather than a direct P&L driver walk, leading to a residual difference between the provision balance movements and the P&L impairment expense.",
+    "Specific divisional drivers (Retail +$106m, Business -$45m) are provided in the narrative but were not included in the primary canonical driver table to avoid double-counting with the aggregate provision data.",
+    "Capped at 80: individual_provisions -25 $m. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it."
   ],
   "evidence_records": [
     {
@@ -137,75 +132,6 @@
       "pdf_page": 45,
       "printed_page": null,
       "kind": "text",
-      "quote": "As at 30 June 2026, total provisions as a proportion of credit RWA decreased 2 basis points on the prior half to 1.53%, driven by volume growth in Credit RWA.",
-      "numbers": [
-        {
-          "label": "Total provisions as a % of credit RWA change vs prior half",
-          "value": -2.0,
-          "unit": "bpts",
-          "basis": null
-        },
-        {
-          "label": "Total provisions as a % of credit RWA FY26",
-          "value": 1.53,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-3",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 45,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Gross non-performing exposures were $11,113 million, an increase of $644 million or 6% on the prior half, mainly driven by higher arrears in the well-secured home lending portfolio.",
-      "numbers": [
-        {
-          "label": "Gross non-performing exposures change vs prior half",
-          "value": 644.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Gross non-performing exposures FY26",
-          "value": 11113.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-4",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 45,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Provision coverage for the non-performing portfolio was 13.40%, a decrease of 57 basis points on the prior half.",
-      "numbers": [
-        {
-          "label": "Provision coverage change vs prior half",
-          "value": -57.0,
-          "unit": "bpts",
-          "basis": null
-        },
-        {
-          "label": "Provision coverage FY26",
-          "value": 13.4,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-5",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 45,
-      "printed_page": null,
-      "kind": "text",
       "quote": "Consumer loan impairment expense (LIE) as a percentage of average gross loans and acceptances was 4 basis points, a decrease of 3 basis points on the prior half, driven by lower collective provision charges.",
       "numbers": [
         {
@@ -215,7 +141,7 @@
           "basis": null
         },
         {
-          "label": "Consumer LIE FY26",
+          "label": "Consumer LIE Jun 26",
           "value": 4.0,
           "unit": "bpts",
           "basis": null
@@ -224,7 +150,7 @@
       "provenance": null
     },
     {
-      "id": "ev-6",
+      "id": "ev-3",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 118,
       "printed_page": null,
@@ -247,7 +173,7 @@
       "provenance": "reference_follow:CBA/FY26/profit_announcement p118 -> Note 2.2 Provisions for Impairment and Asset Quality"
     },
     {
-      "id": "ev-7",
+      "id": "ev-4",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 118,
       "printed_page": null,
@@ -270,7 +196,7 @@
       "provenance": "reference_follow:CBA/FY26/profit_announcement p118 -> Note 2.2 Provisions for Impairment and Asset Quality"
     },
     {
-      "id": "ev-8",
+      "id": "ev-5",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 44,
       "printed_page": null,
@@ -278,19 +204,13 @@
       "quote": "Total provisions for impairment losses as at 30 June 2026 were $6,476 million, an increase of $99 million or 2% on the prior year.",
       "numbers": [
         {
-          "label": "Total provisions for impairment losses FY25",
-          "value": 6377.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total provisions for impairment losses FY26",
+          "label": "Total provisions FY26",
           "value": 6476.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total provisions for impairment losses change FY26 vs FY25",
+          "label": "Total provisions change FY26 vs FY25",
           "value": 99.0,
           "unit": "$m",
           "basis": null
@@ -299,19 +219,13 @@
       "provenance": null
     },
     {
-      "id": "ev-9",
+      "id": "ev-6",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 44,
       "printed_page": null,
       "kind": "text",
       "quote": "Corporate collective provisions increased $172 million or 7% to $2,797 million, mainly reflecting portfolio growth, increased geopolitical risk and macroeconomic uncertainty.",
       "numbers": [
-        {
-          "label": "Corporate collective provisions FY25",
-          "value": 2625.0,
-          "unit": "$m",
-          "basis": null
-        },
         {
           "label": "Corporate collective provisions FY26",
           "value": 2797.0,
@@ -328,19 +242,13 @@
       "provenance": null
     },
     {
-      "id": "ev-10",
+      "id": "ev-7",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 44,
       "printed_page": null,
       "kind": "text",
-      "quote": "Consumer collective provisions decreased $48 million or 2% to $2,888 million, reflecting rising house prices over the period and more targeted forward-looking adjustments for higher risk customer cohorts.",
+      "quote": "Consumer collective provisions decreased $48 million or 2% to $2,888 million, reflecting rising house prices over the period and more targeted forward-looking adjustments for higher risk customer cohorts. This was partly offset by higher arrears, rising cost-of-living pressures, increased geopolitical risk, and macroeconomic uncertainty.",
       "numbers": [
-        {
-          "label": "Consumer collective provisions FY25",
-          "value": 2936.0,
-          "unit": "$m",
-          "basis": null
-        },
         {
           "label": "Consumer collective provisions FY26",
           "value": 2888.0,
@@ -357,19 +265,13 @@
       "provenance": null
     },
     {
-      "id": "ev-11",
+      "id": "ev-8",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 44,
       "printed_page": null,
       "kind": "text",
       "quote": "Consumer individually assessed provisions decreased $19 million or 16% to $97 million, reflecting rising house prices over the period, partly offset by higher arrears.",
       "numbers": [
-        {
-          "label": "Consumer individually assessed provisions FY25",
-          "value": 116.0,
-          "unit": "$m",
-          "basis": null
-        },
         {
           "label": "Consumer individually assessed provisions FY26",
           "value": 97.0,
@@ -386,19 +288,13 @@
       "provenance": null
     },
     {
-      "id": "ev-12",
+      "id": "ev-9",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 44,
       "printed_page": null,
       "kind": "text",
       "quote": "Corporate individually assessed provisions decreased $6 million or 1% to $694 million, driven by write-backs and write-offs.",
       "numbers": [
-        {
-          "label": "Corporate individually assessed provisions FY25",
-          "value": 700.0,
-          "unit": "$m",
-          "basis": null
-        },
         {
           "label": "Corporate individually assessed provisions FY26",
           "value": 694.0,
@@ -415,64 +311,91 @@
       "provenance": null
     },
     {
-      "id": "ev-13",
+      "id": "ev-10",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 44,
+      "pdf_page": 34,
       "printed_page": null,
       "kind": "table",
-      "quote": "Provisions for impairment losses | Collective provisions | Individually assessed provisions | Total provisions for impairment losses | 30 Jun 26 $M | 31 Dec 25 $M | 30 Jun 25 $M",
+      "quote": "Loan impairment expense/(benefit) 788 726 9 469 319 47",
       "numbers": [
         {
-          "label": "Collective provisions 30 Jun 26",
-          "value": 5685.0,
+          "label": "Loan impairment expense FY26",
+          "value": 788.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Collective provisions 31 Dec 25",
-          "value": 5542.0,
+          "label": "Loan impairment expense FY25",
+          "value": 726.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Retail Banking Services 378 272 39 146 232 (37)",
+      "numbers": [
+        {
+          "label": "Retail Banking Services Loan impairment expense FY26",
+          "value": 378.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Collective provisions 30 Jun 25",
-          "value": 5561.0,
+          "label": "Retail Banking Services Loan impairment expense FY25",
+          "value": 272.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Business Banking 310 355 (13) 219 91 large",
+      "numbers": [
+        {
+          "label": "Business Banking Loan impairment expense FY26",
+          "value": 310.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Individually assessed provisions 30 Jun 26",
-          "value": 791.0,
+          "label": "Business Banking Loan impairment expense FY25",
+          "value": 355.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Institutional Banking and Markets 33 49 (33) 41 (8) large",
+      "numbers": [
+        {
+          "label": "Institutional Banking and Markets Loan impairment expense FY26",
+          "value": 33.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Individually assessed provisions 31 Dec 25",
-          "value": 793.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Individually assessed provisions 30 Jun 25",
-          "value": 816.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total provisions for impairment losses 30 Jun 26",
-          "value": 6476.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total provisions for impairment losses 31 Dec 25",
-          "value": 6335.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total provisions for impairment losses 30 Jun 25",
-          "value": 6377.0,
+          "label": "Institutional Banking and Markets Loan impairment expense FY25",
+          "value": 49.0,
           "unit": "$m",
           "basis": null
         }
@@ -484,24 +407,18 @@
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 34,
       "printed_page": null,
-      "kind": "text",
-      "quote": "Loan impairment expense was $788 million, an increase of $62 million or 9% on the prior year.",
+      "kind": "table",
+      "quote": "New Zealand 66 55 20 62 4 large",
       "numbers": [
         {
-          "label": "Loan impairment expense FY25",
-          "value": 726.0,
+          "label": "New Zealand Loan impairment expense FY26",
+          "value": 66.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Loan impairment expense FY26",
-          "value": 788.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Loan impairment expense change FY26 vs FY25",
-          "value": 62.0,
+          "label": "New Zealand Loan impairment expense FY25",
+          "value": 55.0,
           "unit": "$m",
           "basis": null
         }
@@ -513,24 +430,18 @@
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 34,
       "printed_page": null,
-      "kind": "text",
-      "quote": "An increase in Retail Banking Services of $106 million to an expense of $378 million",
+      "kind": "table",
+      "quote": "Corporate Centre and Other 1 (5) large 1 – n/a",
       "numbers": [
         {
-          "label": "Retail Banking Services Loan impairment expense FY25",
-          "value": 272.0,
+          "label": "Corporate Centre and Other Loan impairment expense FY26",
+          "value": 1.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Retail Banking Services Loan impairment expense FY26",
-          "value": 378.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Retail Banking Services Loan impairment expense change FY26 vs FY25",
-          "value": 106.0,
+          "label": "Corporate Centre and Other Loan impairment expense FY25",
+          "value": -5.0,
           "unit": "$m",
           "basis": null
         }
@@ -543,23 +454,17 @@
       "pdf_page": 34,
       "printed_page": null,
       "kind": "text",
-      "quote": "An increase in New Zealand of $11 million to an expense of $66 million",
+      "quote": "Loan impairment expense was $788 million, an increase of $62 million or 9% on the prior year.",
       "numbers": [
         {
-          "label": "New Zealand Loan impairment expense FY25",
-          "value": 55.0,
+          "label": "Loan impairment expense delta FY26 vs FY25",
+          "value": 62.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "New Zealand Loan impairment expense FY26",
-          "value": 66.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "New Zealand Loan impairment expense change FY26 vs FY25",
-          "value": 11.0,
+          "label": "Loan impairment expense level FY26",
+          "value": 788.0,
           "unit": "$m",
           "basis": null
         }
@@ -572,23 +477,17 @@
       "pdf_page": 34,
       "printed_page": null,
       "kind": "text",
-      "quote": "A decrease in Business Banking of $45 million to an expense of $310 million",
+      "quote": "An increase in Retail Banking Services of $106 million to an expense of $378 million",
       "numbers": [
         {
-          "label": "Business Banking Loan impairment expense FY25",
-          "value": 355.0,
+          "label": "Retail Banking Services Loan impairment expense delta FY26 vs FY25",
+          "value": 106.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Business Banking Loan impairment expense FY26",
-          "value": 310.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Business Banking Loan impairment expense change FY26 vs FY25",
-          "value": -45.0,
+          "label": "Retail Banking Services Loan impairment expense level FY26",
+          "value": 378.0,
           "unit": "$m",
           "basis": null
         }
@@ -601,23 +500,17 @@
       "pdf_page": 34,
       "printed_page": null,
       "kind": "text",
-      "quote": "A decrease in Institutional Banking and Markets of $16 million to an expense of $33 million",
+      "quote": "A decrease in Business Banking of $45 million to an expense of $310 million",
       "numbers": [
         {
-          "label": "Institutional Banking and Markets Loan impairment expense FY25",
-          "value": 49.0,
+          "label": "Business Banking Loan impairment expense delta FY26 vs FY25",
+          "value": -45.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Institutional Banking and Markets Loan impairment expense FY26",
-          "value": 33.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Institutional Banking and Markets Loan impairment expense change FY26 vs FY25",
-          "value": -16.0,
+          "label": "Business Banking Loan impairment expense level FY26",
+          "value": 310.0,
           "unit": "$m",
           "basis": null
         }
@@ -633,20 +526,14 @@
       "quote": "Loan impairment expense as a percentage of average gross loans and acceptances (GLAA) increased 1 basis point to 8 basis points.",
       "numbers": [
         {
-          "label": "Loan impairment expense % of avg GLAA FY25",
-          "value": 7.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Loan impairment expense % of avg GLAA FY26",
-          "value": 8.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Loan impairment expense % of avg GLAA change FY26 vs FY25",
+          "label": "Loan impairment expense ratio change FY26 vs FY25",
           "value": 1.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Loan impairment expense ratio FY26",
+          "value": 8.0,
           "unit": "bps",
           "basis": null
         }
@@ -655,122 +542,6 @@
     },
     {
       "id": "ev-20",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Loan impairment expense was $469 million, an increase of $150 million or 47% on the prior half.",
-      "numbers": [
-        {
-          "label": "Loan impairment expense H1 FY26",
-          "value": 469.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Loan impairment expense H2 FY25",
-          "value": 319.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Loan impairment expense change H1 FY26 vs H2 FY25",
-          "value": 150.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-21",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "An increase in Business Banking of $128 million to an expense of $219 million",
-      "numbers": [
-        {
-          "label": "Business Banking Loan impairment expense H2 FY25",
-          "value": 91.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Business Banking Loan impairment expense H1 FY26",
-          "value": 219.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Business Banking Loan impairment expense change H1 FY26 vs H2 FY25",
-          "value": 128.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-22",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "An increase in New Zealand of $58 million to an expense of $62 million",
-      "numbers": [
-        {
-          "label": "New Zealand Loan impairment expense H2 FY25",
-          "value": 4.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "New Zealand Loan impairment expense H1 FY26",
-          "value": 62.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "New Zealand Loan impairment expense change H1 FY26 vs H2 FY25",
-          "value": 58.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-23",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 34,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "An increase in Institutional Banking and Markets of $49 million to an expense of $41 million",
-      "numbers": [
-        {
-          "label": "Institutional Banking and Markets Loan impairment expense H2 FY25",
-          "value": -8.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Institutional Banking and Markets Loan impairment expense H1 FY26",
-          "value": 41.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Institutional Banking and Markets Loan impairment expense change H1 FY26 vs H2 FY25",
-          "value": 49.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-24",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 69,
       "printed_page": 69,
@@ -780,70 +551,70 @@
       "provenance": null
     },
     {
-      "id": "ev-25",
+      "id": "ev-21",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 69,
       "printed_page": 69,
       "kind": "table",
-      "quote": "Loan loss rate by business unit1,2 bpts FY26 FY25 RBS 7 4 BB 4 20 IB&M 6 9 ASB 9 11 Group 3 6",
+      "quote": "Loan loss rate by business unit1,2 bpts FY26 FY25 RBS 7 4 Consumer BB 4 20 IB&M 6 9 ASB 9 5 Group 5 7",
       "numbers": [
         {
-          "label": "Loan loss rate RBS FY26",
+          "label": "RBS loan loss rate FY26",
           "value": 7.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Loan loss rate RBS FY25",
+          "label": "RBS loan loss rate FY25",
           "value": 4.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Loan loss rate BB FY26",
+          "label": "BB loan loss rate FY26",
           "value": 4.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Loan loss rate BB FY25",
+          "label": "BB loan loss rate FY25",
           "value": 20.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Loan loss rate IB&M FY26",
+          "label": "IB&M loan loss rate FY26",
           "value": 6.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Loan loss rate IB&M FY25",
+          "label": "IB&M loan loss rate FY25",
           "value": 9.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Loan loss rate ASB FY26",
+          "label": "ASB loan loss rate FY26",
           "value": 9.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Loan loss rate ASB FY25",
-          "value": 11.0,
+          "label": "ASB loan loss rate FY25",
+          "value": 5.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Loan loss rate Group FY26",
-          "value": 3.0,
+          "label": "Group loan loss rate FY26",
+          "value": 5.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Loan loss rate Group FY25",
-          "value": 6.0,
+          "label": "Group loan loss rate FY25",
+          "value": 7.0,
           "unit": "bps",
           "basis": null
         }
@@ -851,7 +622,7 @@
       "provenance": null
     },
     {
-      "id": "ev-26",
+      "id": "ev-22",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -880,7 +651,94 @@
       "provenance": null
     },
     {
-      "id": "ev-27",
+      "id": "ev-23",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "table",
+      "quote": "Consumer Loan loss rate, bpts1",
+      "numbers": [
+        {
+          "label": "Consumer Loan loss rate FY24",
+          "value": 0.68,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Consumer Loan loss rate FY25",
+          "value": 0.73,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Consumer Loan loss rate FY26",
+          "value": 1.02,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "table",
+      "quote": "Corporate Loan loss rate, bpts1",
+      "numbers": [
+        {
+          "label": "Corporate Loan loss rate FY24",
+          "value": 6.5,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Corporate Loan loss rate FY25",
+          "value": 6.2,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Corporate Loan loss rate FY26",
+          "value": 6.3,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "table",
+      "quote": "Total Loan loss rate, bpts1",
+      "numbers": [
+        {
+          "label": "Total Loan loss rate FY24",
+          "value": 6.1,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Total Loan loss rate FY25",
+          "value": 6.8,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Total Loan loss rate FY26",
+          "value": 6.1,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-26",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -890,7 +748,7 @@
       "provenance": null
     },
     {
-      "id": "ev-28",
+      "id": "ev-27",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -919,81 +777,41 @@
       "provenance": null
     },
     {
+      "id": "ev-28",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "table",
+      "quote": "% of TCE: Credit risk",
+      "numbers": [
+        {
+          "label": "% of TCE Credit risk FY24",
+          "value": 1.11,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "% of TCE Credit risk FY25",
+          "value": 1.01,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "% of TCE Credit risk FY26",
+          "value": 0.97,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
       "id": "ev-29",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 70,
       "printed_page": 70,
       "kind": "table",
-      "quote": "Credit provisions $m Jun 25 Jun 26 Stage 1 1,824 1,883",
-      "numbers": [
-        {
-          "label": "Stage 1 credit provisions FY25",
-          "value": 1824.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Stage 1 credit provisions FY26",
-          "value": 1883.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-30",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 70,
-      "printed_page": 70,
-      "kind": "table",
-      "quote": "Credit provisions $m Jun 25 Jun 26 Stage 2 3,036 3,104",
-      "numbers": [
-        {
-          "label": "Stage 2 credit provisions FY25",
-          "value": 3036.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Stage 2 credit provisions FY26",
-          "value": 3104.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-31",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 70,
-      "printed_page": 70,
-      "kind": "table",
-      "quote": "Credit provisions $m Jun 25 Jun 26 Stage 3 701 698",
-      "numbers": [
-        {
-          "label": "Stage 3 credit provisions FY25",
-          "value": 701.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Stage 3 credit provisions FY26",
-          "value": 698.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-32",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 70,
-      "printed_page": 70,
-      "kind": "table",
-      "quote": "Credit provisions $m Jun 25 Jun 26 Total 6,377 6,476",
+      "quote": "Credit provisions $m Jun 25 Jun 26 Total 1,230,259 1,313,651 6,377 6,476",
       "numbers": [
         {
           "label": "Total credit provisions FY25",
@@ -1011,12 +829,127 @@
       "provenance": null
     },
     {
+      "id": "ev-30",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 70,
+      "printed_page": 70,
+      "kind": "table",
+      "quote": "Stage 1 Credit exposures $m 1,023,199 1,112,083 Credit provisions $m 1,824 1,883",
+      "numbers": [
+        {
+          "label": "Stage 1 credit provisions FY25",
+          "value": 1824.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 1 credit provisions FY26",
+          "value": 1883.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-31",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 70,
+      "printed_page": 70,
+      "kind": "table",
+      "quote": "Stage 2 Credit exposures $m 196,058 190,455 Credit provisions $m 3,036 3,104",
+      "numbers": [
+        {
+          "label": "Stage 2 credit provisions FY25",
+          "value": 3036.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 2 credit provisions FY26",
+          "value": 3104.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-32",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 70,
+      "printed_page": 70,
+      "kind": "table",
+      "quote": "Stage 3 Credit exposures $m 9,148 9,506 Credit provisions $m 701 698",
+      "numbers": [
+        {
+          "label": "Stage 3 credit provisions FY25",
+          "value": 701.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Stage 3 credit provisions FY26",
+          "value": 698.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
       "id": "ev-33",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 70,
+      "printed_page": 70,
+      "kind": "table",
+      "quote": "Individually assessed Stage 3 Credit provisions $m 816 791",
+      "numbers": [
+        {
+          "label": "Individually assessed Stage 3 provisions FY25",
+          "value": 816.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Individually assessed Stage 3 provisions FY26",
+          "value": 791.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-34",
+      "doc_id": "CBA/FY26/results_presentation",
+      "pdf_page": 70,
+      "printed_page": 70,
+      "kind": "table",
+      "quote": "Collectively assessed Stage 3 Credit provisions $m 1,854 1,607",
+      "numbers": [
+        {
+          "label": "Collectively assessed Stage 3 provisions FY25",
+          "value": 1854.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Collectively assessed Stage 3 provisions FY26",
+          "value": 1607.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-35",
       "doc_id": "CBA/FY26/results_presentation",
       "pdf_page": 24,
       "printed_page": 24,
       "kind": "table",
-      "quote": "Loan impairment expense 788 8.5% 47.0%",
+      "quote": "Loan impairment expense",
       "numbers": [
         {
           "label": "Loan impairment expense FY26",
@@ -1025,65 +958,13 @@
           "basis": null
         },
         {
-          "label": "Loan impairment expense FY26 vs FY25",
-          "value": 8.5,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Loan impairment expense 2H26 vs 1H26",
-          "value": 47.0,
-          "unit": "%",
+          "label": "Loan impairment expense FY25",
+          "value": 724.59,
+          "unit": "$m",
           "basis": null
         }
       ],
       "provenance": null
-    },
-    {
-      "id": "ev-34",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 117,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Non-performing exposures – opening balance",
-      "numbers": [
-        {
-          "label": "NPE opening FY25",
-          "value": 9638.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "NPE opening FY26",
-          "value": 11002.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": "reference_follow:CBA/FY26/profit_announcement p118 -> Note 2.2 Provisions for Impairment and Asset Quality"
-    },
-    {
-      "id": "ev-35",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 117,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "New to non-performing status",
-      "numbers": [
-        {
-          "label": "New NPEs FY25",
-          "value": 6024.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "New NPEs FY26",
-          "value": 5751.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": "reference_follow:CBA/FY26/profit_announcement p118 -> Note 2.2 Provisions for Impairment and Asset Quality"
     },
     {
       "id": "ev-36",
@@ -1091,17 +972,41 @@
       "pdf_page": 117,
       "printed_page": null,
       "kind": "table",
-      "quote": "Balances written off",
+      "quote": "Movement in non-performing exposures",
       "numbers": [
         {
-          "label": "Write-offs FY25",
+          "label": "Non-performing exposures – opening balance FY25",
+          "value": 9638.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "New to non-performing status FY25",
+          "value": 6024.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Balances written off FY25",
           "value": -742.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Write-offs FY26",
-          "value": -860.0,
+          "label": "Returned to performing status FY25",
+          "value": -2422.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other changes FY25",
+          "value": -1496.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non-performing exposures – closing balance FY25",
+          "value": 11002.0,
           "unit": "$m",
           "basis": null
         }
@@ -1114,17 +1019,41 @@
       "pdf_page": 117,
       "printed_page": null,
       "kind": "table",
-      "quote": "Returned to performing status",
+      "quote": "Movement in non-performing exposures",
       "numbers": [
         {
-          "label": "Recoveries FY25",
-          "value": -2422.0,
+          "label": "Non-performing exposures – opening balance FY26",
+          "value": 11002.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Recoveries FY26",
+          "label": "New to non-performing status FY26",
+          "value": 5751.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Balances written off FY26",
+          "value": -860.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Returned to performing status FY26",
           "value": -2769.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other changes FY26",
+          "value": -2011.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non-performing exposures – closing balance FY26",
+          "value": 11113.0,
           "unit": "$m",
           "basis": null
         }
@@ -1137,17 +1066,41 @@
       "pdf_page": 117,
       "printed_page": null,
       "kind": "table",
-      "quote": "Other changes ¹",
+      "quote": "Movement in non-performing exposures",
       "numbers": [
         {
-          "label": "Other changes FY25",
-          "value": -1496.0,
+          "label": "Non-performing exposures – opening balance PRIOR HALF",
+          "value": 10469.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Other changes FY26",
-          "value": -2011.0,
+          "label": "New to non-performing status PRIOR HALF",
+          "value": 3981.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Balances written off PRIOR HALF",
+          "value": -445.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Returned to performing status PRIOR HALF",
+          "value": -1815.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other changes PRIOR HALF",
+          "value": -1077.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non-performing exposures – closing balance PRIOR HALF",
+          "value": 11113.0,
           "unit": "$m",
           "basis": null
         }
@@ -1160,17 +1113,41 @@
       "pdf_page": 117,
       "printed_page": null,
       "kind": "table",
-      "quote": "Non-performing exposures – closing balance",
+      "quote": "Movement in non-performing exposures",
       "numbers": [
         {
-          "label": "NPE closing FY25",
+          "label": "Non-performing exposures – opening balance H2 FY26",
           "value": 11002.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "NPE closing FY26",
-          "value": 11113.0,
+          "label": "New to non-performing status H2 FY26",
+          "value": 3576.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Balances written off H2 FY26",
+          "value": -415.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Returned to performing status H2 FY26",
+          "value": -2060.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other changes H2 FY26",
+          "value": -1634.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non-performing exposures – closing balance H2 FY26",
+          "value": 10469.0,
           "unit": "$m",
           "basis": null
         }
@@ -1179,75 +1156,6 @@
     },
     {
       "id": "ev-40",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 117,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Total non-performing exposures",
-      "numbers": [
-        {
-          "label": "Total NPEs 30 Jun 25",
-          "value": 11002.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total NPEs 30 Jun 26",
-          "value": 11113.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": "reference_follow:CBA/FY26/profit_announcement p118 -> Note 2.2 Provisions for Impairment and Asset Quality"
-    },
-    {
-      "id": "ev-41",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 117,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Total well-secured",
-      "numbers": [
-        {
-          "label": "Well-secured NPEs 30 Jun 25",
-          "value": 8696.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Well-secured NPEs 30 Jun 26",
-          "value": 8852.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": "reference_follow:CBA/FY26/profit_announcement p118 -> Note 2.2 Provisions for Impairment and Asset Quality"
-    },
-    {
-      "id": "ev-42",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 117,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Total not well-secured and unsecured",
-      "numbers": [
-        {
-          "label": "Unsecured NPEs 30 Jun 25",
-          "value": 2306.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Unsecured NPEs 30 Jun 26",
-          "value": 2261.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": "reference_follow:CBA/FY26/profit_announcement p118 -> Note 2.2 Provisions for Impairment and Asset Quality"
-    },
-    {
-      "id": "ev-43",
       "doc_id": "CBA/FY26/profit_announcement",
       "pdf_page": 117,
       "printed_page": null,
@@ -1262,10 +1170,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-30T16:28:02+00:00",
-    "seconds": 66.1,
-    "cost_usd": 0.0031,
-    "tokens": "58600 in / 10461 out",
+    "generated": "2026-08-30T18:54:57+00:00",
+    "seconds": 49.7,
+    "cost_usd": 0.0023,
+    "tokens": "43040 in / 8103 out",
     "orchestration": "pipeline",
     "pages_extracted": 16,
     "reference_follow": [

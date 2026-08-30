@@ -56,6 +56,7 @@ from .taxonomy import METRIC_ALIASES, TAXONOMY
 from .validate import (
     _percent_evidenced,
     annotate_walks,
+    cap_drivers_on_failed_walks,
     cap_unreconciled_drivers,
     cap_weakly_cited_claims,
     check_comparison_leak,
@@ -725,12 +726,24 @@ _PUNCTUATION = str.maketrans(
 # different instruments. The relaxation exists to let a quote OMIT a marker, so
 # it must remove markers and nothing else.
 #
-# Three conditions, all required: a LETTER ends the label before the run; the
-# run is one or two digits (repeated, because a row carries two markers); and a
-# VALUE follows it immediately — three or more characters of digits and
-# thousands separators, optionally bracketed. "decreased 1 basis point", "31
-# December 2025" and "Tier 1 and Tier 2" all fail the third condition.
-_MARKER_RE = re.compile(r"(?<=[A-Za-z])((?:\s+\d{1,2})+)(?=\s+\(?[\d,]{3,})")
+# Four conditions, all required: a LETTER ends the label before the run; the
+# run sits on the LABEL'S OWN LINE; the run is one or two digits (repeated,
+# because a row carries two markers); and a VALUE follows it — three or more
+# characters of digits and thousands separators, optionally bracketed.
+# "decreased 1 basis point", "31 December 2025" and "Tier 1 and Tier 2" all
+# fail the last condition.
+#
+# The same-line condition is the fourth, and it exists because a PDF text layer
+# puts every column of a table on its own line. ANZ's 1H26 results announcement
+# p59 reads "Credit and Capital Markets \n \n80 \n102 \n114"; under a run that
+# crossed newlines the 80 was a "marker", and the quote "Credit and Capital
+# Markets 102 114" was accepted as verbatim while dropping the current period
+# and presenting 102 as the first column. Measured over all 30 corpus documents
+# and 3,546 pages, the newline-crossing run removed 1,670 tokens; holding the
+# run to the label's own line removes 779 and takes the whole column class with
+# it. A footnote marker the reader sees between a label and its value is on the
+# label's line by construction.
+_MARKER_RE = re.compile(r"(?<=[A-Za-z])((?:[ \t]+\d{1,2})+)(?=\s+\(?[\d,]{3,})")
 # A superscript digit is a marker wherever it stands: no page prints a value in
 # superscript. "Restructuring and notable items ¹" is the whole row label.
 _SUPERSCRIPT_MARKER_RE = re.compile(r"[¹²³⁰-⁹]+")
@@ -957,7 +970,17 @@ class Research:
 
     def _read_annotations(self, doc: Document, page: int, case_desc: str, unit: str,
                           bar_labels: tuple[str, ...]) -> list[dict]:
-        """The chart's callout layer, minted and returned. Never raises."""
+        """The chart's callout layer, minted and returned. Never raises.
+
+        The cost ceiling is read AGAIN here. One read_chart costs two vision
+        calls and counts as one tool call, so the loop's per-call check binds
+        the pair and neither call inside it: a $0.50 ceiling admitted two $0.60
+        calls and ended at $1.20. The callout layer is the optional half of the
+        pair — the walk is what the caller asked for — so it is the half that
+        gives way.
+        """
+        if self.llm.usage.cost_usd >= self.combo.cost_ceiling_usd:
+            return []
         callouts = extract_walk_annotations(
             self.llm, self.combo.vision, doc, page, case_desc, self.next_id,
             unit=unit, bar_labels=bar_labels,
@@ -1404,7 +1427,7 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
 
     # Ratio-scale corrector first: it restates a movement written in basis
     # points, and settle_identity_scale then reads the corrected endpoints.
-    settle_ratio_scale(attribution)
+    settle_ratio_scale(attribution, metric_cfg["unit"])
     settle_identity_scale(attribution, metric_cfg["method"])
     corroborate(attribution, cross_source)
     # The same evidence-ladder cap the open-loop pipeline applies, from the
@@ -1471,6 +1494,9 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
         peripheral = []
     peripheral += honest_partial
     validation["failed"] += output_failed
+    # A claim-specific cap, so it runs whether or not the walk failure was
+    # graded load-bearing for the answer as a whole (review round 3).
+    cap_drivers_on_failed_walks(attribution, walks)
     if fatal or peripheral:
         attribution.limitations.extend(f"Failed check: {f}" for f in fatal + peripheral)
     if fatal:

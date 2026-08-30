@@ -103,8 +103,12 @@ def _attribution(unit="$m", movement=(5132.0, 5445.0, 313.0), drivers=(), record
         # A bank spells the money unit out as often as it glues it.
         ("a decrease of $1 million on the prior comparative period.", [(1.0, "$m")]),
         ("increased by 3% to $1,002.9 billion", [(3.0, "%"), (1002.9, "$bn")]),
-        # A word that merely starts with a unit letter is not a unit.
-        ("The margin fell 3 basis points", [(3.0, "")]),
+        # A word that merely starts with a unit letter is not a unit. Round 3
+        # then taught the pool the SPELLED-OUT ratio units, so this number now
+        # carries the unit the sentence names rather than none: without it the
+        # conversion table read a unitless 3, and any unit the model attached
+        # to it was accepted.
+        ("The margin fell 3 basis points", [(3.0, "bps")]),
         ("12 months at 31 December 2025", [(12.0, ""), (31.0, "")]),
     ],
 )
@@ -271,7 +275,9 @@ def test_the_ratio_corrector_restates_endpoints_the_evidence_prints_as_percent()
     attribution = _attribution(
         unit="ppt", movement=(1160.0, 1140.0, -20.0), metric="roe", records=[record],
     )
-    note = settle_ratio_scale(attribution)
+    # Round 3: the gate is the METRIC's unit, which the taxonomy fixes, and
+    # never the movement's unit, which the model writes.
+    note = settle_ratio_scale(attribution, "ppt")
     assert note is not None
     assert (attribution.movement.from_value, attribution.movement.to_value) == (11.6, 11.4)
     assert attribution.movement.delta == -0.2
@@ -285,7 +291,7 @@ def test_the_ratio_corrector_stays_silent_without_percent_evidence():
     attribution = _attribution(
         unit="ppt", movement=(11.6, 11.4, -0.2), metric="roe", records=[record]
     )
-    assert settle_ratio_scale(attribution) is None
+    assert settle_ratio_scale(attribution, "ppt") is None
     assert attribution.movement.from_value == 11.6
 
 

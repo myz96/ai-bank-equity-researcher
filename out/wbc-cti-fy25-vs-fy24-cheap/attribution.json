@@ -11,7 +11,7 @@
     "unit": "ppt"
   },
   "movement_source": "row 'Expense to income ratio, ex Notable Items', column FY24 (12 months ended Sep 2024) -> column FY25 (12 months ended Sep 2025)",
-  "headline": "Westpac's cost-to-income ratio (ex Notable Items) widened by 270 bps to 53.0% in FY25 from 50.3% in FY24. This deterioration was driven by operating expenses growing faster than operating income. Total operating expenses rose 9% to $11,916 million, while total operating income grew only 3% to $22,464 million.",
+  "headline": "Westpac's cost-to-income ratio (ex Notable Items) widened by 270 basis points (2.7 ppt) from 50.3% in FY24 to 53.0% in FY25. This deterioration was driven by operating expenses growing faster than operating income. Total operating expenses increased 9% to $11,916 million, while net operating income grew more modestly from $21,763 million to $22,464 million. The widening reflects expense growth outpacing revenue growth across the group.",
   "headline_evidence": [
     "ev-1",
     "ev-2",
@@ -28,7 +28,7 @@
         "unit": "ppt"
       },
       "columns": "stated vs FY24",
-      "narrative": "Operating expenses increased 9% ($11,916m vs $10,944m), contributing positively to the ratio widening as costs outpaced income growth.",
+      "narrative": "Operating expenses rose 9% ($10,944m to $11,916m), contributing positively to the ratio increase as costs expanded faster than income.",
       "confidence": 80,
       "evidence": [
         "ev-2",
@@ -49,7 +49,7 @@
         "unit": "ppt"
       },
       "columns": "stated vs FY24",
-      "narrative": "Operating income grew 3% ($22,464m vs $21,763m). Slower income growth relative to expenses exerted a negative pressure on the ratio.",
+      "narrative": "Net operating income grew ~3% ($21,763m to $22,464m). Slower income growth relative to expenses exerted a negative pressure on the ratio.",
       "confidence": 80,
       "evidence": [
         "ev-5",
@@ -68,19 +68,19 @@
   "notable_items": [],
   "disagreements": [
     {
-      "topic": "Headline Ratio Definition",
+      "topic": "Cost to Income Ratio Definition and Value",
       "values": [
-        "53.0% (Results Announcement ev-1)",
-        "42.4% (Investor Discussion Pack ev-13)"
+        "53.0% (ev-1, Results Announcement)",
+        "42.4% (ev-12, Investor Discussion Pack)"
       ],
       "preferred": "53.0%",
       "reason": "definitional",
-      "explanation": "The Results Announcement explicitly states 'The expense to income ratio excluding Notable Items was 53.0%'. The IDP table at ev-13 lists 42.4% but lacks the explicit 'ex Notable Items' label in the row header shown in the extract, and the magnitude difference suggests it may be a statutory or different basis measure. Per source hierarchy, the Results Announcement text is preferred."
+      "explanation": "The Results Announcement (ev-1) explicitly states 'The expense to income ratio excluding Notable Items was 53.0%'. The Investor Discussion Pack (ev-12) lists a different value of 42.4%. Given the source hierarchy (Results Announcement > Investor Discussion Pack) and the explicit textual confirmation in ev-1 matching the movement calculation (53.0 - 50.3 = 2.7), the 53.0% figure is preferred for the headline movement."
     }
   ],
   "attribution_confidence": 80,
   "limitations": [
-    "The residual of 1.8 ppt indicates that the simple JAWS decomposition (based on aggregate growth rates) does not fully account for the 2.7 ppt movement, likely due to timing differences in revenue/expense recognition or base effects not captured by simple period-over-period growth rates. No walk charts were provided to decompose this further."
+    "The residual of 1.8 ppt suggests that simple JAWS decomposition using aggregate levels does not fully account for the 2.7 ppt movement, likely due to base effects or non-linearities in the ratio calculation not captured by simple percentage growth rates. No walk charts were provided to decompose this further."
   ],
   "evidence_records": [
     {
@@ -115,12 +115,6 @@
       "quote": "Total operating expenses increased 9% to $11,916 million.",
       "numbers": [
         {
-          "label": "total operating expenses delta FY25 vs FY24",
-          "value": 972.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
           "label": "total operating expenses level FY25",
           "value": 11916.0,
           "unit": "$m",
@@ -135,7 +129,7 @@
       "pdf_page": 18,
       "printed_page": null,
       "kind": "table",
-      "quote": "Operating expenses ... Total operating expenses (11,916) (10,944)",
+      "quote": "Total operating expenses\n(11,916)\n(10,944)",
       "numbers": [
         {
           "label": "total operating expenses FY25",
@@ -157,7 +151,7 @@
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 33,
       "printed_page": null,
-      "kind": "table",
+      "kind": "text",
       "quote": "Excluding Notable Items, $m",
       "numbers": [],
       "provenance": null
@@ -171,7 +165,37 @@
       "quote": "Net operating income 2025 8,424 6,110 3,808 2,814 1,308 22,464",
       "numbers": [
         {
-          "label": "Total Operating Income FY25",
+          "label": "Net operating income FY25 Consumer",
+          "value": 8424.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Net operating income FY25 Business & Wealth",
+          "value": 6110.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Net operating income FY25 Institutional",
+          "value": 3808.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Net operating income FY25 New Zealand",
+          "value": 2814.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Net operating income FY25 Group Businesses",
+          "value": 1308.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Net operating income FY25 Group",
           "value": 22464.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -188,8 +212,38 @@
       "quote": "Operating expenses 2025 (4,932) (2,727) (1,647) (1,342) (1,268) (11,916)",
       "numbers": [
         {
-          "label": "Total Operating Expense FY25",
-          "value": 11916.0,
+          "label": "Operating expenses FY25 Consumer",
+          "value": -4932.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses FY25 Business & Wealth",
+          "value": -2727.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses FY25 Institutional",
+          "value": -1647.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses FY25 New Zealand",
+          "value": -1342.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses FY25 Group Businesses",
+          "value": -1268.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses FY25 Group",
+          "value": -11916.0,
           "unit": "$m",
           "basis": "ex_notables"
         }
@@ -205,7 +259,37 @@
       "quote": "Net operating income 2024 8,160 6,136 3,505 2,645 1,317 21,763",
       "numbers": [
         {
-          "label": "Total Operating Income FY24",
+          "label": "Net operating income FY24 Consumer",
+          "value": 8160.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Net operating income FY24 Business & Wealth",
+          "value": 6136.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Net operating income FY24 Institutional",
+          "value": 3505.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Net operating income FY24 New Zealand",
+          "value": 2645.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Net operating income FY24 Group Businesses",
+          "value": 1317.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Net operating income FY24 Group",
           "value": 21763.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -222,8 +306,38 @@
       "quote": "Operating expenses 2024 (4,787) (2,626) (1,465) (1,262) (804) (10,944)",
       "numbers": [
         {
-          "label": "Total Operating Expense FY24",
-          "value": 10944.0,
+          "label": "Operating expenses FY24 Consumer",
+          "value": -4787.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses FY24 Business & Wealth",
+          "value": -2626.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses FY24 Institutional",
+          "value": -1465.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses FY24 New Zealand",
+          "value": -1262.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses FY24 Group Businesses",
+          "value": -804.0,
+          "unit": "$m",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Operating expenses FY24 Group",
+          "value": -10944.0,
           "unit": "$m",
           "basis": "ex_notables"
         }
@@ -246,22 +360,22 @@
       "pdf_page": 101,
       "printed_page": 101,
       "kind": "table",
-      "quote": "Expense to income (%) 2H24 1H25 2H25 Change on 1H25 44.0 43.5 45.7 216 bps",
+      "quote": "Expense to income (%) 44.0 43.5 45.7 216 bps",
       "numbers": [
         {
-          "label": "cost to income ratio cash 2H24",
+          "label": "cost to income ratio ex_notables 2H24",
           "value": 44.0,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "cost to income ratio cash 1H25",
+          "label": "cost to income ratio ex_notables 1H25",
           "value": 43.5,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "cost to income ratio cash 2H25",
+          "label": "cost to income ratio ex_notables 2H25",
           "value": 45.7,
           "unit": "%",
           "basis": "ex_notables"
@@ -275,22 +389,22 @@
       "pdf_page": 101,
       "printed_page": 101,
       "kind": "table",
-      "quote": "Pre-provision profit ($m) 2H24 1H25 2H25 Change on 1H25 1,741 1,693 1,690 (0%)",
+      "quote": "Pre-provision profit ($m) 1,741 1,693 1,690 (0%)",
       "numbers": [
         {
-          "label": "pre-provision profit cash 2H24",
+          "label": "pre-provision profit ex_notables 2H24",
           "value": 1741.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "pre-provision profit cash 1H25",
+          "label": "pre-provision profit ex_notables 1H25",
           "value": 1693.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "pre-provision profit cash 2H25",
+          "label": "pre-provision profit ex_notables 2H25",
           "value": 1690.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -303,52 +417,19 @@
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 103,
       "printed_page": 103,
-      "kind": "text",
-      "quote": "Key financial metrics ex Notable Items",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-13",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 103,
-      "printed_page": 103,
       "kind": "table",
-      "quote": "Expense to income ratio (%) 2H24 43.2 1H25 44.2 2H25 42.4 Change on 1H25 (183bps)",
+      "quote": "Expense to income ratio (%)",
       "numbers": [
         {
-          "label": "Expense to income ratio FY24",
+          "label": "cost to income ratio FY24",
           "value": 43.2,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "Expense to income ratio FY25",
+          "label": "cost to income ratio FY25",
           "value": 42.4,
           "unit": "%",
-          "basis": "ex_notables"
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-14",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 103,
-      "printed_page": 103,
-      "kind": "table",
-      "quote": "Pre-provision profit ($m) 2H24 993 1H25 1,024 2H25 1,137 Change on 1H25 11%",
-      "numbers": [
-        {
-          "label": "Pre-provision profit FY24",
-          "value": 993.0,
-          "unit": "$m",
-          "basis": "ex_notables"
-        },
-        {
-          "label": "Pre-provision profit FY25",
-          "value": 1137.0,
-          "unit": "$m",
           "basis": "ex_notables"
         }
       ],
@@ -360,10 +441,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
-    "generated": "2026-08-30T16:36:35+00:00",
-    "seconds": 27.4,
-    "cost_usd": 0.0013,
-    "tokens": "32285 in / 2354 out",
+    "generated": "2026-08-30T19:04:05+00:00",
+    "seconds": 28.5,
+    "cost_usd": 0.0014,
+    "tokens": "32872 in / 2963 out",
     "orchestration": "pipeline",
     "pages_extracted": 15,
     "reference_follow": [

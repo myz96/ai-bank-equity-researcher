@@ -26,6 +26,7 @@ from .taxonomy import METRIC_ALIASES, TAXONOMY
 from .validate import (
     MONTH_NUMBERS,
     annotate_walks,
+    cap_drivers_on_failed_walks,
     cap_unreconciled_drivers,
     cap_weakly_cited_claims,
     check_comparison_leak,
@@ -406,7 +407,7 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         # into it — or a dollar movement that never met its denominator —
         # states the split 100x too large. It runs second, so it reads the
         # endpoints the ratio corrector has already settled.
-        ratio_note = settle_ratio_scale(attribution)
+        ratio_note = settle_ratio_scale(attribution, metric_cfg["unit"])
         scale_note = settle_identity_scale(attribution, metric_cfg["method"])
         output_failures = (
             check_movement(attribution.movement)[1]
@@ -583,6 +584,9 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
         peripheral = []
     peripheral += honest_partial
     validation["failed"] += output_failed
+    # A claim-specific cap, so it runs whether or not the walk failure was
+    # graded load-bearing for the answer as a whole (review round 3).
+    cap_drivers_on_failed_walks(attribution, walks)
     if fatal or peripheral:
         attribution.limitations.extend(f"Failed check: {f}" for f in fatal + peripheral)
     if unread_pages:

@@ -325,3 +325,230 @@ nothing fired.
 - The ROE identity split itself. The scale is now correct and the checks catch
   the residual error, but no code derives the split.
 - Nothing was committed, per the brief.
+
+## Round 3 (2026-08-31, Claude reviewer C + Codex reviewer) — the convergence round
+
+Reviewers: one fresh Claude subagent and one Codex session, both read-only over
+`src/` at commit d84a2f7. Reviewer C filed 6 findings with executed repros and
+a clean cap-stack trace; Codex filed 5. The two lists overlap heavily, and the
+merged list is 6 items. Where they disagreed, C's design won.
+
+The finding count converges: 18 -> 15 -> 6. Every round-3 item refines a
+round-1 or round-2 fix; none opens new ground.
+
+Result: 6 fixed, 0 refuted, 1 partly deferred (item 3, step 2). No tolerance
+and no cap was loosened. Three items got a red test first, using the reviewers'
+repros verbatim.
+
+### Per item
+
+| # | Finding | Verdict | Evidence |
+|---|---|---|---|
+| C1 + C5 / Codex 2 | HIGH — `quote_prints` verifies a NumberFact's VALUE and never its UNIT, and `_FAMILY_WORDS["ppt"]` holds the token `"pt"` | fixed | One change, because C1's repro needs C5's suffix table. Pre-fix, both repros re-executed: `quote_prints("Net interest margin decreased 5 basis points to 2.03 per cent.", 5, "$m")` -> `True`, so `_mint_record` kept `{"value": 5, "unit": "$m"}` and a `+5 $m` driver stayed at 95; `quote_prints("NPAT was $150m", 150, "bps")` -> `True`. `_quote_numbers("Movements in bpts Credit Risk (34)")` -> `[(34.0, "")]` and `quote_states(34.0, "ppt")` -> `True`, which is 100x wrong, while the correct `0.34 ppt` was refused. Three parts: the number pool now reads the SPELLED-OUT ratio units (`basis point(s)`, `bpt(s)`, `percentage point(s)`, `per cent`); `quote_prints` accepts a number carrying a glued unit only through `convert_unit`, and keeps the bare-number branch untouched; `_FAMILY_WORDS` matches on WORD BOUNDARIES with `"pt"` and `"cent"` removed. Family-word census over all 2,034 shipped quotes: ppt/% hits 795 -> 732, bps 415 -> 373, cents 37 -> 9, `$m` unchanged; of the 35 quotes that name `bps` and print no `%`, 35 passed the ppt family test before and 2 do now. |
+| C2 | HIGH — `settle_ratio_scale` reverses the percent-to-bps lift | fixed | C's repro re-executed: a CET1 movement the model labelled `"%"` was lifted `12.20 -> 1220` by the bps lift, and the corrector — keyed on the model's own label — divided it straight back to `12.2 -> 12.3, delta 0.1`. `check_movement` and `check_ratio_level` both PASSED, so the artifact shipped `+0.1 %` against a gold of `+10 bps` under two limitations that contradicted each other. The gate is now the METRIC's unit, which the taxonomy fixes; both call sites already held `metric_cfg["unit"]`. After: the corrector stays silent and `check_ratio_level` FIRES `movement_level_not_ratio_sized (1230 %)`, so the answer is capped at 40 with its drivers at 80 instead of shipping a silent 100x error. |
+| C6 / Codex 1 | MED — `cap_unreconciled_drivers` covers two fatal names out of eight | fixed | Three parts, on one rule: a check that CAN name its offender caps the offender, and a check that cannot condemns the table. `check_comparison_leak` and `check_component_columns` both print the offending driver, so each now caps that driver at `CLAIM_CITATION_CAP` in place and records `comparison_leak_cap_80` / `component_column_cap_80`. `movement_arithmetic` and `drivers_unit_mismatch` join `WHOLE_TABLE_FAILURES`: a movement whose own three numbers disagree is the movement the whole table was written against, and a contribution dropped from the sum for its unit means the bridge that closed was never closed. `walk_sum` is deliberately NOT in the list — see below. |
+| C4 / Codex 5 | MED-HIGH — an off-unit RESIDUAL is named as a mismatch and then added to the sum | fixed | C's repro re-executed: `movement 5132 -> 5445 $m`, `nii +310 $m`, `residual +3 bps` returned `drivers_reconcile` PASS beside its own `drivers_unit_mismatch` FAIL — three basis points closed a dollar bridge. The residual now joins the total only when its unit is empty or equal, which is the rule B7 already set for the contributions. `sign_flip_hint` carried the same unit-blind arithmetic, so an off-unit residual closed the gap it exists to measure; it now applies the same guard. |
+| C3 / Codex 3 | MED-HIGH — the narrowed `strip_markers` still deletes real table data | fixed (step 1); step 2 deferred | C's repro re-executed on ANZ 1H26 results announcement p59: `match_quote("Credit and Capital Markets 102 114", page)` -> `(True, markers_stripped)`, dropping the current-period value 80 and presenting 102 as the first column. The run of digits must now sit on the LABEL'S OWN LINE (`[ \t]+` in place of `\s+` inside the run; the lookahead keeps `\s+`, so the value may wrap). Corpus census over all 30 documents and 3,546 pages reproduces C's numbers exactly: **1,670 tokens -> 779**, and the newline-crossing class (891 tokens) goes to zero. The round-1 footnote repro still passes and the ANZ quote is now rejected. Replayed over every shipped quote in `out/`: 0 quotes that matched before fail now, and 0 that failed match now. |
+| Codex 4 | MED — the cost ceiling is not enforced between a chart's two vision calls | fixed | Codex's repro re-executed: a $0.50 ceiling admitted two $0.60 vision calls and ended at $1.20, because the loop's per-call check binds the PAIR and neither call inside it. `Research._read_annotations` now re-reads the ceiling and returns no callouts when the run is over it. After: the annotation read is skipped and the run ends at $0.60. The walk read is what the caller asked for, so the callout layer is the half that gives way. |
+| Codex 2 (second half) | HIGH — the open-loop extractor accepts NumberFacts without validating them against their quote | fixed | `extract_text_evidence` now keeps only the facts its quote prints, from the same `quote_prints` the agent's `_mint_record` uses, so a fact means the same thing whichever shell assembled it. Measured, not rewritten (see the replay below). |
+
+### The walk_sum decision, and why it is not a whole-table failure
+
+The brief asked for reasoning rather than a blanket rule. A failed `walk_sum`
+says the bars a vision call read off a slide do not sum to that slide's own
+endpoints. That indicts the CHART READ. It does not say the driver table is
+wrong, because a driver may be grounded in a table or in prose the chart never
+touched.
+
+The saved set settles it, and it settles it BOTH ways:
+
+- `wbc-cet1-fy25-vs-fy24-cheap` — all five drivers cite `ev-1`, the walk record
+  whose bars sum to 1225 against that chart's own end of 1253. Every one of
+  them shipped at 85. A whole-table cap would be right here.
+- `cba-nim-fy26-vs-fy25-agentic-cheap` — one driver of seven (`liquids -3 bps`)
+  cites the broken walk `ev-2`; the other six cite text records. A whole-table
+  cap would lower six claims the chart never touched.
+
+So the rule is the one `check_comparison_leak` already follows: a check that
+can NAME its offender caps the offender. A walk carries `record_id`, and a
+driver names the records it cites, so the drivers resting on a
+self-contradicting chart read are exactly nameable. New
+`validate.cap_drivers_on_failed_walks`, called by both shells. It runs whether
+or not the failure was graded load-bearing for the ANSWER: that grading asks
+whether the walk carries the whole attribution, this asks whether it carries
+THIS claim.
+
+`walk_extraction_error` stays out of every cap. An unreadable chart is a
+coverage gap, not a contradiction; `anz-nim-1h26-vs-1h25-cheap` carries one and
+its seven drivers are already at 85 under the no-primary-walk rule, which is
+the rule that fits.
+
+### Two changes the round found while verifying its own fixes
+
+1. **The citation tolerance was relaxed by every unit conversion.**
+   `CITATION_TOL["ppt"]` is 0.1, which is TEN BASIS POINTS, and the slack was
+   taken from the CLAIM's unit alone. Once C1's fix taught the pool to read
+   "increased 10 basis points", that sentence grounded a component claim of
+   `+0.08 ppt` AND one of `+0.02 ppt` at once — the whole movement fitted
+   inside the slack. Read the other way, a `$2.5bn` quote carried $500m of
+   slack against a `$m` claim. New `_converted_prints` takes the TIGHTER of the
+   two units' own slack, both read in the claim's unit. This was reachable
+   before this round through the glued-`bps` path; the round did not create it,
+   it made it visible.
+2. **A bracketed negative lost its glued unit.** A bank writes
+   `Net interest margin (%) 2.05 2.08 (3)bpts`, and the closing bracket stood
+   between the number and its unit, so 73 of the 2,034 shipped quotes put a
+   UNITLESS number in the pool where the page had named its unit. The pattern
+   now steps over the bracket.
+
+### Verification
+
+`uv run python -m pytest tests/ -q` — **402 passed** (369 before; +33). Three
+items were shown RED first by executing the reviewers' repros against the
+round-2 implementation: `quote_prints` accepts the dollar fact off a
+basis-point sentence, `settle_ratio_scale` divides the lift back out, and the
+off-unit residual closes the bridge.
+
+`ruff check src/ tests/` is byte-identical to its 29-finding baseline. The
+prompt-leakage scan over every `*PROMPT*` string finds no mention of gold,
+checklists or the scorecard.
+
+#### Replay over saved artifacts — the deterministic layer
+
+All 65 saved `out/*/attribution.json` were replayed under the round-2 tree (a
+worktree at 8d5569d) and the round-3 tree, and the two blobs diffed.
+
+`check_movement`, `check_ratio_level`, `check_drivers_reconcile`,
+`sign_flip_hint`, `settle_ratio_scale`, `cap_weakly_cited_claims` and
+`cap_unreconciled_drivers` return the IDENTICAL verdict on all 65. The round
+changes no shipped verdict. Two things move, and both move one way:
+
+- **Grounding: 2 changes, both tightenings, 0 loosenings.**
+  `wbc-roe-fy25-vs-fy24-cheap` and `wbc-roe-fy25-vs-fy24-agentic-cheap` both
+  claimed `earnings_effect -0.26 ppt` citing `ROTE 10.97% 11.21% (24 bps)`.
+  The old slack read 24 bps as 0.24 ppt against a 0.1 ppt tolerance — TEN basis
+  points — so a ROTE change certified an ROE earnings COMPONENT. Both are now
+  ungrounded. (Both drivers were already at 80, so no confidence moves.)
+- **`cap_drivers_on_failed_walks` fires on exactly the two artifacts the
+  reasoning above predicts**: `cba-nim-fy26-vs-fy25-agentic-cheap` caps
+  `liquids -3 bps` and leaves the six prose-grounded drivers alone;
+  `wbc-cet1-fy25-vs-fy24-cheap` caps all five.
+
+C6's three named artifacts, before -> after:
+
+| artifact | failure | before | after |
+|---|---|---|---|
+| `anz-nim-1h26-vs-1h25-cheap` | `walk_extraction_error` | attr 40, 7 drivers at 85 | unchanged — an unreadable chart is a coverage gap, and the no-primary-walk rule already put those drivers at 85 |
+| `cba-nim-fy26-vs-fy25-agentic-cheap` | `walk_sum` | attr 85, drivers at 85/90 | `liquids -3 bps` 85 -> 80; the six drivers citing text records keep 85-90 |
+| `wbc-cet1-fy25-vs-fy24-cheap` | `walk_sum` | attr 40, 5 drivers at 85 | all five -> 80; every one of them cites `ev-1`, the walk that misses its own endpoint by 28 bps |
+
+The `comparison_leak` artifact C named, `cba-cet1-fy21-vs-fy20-cheap`, has its
+drivers at 80 already, so the new in-place cap is reachable rather than
+shipped there. It DOES fire in the fresh suite run below, beside a new
+`component_column_cap_80` on `cba-cash_earnings-1h26-vs-1h25-cheap`.
+
+Marker relaxation, replayed over every shipped quote against its own page: **0
+quotes that matched before fail now, and 0 that failed match now.** No saved
+record carries the relaxation at all, so the narrowing costs nothing live.
+
+#### The extractor NumberFact gate — measured, then narrowed
+
+`quote_prints` applied at full strength to `extract_text_evidence` fails **660
+of 3,552** shipped non-chart facts (18.6%): 411 sit under a quote that prints
+NO number, 247 name a magnitude the quote does not print, and 2 conflict on
+unit. Every sample inspected is genuinely derived or invented — "Loan
+impairment expense was $554 million, a decrease of $1,964 million" carrying a
+fact of 2,518; "Staff expenses increased by 3% to $3,211 million" carrying 96.
+
+Applied at full strength it also destroyed a case. The first suite run
+(`20260830-1758-cheap-dev.md`) lost WBC-roe-FY25 outright: all six of its
+records quoted a row LABEL ("ROTE", "Average ordinary equity ($m)") with the
+values in `numbers`, every value was dropped, and the author reported "the
+movement could not be established". Brier 0.156.
+
+So the gate is narrowed by one condition, and the condition is principled: a
+quote that prints NO number says nothing about the numbers beside it, and
+absence of evidence is not a conflict. A quote that DOES print numbers is the
+model quoting the row, and a fact that row does not carry is contradicted by
+its own evidence. That drops **249 of 3,552 (7.0%)** and keeps every
+unit-conflict and every derived figure in the samples above. The agent shell
+keeps the strict gate, because there the quote is verified against the page
+first and every drop is handed back to the model to re-quote.
+
+#### Cheap dev suite — `evals/results/20260830-1906-cheap-dev.md`, verbatim
+
+- scored_claims: 42
+- unscored_claims: 48
+- cases_scored: 8
+- cases: 25
+- brier: 0.066
+- confidently_wrong_rate: 0.0
+- 70-84: 10 claims, 70% correct
+- 85-94: 32 claims, 100% correct
+
+Movements: 23 OK, 2 WRONG (CBA-cet1-1H26, WBC-roe-FY25).
+
+Three runs were needed, and all three are reported:
+
+| run | gate | brier | confidently wrong | movements |
+|---|---|---|---|---|
+| `20260830-1758` | strict extractor gate | 0.156 | 0.0 | 23 OK, 2 WRONG |
+| `20260830-1833` | narrowed gate | 0.077 | 0.0 | 24 OK, 1 WRONG, 1 crash |
+| `20260830-1906` | narrowed gate | 0.066 | 0.0 | 23 OK, 2 WRONG |
+
+Against round 2 (`20260830-1638`, brier 0.050) and the frozen baseline
+(`baseline-20260829-devonly.md`, brier 0.058) the round is worse on brier and
+level on the invariant that matters:
+
+- **`confidently_wrong_rate` is 0.0 in all three runs.**
+- **Every incorrect claim in all three runs sits at exactly 80**, the evidence
+  ladder's ceiling. The 85-94 band is 100% correct in every run.
+
+The brier moves with the COUNT of wrong claims, and that count is model
+variance in the values, not a cap misfiring. The wrong claims are: CBA 1H26
+`operating_expenses -348` against a gold of -518 (in every run, including
+round 2); WBC FY25 `operating_expenses -672` against -972; NAB FY25
+`credit_impairment_charge +0` against -105. All three are the
+underlying/notable expense split and the impairment sign — known open items,
+not this round's code. Round 2's run held two such claims and this one holds
+three.
+
+#### The two movement misses, and one crash
+
+- `CBA-cet1-1H26` — the known flake, now 4 of 8 across the recorded history
+  (round-2's log has it at 3 of 5). It was OK in the 1833 run and WRONG in the
+  1906 run on identical code. It ships at 40 with `no_quantified_drivers`, so
+  it is an honest partial, not a confident error.
+- `WBC-roe-FY25` — WRONG in both round-3 runs and OK in round 2. The 1906 run
+  read the RIGHT row (`ROTE ex Notable Items`, printed "10.97% 11.21%") and
+  took the columns in the printed order, submitting `10.97 -> 10.89` against a
+  gold of `11.21 -> 10.97`. `drivers_reconcile` failed and the answer shipped
+  at 40. This is a column-order read on a row that prints FY25 first, and the
+  checks caught it.
+- `WBC-impairment-FY25` crashed in the 1833 run only: the author's reply left
+  `confidence` off driver 0, and `DriverClaim.confidence` has no default, so
+  `Attribution(**reply)` raised. The suite scores a crashed case as a failure,
+  which is honest, but a required int with no default is a brittle contract
+  against a model reply. Filed below as a finding for the next round; it did
+  not recur in the 1906 run.
+
+### Left undone
+
+- **`strip_markers` step 2**, per C's own bound. The remaining 779 tokens are
+  digits inside a LABEL, and the proposed fix is to read the page's own
+  numbered footnote block and strip only an index the page defines. Measured
+  composition of the 779: **47% are the digits 1-3**, which is exactly the set
+  a footnote block defines, so the rule would still delete "stage 2", "Peer 1"
+  and "Tier 1" — the risky half. It would protect the year columns ("Mar 26",
+  "25", "22", 127 tokens). That is not enough return for a page-shape parser,
+  so it stays the documented residual limitation.
+- **`DriverClaim.confidence` has no default**, so one missing field in an
+  author reply crashes the whole case (seen once in the 1833 run). Either the
+  author reply is normalised before construction, or the field takes an
+  explicitly-low default. Needs its own decision.
+- Item 17's content-hash cache key, still deferred from rounds 1 and 2.
+- `fetch_more` cannot reach a page retrieval ranked but the page budget
+  dropped.
+- The ROE identity split itself, and the underlying/notable expense framing,
+  which supplies every wrong claim in every run of this round.
+- Nothing was committed, per the brief.
