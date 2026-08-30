@@ -35,6 +35,24 @@ Read this alongside map.md. Deadline: hard 2026-09-03 (Thu).
   planned sealed holdout BANK (identity only in sealed README). Sealed dir must NEVER be
   referenced in repo/prompts/subagent briefs.
 
+## UPDATE 2026-08-31 ~05:30 — overnight review-cycle run (Sun→Mon)
+
+- FOUR review rounds complete (ticket 34): 47 findings fixed total, zero
+  refuted, all reports archived in .scratch/equity-research-agent/reviews/.
+  Convergence 18 → 15 → 7 → 5 → 4; round 4 fixed offline (430 tests).
+- Head-to-head (post-round-3 code, cw 0.0 everywhere): agentic-cheap 24/25
+  brier 0.047 (best); agentic/opus 18/18-completed brier 0.073; cheap
+  open-loop 24/25 brier 0.066. WBC cti (agentic-cheap) is the one real
+  miss; cet1-1H26 is the known flake.
+- BLOCKER: OpenRouter ACCOUNT credits exhausted (210.21/210 used; our key
+  only 35.65/100 — the account balance binds). 402 on every model. Owed on
+  top-up: 7 opus dev cases + merged rescore, all 3 question suites, one
+  post-round-4 verification suite.
+- Codex never failed on quota; the early hangs were a background-TTY issue,
+  fixed with a pty launcher (scratchpad scripts).
+- Machine slept twice killing harness tasks; work now runs detached
+  (nohup + caffeinate + DONE sentinels), which survived every kill wave.
+
 ## UPDATE 2026-08-29 ~23:30 — overnight autonomous run
 
 Everything below in "In-flight" COMPLETED. Current state:
