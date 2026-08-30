@@ -1,96 +1,87 @@
 # NAB — cet1 — FY25 vs FY24
 
-**Movement (cash basis):** 1235bps → 1170bps (-65bps) | **Attribution confidence:** 65/100
+**Movement (cash basis):** 1235bps → 1170bps (-65bps) | **Attribution confidence:** 40/100
 
-*Read from: row 'CET1 capital ratio', column 30 Sep 24 column -> column 30 Sep 25 column*
+*Read from: row 'CET1 capital ratio row', column 30 Sep 24 column -> column 30 Sep 25 column*
 
-NAB's APRA Level 2 Group CET1 ratio fell 65 bps to 11.70% in FY25 from 12.35% in FY24. The decline was driven by lending volume growth increasing credit RWA, increased long-term investment in the business, and a $0.6 billion share buyback (-15 bps). Total RWA rose 6.4% to $440.6bn, with credit RWA up 6.9% to $375.0bn. The bank does not publish a full-year CET1 walk chart; only half-on-half (Mar 25→Sep 25) bridges are provided, which show cash earnings adding 82 bps, dividends deducting 61 bps, credit RWA reducing 45 bps, other RWA adding 1 bp, and other items reducing 8 bps over the September half.
+NAB's APRA Level 2 Group CET1 ratio fell 65 bps to 11.70% in FY25 from 12.35% in FY24. The decline was driven by a $0.6 billion share buyback (-15 bps), lending volume growth increasing credit RWA by 6.9%, a new $2.3 billion capital floor adjustment, and increased long-term investment spend of $1.8 billion. The pro forma CET1 ratio of 11.81% reflects the post-period sale of NAB's remaining 20% stake in MLC Life. No full-year CET1 walk chart is published; the bank discloses only a half-on-half walk (Mar–Sep 2025) showing cash earnings +82 bps, dividend -61 bps, credit RWA -45 bps, other RWA +1 bps, and other items -8 bps.
 
-> [ev-4] NAB/FY25/results_book, printed p28: "CET1 11.70 12.01 12.35 (65 bps) (31 bps)"
-> [ev-5] NAB/FY25/results_book, printed p4: "Group CET1 ratio of 11.70%, down (65 bps) from September 2024. Key drivers of the reduction include lending volume growth, increased long term investment in the business and the impact of $0.6 billion of shares bought back in FY25 (-15 bps)"
-> [ev-6] NAB/FY25/results_book, printed p28: "Capital ratios CET1 11.70 12.01 12.35 (65 bps) (31 bps)"
-> [ev-19] NAB/FY25/results_book, PDF p15: "Level 2 Group capital CET1 capital ratio 11.70% 12.35% (65 bps) 11.70% 12.01% (31 bps)"
+> [ev-8] NAB/FY25/results_book, printed p28: "Capital ratios CET1 11.70 12.01 12.35 (65 bps) (31 bps)"
+> [ev-10] NAB/FY25/results_book, printed p4: "Group CET1 ratio of 11.70%, down (65 bps) from September 2024. Key drivers of the reduction include lending volume growth, increased long term investment in the business and the impact of $0.6 billion of shares bought back in FY25 (-15 bps)"
+> [ev-26] NAB/FY25/results_book, printed p4: "Proforma Group CET1 ratio of 11.81% reflecting the sale of the Group's remaining 20% stake in MLC Life"
 
 ## Drivers
 
 | Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
 |---|---|---|---|---|---|
-| `capital_returns` | share buyback | -15 bps | 85 | 1 (single_source) | ev-5, ev-18 |
-| *residual (unexplained)* | — | -50 bps | — | — |
+| `capital_returns` | Share buy-back | -15 bps | 80 | 1 (single_source) | ev-10, ev-21 |
+| *residual (unexplained)* | — | -20 bps | — | — |
 
-### capital_returns — "share buyback"
-*-15 bps | confidence 85/100*
+### capital_returns — "Share buy-back"
+*-15 bps | confidence 80/100*
 
-The Group completed its $3.0 billion on-market ordinary share buyback on 12 March 2025, resulting in the buy-back and cancellation of 87.8 million ordinary shares, including $0.6 billion in FY25. The bank explicitly quantifies this as -15 bps impact on the CET1 ratio.
-> [ev-5] NAB/FY25/results_book, printed p4: "Group CET1 ratio of 11.70%, down (65 bps) from September 2024. Key drivers of the reduction include lending volume growth, increased long term investment in the business and the impact of $0.6 billion of shares bought back in FY25 (-15 bps)"
-> [ev-18] NAB/FY25/results_book, PDF p29: "On 12 March 2025, the Group completed the on-market buyback that was announced on 15 August 2023 and subsequently increased on 2 May 2024 to $3 billion. Through this buy-back, the Group has bought back and cancelled 87,824,707 ordinary shares, including 16,572,039 ordinary shares ($0.6 billion or 0.15% of CET1 capital) in the September 2025 full year."
+The Group completed its $3.0 billion on-market ordinary share buy-back on 12 March 2025, buying back and cancelling 87,824,707 shares including 16,572,039 shares ($0.6 billion or 0.15% of CET1 capital) in the September 2025 full year, contributing -15 bps to the CET1 ratio.
+> [ev-10] NAB/FY25/results_book, printed p4: "Group CET1 ratio of 11.70%, down (65 bps) from September 2024. Key drivers of the reduction include lending volume growth, increased long term investment in the business and the impact of $0.6 billion of shares bought back in FY25 (-15 bps)"
+> [ev-21] NAB/FY25/results_book, PDF p29: "Through this buy-back, the Group has bought back and cancelled 87,824,707 ordinary shares, including 16,572,039 ordinary shares ($0.6 billion or 0.15% of CET1 capital) in the September 2025 full year"
 
-### rwa.credit — "lending volume growth"
+### rwa.credit — "Lending volume growth"
 *unquantified | confidence 60/100*
 
-Credit RWA rose 6.9% ($350.9bn to $375.0bn). The bank states 'lending volume growth' as a key driver of the CET1 reduction. Over the half year, volume growth contributed -27 bps to the CET1 ratio. For the full year, the bank does not disclose a specific bpts figure for volume growth alone.
-> [ev-9] NAB/FY25/results_book, printed p28: "an increase in credit RWA decreasing the CET1 capital ratio by 45 basis points, driven by: – volume growth contributing to a decrease of 27 basis points, – asset quality deterioration contributing to a decrease of 5 basis points, and – model and methodology changes contributing to a decrease of 13 basis points."
-> [ev-12] NAB/FY25/results_book, printed p28: "Risk-weighted assets Credit risk 374,986 360,486 350,891 6.9 4.0"
+Credit RWA rose $24.1 billion or 6.9% to $375.0 billion (from $350.9 billion), driven by business lending growth (balances rose 9% in FY25) and an RWA overlay of $4.8 billion related to off-balance sheet exposures (majority in RBNZ regulated subsidiary $2.3 billion and corporate A-IRB $2.1 billion). The bank states volume growth as a key driver of the CET1 decline but does not quantify the full-year bps impact separately from asset quality and model changes.
+> [ev-17] NAB/FY25/results_book, printed p66: "Total risk-weighted assets 440,557 426,445 413,946"
+> [ev-20] NAB/FY25/results_book, printed p6: "The Group CET1 ratio was 11.70% at September 2025 compared with our target of greater than 11.25% and declined 65 bps over the year with key drivers including volume growth, increased long term investment in the business, and completion of the on-market share buy-back"
+> [ev-24] NAB/FY25/results_book, printed p28: "an increase in credit RWA decreasing the CET1 capital ratio by 45 basis points, driven by: – volume growth contributing to a decrease of 27 basis points, – asset quality deterioration contributing to a decrease of 5 basis points, and – model and methodology changes contributing to a decrease of 13 basis points"
 
-### other_unmapped — "increased long term investment"
+### regulatory_model_changes — "Capital floor adjustment"
 *unquantified | confidence 60/100*
 
-The bank cites 'increased long term investment in the business' as a key driver of the CET1 reduction. Investment spend rose 9.0% to $1.785bn, with capitalised software and fixed assets up 9.8%. This would reduce CET1 through higher deductions (capitalised expenses, software) but the bank does not quantify the bpts impact.
-> [ev-5] NAB/FY25/results_book, printed p4: "Group CET1 ratio of 11.70%, down (65 bps) from September 2024. Key drivers of the reduction include lending volume growth, increased long term investment in the business and the impact of $0.6 billion of shares bought back in FY25 (-15 bps)"
-> [ev-21] NAB/FY25/investor_presentation, printed p29: "Higher CRWA mainly driven by business lending growth and RWA overlays relating to off balance sheet exposures"
+The APRA capital floor (APS 110) was introduced, adding $2,284 million to RWA at Sep 25 versus zero at Sep 24. In H2, the floor adjustment contributed -3 bps to the CET1 ratio. The floor applies to IRB ADIs requiring aggregate RWA not to fall below 72.5% of standardised RWA. This is a new regulatory item absent in FY24 comparatives.
+> [ev-16] NAB/FY25/results_book, printed p66: "Floor adjustment(3) 2,284 1,256 -"
+> [ev-25] NAB/FY25/results_book, printed p28: "a decrease in other (non-credit) RWA increasing the CET1 capital ratio by 1 basis point, driven mainly by: – operational risk contributing to an increase of 1 basis point, – traded market risk contributing to an increase of 1 basis point, – interest rate risk in the banking book contributing to an increase of 2 basis points, and – the capital floor adjustment contributing to a decrease of 3 basis points"
 
-### earnings_generation — "cash earnings"
+### dividend_net_drp — "Dividend"
 *unquantified | confidence 60/100*
 
-Cash earnings were broadly stable over the year. Over the half year, cash earnings added 82 bps to CET1. For the full year, the bank does not disclose a specific bpts figure for earnings generation on CET1.
-> [ev-8] NAB/FY25/results_book, printed p28: "cash earnings less the 2025 interim dividend resulting in an increase of 21 basis points."
+Total FY25 dividend was 170 cents per share (final 85 cps + interim 85 cps), up 1 cp from FY24's 169 cps. In H2, the interim dividend reduced CET1 by 61 bps. Full-year dividend impact on CET1 is not separately quantified by the bank; it is subsumed within the net earnings contribution. Cash earnings were broadly stable at $6,759 million (down 0.2% from FY24's $6,788 million).
+> [ev-9] NAB/FY25/results_book, printed p28: "Movements in CET1 capital ratio (%) 12.01 0.82 (0.61) (0.45) 0.01 (0.08) 11.70 Mar 25 Cash earnings Dividend Credit RWA Other RWA Other Sep 25"
+> [ev-22] NAB/FY25/results_book, printed p28: "cash earnings less the 2025 interim dividend resulting in an increase of 21 basis points"
 
-### dividend_net_drp — "dividend"
+### earnings_generation — "Cash earnings"
 *unquantified | confidence 60/100*
 
-The final dividend was 85 cents per share, 100% franked. Over the half year, dividends deducted 61 bps from CET1. For the full year, the bank does not disclose a specific bpts figure for dividends on CET1.
-> [ev-8] NAB/FY25/results_book, printed p28: "cash earnings less the 2025 interim dividend resulting in an increase of 21 basis points."
+Cash earnings of $6,759 million were broadly stable versus FY24 ($6,788 million), down 0.2%. CET1 capital grew $388 million to $51,527 million from $51,139 million, reflecting retained earnings net of dividends and buybacks. In H2, cash earnings less interim dividend added 21 bps (82 bps gross earnings minus 61 bps dividend). Full-year net earnings contribution is not separately disclosed.
+> [ev-9] NAB/FY25/results_book, printed p28: "Movements in CET1 capital ratio (%) 12.01 0.82 (0.61) (0.45) 0.01 (0.08) 11.70 Mar 25 Cash earnings Dividend Credit RWA Other RWA Other Sep 25"
+> [ev-11] NAB/FY25/results_book, PDF p67: "CET1 capital 51,527 51,236 51,139"
+> [ev-22] NAB/FY25/results_book, printed p28: "cash earnings less the 2025 interim dividend resulting in an increase of 21 basis points"
 
-### rwa.operational — "operational risk RWA"
+### other_unmapped — "Increased long-term investment"
 *unquantified | confidence 60/100*
 
-Operational risk RWA rose 4.2% ($36.1bn to $37.6bn). Over the half year, op risk contributed +1 bp to CET1. For the full year, the bank does not disclose a specific bpts figure.
-> [ev-14] NAB/FY25/results_book, printed p28: "Operational risk 37,610 37,985 36,102 4.2 (1.0)"
+Investment spend increased to $1.8 billion in FY25 from $1.6 billion in FY24, supporting technology modernisation, customer advocacy, and frontline banker hiring (including ~270 new proprietary home lenders). The bank identifies this as a key driver of the CET1 decline alongside volume growth and the buyback, but does not quantify a separate bps impact.
+> [ev-20] NAB/FY25/results_book, printed p6: "The Group CET1 ratio was 11.70% at September 2025 compared with our target of greater than 11.25% and declined 65 bps over the year with key drivers including volume growth, increased long term investment in the business, and completion of the on-market share buy-back"
 
-### rwa.irrbb — "IRRBB RWA"
-*unquantified | confidence 60/100*
-
-IRRBB RWA fell 10.2% ($15.5bn to $13.9bn), contributing positively to CET1. Over the half year, IRRBB contributed +2 bps to CET1. For the full year, the bank does not disclose a specific bpts figure.
-> [ev-15] NAB/FY25/results_book, printed p28: "Interest rate risk in the banking book 13,945 14,624 15,526 (10.2) (4.6)"
-
-### capital_floor — "capital floor adjustment"
-*unquantified | confidence 60/100*
-
-The capital floor adjustment rose to $2.28bn from nil ($1.26bn at Mar 25). Over the half year, the capital floor contributed -3 bps to CET1. For the full year, the bank does not disclose a specific bpts figure.
-> [ev-16] NAB/FY25/results_book, printed p28: "Floor adjustment 2,284 1,256 - large 81.8"
-
-## Notable items
-- Pro forma CET1 ratio of 11.81% reflects sale of 20% MLC Life stake for $497m completed 31 Oct 2025
-- APRA AT1 phase-out from Jan 2027 led to CET1 operating target increase of 25bps to >11.25%
-- RWA overlay of $4.8bn related to off-balance sheet exposures introduced in Mar 2025
+## Source disagreements
+- **Internationally comparable CET1 ratio vs APRA Level 2 CET1 ratio** (definitional): 17.1% vs 11.7%
+  Preferred: 11.7%. The internationally comparable CET1 ratio excludes the APRA capital floor adjustment and uses different RWA treatment (no APRA multipliers, no Basel capital floor). The task specifies the APRA Level 2 Group CET1 ratio as the headline measure.
 
 ## Limitations
-- No full-year CET1 walk chart is published by NAB. Only half-on-half (Mar 25→Sep 25) bridges are available, which cannot be used as primary drivers for the FY24→FY25 comparison per task rules.
-- The bank states three key drivers qualitatively (lending volume growth, increased long-term investment, buyback) but only quantifies the buyback at -15 bps. All other drivers are unquantified for the full year.
-- The residual of -50 bps represents the net effect of all unquantified drivers including earnings generation, dividends, credit RWA volume/asset quality/models, other RWA movements, FX translation, non-cash earnings, and capitalised software.
-- The pro forma CET1 ratio of 11.81% reflects the sale of MLC Life stake completed on 31 October 2025, which is outside the FY25 period.
-- No published walk covers FY25 vs FY24: the bank's walk for this metric describes another comparison, so the driver split is not walk-verified for this comparison. Confidence is capped at 85.
+- No full-year CET1 walk chart is published by NAB; only a half-on-half walk (Mar 2025 to Sep 2025) is provided, so driver contributions cannot be read from a primary comparison chart.
+- The bank quantifies the buyback impact at -15 bps but does not disclose bps impacts for lending volume growth, long-term investment, or the capital floor for the full year.
+- The residual of -20 bps represents unquantified drivers including FX translation, non-cash earnings, capitalised software, reserves, and other miscellaneous items that the bank does not break out for the full year.
+- The internationally comparable CET1 ratio (17.1% at Sep 25 vs 18.1% at Sep 24, -100 bps) differs materially from the APRA Level 2 ratio due to exclusion of the Basel capital floor and different RWA treatment.
+- Failed check: drivers_reconcile (drivers -15.0 + residual -20.0 != delta -65.0, tol 1.0)
+- Capped at 80: capital_returns -15 bps. drivers_reconcile failed, so the parts and the whole disagree. That proves one of these claims is wrong without saying which, so none of them may claim near-certainty.
 
 ## Provenance
 - combo: agentic-cheap
 - models: agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash
 - documents: NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)
-- generated: 2026-08-30T14:35:50+00:00
-- seconds: 207.2
-- cost_usd: 0.0807
-- tokens: 2019205 in / 10628 out
+- generated: 2026-08-30T20:09:48+00:00
+- seconds: 237.0
+- cost_usd: 0.098
+- tokens: 1686877 in / 13759 out
 - orchestration: agent
-- tool_calls: 59
-- pages_read: 13
-- charts_read: 3
+- tool_calls: 55
+- pages_read: 14
+- charts_read: 1
 - budget_exhausted: no

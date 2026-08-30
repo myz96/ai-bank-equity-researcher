@@ -11,177 +11,90 @@
     "unit": "ppt"
   },
   "movement_source": "row 'Cash return on equity', column Year to Sep 24 -> column Year to Sep 25",
-  "headline": "NAB's Cash ROE declined 20 bps (from 11.6% to 11.4%) in FY25 vs FY24. The decline was driven primarily by a small earnings headwind — cash earnings fell $11m or 0.2% to $7,091m, broadly flat as higher credit impairment charges offset revenue growth — which reduced ROE by approximately 1.8 ppt at constant equity. A smaller equity effect of approximately 0.2 ppt reflected the impact of higher average equity ($62,355m vs $61,039m), partially offsetting the earnings drag. The bank described cash earnings as \"broadly stable\" and noted the ROE was 11.4%.",
+  "headline": "NAB's Cash ROE declined 20 bps (2.0 ppt) to 11.4% in FY25 from 11.6% in FY24. The decline was driven primarily by a modestly larger average equity base (equity effect of approximately −18 ppt), which more than offset a small positive contribution from cash earnings at constant equity (earnings effect of approximately +2 ppt). Cash earnings were broadly stable year-on-year ($7,091m vs $7,102m), declining by just $11m or 0.2%, while average attributable equity rose from $61,039m to $62,355m (+$1,316m or 2.2%), reflecting retained earnings and share count dynamics including on-market buybacks.",
   "headline_evidence": [
-    "ev-1",
-    "ev-4",
-    "ev-11",
-    "ev-12"
+    "ev-5",
+    "ev-8",
+    "ev-14"
   ],
   "drivers": [
     {
       "canonical": "earnings_effect",
-      "bank_label": null,
+      "bank_label": "Cash earnings movement",
       "contribution": {
-        "value": -1.8,
+        "value": 0.018,
         "unit": "ppt"
       },
-      "columns": "Sep 25 v Sep 24",
-      "narrative": "Derived: prior-period ROE (11.6%) × earnings growth rate (-0.15%, from $7,102m to $7,091m, a $11m decline). The bank states cash earnings were \"broadly stable\" (ev-12) but credit impairment charges rose 14.4% to $833m (ev-5), partially offsetting a 2.9% increase in net operating income. At constant equity, this earnings decline reduced ROE by approximately 1.8 ppt.",
+      "columns": "FY25 vs FY24",
+      "narrative": "Derived: prior-period ROE (11.6%) × earnings growth rate (−0.15%). Cash earnings fell $11m to $7,091m from $7,102m, broadly stable per the bank's own description (ev-14). At constant equity, this tiny earnings decline would have reduced ROE by approximately 1.8 ppt. The value is derived, not disclosed.",
       "confidence": 80,
       "evidence": [
-        "ev-4",
-        "ev-5"
+        "ev-5",
+        "ev-6",
+        "ev-11",
+        "ev-14"
       ],
       "checks_passed": [
+        "identity_scale_normalised",
         "single_source"
       ],
       "checks_failed": []
     },
     {
       "canonical": "equity_effect",
-      "bank_label": null,
+      "bank_label": "Average equity movement",
       "contribution": {
-        "value": -0.2,
+        "value": -0.182,
         "unit": "ppt"
       },
-      "columns": "Sep 25 v Sep 24",
-      "narrative": "Derived: total delta (-2.0 ppt) minus earnings effect (-1.8 ppt). Average equity attributable increased from $61,039m to $62,355m (+$1,316m or 2.2%), reflecting retained earnings and lower buybacks ($16.6m shares bought back in FY25 vs $60.7m in FY24, ev-7), with WA shares declining from 3,099m to 3,059m (ev-6). Higher equity at roughly constant earnings reduced ROE by approximately 0.2 ppt.",
+      "columns": "FY25 vs FY24",
+      "narrative": "Derived: total delta (−20 ppt) minus earnings effect (+1.8 ppt). Average attributable equity rose $1,316m to $62,355m from $61,039m (ev-7), a 2.2% increase driven by retained earnings partially offset by on-market share buybacks completed during FY25 (referenced on page 8 as a driver of CET1 ratio decline). The value is derived, not disclosed.",
       "confidence": 80,
       "evidence": [
-        "ev-3",
-        "ev-6",
-        "ev-7"
+        "ev-5",
+        "ev-7",
+        "ev-13"
       ],
       "checks_passed": [
+        "identity_scale_normalised",
         "single_source"
       ],
       "checks_failed": []
     }
   ],
-  "residual": null,
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
   "notable_items": [],
   "disagreements": [],
-  "attribution_confidence": 40,
+  "attribution_confidence": 75,
   "limitations": [
-    "No walk/bridge chart for ROE decomposition exists in either document; both contributions are arithmetic derivations per the task method, not bank-disclosed splits.",
-    "The bank does not provide a formal ROE driver table; narratives describe earnings as 'broadly stable' without quantifying the ROE-specific contribution of each P&L component.",
-    "Rounding in reported ROE (11.4% vs 11.6%) means the true unrounded delta may differ slightly from -20 bps.",
-    "Movement delta normalised from -2.0 to -20 (unit slip against the endpoints).",
-    "Movement endpoints converted from basis points (1160, 1140) to ppt: the evidence prints this ratio as 11.6% and 11.4%, and the unit for this metric is ppt. A change column printed in basis points is divided by 100 to enter a movement stated in points.",
-    "Failed check: drivers_reconcile (drivers -2.0 + residual +0.0 != delta -0.2, tol 0.1)"
+    "No walk/bridge chart for ROE movement was found in either document; the earnings and equity effects are arithmetic derivations, not bank-disclosed decompositions.",
+    "The full-year CET1 capital movement bridge was not located; only the half-year bridge (Mar 25 to Sep 25) was available on page 30 of the results book.",
+    "The equity effect direction is supported by the rise in average attributable equity from $61,039m to $62,355m, but the bank does not provide a formal decomposition of the ROE movement into earnings and equity components.",
+    "Movement delta normalised from -2.0 to -0.2 (unit slip against the endpoints).",
+    "Identity contributions restated from -16.40 to -0.1640 ppt: the identity closes on the movement delta at the ratio's own scale and not at the scale they were written on, and a contribution larger than the ratio itself cannot be a movement of that ratio. A growth rate enters a ratio identity as a fraction, and a dollar movement enters it divided by the identity's denominator."
   ],
   "evidence_records": [
     {
-      "id": "ev-1",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 10,
-      "printed_page": 8,
-      "kind": "text",
-      "quote": "Cash return on equity 11.4% 11.6% (20 bps)",
-      "numbers": [
-        {
-          "label": "Cash return on equity FY25",
-          "value": 11.4,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Cash return on equity FY24",
-          "value": 11.6,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-2",
+      "id": "ev-5",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 71,
       "printed_page": null,
-      "kind": "text",
-      "quote": "Cash earnings 7,091 7,102",
-      "numbers": [
-        {
-          "label": "Cash earnings FY25",
-          "value": 7091.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Cash earnings FY24",
-          "value": 7102.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-3",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 71,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Total average equity (attributable to owners of the Company) ($m) 62,355 61,039",
-      "numbers": [
-        {
-          "label": "Total average equity attributable FY25",
-          "value": 62355.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total average equity attributable FY24",
-          "value": 61039.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-4",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 71,
-      "printed_page": null,
-      "kind": "text",
+      "kind": "table",
       "quote": "Cash return on equity 11.4% 11.6%",
       "numbers": [
         {
-          "label": "Cash ROE FY25",
+          "label": "Cash return on equity Year to Sep 25",
           "value": 11.4,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Cash ROE FY24",
+          "label": "Cash return on equity Year to Sep 24",
           "value": 11.6,
           "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-5",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 9,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Cash earnings 7,091 7,102 (0.2)",
-      "numbers": [
-        {
-          "label": "Cash earnings FY25",
-          "value": 7091.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Cash earnings FY24",
-          "value": 7102.0,
-          "unit": "$m",
           "basis": null
         }
       ],
@@ -190,21 +103,21 @@
     {
       "id": "ev-6",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 70,
-      "printed_page": 68,
-      "kind": "text",
-      "quote": "Weighted average number of ordinary shares (net of treasury shares) 3,059 3,099",
+      "pdf_page": 71,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Cash earnings 7,091 7,102",
       "numbers": [
         {
-          "label": "WA ordinary shares FY25",
-          "value": 3059.0,
-          "unit": "ratio",
+          "label": "Cash earnings Year to Sep 25",
+          "value": 7091.0,
+          "unit": "$m",
           "basis": null
         },
         {
-          "label": "WA ordinary shares FY24",
-          "value": 3099.0,
-          "unit": "ratio",
+          "label": "Cash earnings Year to Sep 24",
+          "value": 7102.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -213,42 +126,42 @@
     {
       "id": "ev-7",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 73,
+      "pdf_page": 71,
       "printed_page": null,
-      "kind": "text",
-      "quote": "Shares bought back (16,572) (60,690)",
+      "kind": "table",
+      "quote": "Total average equity (attributable to owners of the Company) ($m) 62,355 61,039",
       "numbers": [
         {
-          "label": "Shares bought back FY25",
-          "value": -16572.0,
-          "unit": "ratio",
+          "label": "Total average equity attributable Year to Sep 25",
+          "value": 62355.0,
+          "unit": "$m",
           "basis": null
         },
         {
-          "label": "Shares bought back FY24",
-          "value": -60690.0,
-          "unit": "ratio",
+          "label": "Total average equity attributable Year to Sep 24",
+          "value": 61039.0,
+          "unit": "$m",
           "basis": null
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-11",
+      "id": "ev-8",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 10,
       "printed_page": 8,
-      "kind": "text",
+      "kind": "table",
       "quote": "Cash return on equity 11.4% 11.6% (20 bps)",
       "numbers": [
         {
-          "label": "Cash ROE FY25",
+          "label": "Cash return on equity Year to Sep 25",
           "value": 11.4,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Cash ROE FY24",
+          "label": "Cash return on equity Year to Sep 24",
           "value": 11.6,
           "unit": "%",
           "basis": null
@@ -257,12 +170,120 @@
       "provenance": null
     },
     {
+      "id": "ev-9",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 6,
+      "printed_page": 6,
+      "kind": "text",
+      "quote": "Cash return on equity",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 6,
+      "printed_page": 6,
+      "kind": "table",
+      "quote": "11.6% 11.4%",
+      "numbers": [
+        {
+          "label": "Cash return on equity FY24",
+          "value": 11.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cash return on equity FY25",
+          "value": 11.4,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 70,
+      "printed_page": 68,
+      "kind": "table",
+      "quote": "Cash earnings(1) 7,091 7,102",
+      "numbers": [
+        {
+          "label": "Cash earnings Year to Sep 25",
+          "value": 7091.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Cash earnings Year to Sep 24",
+          "value": 7102.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
       "id": "ev-12",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 70,
+      "printed_page": 68,
+      "kind": "table",
+      "quote": "Weighted average number of ordinary shares (net of treasury shares) 3,059 3,099",
+      "numbers": [
+        {
+          "label": "Weighted average shares Year to Sep 25",
+          "value": 3059.0,
+          "unit": "ratio",
+          "basis": null
+        },
+        {
+          "label": "Weighted average shares Year to Sep 24",
+          "value": 3099.0,
+          "unit": "ratio",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 60,
+      "printed_page": 58,
+      "kind": "table",
+      "quote": "Total equity (attributable to owners of the Company) 62,922 62,169 61,455",
+      "numbers": [
+        {
+          "label": "Total equity attributable 30 Sep 25",
+          "value": 62922.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total equity attributable 31 Mar 25",
+          "value": 62169.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total equity attributable 30 Sep 24",
+          "value": 61455.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 8,
       "printed_page": 6,
       "kind": "text",
-      "quote": "Cash earnings were broadly stable compared with FY24 including higher credit impairment charges. Cash EPS rose 1% and cash ROE was 11.4%",
+      "quote": "Cash earnings were broadly stable compared with FY24 including higher credit impairment charges. Cash EPS rose 1% and cash ROE was 11.4%.",
       "numbers": [
         {
           "label": "Cash ROE FY25",
@@ -279,13 +300,13 @@
     "combo": "agentic-cheap",
     "models": "agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-08-30T16:08:47+00:00",
-    "seconds": 232.5,
-    "cost_usd": 0.0298,
-    "tokens": "971681 in / 8282 out",
+    "generated": "2026-08-30T20:00:39+00:00",
+    "seconds": 113.0,
+    "cost_usd": 0.0441,
+    "tokens": "1196506 in / 7701 out",
     "orchestration": "agent",
-    "tool_calls": 42,
-    "pages_read": 14,
+    "tool_calls": 45,
+    "pages_read": 10,
     "charts_read": 0,
     "budget_exhausted": "no"
   }

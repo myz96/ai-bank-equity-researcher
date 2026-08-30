@@ -10,44 +10,54 @@
     "delta": -11.0,
     "unit": "$m"
   },
-  "movement_source": "row 'Cash earnings', column FY24 column -> column FY25 column",
-  "headline": "NAB's cash earnings fell $11 million (0.2%) to $7,091 million in FY25 from $7,102 million in FY24, remaining broadly stable. Statutory net profit from continuing operations fell $275 million to $6,788 million (from $7,063 million), with $303 million of non-cash items (hedging/fair value, amortisation, acquisition/disposal costs) separating it from cash earnings. Underlying profit rose $142 million (1.3%) to $10,965 million, supported by $577 million of revenue growth (NII +$644m, partly offset by OOI -$67m) and $435 million of higher operating expenses (including $130m payroll review/remediation). Credit impairment charges rose $105 million to $833 million, and tax expense increased $27 million to $3,002 million.",
-  "headline_evidence": [],
+  "movement_source": "row 'Cash earnings', column FY24 column (12 months ended Sep 2024) -> column FY25 column (12 months ended Sep 2025)",
+  "headline": "NAB's cash earnings decreased $11 million or 0.2% to $7,091 million in FY25 from $7,102 million in FY24, broadly stable as the bank reported. Revenue (net operating income) rose 2.9% to $20,813 million, driven by net interest income growth of $644 million (+3.8%), partially offset by a $67 million decline in other operating income. Underlying operating expenses (excluding $130 million of payroll review and remediation charges) increased $305 million or 3.2%. Credit impairment charges rose $105 million to $833 million. Income tax expense increased $27 million. Statutory net profit fell $201 million to $6,759 million, reflecting $303 million of non-cash items (hedging volatility $28m, amortisation $(36)m, acquisition/disposal costs $(295)m) versus $(41)m in FY24.",
+  "headline_evidence": [
+    "ev-8",
+    "ev-25",
+    "ev-29",
+    "ev-1",
+    "ev-2",
+    "ev-3",
+    "ev-5",
+    "ev-7",
+    "ev-19",
+    "ev-20",
+    "ev-21"
+  ],
   "drivers": [
     {
       "canonical": "nii",
-      "bank_label": null,
+      "bank_label": "Net interest income",
       "contribution": {
         "value": 644.0,
         "unit": "$m"
       },
-      "columns": null,
-      "narrative": "NII increased $644 million (3.8%) to $17,398 million, driven by volume growth (average IEA up $22.5 billion or 2.3%) and a 3 bps NIM improvement to 1.74%, partially offset by a $74 million hedge movement included in NII but excluded from underlying. Excluding hedges, underlying NII rose $718 million (4.3%).",
-      "confidence": 80,
+      "columns": "FY25 $17,398m vs FY24 $16,754m",
+      "narrative": "NII increased $644 million or 3.8%, including a $74 million decrease from economic hedge movements (offset in other operating income). Excluding this, underlying NII rose $718 million or 4.3% from higher average interest earning assets (+$22.5 billion or 2.3%) and a 3 bps improvement in NIM to 1.74%. Margin gains were driven by higher earnings on deposit and capital replicating portfolios (+9 bps), lower mix of liquid assets (+2 bps), and higher Markets & Treasury income (+2 bps), partially offset by higher deposit costs (-7 bps), wholesale funding costs (-2 bps), and lending margin compression (-1 bp).",
+      "confidence": 85,
       "evidence": [
         "ev-1",
-        "ev-19",
-        "ev-20"
+        "ev-32"
       ],
       "checks_passed": [
-        "single_source",
-        "computed_delta_cap_80"
+        "single_source"
       ],
       "checks_failed": []
     },
     {
       "canonical": "other_operating_income",
-      "bank_label": null,
+      "bank_label": "Other operating income",
       "contribution": {
         "value": -67.0,
         "unit": "$m"
       },
-      "columns": null,
-      "narrative": "Other operating income fell $67 million (1.9%) to $3,415 million, partially offset by the $74 million hedge decrease in NII. Revenue excluding M&T rose only 1.4%, impacted by higher customer-related remediation charges ($102 million in FY25 vs $35 million in FY24) and business disposals/run-offs.",
-      "confidence": 80,
+      "columns": "FY25 $3,415m vs FY24 $3,482m",
+      "narrative": "Other operating income declined $67 million or 1.9%. This included a $74 million increase from economic hedge movements (offset in NII), a $67 million increase in customer-related remediation charges (FY25: $102m vs FY24: $35m), and a $66 million fee reduction from winding down and disposing of Group businesses. Underlying OOI (ex-hedges, remediation, disposals) declined $8 million or 0.3%, primarily from lower trading income, partially offset by higher MLC Life and FirstCape NZ earnings.",
+      "confidence": 85,
       "evidence": [
         "ev-2",
-        "ev-15"
+        "ev-33"
       ],
       "checks_passed": [
         "single_source"
@@ -56,83 +66,94 @@
     },
     {
       "canonical": "operating_expenses",
-      "bank_label": null,
+      "bank_label": "Operating expenses (underlying)",
       "contribution": {
-        "value": -435.0,
+        "value": -305.0,
         "unit": "$m"
       },
-      "columns": null,
-      "narrative": "Underlying operating expenses increased $435 million (4.6%) to $9,848 million. Excluding $130 million of payroll review and remediation costs, underlying opex rose $305 million (3.2%), driven by $271 million higher personnel expenses (salary inflation, investment in bankers) and $71 million higher technology expenses, partially offset by productivity benefits of $420 million.",
+      "columns": "Underlying FY25 $9,718m vs FY24 $9,413m",
+      "narrative": "Underlying operating expenses (excluding $130 million of payroll review and remediation costs) increased $305 million or 3.2%. Personnel expenses rose $170 million or 3.0% ex-notable, driven by salary inflation, investment in additional bankers, and technology/financial crime capabilities, partially offset by productivity benefits of $420 million. Technology expenses increased $71 million or 3.5% from software licences, maintenance, cloud consumption, and higher amortisation. General expenses rose $52 million or 4.3% ex-notable from continued technology investment. Occupancy and depreciation rose $12 million or 2.0% from lease and facility costs.",
       "confidence": 80,
       "evidence": [
-        "ev-4",
-        "ev-16",
-        "ev-22",
-        "ev-23"
+        "ev-3",
+        "ev-30",
+        "ev-31"
       ],
       "checks_passed": [
-        "single_source",
-        "computed_delta_cap_80"
+        "single_source"
       ],
       "checks_failed": []
     },
     {
       "canonical": "notable_items",
-      "bank_label": null,
+      "bank_label": "Payroll review and remediation costs",
       "contribution": {
         "value": -130.0,
         "unit": "$m"
       },
-      "columns": null,
-      "narrative": "Payroll review and remediation costs of $130 million were incurred in FY25 ($101 million in personnel expenses, $29 million in general expenses), compared to nil in FY24. These are disclosed separately from underlying operating expenses.",
+      "columns": "FY25 $130m vs FY24 $nil",
+      "narrative": "Payroll review and remediation costs of $130 million were incurred in FY25 (personnel: $101 million; general: $29 million), with no comparable charge in FY24. These are excluded from underlying operating expenses and reported separately as notable items.",
       "confidence": 80,
       "evidence": [
-        "ev-16",
-        "ev-22"
+        "ev-23",
+        "ev-24",
+        "ev-30"
       ],
       "checks_passed": [
-        "single_source",
-        "computed_delta_cap_80"
+        "single_source"
       ],
       "checks_failed": []
     },
     {
       "canonical": "credit_impairment_charge",
-      "bank_label": null,
+      "bank_label": "Credit impairment charge",
       "contribution": {
         "value": -105.0,
         "unit": "$m"
       },
-      "columns": null,
-      "narrative": "Credit impairment charge rose $105 million (14.4%) to $833 million. Individually assessed charges increased $328 million to $964 million (C&IB impairments, non-recurrence of FY24 write-backs/recoveries, modest increases in B&PB/NZ/retail). Collective provisions swung from a $92 million charge to a $131 million write-back ($223 million improvement), driven by forward-looking provision releases.",
-      "confidence": 80,
+      "columns": "FY25 $(833)m vs FY24 $(728)m",
+      "narrative": "Credit impairment charge increased $105 million or 14.4% to $833 million. Individually assessed charges were $964 million (vs lower FY24 levels), primarily in Corporate and Institutional Banking business lending portfolio and, to a lesser extent, Australian unsecured retail. This was partially offset by a $131 million release from collective provisions, which includes a $283 million release from forward-looking provisions, partially offset by volume growth in B&PB business lending and asset quality deterioration.",
+      "confidence": 85,
       "evidence": [
-        "ev-6",
-        "ev-17",
-        "ev-24",
-        "ev-25",
-        "ev-26"
+        "ev-5",
+        "ev-34"
       ],
       "checks_passed": [
-        "single_source",
-        "computed_delta_cap_80"
+        "single_source"
       ],
       "checks_failed": []
     },
     {
       "canonical": "tax_and_other",
-      "bank_label": null,
+      "bank_label": "Income tax expense",
       "contribution": {
         "value": -27.0,
         "unit": "$m"
       },
-      "columns": null,
-      "narrative": "Income tax expense increased $27 million (0.9%) to $3,002 million, due to higher pre-tax earnings and a 10 bps rise in the effective tax rate to 29.6% (mainly lower deferred tax asset for US tax losses). Non-controlling interests widened by $21 million to $39 million.",
+      "columns": "FY25 $(3,002)m vs FY24 $(2,975)m",
+      "narrative": "Income tax expense increased $27 million or 0.9% to $3,002 million, due to higher cash earnings before income tax ($10,132m vs $10,095m) and a higher effective tax rate.",
       "confidence": 80,
       "evidence": [
-        "ev-8",
-        "ev-27",
-        "ev-28"
+        "ev-7",
+        "ev-35"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "other_unmapped",
+      "bank_label": "Non-controlling interests",
+      "contribution": {
+        "value": -21.0,
+        "unit": "$m"
+      },
+      "columns": "FY25 $(39)m vs FY24 $(18)m",
+      "narrative": "Non-controlling interests increased from $(18)m to $(39)m, an additional $21 million deduction from cash earnings before NCI to arrive at cash earnings attributable to owners.",
+      "confidence": 80,
+      "evidence": [
+        "ev-8"
       ],
       "checks_passed": [
         "single_source"
@@ -144,33 +165,15 @@
     "value": 0.0,
     "unit": "$m"
   },
-  "notable_items": [
-    "Payroll review and remediation costs: $130 million in FY25 (nil in FY24)",
-    "Customer-related remediation charges in contra-revenue: $102 million in FY25 vs $35 million in FY24",
-    "Productivity benefits of $420 million partially offset expense growth",
-    "Hedging movement of $74 million in NII offset in OOI"
-  ],
-  "disagreements": [
-    {
-      "topic": "Statutory vs Cash earnings movement",
-      "values": [
-        "Statutory NP moved -$275m to $6,788m; Cash earnings moved -$11m to $7,091m"
-      ],
-      "preferred": "Cash earnings movement is -$11m; Statutory movement is -$275m",
-      "reason": "definitional",
-      "explanation": "The task asks for cash earnings movement. Statutory differs materially due to $303m of non-cash items (hedging +$28m, amortisation -$36m, acquisitions/disposals -$295m). Both movements are reported."
-    }
-  ],
-  "attribution_confidence": 40,
+  "notable_items": [],
+  "disagreements": [],
+  "attribution_confidence": 85,
   "limitations": [
-    "No primary-period walk chart found in either document; component movements computed from period columns per table discipline.",
-    "Other operating income driver is a residual delta (FY25 $3,415m minus FY24 $3,482m = -$67m); bank does not separately quantify the OOI movement in dollars for FY25 v FY24.",
-    "Tax driver uses the stated $27 million increase from page 23.",
-    "Notable items ($130m payroll/remediation) claimed separately from underlying opex per instructions.",
-    "Investor presentation corroborates cash earnings levels and statutory reconciliation but does not provide a separate FY25 v FY24 bridge/walk chart.",
-    "Research stopped early: the tool-call budget (80 calls) was reached, so the evidence behind this answer is less complete than a full run's.",
-    "Expenses are claimed on the underlying/notable split; the bank equally publishes the combined headline framing, so both claims are capped at 80.",
-    "Failed check: drivers_reconcile (drivers -120.0 + residual +0.0 != delta -11.0, tol 1.0)"
+    "No primary walk chart found for the FY25 v FY24 comparison; driver values computed from period columns of the results table (page 9) and verified against the narrative on page 14.",
+    "The investor presentation corroborates the headline cash earnings figure and statutory reconciliation but does not provide a separate FY25 v FY24 bridge chart.",
+    "Notable items (acquisitions, integration, disposals and business closures) of $(295)m in FY25 vs $(4)m in FY24 are non-cash reconciling items between statutory and cash earnings within each period; they do not flow through the cash earnings year-on-year movement.",
+    "The $74 million economic hedge movement is embedded in both NII and OOI but nets to zero across those two lines; it is disclosed as part of the NII/OOI composition rather than as a standalone driver.",
+    "Expenses are claimed on the underlying/notable split; the bank equally publishes the combined headline framing, so both claims are capped at 80."
   ],
   "evidence_records": [
     {
@@ -178,9 +181,22 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 9,
       "printed_page": null,
-      "kind": "table",
+      "kind": "text",
       "quote": "Net interest income 17,398 16,754 3.8",
-      "numbers": [],
+      "numbers": [
+        {
+          "label": "FY25 Net interest income",
+          "value": 17398.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Net interest income",
+          "value": 16754.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
@@ -188,9 +204,22 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 9,
       "printed_page": null,
-      "kind": "table",
+      "kind": "text",
       "quote": "Other operating income(1) 3,415 3,482 (1.9)",
-      "numbers": [],
+      "numbers": [
+        {
+          "label": "FY25 Other operating income",
+          "value": 3415.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Other operating income",
+          "value": 3482.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
@@ -198,9 +227,22 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 9,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Net operating income 20,813 20,236 2.9",
-      "numbers": [],
+      "kind": "text",
+      "quote": "Operating expenses(1) (9,848) (9,413) 4.6",
+      "numbers": [
+        {
+          "label": "FY25 Operating expenses",
+          "value": -9848.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Operating expenses",
+          "value": -9413.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
@@ -208,9 +250,22 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 9,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Operating expenses(1) (9,848) (9,413) 4.6",
-      "numbers": [],
+      "kind": "text",
+      "quote": "Underlying profit 10,965 10,823 1.3",
+      "numbers": [
+        {
+          "label": "FY25 Underlying profit",
+          "value": 10965.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Underlying profit",
+          "value": 10823.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
@@ -218,9 +273,22 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 9,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Underlying profit 10,965 10,823 1.3",
-      "numbers": [],
+      "kind": "text",
+      "quote": "Credit impairment charge (833) (728) 14.4",
+      "numbers": [
+        {
+          "label": "FY25 Credit impairment charge",
+          "value": -833.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Credit impairment charge",
+          "value": -728.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
@@ -228,9 +296,22 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 9,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Credit impairment charge (833) (728) 14.4",
-      "numbers": [],
+      "kind": "text",
+      "quote": "Cash earnings before income tax 10,132 10,095 0.4",
+      "numbers": [
+        {
+          "label": "FY25 Cash earnings before income tax",
+          "value": 10132.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Cash earnings before income tax",
+          "value": 10095.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
@@ -238,9 +319,22 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 9,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Cash earnings before income tax 10,132 10,095 0.4",
-      "numbers": [],
+      "kind": "text",
+      "quote": "Income tax expense (3,002) (2,975) 0.9",
+      "numbers": [
+        {
+          "label": "FY25 Income tax expense",
+          "value": -3002.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Income tax expense",
+          "value": -2975.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
@@ -248,229 +342,619 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 9,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Income tax expense (3,002) (2,975) 0.9",
-      "numbers": [],
+      "kind": "text",
+      "quote": "Cash earnings 7,091 7,102 (0.2)",
+      "numbers": [
+        {
+          "label": "FY25 Cash earnings",
+          "value": 7091.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Cash earnings",
+          "value": 7102.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-9",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 9,
+      "pdf_page": 75,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Cash earnings before non-controlling interests 7,130 7,120 0.1",
-      "numbers": [],
+      "kind": "text",
+      "quote": "Net interest income 17,403 (5) - - 17,398",
+      "numbers": [
+        {
+          "label": "FY25 Statutory Net interest income",
+          "value": 17403.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY25 Cash Net interest income",
+          "value": 17398.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 75,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Other operating income 3,469 (34) - (20) 3,415",
+      "numbers": [
+        {
+          "label": "FY25 Statutory Other operating income",
+          "value": 3469.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY25 Cash Other operating income",
+          "value": 3415.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-11",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 9,
+      "pdf_page": 75,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Cash earnings 7,091 7,102 (0.2)",
-      "numbers": [],
+      "kind": "text",
+      "quote": "Operating expenses (10,348) - 49 451 (9,848)",
+      "numbers": [
+        {
+          "label": "FY25 Statutory Operating expenses",
+          "value": -10348.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY25 Cash Operating expenses",
+          "value": -9848.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-12",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 9,
+      "pdf_page": 75,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Non-cash earnings items (after tax) (303) (39) large",
-      "numbers": [],
+      "kind": "text",
+      "quote": "Credit impairment charge (833) - - - (833)",
+      "numbers": [
+        {
+          "label": "FY25 Credit impairment charge",
+          "value": -833.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-13",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 9,
+      "pdf_page": 75,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Net profit attributable to owners of the Company from continuing operations 6,788 7,063 (3.9)",
-      "numbers": [],
+      "kind": "text",
+      "quote": "Income tax (expense) / benefit (2,864) 11 (13) (136) (3,002)",
+      "numbers": [
+        {
+          "label": "FY25 Statutory Income tax expense",
+          "value": -2864.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY25 Cash Income tax expense",
+          "value": -3002.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-14",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 4,
-      "printed_page": 2,
+      "pdf_page": 75,
+      "printed_page": null,
       "kind": "text",
-      "quote": "Cash earnings were broadly stable over the year. While credit impairment charges increased, pleasingly a number of key asset quality outcomes improved over 2H25",
-      "numbers": [],
+      "quote": "Net interest income 16,757 (3) - - 16,754",
+      "numbers": [
+        {
+          "label": "FY24 Statutory Net interest income",
+          "value": 16757.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Cash Net interest income",
+          "value": 16754.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-15",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 5,
+      "pdf_page": 75,
       "printed_page": null,
       "kind": "text",
-      "quote": "Revenue increased by 2.9% with key drivers including volume growth and higher Markets & Treasury (M&T) income, partially offset by higher customer-related remediation charges and the impact from business disposals and run-offs. Excluding M&T income, revenue rose 1.4% over the year",
-      "numbers": [],
+      "quote": "Other operating income 3,875 (10) - (383) 3,482",
+      "numbers": [
+        {
+          "label": "FY24 Statutory Other operating income",
+          "value": 3875.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Cash Other operating income",
+          "value": 3482.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-16",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 5,
+      "pdf_page": 75,
       "printed_page": null,
       "kind": "text",
-      "quote": "Expenses increased by 4.6% including $130 million related to payroll review and remediation charges. Excluding payroll review and remediation charges, expenses rose 3.2% reflecting higher personnel and technology related costs, partially offset by productivity benefits and lower costs relating to the Group's Enforceable Undertaking with AUSTRAC.",
-      "numbers": [],
+      "quote": "Operating expenses (10,012) - 42 557 (9,413)",
+      "numbers": [
+        {
+          "label": "FY24 Statutory Operating expenses",
+          "value": -10012.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Cash Operating expenses",
+          "value": -9413.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-17",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 5,
+      "pdf_page": 75,
       "printed_page": null,
       "kind": "text",
-      "quote": "Credit impairment charge was $833 million, versus a FY24 charge of $728 million. The FY25 charge includes individually assessed charges of $964 million and a $131 million release from collective provisions.",
-      "numbers": [],
+      "quote": "Credit impairment (charge) / write-back (741) 13 - - (728)",
+      "numbers": [
+        {
+          "label": "FY24 Statutory Credit impairment charge",
+          "value": -741.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Cash Credit impairment charge",
+          "value": -728.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 75,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Income tax (expense) / benefit (2,798) 6 (13) (170) (2,975)",
+      "numbers": [
+        {
+          "label": "FY24 Statutory Income tax expense",
+          "value": -2798.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Cash Income tax expense",
+          "value": -2975.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-19",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 17,
+      "pdf_page": 13,
       "printed_page": null,
       "kind": "text",
-      "quote": "Net interest income increased by $644 million or 3.8%. This includes a decrease of $74 million due to movements in economic hedges, offset in other operating income. Excluding this movement, the underlying increase of $718 million or 4.3% was due to higher average interest earning assets and net interest margin.",
-      "numbers": [],
+      "quote": "Non-cash earnings items (after tax): Hedging and fair value volatility 28 (6) large",
+      "numbers": [
+        {
+          "label": "FY25 Hedging and fair value volatility",
+          "value": 28.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Hedging and fair value volatility",
+          "value": -6.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-20",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 17,
+      "pdf_page": 13,
       "printed_page": null,
       "kind": "text",
-      "quote": "Net interest income increased by $644 million or 3.8%. This includes a decrease of $74 million due to movements in economic hedges, offset in other operating income.",
-      "numbers": [],
+      "quote": "Amortisation of acquired intangible assets (36) (29) 24.1",
+      "numbers": [
+        {
+          "label": "FY25 Amortisation of acquired intangible assets",
+          "value": -36.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Amortisation of acquired intangible assets",
+          "value": -29.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Acquisitions, integration, disposals and business closures (295) (4) large",
+      "numbers": [
+        {
+          "label": "FY25 Acquisitions, integration, disposals and business closures",
+          "value": -295.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Acquisitions, integration, disposals and business closures",
+          "value": -4.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-22",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 20,
-      "printed_page": 18,
+      "pdf_page": 49,
+      "printed_page": null,
       "kind": "text",
-      "quote": "Operating expenses increased by $435 million or 4.6%. Excluding an increase of $130 million for payroll review and remediation costs, operating expenses increased by $305 million or 3.2%.",
-      "numbers": [],
+      "quote": "Total operating expenses(2) 10,348 10,012",
+      "numbers": [
+        {
+          "label": "FY25 Total operating expenses (statutory)",
+          "value": 10348.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Total operating expenses (statutory)",
+          "value": 10012.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-23",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 20,
-      "printed_page": 18,
+      "pdf_page": 49,
+      "printed_page": null,
       "kind": "text",
-      "quote": "Personnel expenses increased by $271 million or 4.8%. Excluding an increase of $101 million for payroll review and remediation costs, personnel expenses increased by $170 million or 3.0%. The increase was driven by salary expense inflation, investment in additional bankers and resources to support growth, and continued investment in technology and financial crime related capabilities.",
-      "numbers": [],
+      "quote": "Personnel expenses include payroll review and remediation costs of $101 million in the September 2025 full year (2024 full year: $nil)",
+      "numbers": [
+        {
+          "label": "FY25 Personnel payroll review and remediation",
+          "value": 101.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-24",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 26,
-      "printed_page": 24,
+      "pdf_page": 49,
+      "printed_page": null,
       "kind": "text",
-      "quote": "Credit impairment charge increased by $105 million or 14.4% to $833 million, driven by a higher level of individually assessed credit impairment charge primarily in Corporate and Institutional Banking. This was partially offset by a lower level of collective credit impairment charge.",
-      "numbers": [],
+      "quote": "General expenses include payroll review and remediation costs of $29 million in the September 2025 full year (2024 full year: $nil)",
+      "numbers": [
+        {
+          "label": "FY25 General payroll review and remediation",
+          "value": 29.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-25",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 26,
-      "printed_page": 24,
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 39,
+      "printed_page": 39,
       "kind": "text",
-      "quote": "Collective credit impairment charge decreased by $223 million from a charge of $92 million to a write-back of $131 million.",
-      "numbers": [],
+      "quote": "Cash earnings 7,091 7,102 (11)",
+      "numbers": [
+        {
+          "label": "FY25 Cash earnings",
+          "value": 7091.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Cash earnings",
+          "value": 7102.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-26",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 26,
-      "printed_page": 24,
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 39,
+      "printed_page": 39,
       "kind": "text",
-      "quote": "Credit impairment charge increased by $105 million or 14.4% to $833 million, driven by a higher level of individually assessed credit impairment charge primarily in Corporate and Institutional Banking.",
-      "numbers": [],
+      "quote": "Hedging and fair value volatility 28 (6) 34",
+      "numbers": [
+        {
+          "label": "FY25 Hedging and fair value volatility",
+          "value": 28.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Hedging and fair value volatility",
+          "value": -6.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-27",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 23,
-      "printed_page": null,
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 39,
+      "printed_page": 39,
       "kind": "text",
-      "quote": "Income tax expense increased by $27 million or 0.9% due to higher cash earnings before income tax and a higher effective tax rate.",
-      "numbers": [],
+      "quote": "Amortisation of acquired intangible assets (36) (29) (7)",
+      "numbers": [
+        {
+          "label": "FY25 Amortisation of acquired intangible assets",
+          "value": -36.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Amortisation of acquired intangible assets",
+          "value": -29.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-28",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 23,
-      "printed_page": null,
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 39,
+      "printed_page": 39,
       "kind": "text",
-      "quote": "The effective tax rate increased by 10 basis points to 29.6% primarily due to a decrease in the amount recognised as a deferred tax asset for U.S. tax losses.",
-      "numbers": [],
+      "quote": "Acquisition, disposals and business closures (295) (4) (291)",
+      "numbers": [
+        {
+          "label": "FY25 Acquisition, disposals and business closures",
+          "value": -295.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Acquisition, disposals and business closures",
+          "value": -4.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-29",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 74,
-      "printed_page": 72,
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 39,
+      "printed_page": 39,
       "kind": "text",
-      "quote": "In the September 2025 full year, there was an increase in statutory profit of $39 million ($28 million after tax) from hedging and fair value volatility.",
-      "numbers": [],
+      "quote": "Statutory net profit 6,759 6,960 (201)",
+      "numbers": [
+        {
+          "label": "FY25 Statutory net profit",
+          "value": 6759.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY24 Statutory net profit",
+          "value": 6960.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-30",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 74,
-      "printed_page": 72,
+      "pdf_page": 20,
+      "printed_page": 18,
       "kind": "text",
-      "quote": "In the September 2025 full year, there was a decrease in statutory profit of $49 million ($36 million after tax) due to the amortisation of acquired intangible assets.",
-      "numbers": [],
+      "quote": "Operating expenses increased by $435 million or 4.6%. Excluding an increase of $130 million for payroll review and remediation costs, operating expenses increased by $305 million or 3.2%.",
+      "numbers": [
+        {
+          "label": "FY25-FY24 Operating expenses increase",
+          "value": 435.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Payroll review and remediation increase",
+          "value": 130.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-31",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 74,
-      "printed_page": 72,
+      "pdf_page": 20,
+      "printed_page": 18,
       "kind": "text",
-      "quote": "In the September 2025 full year, there was a decrease in statutory profit of $431 million ($295 million after tax) related to acquisitions, integration, disposals and business closures.",
-      "numbers": [],
+      "quote": "Personnel expenses increased by $271 million or 4.8%. Excluding an increase of $101 million for payroll review and remediation costs, personnel expenses increased by $170 million or 3.0%.",
+      "numbers": [
+        {
+          "label": "FY25-FY24 Personnel expenses increase",
+          "value": 271.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY25-FY24 Personnel payroll review and remediation",
+          "value": 101.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-32",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 39,
-      "printed_page": 39,
-      "kind": "table",
-      "quote": "Cash earnings 7,091 7,102 (11)",
-      "numbers": [],
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 14,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "Net interest income increased by $644 million or 3.8%. This includes a decrease of $74 million due to movements in economic hedges, offset in other operating income. Excluding this movement, the underlying increase of $718 million or 4.3% was due to higher average interest earning assets and net interest margin.",
+      "numbers": [
+        {
+          "label": "FY25-FY24 Net interest income increase",
+          "value": 644.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Economic hedge movement",
+          "value": -74.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-33",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 39,
-      "printed_page": 39,
-      "kind": "table",
-      "quote": "Net profit attributable to owners of the Company from continuing operations 6,788 7,063 (275)",
-      "numbers": [],
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 14,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "Other operating income decreased by $67 million or 1.9%. This includes an increase of $74 million due to movements in economic hedges, offset in net interest income, and an increase in customer-related remediation of $67 million, together with the fee reduction impact from the winding down and disposal of Group businesses of $66 million.",
+      "numbers": [
+        {
+          "label": "FY25-FY24 Other operating income decrease",
+          "value": -67.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Customer-related remediation increase",
+          "value": 67.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Fee reduction from disposals",
+          "value": -66.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-34",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 14,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "Credit impairment charge increased by $105 million or 14.4%, driven by a higher level of individually assessed credit impairment charge primarily in Corporate and Institutional Banking.",
+      "numbers": [
+        {
+          "label": "FY25-FY24 Credit impairment charge increase",
+          "value": 105.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-35",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 14,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "Income tax expense increased by $27 million or 0.9% due to higher cash earnings before income tax and a higher effective tax rate.",
+      "numbers": [
+        {
+          "label": "FY25-FY24 Income tax expense increase",
+          "value": 27.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     }
   ],
@@ -479,14 +963,14 @@
     "combo": "agentic-cheap",
     "models": "agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-08-30T14:27:15+00:00",
-    "seconds": 322.1,
-    "cost_usd": 0.1029,
-    "tokens": "3208676 in / 12600 out",
+    "generated": "2026-08-30T19:58:46+00:00",
+    "seconds": 95.9,
+    "cost_usd": 0.0346,
+    "tokens": "765127 in / 9807 out",
     "orchestration": "agent",
-    "tool_calls": 80,
-    "pages_read": 41,
+    "tool_calls": 42,
+    "pages_read": 23,
     "charts_read": 0,
-    "budget_exhausted": "the tool-call budget (80 calls)"
+    "budget_exhausted": "no"
   }
 }

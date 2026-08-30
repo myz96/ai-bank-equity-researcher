@@ -1,0 +1,911 @@
+{
+  "bank": "CBA",
+  "metric": "cti",
+  "period": "1H26",
+  "comparator": "1H25",
+  "basis": "cash",
+  "movement": {
+    "from_value": 45.2,
+    "to_value": 45.9,
+    "delta": 0.7,
+    "unit": "ppt"
+  },
+  "movement_source": "row 'Operating expenses to total operating income (%)', column 31 Dec 24 -> column 31 Dec 25",
+  "headline": "CBA's headline cost-to-income ratio (operating expenses to total operating income, cash basis, continuing operations) rose 70bpts, from 45.2% in 1H25 to 45.9% in 1H26 (ev-1, ev-18, ev-34). Jaws were NEGATIVE on a headline basis: total operating income grew 7% (+6.6% per the presentation) to $15,021m while total operating expenses grew 8% (+8.1%) to $6,890m (ev-4, ev-7, ev-19, ev-29). The deterioration is entirely a notable-items story. Excluding restructuring and notable items — $170m in 1H26 against nil in 1H25 (ev-6) — underlying expenses grew only 5% to $6,720m (ev-5, ev-12) and CBA's underlying cost-to-income ratio IMPROVED 50bpts, from 45.2% to 44.7% (ev-11), i.e. underlying jaws were positive. Statutory NPAT rose 5% and cash NPAT 6% (ev-2), but CBA prints only one cost-to-income row, unlabelled and stated to be \"cash basis\" (ev-3), so cash and statutory framings do not diverge for this metric. CBA publishes no ratio walk; the ppt split below is my own arithmetic on the disclosed levels.",
+  "headline_evidence": [
+    "ev-1",
+    "ev-2",
+    "ev-3",
+    "ev-4",
+    "ev-5",
+    "ev-6",
+    "ev-7",
+    "ev-11",
+    "ev-12",
+    "ev-18",
+    "ev-19",
+    "ev-29",
+    "ev-34"
+  ],
+  "drivers": [
+    {
+      "canonical": "expense_growth",
+      "bank_label": "Underlying operating expenses +5% ($6,372m to $6,720m)",
+      "contribution": {
+        "value": 2.32,
+        "unit": "ppt"
+      },
+      "columns": "31 Dec 25 vs 31 Dec 24",
+      "narrative": "Underlying expenses rose $348m or 5% (ev-12). CBA's 1H25->1H26 walk splits this: Inflation +$275m, Investment in technology +$222m, Investment in frontline and operations +$78m, Other -$6m, Productivity -$221m (ev-9). Staff +$169m to $4,139m on wage inflation and lenders/technology resources; IT services +$134m or 11% to $1,321m on cloud, licensing and AI; Other +$40m to $795m on marketing; Occupancy +$5m (ev-13, ev-14, ev-15, ev-16). Average FTE up 2,448 to 51,755 (ev-17).",
+      "confidence": 74,
+      "evidence": [
+        "ev-5",
+        "ev-9",
+        "ev-12",
+        "ev-13",
+        "ev-14",
+        "ev-15",
+        "ev-16",
+        "ev-17",
+        "ev-21",
+        "ev-23",
+        "ev-24",
+        "ev-25",
+        "ev-27",
+        "ev-33"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "notable_items",
+      "bank_label": "Restructuring and notable items ($170m in 1H26, nil in 1H25)",
+      "contribution": {
+        "value": 1.13,
+        "unit": "ppt"
+      },
+      "columns": "31 Dec 25 vs 31 Dec 24",
+      "narrative": "$170m of restructuring and notable items in 1H26 against none in 1H25 (ev-6) turned a 5% underlying expense increase into an 8% headline increase (ev-5, ev-7, ev-22), and so turned a 50bpt underlying ratio improvement (45.2% to 44.7%, ev-11) into a 70bpt headline deterioration (ev-1). CBA attributes the charge to provisions for settlement of legal proceedings in NZ, an additional goodwill payment to customers from ASIC's Better Banking review, and domestic customer remediation (ev-8).",
+      "confidence": 78,
+      "evidence": [
+        "ev-1",
+        "ev-5",
+        "ev-6",
+        "ev-7",
+        "ev-8",
+        "ev-11",
+        "ev-22"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "income_growth",
+      "bank_label": "Total operating income +7% ($14,097m to $15,021m)",
+      "contribution": {
+        "value": -2.78,
+        "unit": "ppt"
+      },
+      "columns": "31 Dec 25 vs 31 Dec 24",
+      "narrative": "Income rose 7% to $15,021m (ev-4, ev-29), partly offsetting expense growth. NII +6%, driven by an 8% rise in average interest earning assets, partly offset by a 4bpt NIM decline to 2.04%; excluding liquid assets and institutional repos the underlying NIM was unchanged, and average lending assets grew 7% on home, business and institutional lending (ev-30, ev-31). Other operating income +8% on Markets trading, equities volumes, insurance income including a CommInsure General Insurance milestone payment, and syndication fees (ev-32). CBA frames this as \"Strong volume growth with broadly stable underlying margin\" (ev-26).",
+      "confidence": 74,
+      "evidence": [
+        "ev-4",
+        "ev-19",
+        "ev-26",
+        "ev-28",
+        "ev-29",
+        "ev-30",
+        "ev-31",
+        "ev-32"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.03,
+    "unit": "ppt"
+  },
+  "notable_items": [
+    "Restructuring and notable items of $170m in 1H26 (nil in 1H25): provisions for settlement of legal proceedings in NZ, an additional goodwill payment to certain customers arising from ASIC's Better Banking review, and domestic customer remediation (ev-6, ev-8)."
+  ],
+  "disagreements": [
+    {
+      "topic": "Headline vs underlying cost-to-income movement",
+      "values": [
+        "+70bpts (45.2% to 45.9%, headline)",
+        "(50)bpts (45.2% to 44.7%, underlying)"
+      ],
+      "preferred": "+70bpts (45.2% to 45.9%, headline)",
+      "reason": "definitional",
+      "explanation": "The headline row 'Operating expenses to total operating income' includes restructuring and notable items; the 'Underlying operating expenses to underlying operating income' row excludes them. Both are printed on profit announcement p31 (ev-1, ev-11). The headline row is the KPI-table measure named in CBA's vocabulary and supplies the movement; the underlying ratio is a different measure reported as context."
+    },
+    {
+      "topic": "Operating income growth rate vs 1H25",
+      "values": [
+        "7% (profit announcement)",
+        "+6.6% (results presentation)"
+      ],
+      "preferred": "7% (profit announcement)",
+      "reason": "rounding",
+      "explanation": "Both derive from $14,097m to $15,021m, a 6.56% increase (ev-4, ev-28). The results book rounds to 7% in its change column (ev-4, ev-29); the slide prints one decimal (+6.6%, ev-19). Source hierarchy puts the results-book table first, but the figures are the same."
+    },
+    {
+      "topic": "Operating expense growth rate vs 1H25",
+      "values": [
+        "8% total / 5% underlying (profit announcement)",
+        "+8.1% headline / +5.5% underlying (results presentation)"
+      ],
+      "preferred": "8% total (profit announcement)",
+      "reason": "rounding",
+      "explanation": "$6,372m to $6,890m is +8.13% headline and $6,372m to $6,720m is +5.46% underlying (ev-5, ev-7). The results book rounds to 8% and 5% (ev-5, ev-7, ev-33); the presentation prints +8.1% and, on p28, +5.5% (ev-19, ev-22). Same underlying levels."
+    }
+  ],
+  "attribution_confidence": 80,
+  "limitations": [
+    "CBA publishes NO cost-to-income ratio walk for the Group. The three ppt contributions are MY arithmetic on the disclosed levels of both periods, not the bank's own decomposition: income effect = 6,372/15,021 - 6,372/14,097 = -2.78ppt; underlying expense effect = (6,720-6,372)/15,021 = +2.32ppt; notable items = 170/15,021 = +1.13ppt. They sum to +0.67ppt against a printed +0.7ppt delta, leaving a +0.03ppt rounding residual. Confidence on each is therefore capped in the 70s.",
+    "The primary walk I read (profit announcement p31, ev-9) is an OPERATING EXPENSE walk in $m, not a ratio walk. Its bars (Inflation +275, Investment in technology +222, Investment in frontline and operations +78, Other -6, Productivity -221) decompose the $348m underlying expense increase only; they explain the composition of the expense_growth driver and are NOT ppt contributions to the ratio. The walk also excludes the $170m of notable items entirely.",
+    "The presentation's 'Contribution to mvt' figures on p28 (Inflation +4.3%, Investment in technology +3.5%, Investment in frontline and operations +1.2%, Productivity (3.4%), ev-23) are percentage contributions to UNDERLYING EXPENSE GROWTH, not to the cost-to-income ratio, and are quoted in the expense driver narrative as such.",
+    "The Productivity bar of -$221m and the '(3.4%)' contribution are net offsets that the bank flags inside its other bars: CBA says staff, IT and other expense increases were each 'partly offset by productivity initiatives' (ev-13, ev-14, ev-33). The gross investment and inflation spend is therefore larger than the net +$348m increase implies.",
+    "CBA states that excluding liquid assets and institutional reverse repos the underlying NIM was UNCHANGED (ev-30), so the reported 4bpt NIM decline overstates the drag on income growth; the income contribution I compute is a net number and I cannot split it between volume and margin from the evidence read.",
+    "I did not read the 2H25-comparison expense walk on results_presentation p65; it describes the half-on-half movement and is out of scope for this task.",
+    "No evidence read states whether total operating income itself contained notable items in either period; the 44.7% underlying ratio implies underlying income is approximately equal to total income ($6,720/0.447 = $15,033m vs $15,021m printed), consistent with no material income-side notables, but the bank does not print an 'underlying operating income' level on the pages read."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 18,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Operating expenses to total operating income (%) 45.9 46.1 45.2 (20)bpts 70 bpts",
+      "numbers": [
+        {
+          "label": "Operating expenses to total operating income 1H26",
+          "value": 45.9,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating expenses to total operating income 2H25",
+          "value": 46.1,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating expenses to total operating income 1H25",
+          "value": 45.2,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Dec 25 vs Dec 24 change",
+          "value": 70.0,
+          "unit": "bps",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 18,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Cash net profit after tax ($M) 5,445 5,120 5,132 6 6",
+      "numbers": [
+        {
+          "label": "Cash NPAT 1H26",
+          "value": 5445.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Cash NPAT 1H25",
+          "value": 5132.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 18,
+      "printed_page": 3,
+      "kind": "text",
+      "quote": "Presented on a \"cash basis\" unless stated otherwise.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Total operating income 15,021 14,368 14,097 5 7",
+      "numbers": [
+        {
+          "label": "Total operating income 1H26",
+          "value": 15021.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Total operating income 1H25",
+          "value": 14097.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Dec 25 vs Dec 24 %",
+          "value": 7.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Underlying operating expenses (6,720) (6,494) (6,372) 3 5",
+      "numbers": [
+        {
+          "label": "Underlying operating expenses 1H26",
+          "value": -6720.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Underlying operating expenses 1H25",
+          "value": -6372.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Dec 25 vs Dec 24 %",
+          "value": 5.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Restructuring and notable items ¹ (170) (130) – 31 n/a",
+      "numbers": [
+        {
+          "label": "Restructuring and notable items 1H26",
+          "value": -170.0,
+          "unit": "$m",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "table",
+      "quote": "Total operating expenses (6,890) (6,624) (6,372) 4 8",
+      "numbers": [
+        {
+          "label": "Total operating expenses 1H26",
+          "value": -6890.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Total operating expenses 1H25",
+          "value": -6372.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Dec 25 vs Dec 24 %",
+          "value": 8.0,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 27,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Current half relates to provisions for the settlement of legal proceedings in NZ; an additional goodwill payment made to certain customers as a result of ASIC’s Better Banking review; and domestic customer remediation.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Underlying Operating Expenses: 1H25 6372.0 -> 1H26 6720.0",
+      "numbers": [
+        {
+          "label": "Inflation",
+          "value": 275.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Investment in technology",
+          "value": 222.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Investment in frontline and operations",
+          "value": 78.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other",
+          "value": -6.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Productivity",
+          "value": -221.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Underlying operating expenses to underlying operating income (%) 44.7 45.2 45.2 (50)bpts (50)bpts",
+      "numbers": [
+        {
+          "label": "Underlying expenses to underlying income 1H26",
+          "value": 44.7,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Underlying expenses to underlying income 1H25",
+          "value": 45.2,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Dec 25 vs Dec 24",
+          "value": -50.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Underlying operating expenses were $6,720 million, an increase of $348 million or 5% on the prior comparative period.",
+      "numbers": [
+        {
+          "label": "Underlying operating expenses 1H26",
+          "value": 6720.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Increase vs 1H25",
+          "value": 348.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Increase %",
+          "value": 5.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Staff expenses increased by $169 million or 4% to $4,139 million, mainly driven by wage inflation, and increased investment in lenders and technology resources, partly offset by productivity initiatives.",
+      "numbers": [
+        {
+          "label": "Staff expenses increase vs 1H25",
+          "value": 169.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Staff expenses 1H26",
+          "value": 4139.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Information technology services expenses increased by $134 million or 11% to $1,321 million, primarily due to increased cloud computing volumes and software licensing, higher software and IT vendor inflation, higher amortisation and investment in infrastructure, resilience and AI capabilities",
+      "numbers": [
+        {
+          "label": "IT services expenses increase vs 1H25",
+          "value": 134.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "IT services expenses 1H26",
+          "value": 1321.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Other expenses increased by $40 million or 5% to $795 million, primarily driven by higher marketing spend.",
+      "numbers": [
+        {
+          "label": "Other expenses increase",
+          "value": 40.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other expenses 1H26",
+          "value": 795.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Occupancy and equipment expenses increased by $5 million or 1% to $465 million.",
+      "numbers": [
+        {
+          "label": "Occupancy increase",
+          "value": 5.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Occupancy 1H26",
+          "value": 465.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 31,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The average number of FTE increased by 2,448 from 49,307 to 51,755",
+      "numbers": [
+        {
+          "label": "Average FTE increase",
+          "value": 2448.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average FTE 1H26",
+          "value": 51755.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 53,
+      "printed_page": 53,
+      "kind": "text",
+      "quote": "Cost to income 45.9% +70bpts",
+      "numbers": [
+        {
+          "label": "Cost to income 1H26",
+          "value": 45.9,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Movement vs 1H25",
+          "value": 70.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 53,
+      "printed_page": 53,
+      "kind": "text",
+      "quote": "Operating income ($m) 15,021 +6.6% Operating expenses ($m) 6,890 +8.1%",
+      "numbers": [
+        {
+          "label": "Operating income 1H26",
+          "value": 15021.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating income growth vs 1H25",
+          "value": 6.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses 1H26",
+          "value": 6890.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expense growth vs 1H25",
+          "value": 8.1,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 53,
+      "printed_page": 53,
+      "kind": "text",
+      "quote": "all movements on the prior comparative period unless otherwise stated",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 28,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Inflation, investment in technology and proprietary distribution driving higher expense growth",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 28,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Headline operating expenses +8.1% including these items.",
+      "numbers": [
+        {
+          "label": "Headline operating expense growth vs 1H25",
+          "value": 8.1,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 28,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Contribution to mvt: (3.4%) +4.3% +3.5% +1.2%",
+      "numbers": [
+        {
+          "label": "Productivity contribution to expense movement",
+          "value": -3.4,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Inflation contribution",
+          "value": 4.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Investment in technology contribution",
+          "value": 3.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Investment in frontline and operations contribution",
+          "value": 1.2,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 28,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Average first half cost savings realised (last 7 years) $141m",
+      "numbers": [
+        {
+          "label": "Average first half cost savings realised",
+          "value": 141.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 28,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "• Vendor IT inflation +5%",
+      "numbers": [
+        {
+          "label": "Vendor IT inflation",
+          "value": 5.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-26",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "text",
+      "quote": "Operating income Strong volume growth with broadly stable underlying margin",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-27",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "text",
+      "quote": "Operating expenses2 Inflation and investment in technology and frontline",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-28",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "text",
+      "quote": "14,097 14,368 15,021 1H25 2H25 1H26",
+      "numbers": [
+        {
+          "label": "Operating income 1H25",
+          "value": 14097.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating income 1H26",
+          "value": 15021.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-29",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Operating income increased 7% on the prior comparative period.",
+      "numbers": [
+        {
+          "label": "Operating income growth vs 1H25",
+          "value": 7.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-30",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Net Interest Income (NII) increased 6%, primarily driven by a $96 billion or 8% increase in Average Interest Earning Assets (AIEA), partly offset by a 4 basis point decrease in Net Interest Margin (NIM). Excluding the impact of liquid assets and institutional reverse sale and repurchase agreements, the underlying NIM was unchanged.",
+      "numbers": [
+        {
+          "label": "NII growth vs 1H25",
+          "value": 6.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "AIEA increase %",
+          "value": 8.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "NIM decrease",
+          "value": -4.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-31",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Average lending assets increased by $61 billion or 7% due to growth in home, business and institutional lending.",
+      "numbers": [
+        {
+          "label": "Average lending assets increase %",
+          "value": 7.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-32",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Other operating income increased 8% with higher trading income from Markets including favourable derivative valuation adjustments, growth in equities volumes, higher insurance income including a milestone payment recognised in relation to the sale of Commonwealth Insurance Limited (CommInsure General Insurance), and higher syndication and institutional lending fee income",
+      "numbers": [
+        {
+          "label": "Other operating income growth vs 1H25",
+          "value": 8.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-33",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Operating expenses 2 increased 5%, mainly driven by higher staff expenses due to inflation and an increase in full-time equivalent staff (FTE), and additional technology spend to support investment in infrastructure, resilience and AI capabilities, as well as higher cloud computing volumes and software licensing, partly offset by productivity initiatives.",
+      "numbers": [
+        {
+          "label": "Underlying operating expense growth vs 1H25",
+          "value": 5.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-34",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 54,
+      "printed_page": 54,
+      "kind": "text",
+      "quote": "45.2% 46.1% 45.9% 1H25 2H25 1H26",
+      "numbers": [
+        {
+          "label": "Cost to income 1H25",
+          "value": 45.2,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost to income 2H25",
+          "value": 46.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost to income 1H26",
+          "value": 45.9,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-35",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 54,
+      "printed_page": 54,
+      "kind": "text",
+      "quote": "Cost to income1",
+      "numbers": [],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "agentic",
+    "models": "agent=anthropic/claude-opus-5, vision=anthropic/claude-opus-5",
+    "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
+    "generated": "2026-08-30T19:35:49+00:00",
+    "seconds": 181.8,
+    "cost_usd": 0.7395,
+    "tokens": "418297 in / 12155 out",
+    "orchestration": "agent",
+    "tool_calls": 25,
+    "pages_read": 8,
+    "charts_read": 1,
+    "budget_exhausted": "no"
+  }
+}

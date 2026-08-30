@@ -1,0 +1,1003 @@
+{
+  "bank": "NAB",
+  "metric": "cti",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "cash",
+  "movement": {
+    "from_value": 46.5,
+    "to_value": 47.3,
+    "delta": 0.8,
+    "unit": "ppt"
+  },
+  "movement_source": "row 'Cost to income ratio (cash earnings basis)', column Year to Sep 24 -> column Year to Sep 25",
+  "headline": "NAB's headline cash-basis cost-to-income ratio rose to 47.3% in FY25 from 46.5% in FY24, an increase the results book prints as 80 bps (+0.8 ppt) [ev-1]. On the statutory block of the same KPI table the ratio rose 110 bps, 48.5% to 49.6% [ev-2]. The move is negative jaws: net operating income grew 2.9% to $20,813m while operating expenses grew 4.6% to $9,848m, so underlying profit rose only 1.3% [ev-4][ev-5][ev-23]. Income growth was diluted by other operating income falling 1.9% (customer-related remediation up $67m, $66m fee loss from wound-down/disposed businesses) against net interest income up 3.8% [ev-6][ev-7][ev-17][ev-16]; ex-M&T revenue rose just 1.4% [ev-24]. Expenses carried $130m of payroll review and remediation costs (ex which growth was 3.2%), with salary-related +$267m, technology & investment +$213m and $420m of productivity benefits [ev-8][ev-19][ev-26].",
+  "headline_evidence": [
+    "ev-1",
+    "ev-2",
+    "ev-4",
+    "ev-5",
+    "ev-6",
+    "ev-7",
+    "ev-8",
+    "ev-16",
+    "ev-17",
+    "ev-19",
+    "ev-23",
+    "ev-24",
+    "ev-26"
+  ],
+  "drivers": [
+    {
+      "canonical": "expense_growth",
+      "bank_label": "Operating expenses increased by $435 million or 4.6%",
+      "contribution": {
+        "value": 2.09,
+        "unit": "ppt"
+      },
+      "columns": "Year to Sep 25 minus Year to Sep 24",
+      "narrative": "Expenses rose $435m/4.6% to $9,848m, raising the ratio. NAB's YoY walk: salary related +$267m, volume related +$143m, technology & investment +$213m, D&A +$42m, other +$131m (incl. $62m financial crime uplift), less productivity $420m and EU $71m (AUSTRAC costs $18m vs $89m). Personnel +$271m/4.8%, technology +$71m/3.5%, general +$81m/6.8%.",
+      "confidence": 78,
+      "evidence": [
+        "ev-5",
+        "ev-8",
+        "ev-9",
+        "ev-10",
+        "ev-11",
+        "ev-12",
+        "ev-13",
+        "ev-14",
+        "ev-15",
+        "ev-19",
+        "ev-28",
+        "ev-29"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "income_growth",
+      "bank_label": "Net operating income 20,813 20,236 2.9",
+      "contribution": {
+        "value": -1.28,
+        "unit": "ppt"
+      },
+      "columns": "Year to Sep 25 minus Year to Sep 24",
+      "narrative": "Income grew 2.9% to $20,813m, lowering the ratio, but too slowly to offset costs. Drivers: volume growth (GLAs +5.9%, deposits +7.4%) and higher Markets & Treasury income; NII +$644m/3.8% on higher average interest earning assets and NIM (1.74%, +3bps). Other operating income fell $67m/1.9% on $67m higher customer remediation and $66m fees lost to disposals/run-offs; ex-M&T revenue rose only 1.4%.",
+      "confidence": 78,
+      "evidence": [
+        "ev-4",
+        "ev-6",
+        "ev-7",
+        "ev-16",
+        "ev-17",
+        "ev-23",
+        "ev-24"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "notable_items",
+      "bank_label": "payroll review and remediation costs",
+      "contribution": {
+        "value": 0.62,
+        "unit": "ppt"
+      },
+      "columns": "Year to Sep 25 minus Year to Sep 24",
+      "narrative": "Within the expense driver, NAB isolates $130m of payroll review and remediation costs (personnel $101m, general $29m); excluding them expenses rose $305m or 3.2% rather than 4.6% — management calls them \"disappointing and must be fixed\". Also inside income, customer-related remediation rose $67m, depressing other operating income.",
+      "confidence": 72,
+      "evidence": [
+        "ev-8",
+        "ev-13",
+        "ev-15",
+        "ev-19",
+        "ev-25",
+        "ev-26",
+        "ev-27",
+        "ev-17"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
+  "notable_items": [
+    "Payroll review and remediation costs of $130m in FY25 (personnel $101m, general $29m); expense growth ex these costs 3.2% vs 4.6% reported [ev-8][ev-13][ev-15]",
+    "Customer-related remediation in other operating income up $67m FY25 v FY24 [ev-17]",
+    "Lower AUSTRAC enforceable undertaking costs: $18m FY25 vs $89m FY24 (-$71m walk bar) [ev-19][ev-28]",
+    "Statutory CTI (which includes acquisitions, integration, disposals and business closures items) rose 110 bps vs cash 80 bps [ev-1][ev-2]"
+  ],
+  "disagreements": [
+    {
+      "topic": "Cost-to-income ratio movement: cash vs statutory basis",
+      "values": [
+        "cash: 46.5% to 47.3%, +80 bps",
+        "statutory: 48.5% to 49.6%, +110 bps"
+      ],
+      "preferred": "cash: 46.5% to 47.3%, +80 bps",
+      "reason": "definitional",
+      "explanation": "The KPI table prints the same 'Cost to income ratio' row twice, once in the statutory-basis block and once in the cash-earnings block. NAB's primary reporting measure is cash earnings, so the cash block supplies the movement; the statutory block's larger 110 bps rise reflects non-cash items (notably $295m of acquisitions, integration, disposals and business closures) and is reported as context."
+    }
+  ],
+  "attribution_confidence": 40,
+  "limitations": [
+    "NAB publishes no cost-to-income ratio waterfall. The ppt contributions for income and expense growth are MY arithmetic on the disclosed FY25/FY24 income and expense levels (expense effect $435m/$20,813m = +2.09 ppt; income effect 9,413/20,813 less 9,413/20,236 = -1.28 ppt), not a bank-published split, so they are capped in confidence.",
+    "The $0.62 ppt notable-items figure ($130m payroll remediation / FY25 income) is a sub-part sitting INSIDE the +2.09 ppt expense contribution, not an additional driver; adding it to the two jaws contributions would double count.",
+    "The FY25 v FY24 expense walk (presentation p.25) is denominated in $m, not ppt of the ratio, and its bars are net numbers: the reported +4.6% already absorbs $420m of productivity benefits and a $71m fall in AUSTRAC EU costs, so gross cost pressure was materially larger than the net movement.",
+    "Comparatives were restated in FY25 for the presentation of expenses directly attributable to earning income and for portfolio transfers between Personal Banking and B&PB, so FY24 levels here differ from those originally published.",
+    "No document quantifies the ratio impact of individual revenue components (e.g. M&T income, disposals); those are given as $m or % of income only.",
+    "Failed check: drivers_reconcile (drivers +1.4 + residual +0.0 != delta +0.8, tol 0.1)"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 15,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Cost to income ratio 47.3% 46.5% 80 bps 47.8% 46.8% 100 bps",
+      "numbers": [
+        {
+          "label": "CTI FY25 (cash)",
+          "value": 47.3,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "CTI FY24 (cash)",
+          "value": 46.5,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "CTI Sep25 v Sep24 change",
+          "value": 80.0,
+          "unit": "bps",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 15,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Cost to income ratio 49.6% 48.5% 110 bps 50.2% 48.9% 130 bps",
+      "numbers": [
+        {
+          "label": "CTI FY25 (statutory)",
+          "value": 49.6,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "CTI FY24 (statutory)",
+          "value": 48.5,
+          "unit": "%",
+          "basis": "statutory"
+        },
+        {
+          "label": "CTI Sep25 v Sep24 change (statutory)",
+          "value": 110.0,
+          "unit": "bps",
+          "basis": "statutory"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 15,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Full-time equivalent employees (FTE) Group - Continuing operations (spot) 41,723 38,996 7.0%",
+      "numbers": [
+        {
+          "label": "FTE spot Sep 25",
+          "value": 41723.0,
+          "unit": "ratio",
+          "basis": null
+        },
+        {
+          "label": "FTE spot Sep 24",
+          "value": 38996.0,
+          "unit": "ratio",
+          "basis": null
+        },
+        {
+          "label": "FTE growth Sep25 v Sep24",
+          "value": 7.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net operating income 20,813 20,236 2.9 10,545 10,268 2.7",
+      "numbers": [
+        {
+          "label": "Net operating income FY25",
+          "value": 20813.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Net operating income FY24",
+          "value": 20236.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Net operating income growth Sep25 v Sep24",
+          "value": 2.9,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Operating expenses(1) (9,848) (9,413) 4.6 (5,043) (4,805) 5.0",
+      "numbers": [
+        {
+          "label": "Operating expenses FY25",
+          "value": -9848.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating expenses FY24",
+          "value": -9413.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Operating expenses growth Sep25 v Sep24",
+          "value": 4.6,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net interest income 17,398 16,754 3.8 8,953 8,445 6.0",
+      "numbers": [
+        {
+          "label": "Net interest income FY25",
+          "value": 17398.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Net interest income FY24",
+          "value": 16754.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "NII growth Sep25 v Sep24",
+          "value": 3.8,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Other operating income(1) 3,415 3,482 (1.9) 1,592 1,823 (12.7)",
+      "numbers": [
+        {
+          "label": "Other operating income FY25",
+          "value": 3415.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "Other operating income FY24",
+          "value": 3482.0,
+          "unit": "$m",
+          "basis": "cash"
+        },
+        {
+          "label": "OOI growth Sep25 v Sep24",
+          "value": -1.9,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 20,
+      "printed_page": 18,
+      "kind": "text",
+      "quote": "Operating expenses increased by $435 million or 4.6%. Excluding an increase of $130 million for payroll review and remediation costs, operating expenses increased by $305 million or 3.2%.",
+      "numbers": [
+        {
+          "label": "Operating expense increase FY25 v FY24",
+          "value": 435.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expense growth FY25 v FY24",
+          "value": 4.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Payroll review and remediation cost increase FY25 v FY24",
+          "value": 130.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expense increase ex payroll remediation",
+          "value": 305.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expense growth ex payroll remediation",
+          "value": 3.2,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 20,
+      "printed_page": 18,
+      "kind": "table",
+      "quote": "Personnel expenses 5,860 5,589 4.8 3,036 2,824 7.5",
+      "numbers": [
+        {
+          "label": "Personnel expenses FY25",
+          "value": 5860.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Personnel expenses FY24",
+          "value": 5589.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Personnel expense growth FY25 v FY24",
+          "value": 4.8,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 20,
+      "printed_page": 18,
+      "kind": "table",
+      "quote": "Technology expenses(1) 2,105 2,034 3.5 1,067 1,038 2.8",
+      "numbers": [
+        {
+          "label": "Technology expenses FY25",
+          "value": 2105.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Technology expenses FY24",
+          "value": 2034.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Technology expense growth FY25 v FY24",
+          "value": 3.5,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 20,
+      "printed_page": 18,
+      "kind": "table",
+      "quote": "General expenses(1) 1,280 1,199 6.8 639 641 (0.3)",
+      "numbers": [
+        {
+          "label": "General expenses FY25",
+          "value": 1280.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "General expenses FY24",
+          "value": 1199.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "General expense growth FY25 v FY24",
+          "value": 6.8,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 20,
+      "printed_page": 18,
+      "kind": "table",
+      "quote": "Occupancy and depreciation expenses 603 591 2.0 301 302 (0.3)",
+      "numbers": [
+        {
+          "label": "Occupancy and depreciation FY25",
+          "value": 603.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Occupancy and depreciation FY24",
+          "value": 591.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Occupancy growth FY25 v FY24",
+          "value": 2.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 20,
+      "printed_page": 18,
+      "kind": "text",
+      "quote": "Personnel expenses increased by $271 million or 4.8%. Excluding an increase of $101 million for payroll review and remediation costs, personnel expenses increased by $170 million or 3.0%. The increase was driven by salary expense inflation, investment in additional bankers and resources to support growth, and continued investment in technology and financial crime related capabilities.",
+      "numbers": [
+        {
+          "label": "Personnel expense increase FY25 v FY24",
+          "value": 271.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Payroll review/remediation in personnel",
+          "value": 101.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Personnel increase ex payroll remediation",
+          "value": 170.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Personnel growth ex payroll remediation",
+          "value": 3.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 20,
+      "printed_page": 18,
+      "kind": "text",
+      "quote": "Technology expenses increased by $71 million or 3.5%. The increase was primarily due to costs associated with software licences, maintenance and cloud consumption, combined with higher software amortisation.",
+      "numbers": [
+        {
+          "label": "Technology expense increase FY25 v FY24",
+          "value": 71.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Technology expense growth",
+          "value": 3.5,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 20,
+      "printed_page": 18,
+      "kind": "text",
+      "quote": "General expenses increased by $81 million or 6.8%. Excluding an increase of $29 million for payroll review and remediation costs, general expenses increased $52 million or 4.3%. This was primarily due to continued investment in technology capabilities.",
+      "numbers": [
+        {
+          "label": "General expense increase FY25 v FY24",
+          "value": 81.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Payroll review/remediation in general expenses",
+          "value": 29.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "General expense increase ex payroll remediation",
+          "value": 52.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 14,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "Net interest income increased by $644 million or 3.8%. This includes a decrease of $74 million due to movements in economic hedges, offset in other operating income. Excluding this movement, the underlying increase of $718 million or 4.3% was due to higher average interest earning assets and net interest margin.",
+      "numbers": [
+        {
+          "label": "NII increase FY25 v FY24",
+          "value": 644.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NII growth FY25 v FY24",
+          "value": 3.8,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Economic hedge movement in NII",
+          "value": -74.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NII underlying increase",
+          "value": 718.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NII underlying growth",
+          "value": 4.3,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 14,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "Other operating income decreased by $67 million or 1.9%. This includes an increase of $74 million due to movements in economic hedges, offset in net interest income, and an increase in customer-related remediation of $67 million, together with the fee reduction impact from the winding down and disposal of Group businesses of $66 million.",
+      "numbers": [
+        {
+          "label": "OOI decrease FY25 v FY24",
+          "value": -67.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "OOI growth",
+          "value": -1.9,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Economic hedges in OOI",
+          "value": 74.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Customer-related remediation increase",
+          "value": 67.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Fee reduction from wind-down/disposal",
+          "value": 66.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 14,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "Operating expenses increased by $435 million or 4.6%. Excluding an increase of $130 million for payroll review and remediation costs, operating expenses increased by $305 million or 3.2%. This was primarily driven by salary expense inflation, continued investment in technology and financial crime related capabilities, and investment in additional bankers and resources to support growth.",
+      "numbers": [
+        {
+          "label": "Operating expense increase FY25 v FY24",
+          "value": 435.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Payroll review and remediation",
+          "value": 130.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Ex-payroll expense increase",
+          "value": 305.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 25,
+      "printed_page": 25,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Operating expenses (YoY) ($m): Sep 24 9413.0 -> Sep 25 9848.0",
+      "numbers": [
+        {
+          "label": "Salary related",
+          "value": 267.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Volume related",
+          "value": 143.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Technology & Investment",
+          "value": 213.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Depreciation & Amortisation",
+          "value": 42.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Productivity",
+          "value": -420.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other",
+          "value": 131.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "EU",
+          "value": -71.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Payroll review and remediation",
+          "value": 130.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 25,
+      "printed_page": 25,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Other: Includes uplift in financial crime related costs of $62m and lower restructuring costs of $22m",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 25,
+      "printed_page": 25,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] EU2: AUSTRAC EU-related costs of $18m ($89m in FY24)",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 25,
+      "printed_page": 25,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] YoY increase 4.6% (ex payroll review +3.2%)",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 5,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "FY25 v FY24 drivers of cash earnings change (%) 2.9 4.6 1.3 Income Expenses Underlying profit",
+      "numbers": [
+        {
+          "label": "Income growth FY25 v FY24",
+          "value": 2.9,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Expense growth FY25 v FY24",
+          "value": 4.6,
+          "unit": "%",
+          "basis": "cash"
+        },
+        {
+          "label": "Underlying profit growth FY25 v FY24",
+          "value": 1.3,
+          "unit": "%",
+          "basis": "cash"
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 5,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Revenue increased by 2.9% with key drivers including volume growth and higher Markets & Treasury (M&T) income, partially offset by higher customer-related remediation charges and the impact from business disposals and run-offs. Excluding M&T income, revenue rose 1.4% over the year, and increased 4.3% 2H25 compared with 1H25.",
+      "numbers": [
+        {
+          "label": "Revenue growth FY25 v FY24",
+          "value": 2.9,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Revenue growth ex M&T FY25 v FY24",
+          "value": 1.4,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Revenue growth ex M&T 2H25 v 1H25",
+          "value": 4.3,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 5,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Expenses increased by 4.6% including $130 million related to payroll review and remediation charges. Excluding payroll review and remediation charges, expenses rose 3.2% reflecting higher personnel and technology related costs, partially offset by productivity benefits and lower costs relating to the Group's Enforceable Undertaking with AUSTRAC.",
+      "numbers": [
+        {
+          "label": "Expense growth FY25 v FY24",
+          "value": 4.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Payroll review and remediation charges FY25",
+          "value": 130.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Expense growth ex payroll review FY25 v FY24",
+          "value": 3.2,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-26",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 5,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Expense growth of 4.6% includes productivity benefits of $420 million but has been impacted by $130 million of payroll review and remediation costs which are disappointing and must be fixed.",
+      "numbers": [
+        {
+          "label": "Productivity benefits FY25",
+          "value": 420.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Payroll review and remediation costs FY25",
+          "value": 130.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-27",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 25,
+      "printed_page": 25,
+      "kind": "text",
+      "quote": "YoY increase 4.6% (ex payroll review +3.2%)",
+      "numbers": [
+        {
+          "label": "Opex YoY growth FY25 v FY24",
+          "value": 4.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Opex YoY growth ex payroll review",
+          "value": 3.2,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-28",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 25,
+      "printed_page": 25,
+      "kind": "text",
+      "quote": "AUSTRAC EU-related costs of $18m ($89m in FY24)",
+      "numbers": [
+        {
+          "label": "AUSTRAC EU-related costs FY25",
+          "value": 18.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "AUSTRAC EU-related costs FY24",
+          "value": 89.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-29",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 25,
+      "printed_page": 25,
+      "kind": "text",
+      "quote": "Includes uplift in financial crime related costs of $62m and lower restructuring costs of $22m",
+      "numbers": [
+        {
+          "label": "Financial crime related cost uplift FY25 v FY24",
+          "value": 62.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Lower restructuring costs FY25 v FY24",
+          "value": 22.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-30",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 25,
+      "printed_page": 25,
+      "kind": "text",
+      "quote": "1,638 1,785 ~1,800 FY24 FY25 FY26 estimate Investment spend",
+      "numbers": [
+        {
+          "label": "Investment spend FY24",
+          "value": 1638.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Investment spend FY25",
+          "value": 1785.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "agentic",
+    "models": "agent=anthropic/claude-opus-5, vision=anthropic/claude-opus-5",
+    "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
+    "generated": "2026-08-30T20:15:30+00:00",
+    "seconds": 182.2,
+    "cost_usd": 0.88,
+    "tokens": "619423 in / 12481 out",
+    "orchestration": "agent",
+    "tool_calls": 29,
+    "pages_read": 14,
+    "charts_read": 1,
+    "budget_exhausted": "no"
+  }
+}
