@@ -706,3 +706,13 @@ saved quotes verbatim.
   and no shape rule separates the two. It was let through before this round as
   well, so nothing regressed; it is a candidate for a later round.
 - Everything left undone by round 3 stands.
+
+## Disposition (2026-08-31 morning)
+
+Four rounds ran overnight; the finding count converged 18 -> 15 -> 7 -> 5 -> 4
+with severity narrowing each round (rounds 3-4 were refinements of earlier
+fixes, not new defect classes). 47 findings fixed, zero refuted, zero
+loosenings, 430 tests. This ticket CLOSES when the round-4 live verification
+suite is green (running this morning). Further review passes fold into
+Tuesday's six cleanup passes (ticket 33), which review the same code with the
+same discipline on the cleaned layout.
