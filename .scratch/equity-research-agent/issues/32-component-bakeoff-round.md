@@ -120,6 +120,18 @@ loop-shape deficit. RECOMMENDATION UPDATE: run one more cheap-tier
 iteration on those two fixes before paying for a hybrid pass; adopt the
 hybrid only if the anchors still sit below ~6/15 after it. User ratifies.
 
+## SUPERSEDED (2026-08-30, user decision -> ADR-0005)
+
+The user rejected the cheap-tier-first framing above. The objective is the
+most accurate and most generalisable agent; cost is a secondary rail, not
+the target. Ticket 22's follower is retired as a primary path (it survives
+as an agent tool). The research loop becomes a closed-loop tool-use agent
+on the strongest reliably tool-calling model; cheap combos remain only as
+comparison arms. The bake-off's findings stand as the evidence base for
+this decision; its cheap-vs-hybrid decision rule is void. Next measurement:
+pipeline vs agentic-cheap vs agentic (strong) on the 25 dev metric cases
+plus the five Codex-authored dev researcher questions.
+
 ## Question
 
 Time-permitting robustness round (user, 2026-08-28): the current component choices are tested but not comprehensively compared — make each a measured decision rather than an assumption. Reuse the prototype-13/14 harnesses; every arm scores against existing gold.
