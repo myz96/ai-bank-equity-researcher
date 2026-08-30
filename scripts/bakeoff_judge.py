@@ -47,7 +47,12 @@ ANCHORS = [
     ("cba-nim-fy21", "cba-nim-fy21-vs-fy20", "cba-fy21.json", "nim"),
 ]
 
-PIPELINE_ARMS = {"cheap": "cheap", "glm": "normal"}  # arm name -> out/ suffix
+PIPELINE_ARMS = {  # arm name -> out/ suffix (all four emit the pipeline artifact contract)
+    "cheap": "cheap",
+    "glm": "normal",
+    "agentic": "agentic",
+    "agentic-cheap": "agentic-cheap",
+}
 BENCH_ARMS = ("sonnet", "fable", "codex")
 ALL_ARMS = list(PIPELINE_ARMS) + list(BENCH_ARMS)
 

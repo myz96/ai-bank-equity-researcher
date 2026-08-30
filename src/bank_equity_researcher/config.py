@@ -50,7 +50,10 @@ class Combo:
     # Runaway protection only (ADR-0005 point 5): set generously enough that a
     # normal run never meets them. On exhaustion the loop asks for a submission
     # of what it has, with the shortfall declared; it never crashes.
-    max_tool_calls: int = 40
+    # The build round observed 40 BINDING on the two densest cases (45 and 54
+    # calls wanted) — a rail that shapes a run violates ADR-0005 point 5, so
+    # the default sits far above any observed need.
+    max_tool_calls: int = 80
     cost_ceiling_usd: float = 2.0
     wall_clock_s: float = 1800.0
 
@@ -93,7 +96,9 @@ COMBOS: dict[str, Combo] = {
         orchestration="agent",
         agent="anthropic/claude-opus-5",
         agent_max_tokens=8000,
-        cost_ceiling_usd=2.0,
+        # The densest anchor case cost $1.57; a $2 ceiling was close enough to
+        # shape behaviour. $5 is a pure runaway-catch.
+        cost_ceiling_usd=5.0,
     ),
     # A comparison arm, never the product (ADR-0005 point 4): it measures what
     # the model tier buys INSIDE a closed loop. qwen3.7-flash is the cheapest
