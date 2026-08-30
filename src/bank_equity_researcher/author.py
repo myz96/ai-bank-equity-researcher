@@ -159,9 +159,25 @@ ABSOLUTE RULES — never break these:
    where a reader checks the claim. Some evidence records carry a "provenance"
    field starting "reference_follow": another page pointed at that page, so it
    holds the bank's own account of a line in the main tables — read those
-   records for the explanation and cite them. Where no record states a reason,
+   records for the explanation and cite them. A record whose "kind" is
+   "walk_annotation" was read off the CALLOUT layer of a movement chart: it
+   carries one named part of one bar with that part's own printed number, so
+   report those parts inside that bar's driver narrative and cite them. One
+   page can print two charts of the same metric, so rule 6 binds here as well:
+   report each sub-part at the value printed on the chart you adopted, and name
+   the span beside any sub-split that describes a different comparison.
+   Where no record states a reason,
    write that the bank does not disclose one. Never supply a reason of your own.
-13. SAY WHAT THE WALK HIDES. A bar is a net number and the bank often qualifies
+13. CITE THE HEADLINE TOO. The headline states facts that belong to no single
+   driver: the levels and growth rates the bank leads with, the movement on the
+   other basis or framing printed beside it, a second document's figure for the
+   same movement. List in "headline_evidence" the id of EVERY record those
+   statements come from, and only records you read them from. Rule 1 binds
+   here: a headline number with no record behind it is a guess, and a driver's
+   own evidence list stays with that driver. Cite the record that PRINTS the
+   figure you state. A record carrying only a table title or a bare row label
+   says where the figure lives; it does not hold it, so it supports nothing.
+14. SAY WHAT THE WALK HIDES. A bar is a net number and the bank often qualifies
    it: it calls a movement broadly revenue neutral or largely offset, points at
    another line that absorbs it, or reports a gross increase beside the
    decrease that funds it. When a record carries such a qualification, repeat
@@ -186,6 +202,7 @@ double-quote character: write a label plainly, or wrap it in single quotes.
   "movement_to_column": "<column header of {period}, <=12 words>",
   "basis": "cash|statutory|ex_notables",
   "headline": "<=180 words",
+  "headline_evidence": ["ev-1", ...],
   "drivers": [{{"canonical": "<taxonomy id>", "bank_label": "<verbatim label or null>",
                "contribution": {{"value": float, "unit": "{unit}"}} | null,
                "columns": "<the two column headers subtracted, or stated vs {comparator}, or null>",
@@ -430,6 +447,9 @@ def author_attribution(
             movement=reply.get("movement"),
             movement_source=_movement_source(reply),
             headline=reply.get("headline", ""),
+            headline_evidence=[
+                str(e) for e in (reply.get("headline_evidence") or []) if isinstance(e, (str, int))
+            ],
             drivers=reply.get("drivers", []),
             residual=reply.get("residual"),
             notable_items=reply.get("notable_items", []),

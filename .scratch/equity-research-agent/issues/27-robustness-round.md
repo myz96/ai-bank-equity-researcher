@@ -556,3 +556,219 @@ band, not a step.
   consistency. WBC cti was already passing and still passes; the change is not
   load-bearing.
 - Nothing is committed.
+
+### Iteration 3 (2026-08-30)
+
+Three bounded fixes, each with an identified cause. Nothing is committed.
+
+#### Fix 1 — the ROE identity scale bug
+
+`validate.py`: `reconcile_tolerance()` is factored out of
+`check_drivers_reconcile` so the check and the new normaliser read one number,
+and `settle_identity_scale()` is added. `pipeline.py` calls it on every author
+answer before any check reads the numbers, and a firing adds one retry with a
+generic `identity_scale` instruction. `taxonomy.py` gains a SCALE paragraph in
+the roe method hint.
+
+Mechanism: a ratio identity is stated in the ratio's own unit, so a growth rate
+enters it as a FRACTION and a dollar movement enters it divided by the
+denominator; an author that feeds in a rate printed in per cent states the
+split exactly 100 times too large.
+
+Three guards keep it from becoming a way of making any failing bridge close.
+It fires only when the identity does NOT close at the scale written, DOES close
+one factor of 100 down, and some contribution is larger than the ratio's own
+endpoints. Without the third guard, dividing any failing ppt split by 100 would
+drive its sum to nearly zero and the loose ppt tolerance would accept it.
+
+Replayed over all 45 saved artifacts before switch-on: two fires, both on cases
+that were FAILING `drivers_reconcile` and both correct — WBC roe FY25 (-23.76
+and +0.56 ppt against a -0.24 ppt movement) and CBA roe FY21 (+146 and -16 ppt
+against +1.3). Zero fires on any passing artifact.
+
+CTI does NOT have the bug. Its identity carries no rate-times-level product, and
+every saved CTI artifact states its contributions on the ppt scale already. The
+normaliser covers CTI anyway, because both metrics share the
+`two_level_arithmetic` method.
+
+Verification: WBC roe FY25 re-ran OK at 11.21 -> 10.97 ppt, `drivers_reconcile`
+now PASSES, and confidence rose 40 -> 80 (the computed-delta ceiling). With the
+tightened method hint the author reached the right scale on its own, so the
+normaliser did not have to fire on the re-run.
+
+#### Fix 2 — headline-level citations, on both sides
+
+`schema.py`: `Attribution.headline_evidence`, filtered by
+`enforce_evidence_gate` like every other citation list. `author.py`: rule 13
+CITE THE HEADLINE TOO, the new JSON field, and one clause telling the author to
+cite the record that PRINTS a figure rather than one holding a table title.
+`render.py`: the headline's citations print as block quotes under the headline,
+so `answer_prose` still strips them and the "does the note state it" question
+never reads a pasted quote. `judge.py`: `cited_quotes` unions the driver lists
+with the headline list. `scripts/bakeoff_judge.py` needed NO change — its
+pipeline arm already calls `J.cited_quotes`.
+
+The rule that records the answer never cited are not its grounding is unchanged
+and tested.
+
+One defect found inside the fix. `MAX_QUOTES` is 24, and the CBA FY26
+cash-earnings answer cites 26 records. Under a flat "drivers first, headline
+after" order the two quotes carrying the headline's own figures fell off the end
+of the window — the new citations were the first thing the cap threw away. The
+cap is unchanged; the two lists now share it, with the drivers taking every slot
+the headline does not need and never fewer than half.
+
+Verification: the entailment path now exists where it could not before. On the
+cash-earnings anchor, "operating income growth +6.2%" moved from
+stated/not-entailed to a PASS — the first time any of the six arms scored on
+that item — and the operating-performance item moved from a flat fail to a
+judge split, one judge entailing it from the quote the headline now cites.
+
+#### Fix 3 — walk-annotation vision pairing
+
+`extract.py`: `ANNOTATION_PROMPT`, `annotation_records()` (parsing, separated so
+the degradation rule is testable without a model) and `extract_walk_annotations()`
+— exactly one extra vision call per walk page. `pipeline.py` calls it inside the
+walk loop, whether or not the walk read itself succeeded.
+
+Mechanism: a walk chart has two layers. The bars are one. The other is the
+callout layer, where the bank splits a bar into named parts with their own
+numbers; the PDF text layer emits those numbers as one block and their labels as
+another ("(1) (1) +9 (5) (4)" above three product names), so nothing but a look
+at the page can pair them.
+
+Constraints held. One extra call per walk page and no more. Any failure — an
+unreachable model, a reply in the wrong shape, an item with no label — returns
+NOTHING, so the case keeps its walk and its answer. The prompt describes the
+SHAPE of a callout (sub-splits, components, footnote markers, qualifying
+phrases) and names no bank, no chart and no value; a test asserts that.
+
+One refinement the re-runs forced: the reader sometimes re-reported the chart's
+own bars as callouts, so the walk's bar labels are passed in and a callout that
+only repeats a bar is dropped. The same bar reaching the author twice invites it
+to claim the bar twice.
+
+Verification: nim FY21 now carries 23 annotation records, including the
+home-loan sub-split (+9 / -5 / -4) and the deposit-funding sub-split (-8 / +1 /
++2 / +2) that no text pass could pair. The case moved from 0/5 to 2/5 on the
+judge checklist, and the sub-split item passes STATED and ENTAILED.
+
+#### Bake-off judge row (verbatim)
+
+`evals/results/20260829-2156-iter3-bakeoff-judge.json`, four anchors, cheap arm:
+
+| arm | cba-nim-fy26 | cba-cash-earnings-fy26 | cba-impairment-fy26 | cba-nim-fy21 | total |
+|---|---|---|---|---|---|
+| cheap | 2/4 ⚑2 | 1/3 ⚑1 | 0/3 | 2/5 | 5/15 |
+
+Prior row was 3/4 ⚑1, 0/3 ⚑1, 0/3, 0/5 = 3/15. The target that ends the
+bake-off is 6/15 and this run does not reach it. Both nim FY26 flags are judge
+splits in which one judge answers stated-and-entailed; the four passes are real.
+The full suite re-ran the four anchors afterwards, so the artifacts now in
+`out/` are a later sample than the judged ones.
+
+#### Full dev suite (verbatim)
+
+`evals/results/20260830-1247-cheap-dev.md` is one clean run of all 25 cases. It
+came back 24 of 25 movements: CBA cet1 1H26 read from_value 12.6 off a
+capital-overview SLIDE while its own citation named the results book's KPI row,
+which prints 12.2. The slide record is a mis-extraction — that page prints
+Level 1, Level 2 and International ratios for Dec 25 plus a peer bar chart, and
+no 1H25 CET1 at all. Two immediate re-runs of the case both returned the
+correct 1220 -> 1230 bps off the book row, so the case is flaky, not stably
+wrong.
+
+The scorecard below is the offline rescore over the saved artifacts, which is
+the same run with that one case re-run: `evals/results/20260830-iter3-rerun.md`.
+No model calls.
+
+| Case | Movement | Driver recall | Precision | Extraction | Scored claims | Unscored | Failed checks | Conf | Cost |
+|---|---|---|---|---|---|---|---|---|---|
+| CBA-nim-1H26 | OK | 7/7 | 7/7 | 7/7 | 7/7 | 0 | 0 | 90 | $0.0033 |
+| CBA-cash_earnings-1H26 | OK | 2/3 | 2/3 | — | 3/6 | 3 | 0 | 95 | $0.0051 |
+| CBA-roe-1H26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 80 | $0.0017 |
+| CBA-cet1-1H26 | OK | 0/1 | 0/0 | — | 0/1 | 1 | 0 | 60 | $0.0025 |
+| CBA-impairment-1H26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/4 | 4 | 1 | 40 | $0.0026 |
+| CBA-cti-1H26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/1 | 1 | 0 | 85 | $0.0019 |
+| CBA-nim-FY21 | OK | 7/7 | 7/7 | 7/7 | 7/7 | 0 | 0 | 95 | $0.0029 |
+| CBA-cet1-FY21 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/0 | 0 | 1 | 40 | $0.0029 |
+| CBA-nim-FY25 | OK | 7/7 | 7/7 | 7/7 | 7/7 | 0 | 0 | 95 | $0.0035 |
+| CBA-nim-FY26 | OK | 6/6 | 6/6 | 7/7 | 6/6 | 0 | 0 | 90 | $0.0032 |
+| CBA-cash_earnings-FY26 | OK | 4/4 | 4/4 | — | 4/6 | 2 | 0 | 95 | $0.0049 |
+| CBA-roe-FY26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 80 | $0.0015 |
+| CBA-cet1-FY26 | OK | n/a (gold decomposes a different comparison) | n/a (gold decomposes a different comparison) | n/a (gold walk is not the case comparison) | 0/0 | 0 | 1 | 40 | $0.0023 |
+| CBA-impairment-FY26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/3 | 3 | 0 | 80 | $0.0024 |
+| CBA-cti-FY26 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/3 | 3 | 0 | 90 | $0.0021 |
+| NAB-cash_earnings-FY25 | OK | 3/3 | 3/3 | — | 3/5 | 2 | 1 | 40 | $0.0049 |
+| NAB-roe-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 80 | $0.0018 |
+| NAB-cti-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/0 | 0 | 1 | 75 | $0.0013 |
+| NAB-cet1-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/5 | 5 | 0 | 60 | $0.0022 |
+| NAB-impairment-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 90 | $0.0022 |
+| WBC-cash_earnings-FY25 | OK | 4/5 | 4/5 | — | 5/6 | 1 | 1 | 40 | $0.0047 |
+| WBC-roe-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 75 | $0.0011 |
+| WBC-cti-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 75 | $0.0013 |
+| WBC-cet1-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/7 | 7 | 1 | 40 | $0.003 |
+| WBC-impairment-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/3 | 3 | 1 | 40 | $0.002 |
+
+## Calibration (scored quantified driver claims only)
+
+- scored_claims: 42
+- unscored_claims: 47
+- cases_scored: 8
+- cases: 25
+- brier: 0.051
+- confidently_wrong_rate: 0.0
+- 70-84: 9 claims, 78% correct
+- 85-94: 33 claims, 100% correct
+
+25 of 25 movements OK. confidently_wrong_rate 0.0 holds. Every claim at 85 or
+above is correct, 33 of 33.
+
+Brier is 0.051 against 0.035 on the frozen run, and the band table says why: the
+70-84 band holds nine claims with two incorrect where it held eight with one.
+BOTH incorrect claims are the same already-recorded framing gap, and both sit at
+80 under the framing cap:
+
+- CBA cash_earnings 1H26 `operating_expenses` -348 against gold -518 — the same
+  claim the frozen baseline held incorrect;
+- WBC cash_earnings FY25 `operating_expenses` -699 against gold -972 — the same
+  shape on Westpac. The answer also claims `notable_items` -273, and
+  -699 + -273 = -972 exactly, so the answer is right on the combined framing and
+  wrong only on the split the scorer does not use.
+
+No new KIND of incorrect claim appears, and none reaches 85.
+
+#### Tests
+
+`uv run python -m pytest tests/ -q` — 172 passed (136 before). New: eight tests
+of the identity normaliser in `tests/test_author_normalisers.py`, nine of the
+citation union and the report round-trip in `tests/test_judge.py`, and
+`tests/test_walk_annotations.py` (fifteen, covering label-value pairing, the
+bar-repeat filter, seven degradation shapes and the prompt's generic wording).
+
+#### Left undone
+
+- **WBC impairment FY25 still fails `drivers_reconcile`, and the cause is NOT
+  the scale bug.** Its bridge claims a write-off LEVEL as a contribution and a
+  provision-BALANCE movement the method hint forbids, then declares a residual
+  that disagrees with its own contributions (+23 against the implied +289) even
+  after the residual assist hands it the number. The movement is right at 537 ->
+  424 $m. The honest outcome is confidence 40, and the only clean fix — a
+  residual harmoniser that recomputes the field from its definition — would make
+  `drivers_reconcile` unfailable and let a bridge that explains nothing ship at
+  high confidence. Not done on purpose.
+- **The bake-off anchors sit at 5/15 against the 6/15 bar.** The residue is
+  three kinds: two judge splits on nim FY26 where one judge passes, two
+  impairment half-year facts a FY-vs-FY note legitimately skips, and one
+  document-meta fact quotes can never entail.
+- **A page-level comparison stamp on annotation records was built and
+  reverted.** A slide prints more than one chart of the same metric — the FY21
+  presentation puts the half-on-half margin chart and the full-year one on one
+  page with identical bar labels — so the stamp asserted a span the code cannot
+  know. A comment in `pipeline.py` records why the field is deliberately absent.
+- **CBA cet1 1H26 is flaky on its movement** (one wrong in three recent samples).
+  The trigger is a mis-extracted slide record; the answer took its from_value
+  from that record while its own citation named the results book's row. A check
+  that the movement's endpoints appear in a record matching the row the answer
+  CITES would catch it, and is the natural next build.
+- Nothing is committed.

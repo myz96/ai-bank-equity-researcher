@@ -751,21 +751,96 @@ def implied_residual(attribution) -> float | None:
     return round(attribution.movement.delta - sum(quantified), 2)
 
 
-def check_drivers_reconcile(attribution) -> tuple[list[str], list[str]]:
-    """Quantified drivers + residual should sum to the movement delta.
+def reconcile_tolerance(attribution) -> float:
+    """The slack check_drivers_reconcile allows, and the scale normaliser reads.
+
     Tolerance follows the evidence: drivers sourced from a presentation walk
-    inherit its endpoint-rounding slack (the CBA CET1 slide case)."""
+    inherit its endpoint-rounding slack (the CBA CET1 slide case).
+    """
+    presentation_walk = any(
+        r.kind == "walk_vision" and ("presentation" in r.doc_id or "discussion" in r.doc_id)
+        for r in attribution.evidence_records
+    )
+    return WALK_SUM_TOL_PRESENTATION if presentation_walk else 1.0
+
+
+# A ratio identity is stated in the RATIO's own unit. ROE is profit divided by
+# average equity, so a profit movement enters the identity divided by that
+# denominator, and a growth rate enters it as a FRACTION: earnings_effect =
+# prior ROE x growth. An author that multiplies the prior ratio by a growth
+# rate printed in PER CENT — or that carries a dollar movement straight into a
+# ppt field — states the split exactly 100 times too large. The WBC FY25 ROE
+# run split a -0.24 ppt movement into -23.76 and +0.56 ppt, so a CORRECT
+# movement failed drivers_reconcile and shipped capped at 40.
+IDENTITY_SCALE = 100.0
+
+
+def settle_identity_scale(attribution, method: str) -> str | None:
+    """Restate a ratio identity that was written 100x too large. Mutates.
+
+    The correction is arithmetic, never evidence, and it is self-evidencing:
+    it fires only when the identity does NOT close at the scale the author
+    wrote AND does close one factor of 100 down AND some contribution is
+    larger than the ratio's own endpoints. A ppt contribution bigger than the
+    ratio itself is not a movement of that ratio; it is a number on another
+    scale. A bridge whose components are genuinely wrong still fails the
+    reconciliation check, because dividing wrong numbers by 100 does not make
+    them sum.
+
+    Returns the note it appended to limitations, or None when nothing changed.
+    """
+    if method != "two_level_arithmetic" or attribution.movement is None:
+        return None
+    unit = attribution.movement.unit
+    quantified = [
+        d for d in attribution.drivers
+        if d.contribution is not None and d.contribution.unit == unit
+    ]
+    if not quantified or len(quantified) != len([d for d in attribution.drivers if d.contribution]):
+        return None
+    delta = attribution.movement.delta
+    residual = attribution.residual.value if attribution.residual else 0.0
+    tolerance = reconcile_tolerance(attribution)
+    raw = sum(d.contribution.value for d in quantified)
+    if abs(raw + residual - delta) <= tolerance:
+        return None
+    # A contribution to a ratio movement cannot outrun the ratio's own level.
+    level = max(abs(attribution.movement.from_value), abs(attribution.movement.to_value))
+    if not any(abs(d.contribution.value) > level for d in quantified):
+        return None
+    # The author may have written the residual on either scale, so try the two
+    # readings in order: the residual as written, then the residual rescaled
+    # with the contributions.
+    for scaled_residual in (residual, residual / IDENTITY_SCALE):
+        if abs(raw / IDENTITY_SCALE + scaled_residual - delta) > tolerance:
+            continue
+        for driver in quantified:
+            driver.contribution.value = round(driver.contribution.value / IDENTITY_SCALE, 4)
+            driver.checks_passed.append("identity_scale_normalised")
+        if attribution.residual is not None and scaled_residual != residual:
+            attribution.residual.value = round(scaled_residual, 4)
+        note = (
+            f"Identity contributions restated from {raw:+.2f} to {raw / IDENTITY_SCALE:+.4f} "
+            f"{unit}: the identity closes on the movement delta at the ratio's own scale and "
+            "not at the scale they were written on, and a contribution larger than the ratio "
+            "itself cannot be a movement of that ratio. A growth rate enters a ratio identity "
+            "as a fraction, and a dollar movement enters it divided by the identity's "
+            "denominator."
+        )
+        attribution.limitations.append(note)
+        return note
+    return None
+
+
+def check_drivers_reconcile(attribution) -> tuple[list[str], list[str]]:
+    """Quantified drivers + residual should sum to the movement delta."""
     passed, failed = [], []
     if attribution.movement is None:
         return passed, failed
     quantified = [d.contribution.value for d in attribution.drivers if d.contribution]
     if not quantified:
         return passed, ["no_quantified_drivers"]
-    presentation_walk = any(
-        r.kind == "walk_vision" and ("presentation" in r.doc_id or "discussion" in r.doc_id)
-        for r in attribution.evidence_records
-    )
-    tolerance = WALK_SUM_TOL_PRESENTATION if presentation_walk else 1.0
+    tolerance = reconcile_tolerance(attribution)
     residual = attribution.residual.value if attribution.residual else 0.0
     total = sum(quantified) + residual
     if abs(total - attribution.movement.delta) <= tolerance:

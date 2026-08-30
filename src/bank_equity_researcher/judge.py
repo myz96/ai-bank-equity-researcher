@@ -375,17 +375,36 @@ def answer_prose(report_md: str) -> str:
 
 
 def cited_quotes(attribution: dict) -> list[str]:
-    """The verbatim quotes of the evidence records the drivers actually cite.
+    """The verbatim quotes of the evidence records the ANSWER actually cites.
+
+    An answer cites a record in two places, and both are its own citations: a
+    DRIVER's evidence list, and the HEADLINE's. A headline states facts that
+    belong to no single driver — the movement as a second document states it,
+    the statutory-versus-cash framing, the summary measures the bank leads with
+    — and while only driver lists were read here, such a fact could never be
+    entailed however well the answer had sourced it.
 
     Records the answer never cited are not the answer's grounding, so they are
-    not evidence for it here.
+    still not evidence for it here.
+
+    MAX_QUOTES bounds the window, and the two lists share it: neither may
+    starve the other. Drivers cite many records and a headline cites few, so
+    the drivers take every slot the headline does not need, and never fewer
+    than half. A flat "drivers first" order failed the same way the missing
+    field did — the answer's headline citations fell off the end of the window
+    exactly when they were most needed.
     """
-    cited_ids = {e for driver in attribution.get("drivers", []) for e in driver.get("evidence", [])}
-    return [
-        record["quote"]
-        for record in attribution.get("evidence_records", [])
-        if record.get("id") in cited_ids and record.get("quote")
-    ]
+    driver_ids = {e for driver in attribution.get("drivers", []) for e in driver.get("evidence", [])}
+    headline_ids = {e for e in (attribution.get("headline_evidence") or [])} - driver_ids
+    records = attribution.get("evidence_records", [])
+
+    def quotes_of(wanted: set) -> list[str]:
+        return [r["quote"] for r in records if r.get("id") in wanted and r.get("quote")]
+
+    driver_quotes, headline_quotes = quotes_of(driver_ids), quotes_of(headline_ids)
+    driver_room = MAX_QUOTES - min(len(headline_quotes), MAX_QUOTES // 2)
+    kept = driver_quotes[:driver_room]
+    return kept + headline_quotes[: MAX_QUOTES - len(kept)]
 
 
 __all__ = [

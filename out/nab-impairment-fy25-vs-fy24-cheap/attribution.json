@@ -11,7 +11,12 @@
     "unit": "$m"
   },
   "movement_source": "row 'Total credit impairment charge', column FY24 -> column FY25",
-  "headline": "NAB's credit impairment charge (CIC) rose $105 million to $833 million in FY25 (vs $728 million in FY24). The increase was driven by a $328 million rise in individually assessed provisions ($964m vs $636m), partially offset by a $223 million swing in collective provisions from a $92 million charge to a $131 million write-back.",
+  "headline": "NAB's credit impairment charge (CIC) increased by $105 million to $833 million in FY25 (vs $728 million in FY24). The increase was driven by a $328 million rise in individually assessed provisions, primarily in Corporate and Institutional Banking due to specific customer impairments and the non-recurrence of prior-year write-backs. This was partially offset by a $223 million decrease in collective provisions, which swung from a $92 million charge to a $131 million release.",
+  "headline_evidence": [
+    "ev-1",
+    "ev-4",
+    "ev-21"
+  ],
   "drivers": [
     {
       "canonical": "individual_provisions",
@@ -21,15 +26,14 @@
         "unit": "$m"
       },
       "columns": "stated vs FY24",
-      "narrative": "Individualy assessed charges increased $328 million to $964 million (ev-2). This reflects higher specific provisioning on business lending, including customers in C&IB and BNZ (ev-36, ev-47).",
-      "confidence": 90,
+      "narrative": "Increased by $328 million to $964 million. Driven by higher charges in C&IB for a small number of customers and the non-recurrence of write-backs/recoveries seen in Sep 2024. Also saw modest increases in Business/Private Banking, NZ Banking, and unsecured retail portfolios.",
+      "confidence": 85,
       "evidence": [
-        "ev-2",
-        "ev-22",
-        "ev-36",
-        "ev-47"
+        "ev-2"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "single_source"
+      ],
       "checks_failed": []
     },
     {
@@ -40,14 +44,14 @@
         "unit": "$m"
       },
       "columns": "stated vs FY24",
-      "narrative": "Collective provisions swung from a $92 million charge to a $131 million write-back, a $223 million improvement (ev-3). The bank notes no underlying collective provisioning charge, with volume growth and reducing asset quality impact offset by transfers to individual provisions (ev-28).",
-      "confidence": 90,
+      "narrative": "Decreased by $223 million, swinging from a $92 million charge in FY24 to a $131 million write-back in FY25. Reflects improving asset quality and volume dynamics offsetting forward-looking adjustments.",
+      "confidence": 85,
       "evidence": [
-        "ev-3",
-        "ev-22",
-        "ev-28"
+        "ev-3"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "single_source"
+      ],
       "checks_failed": []
     }
   ],
@@ -55,20 +59,18 @@
   "notable_items": [],
   "disagreements": [
     {
-      "topic": "Investor Presentation CIC Definition",
+      "topic": "Total CIC FY24 Level",
       "values": [
-        "833 (Results Book)",
-        "-89 (Investor Presentation)"
+        "$728m (ev-1, ev-21)",
+        "$741m (ev-18)"
       ],
-      "preferred": "833",
+      "preferred": "$728m",
       "reason": "definitional",
-      "explanation": "The Investor Presentation table (ev-24) lists 'Credit impairment charge (CIC)' as -89m for FY25, which contradicts the Results Book headline of 833m. The IP figure likely represents a net release or excludes specific components included in the statutory/cash P&L line item reported in the Results Book. We follow the Results Book as the primary source."
+      "explanation": "The results book summary table (ev-1) and narrative (ev-21) state $728m. A detailed roll-forward table (ev-18) shows $741m. The summary/narrative figures are prioritized as the headline reported metric."
     }
   ],
   "attribution_confidence": 90,
-  "limitations": [
-    "Divisional breakdowns are not explicitly quantified in the provided evidence records for the full year comparison, so the narrative relies on aggregate provision type splits and high-level commentary on business lending drivers."
-  ],
+  "limitations": [],
   "evidence_records": [
     {
       "id": "ev-1",
@@ -99,7 +101,7 @@
       "pdf_page": 26,
       "printed_page": 24,
       "kind": "text",
-      "quote": "Individually assessed credit impairment charge increased by $328 million or 51.6% to $964 million",
+      "quote": "Individually assessed credit impairment charge increased by $328 million or 51.6% to $964 million mainly due to: an increased charge in Corporate and Institutional Banking for the impairment of a small number of customers combined with the non-recurrence of write-backs and recoveries for a small number of customers in the September 2024 full year, and a modest increase in charge across the Business and Private Banking and New Zealand Banking business lending portfolios and the unsecured retail portfolio in Personal Banking.",
       "numbers": [
         {
           "label": "Individually assessed credit impairment charge delta FY25 vs FY24",
@@ -151,7 +153,7 @@
       "pdf_page": 26,
       "printed_page": 24,
       "kind": "text",
-      "quote": "Credit impairment charge increased by $105 million or 14.4% to $833 million",
+      "quote": "Credit impairment charge increased by $105 million or 14.4% to $833 million, driven by a higher level of individually assessed credit impairment charge primarily in Corporate and Institutional Banking. This was partially offset by a lower level of collective credit impairment charge.",
       "numbers": [
         {
           "label": "Credit impairment charge delta FY25 vs FY24",
@@ -173,18 +175,18 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 26,
       "printed_page": 24,
-      "kind": "table",
-      "quote": "Net write-offs to GLAs - annualised 0.07 0.06 1 bp",
+      "kind": "text",
+      "quote": "The Group ratio of net write-offs to GLAs increased by 1 basis point to 0.07%",
       "numbers": [
         {
-          "label": "Net write-offs to GLAs annualised FY25",
-          "value": 0.07,
-          "unit": "%",
+          "label": "Net write-offs to GLAs change FY25 vs FY24",
+          "value": 1.0,
+          "unit": "bps",
           "basis": null
         },
         {
-          "label": "Net write-offs to GLAs annualised FY24",
-          "value": 0.06,
+          "label": "Net write-offs to GLAs FY25",
+          "value": 0.07,
           "unit": "%",
           "basis": null
         }
@@ -425,13 +427,13 @@
       "quote": "Credit impairment charge New and increased provisions (net of collective provision releases) 1,061 968 606 455",
       "numbers": [
         {
-          "label": "New and increased provisions (net of collective provision releases) FY25",
+          "label": "New and increased provisions FY25",
           "value": 1061.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "New and increased provisions (net of collective provision releases) FY24",
+          "label": "New and increased provisions FY24",
           "value": 968.0,
           "unit": "$m",
           "basis": null
@@ -445,7 +447,7 @@
       "pdf_page": 53,
       "printed_page": null,
       "kind": "table",
-      "quote": "Credit impairment charge Write-backs of individually assessed provisions (178) (132) (97) (81)",
+      "quote": "Write-backs of individually assessed provisions (178) (132) (97) (81)",
       "numbers": [
         {
           "label": "Write-backs of individually assessed provisions FY25",
@@ -468,7 +470,7 @@
       "pdf_page": 53,
       "printed_page": null,
       "kind": "table",
-      "quote": "Credit impairment charge Recoveries of amounts previously written-off (50) (95) (24) (26)",
+      "quote": "Recoveries of amounts previously written-off (50) (95) (24) (26)",
       "numbers": [
         {
           "label": "Recoveries of amounts previously written-off FY25",
@@ -491,16 +493,16 @@
       "pdf_page": 53,
       "printed_page": null,
       "kind": "table",
-      "quote": "Credit impairment charge Total charge to the income statement 833 741 485 348",
+      "quote": "Total charge to the income statement 833 741 485 348",
       "numbers": [
         {
-          "label": "Total charge to the income statement FY25",
+          "label": "Total credit impairment charge FY25",
           "value": 833.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total charge to the income statement FY24",
+          "label": "Total credit impairment charge FY24",
           "value": 741.0,
           "unit": "$m",
           "basis": null
@@ -514,11 +516,11 @@
       "pdf_page": 54,
       "printed_page": 52,
       "kind": "table",
-      "quote": "New and increased provisions (net of collective provision releases) ... Total ... 606",
+      "quote": "New and increased provisions (net of collective provision releases) ... Total ... 455",
       "numbers": [
         {
-          "label": "Credit impairment charge FY25",
-          "value": 606.0,
+          "label": "Credit impairment charge FY24 (H1)",
+          "value": 455.0,
           "unit": "$m",
           "basis": null
         }
@@ -531,11 +533,11 @@
       "pdf_page": 54,
       "printed_page": 52,
       "kind": "table",
-      "quote": "New and increased provisions (net of collective provision releases) ... Total ... 455",
+      "quote": "New and increased provisions (net of collective provision releases) ... Total ... 606",
       "numbers": [
         {
-          "label": "Credit impairment charge FY24",
-          "value": 455.0,
+          "label": "Credit impairment charge FY25 (H2)",
+          "value": 606.0,
           "unit": "$m",
           "basis": null
         }
@@ -679,13 +681,13 @@
       "numbers": [
         {
           "label": "Underlying CP charge FY24",
-          "value": 365.0,
+          "value": 152.0,
           "unit": "$m",
           "basis": null
         },
         {
           "label": "Underlying CP charge FY25",
-          "value": 363.0,
+          "value": 0.0,
           "unit": "$m",
           "basis": null
         }
@@ -702,13 +704,13 @@
       "numbers": [
         {
           "label": "Forward looking provisions FY24",
-          "value": -390.0,
+          "value": -92.0,
           "unit": "$m",
           "basis": null
         },
         {
           "label": "Forward looking provisions FY25",
-          "value": -352.0,
+          "value": 61.0,
           "unit": "$m",
           "basis": null
         }
@@ -901,7 +903,7 @@
           "basis": null
         },
         {
-          "label": "IAP change vs prior half",
+          "label": "IAP change from prior half",
           "value": 200.0,
           "unit": "$m",
           "basis": null
@@ -954,24 +956,12 @@
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 85,
       "printed_page": 85,
-      "kind": "table",
-      "quote": "Movement in provisions1",
+      "kind": "text",
+      "quote": "Net $89m release from forward-looking provisions",
       "numbers": [
         {
-          "label": "Underlying CP Sep 24",
-          "value": 96.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Underlying CP Mar 25",
-          "value": 243.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Underlying CP Sep 25",
-          "value": 6165.0,
+          "label": "Forward Looking Provisions Change FY25 (H2)",
+          "value": -89.0,
           "unit": "$m",
           "basis": null
         }
@@ -983,24 +973,12 @@
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 85,
       "printed_page": 85,
-      "kind": "table",
-      "quote": "Economic Adjustment (EA)",
+      "kind": "text",
+      "quote": "$128m increase in provisions for expected credit losses Mar 25 – Sep 25",
       "numbers": [
         {
-          "label": "EA Sep 24",
-          "value": 5921.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "EA Mar 25",
-          "value": 6037.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "EA Sep 25",
-          "value": 6165.0,
+          "label": "Provisions for Expected Credit Losses Change FY25 (H2)",
+          "value": 128.0,
           "unit": "$m",
           "basis": null
         }
@@ -1013,23 +991,47 @@
       "pdf_page": 85,
       "printed_page": 85,
       "kind": "table",
-      "quote": "Target sector FLAs",
+      "quote": "Movement in provisions1 Underlying CP1 Economic Adjustment (EA) Target sector FLAs ($m) Excluding the impact of foreign exchange movements, underlying CP change is $0m Mar 25 v Sept 25 Scenarios, prepared for purposes of informing forward-looking provisions, rely on NAB Economics forecasts at Aug 25 and management judgement 96 243 5,921 Sep 24 6,037 Mar 25 (26) Underlying collective provision Forward Looking Economic Adjustment (185) Target sector Forward Looking Adjustments Individually assessed provision 6,165 Sep 25 IAP",
       "numbers": [
         {
-          "label": "Target sector FLAs Sep 24",
-          "value": -26.0,
+          "label": "Underlying Collective Provision Sep 24",
+          "value": 5921.0,
+          "unit": "$m",
+          "basis": "underlying"
+        },
+        {
+          "label": "Underlying Collective Provision Mar 25",
+          "value": 6037.0,
+          "unit": "$m",
+          "basis": "underlying"
+        },
+        {
+          "label": "Economic Adjustment Change FY25 (H2)",
+          "value": 96.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Target sector FLAs Mar 25",
+          "label": "Target Sector Forward Looking Adjustments Change FY25 (H2)",
           "value": -185.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Target sector FLAs Sep 25",
-          "value": -185.0,
+          "label": "Individually Assessed Provision Change FY25 (H2)",
+          "value": 243.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total Provisions Sep 24",
+          "value": 6037.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total Provisions Sep 25",
+          "value": 6165.0,
           "unit": "$m",
           "basis": null
         }
@@ -1039,26 +1041,20 @@
     {
       "id": "ev-42",
       "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 85,
-      "printed_page": 85,
+      "pdf_page": 86,
+      "printed_page": 86,
       "kind": "table",
-      "quote": "Individually assessed provision IAP",
+      "quote": "Total provision for expected credit losses3",
       "numbers": [
         {
-          "label": "IAP Sep 24",
-          "value": 0.0,
+          "label": "Total provision for ECL FY25",
+          "value": 6165.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "IAP Mar 25",
-          "value": 0.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "IAP Sep 25",
-          "value": 243.0,
+          "label": "Total provision for ECL FY24",
+          "value": 4343.0,
           "unit": "$m",
           "basis": null
         }
@@ -1068,14 +1064,14 @@
     {
       "id": "ev-43",
       "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 85,
-      "printed_page": 85,
-      "kind": "text",
-      "quote": "Net $89m release from forward-looking provisions",
+      "pdf_page": 86,
+      "printed_page": 86,
+      "kind": "table",
+      "quote": "Increase / (decrease) from Mar 25",
       "numbers": [
         {
-          "label": "FLA Release FY25",
-          "value": -89.0,
+          "label": "ECL change H1 FY25 vs H2 FY24",
+          "value": 128.0,
           "unit": "$m",
           "basis": null
         }
@@ -1085,14 +1081,14 @@
     {
       "id": "ev-44",
       "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 85,
-      "printed_page": 85,
+      "pdf_page": 86,
+      "printed_page": 86,
       "kind": "text",
-      "quote": "$128m increase in provisions for expected credit losses Mar 25 – Sep 25",
+      "quote": "Increase in ECL vs Mar 25 primarily reflects increased IAP balances, deterioration in asset quality and volume growth, partially offset by a net release of $89m from forward- looking provisions:",
       "numbers": [
         {
-          "label": "Provision Increase H2 FY25",
-          "value": 128.0,
+          "label": "Net release of FLAs",
+          "value": -89.0,
           "unit": "$m",
           "basis": null
         }
@@ -1102,14 +1098,20 @@
     {
       "id": "ev-45",
       "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 85,
-      "printed_page": 85,
-      "kind": "text",
-      "quote": "2H25 EA increase of $96m reflecting refreshed economic scenarios2",
+      "pdf_page": 95,
+      "printed_page": 95,
+      "kind": "table",
+      "quote": "B&PB credit impairment charge and as % of GLAs1,2 ($m)",
       "numbers": [
         {
-          "label": "EA Change H2 FY25",
-          "value": 96.0,
+          "label": "B&PB credit impairment charge FY25",
+          "value": 1707.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "B&PB credit impairment charge FY24",
+          "value": 1648.0,
           "unit": "$m",
           "basis": null
         }
@@ -1119,134 +1121,20 @@
     {
       "id": "ev-46",
       "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 85,
-      "printed_page": 85,
-      "kind": "text",
-      "quote": "Net $185m decrease in target sector FLAs including release from Retail Trade and partial releases from Commercial Property and Construction",
-      "numbers": [
-        {
-          "label": "Target Sector FLA Change H2 FY25",
-          "value": -185.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-47",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 85,
-      "printed_page": 85,
-      "kind": "text",
-      "quote": "$243m increase in 2H25 mainly related to a small number of customers in both C&IB and BNZ, combined with B&PB business lending",
-      "numbers": [
-        {
-          "label": "IAP Change H2 FY25",
-          "value": 243.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-48",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 86,
-      "printed_page": 86,
-      "kind": "table",
-      "quote": "Total provision for expected credit losses3",
-      "numbers": [
-        {
-          "label": "Total provision for ECL FY24",
-          "value": 4245.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total provision for ECL FY25",
-          "value": 4343.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-49",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 86,
-      "printed_page": 86,
-      "kind": "table",
-      "quote": "Increase / (decrease) from Mar 25",
-      "numbers": [
-        {
-          "label": "ECL change vs prior half FY25",
-          "value": 128.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-50",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 86,
-      "printed_page": 86,
-      "kind": "text",
-      "quote": "Net release of FLAs mainly relating to Retail Trade, Construction and Commercial Property",
-      "numbers": [
-        {
-          "label": "FLA net release FY25",
-          "value": -89.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-51",
-      "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 95,
       "printed_page": 95,
       "kind": "table",
-      "quote": "B&PB credit impairment charge and as % of GLAs1,2 ($m)",
+      "quote": "B&PB credit impairment charge and as % of GLAs1,2 (%)",
       "numbers": [
         {
-          "label": "Credit impairment charge FY24",
-          "value": 1648.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Credit impairment charge FY25",
-          "value": 1707.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-52",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 95,
-      "printed_page": 95,
-      "kind": "table",
-      "quote": "B&PB credit impairment charge and as % of GLAs1,2 (% of GLAs)",
-      "numbers": [
-        {
-          "label": "Credit impairment charge % GLAs FY24",
-          "value": 2.41,
+          "label": "B&PB credit impairment charge % of GLAs FY25",
+          "value": 2.54,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Credit impairment charge % GLAs FY25",
-          "value": 2.54,
+          "label": "B&PB credit impairment charge % of GLAs FY24",
+          "value": 2.41,
           "unit": "%",
           "basis": null
         }
@@ -1259,10 +1147,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-08-29T21:02:29+00:00",
-    "seconds": 58.0,
-    "cost_usd": 0.0023,
-    "tokens": "40147 in / 8180 out",
+    "generated": "2026-08-30T12:42:35+00:00",
+    "seconds": 50.6,
+    "cost_usd": 0.0022,
+    "tokens": "39817 in / 7751 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": []

@@ -11,7 +11,12 @@ from datetime import datetime, timezone
 from .author import author_attribution, primary_basis
 from .config import COMBOS, OUT_DIR, REGISTRY_DIR
 from .corpus import Document, documents_for_period
-from .extract import WALK_PAGE_HINT, extract_text_evidence, extract_walk
+from .extract import (
+    WALK_PAGE_HINT,
+    extract_text_evidence,
+    extract_walk,
+    extract_walk_annotations,
+)
 from .llm import LLM
 from .refs import extraction_hint, follow_references
 from .render import render_report
@@ -34,6 +39,7 @@ from .validate import (
     half_label,
     implied_residual,
     period_end_date,
+    settle_identity_scale,
     unclaimed_components,
     walks_for_view,
 )
@@ -239,6 +245,7 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
     next_id = lambda: f"ev-{next(counter)}"  # noqa: E731
     records, walks, validation = [], [], {"passed": [], "failed": []}
     for doc_id, page in walk_pages:
+        bar_labels: tuple[str, ...] = ()
         try:
             walk, record = extract_walk(
                 llm, combo.vision, doc_by_id[doc_id], page, case_desc, next_id,
@@ -246,20 +253,39 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             )
         except Exception as exc:  # noqa: BLE001
             validation["failed"].append(f"walk_extraction_error p{page}: {exc}")
-            continue
-        passed, failed = check_walk(walk, doc_by_id[doc_id].doc_type)
-        walk["source"] = f"{doc_id} PDF p{page} ({record.id})"
-        walk["record_id"] = record.id
-        walk["checks_passed"] = passed
-        walk["checks_failed"] = [f"{f} [{walk['source']}]" for f in failed]
-        validation["passed"] += passed
-        validation["failed"] += walk["checks_failed"]
-        walks.append(walk)
-        records.append(record)
+        else:
+            passed, failed = check_walk(walk, doc_by_id[doc_id].doc_type)
+            walk["source"] = f"{doc_id} PDF p{page} ({record.id})"
+            walk["record_id"] = record.id
+            walk["checks_passed"] = passed
+            walk["checks_failed"] = [f"{f} [{walk['source']}]" for f in failed]
+            validation["passed"] += passed
+            validation["failed"] += walk["checks_failed"]
+            walks.append(walk)
+            records.append(record)
+            bar_labels = tuple(str(bar.get("label", "")) for bar in walk.get("bars", []))
+        # The chart's ANNOTATION layer, one extra vision call per walk page
+        # (ticket 27, iteration 3). The callouts beside a walk hold the bank's
+        # own sub-split of its bars, and the text layer prints their numbers
+        # and their labels as two separate blocks, so nothing but a look at the
+        # page can pair them. The read degrades to nothing on any failure, so a
+        # page whose annotations are unreadable costs the case nothing.
+        records.extend(
+            extract_walk_annotations(
+                llm, combo.vision, doc_by_id[doc_id], page, case_desc, next_id,
+                unit=metric_cfg["unit"], bar_labels=bar_labels,
+            )
+        )
     # Classify each walk against the case comparison before the author sees it,
     # then put the task-comparison walks first: the author reads in order, and
     # the source hierarchy only decides between walks of the SAME comparison.
     annotate_walks(walks, calendar, period, comparator)
+    # Deliberately NOT stamped: the comparison of the chart an annotation sits
+    # on. A slide prints more than one chart of the same metric — the FY21
+    # presentation puts the half-on-half margin chart and the full-year one on
+    # one page, with the same bar labels — so a page-level comparison stamp
+    # would assert a span the code cannot know. The record names its document,
+    # its page and its kind, and rule 6 governs the rest.
     walks.sort(key=lambda w: 0 if w.get("comparison") == "primary" else 1)
     # Walk pages also get text extraction: the narrative beside a walk carries
     # the explanations and caveats (defect 22), and some banks (ANZ) publish
@@ -353,6 +379,13 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             period_note=period_note,
             headline_row=headline_label,
         )
+        # Ratio-identity scale (ticket 27, iteration 3). ROE and CTI derive
+        # their level-1 split from an identity, and an author that feeds a
+        # growth rate printed in per cent into it — or a dollar movement that
+        # never met its denominator — states the split 100x too large. The
+        # numbers are corrected before any check reads them, and the retry
+        # below asks for the headline to be rewritten on the same scale.
+        scale_note = settle_identity_scale(attribution, metric_cfg["method"])
         output_failures = (
             check_movement(attribution.movement)[1]
             + check_drivers_reconcile(attribution)[1]
@@ -373,7 +406,7 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             if is_bridge
             else []
         )
-        if not (output_failures or missing_components) or attempt == 1:
+        if not (output_failures or missing_components or scale_note) or attempt == 1:
             break
         author_validation = {
             **validation,
@@ -381,6 +414,19 @@ def run_case(bank: str, metric: str, period: str, comparator: str | None, combo_
             "instruction": "Fix these failures: use the walk matching the task periods, "
             "or declare a residual and lower confidence. Do not force numbers.",
         }
+        if scale_note:
+            # The numbers are already corrected; this asks for one answer whose
+            # PROSE agrees with them. Generic wording: it names the arithmetic,
+            # never a value to reach.
+            author_validation["identity_scale"] = (
+                "Your quantified contributions did not sum to the movement at the scale you "
+                "wrote them, and they do one factor of 100 down. A ratio identity is stated "
+                "in the ratio's own unit: a growth rate enters it as a FRACTION (a fall of 2 "
+                "per cent is -0.02, never -2), and a movement in dollars enters it divided by "
+                "the identity's denominator. Rewrite every contribution AND the headline on "
+                "the ratio's own scale. A contribution larger than the ratio itself is a "
+                "scale error, not a driver."
+            )
         if missing_components:
             author_validation["components_unclaimed"] = (
                 "The evidence quantifies these bridge components and your answer leaves "

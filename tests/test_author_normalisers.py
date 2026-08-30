@@ -15,9 +15,20 @@ from __future__ import annotations
 import pytest
 
 from bank_equity_researcher.author import AUTHOR_PROMPT, author_attribution, settle_charge_sign
-from bank_equity_researcher.schema import Attribution, Movement
+from bank_equity_researcher.schema import (
+    Attribution,
+    Contribution,
+    DriverClaim,
+    EvidenceRecord,
+    Movement,
+)
 from bank_equity_researcher.taxonomy import TAXONOMY
-from bank_equity_researcher.validate import check_movement_basis, check_movement_variant
+from bank_equity_researcher.validate import (
+    check_drivers_reconcile,
+    check_movement_basis,
+    check_movement_variant,
+    settle_identity_scale,
+)
 
 IMPAIRMENT = TAXONOMY["impairment"]
 CASH_EARNINGS = TAXONOMY["cash_earnings"]
@@ -340,3 +351,159 @@ def test_variant_words_ignore_hyphens(name, why, metric, source, label, fires):
     passed, failed = check_movement_variant(_movement(metric, source), label)
     assert bool(failed) is fires, why
     assert bool(passed) is not fires
+
+
+# ---------------------------------------------------------------------------
+# The ratio-identity scale normaliser (ticket 27, iteration 3)
+#
+# ROE and CTI derive their level-1 split from an identity. The growth rate
+# enters that identity as a FRACTION, and a dollar movement enters it divided
+# by average equity. An author that feeds a rate printed in per cent straight
+# in states the split 100 times too large: the WBC FY25 run split a -0.24 ppt
+# movement into -23.76 and +0.56 ppt, and the CBA FY21 run split a +1.3 ppt
+# movement into +146 and -16. Both movements were CORRECT and both shipped
+# capped at 40 behind a failed drivers_reconcile.
+#
+# The normaliser must not become a way of making any failing bridge close, so
+# each row below names the guard it exercises.
+# ---------------------------------------------------------------------------
+
+
+def _identity(metric, from_value, to_value, contributions, residual=None, unit="ppt"):
+    return Attribution(
+        bank="BANK",
+        metric=metric,
+        period="FY25",
+        comparator="FY24",
+        basis="cash",
+        movement=Movement(
+            from_value=from_value,
+            to_value=to_value,
+            delta=round(to_value - from_value, 2),
+            unit=unit,
+        ),
+        drivers=[
+            DriverClaim(
+                canonical=canonical,
+                contribution=Contribution(value=value, unit=contribution_unit),
+                confidence=80,
+                evidence=["ev-1"],
+            )
+            for canonical, value, contribution_unit in contributions
+        ],
+        residual=None if residual is None else Contribution(value=residual, unit=unit),
+        evidence_records=[
+            EvidenceRecord(
+                id="ev-1",
+                doc_id="BANK/FY25/results_announcement",
+                pdf_page=9,
+                quote="Return on equity 10.97 11.21",
+            )
+        ],
+    )
+
+
+def test_identity_scale_restates_the_wbc_roe_split():
+    """The case that motivated the fix: a correct movement, a 100x split."""
+    attribution = _identity(
+        "roe", 11.21, 10.97,
+        [("earnings_effect", -23.76, "ppt"), ("equity_effect", 0.56, "ppt")],
+        residual=-0.04,
+    )
+    assert check_drivers_reconcile(attribution)[1], "the split must fail before the fix"
+    note = settle_identity_scale(attribution, TAXONOMY["roe"]["method"])
+    assert note is not None
+    values = [d.contribution.value for d in attribution.drivers]
+    assert values == [-0.2376, 0.0056]
+    assert all("identity_scale_normalised" in d.checks_passed for d in attribution.drivers)
+    assert check_drivers_reconcile(attribution)[0] == ["drivers_reconcile"]
+    assert not check_drivers_reconcile(attribution)[1]
+    assert note in attribution.limitations
+
+
+def test_identity_scale_restates_the_cba_roe_split():
+    """The same defect on the other side of zero, with a zero residual."""
+    attribution = _identity(
+        "roe", 10.2, 11.5,
+        [("earnings_effect", 146.0, "ppt"), ("equity_effect", -16.0, "ppt")],
+        residual=0.0,
+    )
+    assert settle_identity_scale(attribution, TAXONOMY["roe"]["method"]) is not None
+    assert [d.contribution.value for d in attribution.drivers] == [1.46, -0.16]
+    assert not check_drivers_reconcile(attribution)[1]
+
+
+def test_identity_scale_rescales_a_residual_written_on_the_same_scale():
+    """The residual is part of the identity, so it moves with it — but only
+    when the identity closes that way."""
+    attribution = _identity(
+        "roe", 10.2, 11.5,
+        [("earnings_effect", 146.0, "ppt"), ("equity_effect", -20.0, "ppt")],
+        residual=4.0,
+    )
+    assert settle_identity_scale(attribution, TAXONOMY["roe"]["method"]) is not None
+    assert [d.contribution.value for d in attribution.drivers] == [1.46, -0.2]
+    assert attribution.residual.value == 0.04
+
+
+def test_identity_scale_leaves_a_split_that_is_already_on_scale():
+    """The normaliser fires on the symptom, never on a passing answer."""
+    attribution = _identity(
+        "roe", 12.5, 13.0,
+        [("earnings_effect", 0.94, "ppt"), ("equity_effect", -0.44, "ppt")],
+        residual=0.0,
+    )
+    assert settle_identity_scale(attribution, TAXONOMY["roe"]["method"]) is None
+    assert [d.contribution.value for d in attribution.drivers] == [0.94, -0.44]
+    assert attribution.limitations == []
+
+
+def test_identity_scale_does_not_rescue_a_wrong_split():
+    """A split written on the RIGHT scale and simply wrong stays wrong.
+
+    Without the guard, dividing any failing split by 100 would drive its sum to
+    nearly zero and the loose ppt tolerance would then accept it, so every
+    reconciliation failure on a ratio metric would disappear.
+    """
+    attribution = _identity(
+        "roe", 11.21, 10.97,
+        [("earnings_effect", -5.0, "ppt"), ("equity_effect", 1.0, "ppt")],
+        residual=0.0,
+    )
+    assert settle_identity_scale(attribution, TAXONOMY["roe"]["method"]) is None
+    assert [d.contribution.value for d in attribution.drivers] == [-5.0, 1.0]
+    assert check_drivers_reconcile(attribution)[1], "the check keeps its teeth"
+
+
+def test_identity_scale_ignores_a_bridge_metric():
+    """Only a two-level ARITHMETIC identity is restated; a bridge's components
+    are read from tables, so a 100x sum there is a reading error, not a scale."""
+    attribution = _identity(
+        "cash_earnings", 10000.0, 10200.0,
+        [("nii", 40000.0, "$m"), ("operating_expenses", -20000.0, "$m")],
+        residual=0.0,
+        unit="$m",
+    )
+    assert settle_identity_scale(attribution, TAXONOMY["cash_earnings"]["method"]) is None
+    assert [d.contribution.value for d in attribution.drivers] == [40000.0, -20000.0]
+
+
+def test_identity_scale_ignores_a_split_stated_in_another_unit():
+    """A contribution left in dollars is a different defect: converting it needs
+    the identity's denominator, which this normaliser does not have."""
+    attribution = _identity(
+        "roe", 11.21, 10.97,
+        [("earnings_effect", -442.0, "$m"), ("equity_effect", 0.56, "ppt")],
+        residual=0.0,
+    )
+    assert settle_identity_scale(attribution, TAXONOMY["roe"]["method"]) is None
+
+
+def test_identity_scale_is_silent_without_a_movement():
+    attribution = _identity(
+        "roe", 11.21, 10.97,
+        [("earnings_effect", -23.76, "ppt")],
+        residual=0.0,
+    )
+    attribution.movement = None
+    assert settle_identity_scale(attribution, TAXONOMY["roe"]["method"]) is None

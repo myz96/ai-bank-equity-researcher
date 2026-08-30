@@ -310,6 +310,155 @@ def test_cited_quotes_ignores_uncited_records():
 
 
 # ---------------------------------------------------------------------------
+# Headline citations (ticket 27, iteration 3)
+#
+# A headline states facts that belong to no single driver: the movement as a
+# second document states it, the statutory-versus-cash framing, the summary
+# measures the bank leads with. While only DRIVER evidence lists were read
+# here, such a fact was judged "stated" and "not entailed" however well the
+# answer had sourced it, because the entailment path did not exist for it. The
+# rule that a record the answer never cited is not the answer's grounding is
+# unchanged.
+# ---------------------------------------------------------------------------
+
+
+HEADLINE_ATTRIBUTION = {
+    "drivers": [{"canonical": "asset_pricing", "evidence": ["ev-1"]}],
+    "headline_evidence": ["ev-3"],
+    "evidence_records": [
+        {"id": "ev-1", "quote": "driver quote"},
+        {"id": "ev-2", "quote": "never cited"},
+        {"id": "ev-3", "quote": "headline quote"},
+    ],
+}
+
+
+def test_cited_quotes_includes_headline_citations():
+    assert cited_quotes(HEADLINE_ATTRIBUTION) == ["driver quote", "headline quote"]
+
+
+def test_cited_quotes_still_excludes_records_neither_list_cites():
+    assert "never cited" not in cited_quotes(HEADLINE_ATTRIBUTION)
+
+
+def test_cited_quotes_puts_driver_quotes_first():
+    """Drivers cite many records and a headline cites few, so the drivers lead."""
+    attribution = {
+        "drivers": [{"canonical": "asset_pricing", "evidence": ["ev-9"]}],
+        "headline_evidence": ["ev-1"],
+        "evidence_records": [
+            {"id": "ev-1", "quote": "headline quote"},
+            {"id": "ev-9", "quote": "driver quote"},
+        ],
+    }
+    assert cited_quotes(attribution) == ["driver quote", "headline quote"]
+
+
+def _many(driver_count: int, headline_count: int) -> dict:
+    records = [{"id": f"d-{i}", "quote": f"driver {i}"} for i in range(driver_count)]
+    records += [{"id": f"h-{i}", "quote": f"headline {i}"} for i in range(headline_count)]
+    return {
+        "drivers": [{"canonical": "x", "evidence": [f"d-{i}" for i in range(driver_count)]}],
+        "headline_evidence": [f"h-{i}" for i in range(headline_count)],
+        "evidence_records": records,
+    }
+
+
+def test_cited_quotes_never_starves_the_headline_when_the_cap_binds():
+    """The cap is unchanged; what changes is which citations it drops.
+
+    The CBA FY26 cash-earnings answer cited 21 records from its drivers and 5
+    more from its headline. Under a flat "drivers first, headline after" order
+    the two quotes carrying the headline's own figures fell off the end of the
+    window — the new citations were the first thing the cap threw away.
+    """
+    quotes = cited_quotes(_many(21, 5))
+    assert len(quotes) == judge_module.MAX_QUOTES
+    assert quotes[-5:] == [f"headline {i}" for i in range(5)]
+
+
+def test_cited_quotes_splits_the_window_when_both_lists_are_long():
+    quotes = cited_quotes(_many(30, 30))
+    assert len(quotes) == judge_module.MAX_QUOTES
+    assert sum(1 for q in quotes if q.startswith("headline")) == judge_module.MAX_QUOTES // 2
+
+
+def test_cited_quotes_gives_the_drivers_the_whole_window_when_alone():
+    """An answer with no headline citations reads exactly as it did before."""
+    quotes = cited_quotes(_many(30, 0))
+    assert quotes == [f"driver {i}" for i in range(judge_module.MAX_QUOTES)]
+
+
+def test_cited_quotes_lists_a_shared_record_once():
+    attribution = {
+        "drivers": [{"canonical": "asset_pricing", "evidence": ["ev-1"]}],
+        "headline_evidence": ["ev-1"],
+        "evidence_records": [{"id": "ev-1", "quote": "shared quote"}],
+    }
+    assert cited_quotes(attribution) == ["shared quote"]
+
+
+def test_cited_quotes_reads_an_attribution_with_no_headline_list():
+    """Every artifact saved before the field existed still judges."""
+    attribution = {
+        "drivers": [{"canonical": "asset_pricing", "evidence": ["ev-1"]}],
+        "evidence_records": [{"id": "ev-1", "quote": "driver quote"}],
+    }
+    assert cited_quotes(attribution) == ["driver quote"]
+
+
+def test_headline_evidence_survives_the_report_round_trip():
+    """The report must print the headline's citations as BLOCK QUOTES: the
+    judge's "does the note state it" question reads answer_prose, and a pasted
+    quote there would answer its own question."""
+    from bank_equity_researcher.render import render_report
+    from bank_equity_researcher.schema import Attribution, EvidenceRecord
+
+    attribution = Attribution(
+        bank="BANK",
+        metric="cash_earnings",
+        period="FY26",
+        comparator="FY25",
+        basis="cash",
+        headline="Operating performance rose 6.5 per cent.",
+        headline_evidence=["ev-1"],
+        evidence_records=[
+            EvidenceRecord(
+                id="ev-1",
+                doc_id="BANK/FY26/results_presentation",
+                pdf_page=24,
+                quote="Operating performance 16,469 up 6.5%",
+            )
+        ],
+    )
+    report = render_report(attribution)
+    assert '> [ev-1] BANK/FY26/results_presentation' in report
+    prose = answer_prose(report)
+    assert "Operating performance rose 6.5 per cent." in prose
+    assert "16,469" not in prose
+
+
+def test_headline_evidence_drops_an_id_that_resolves_to_no_record():
+    """The never-guess gate is structural: an id citing nothing cites nothing."""
+    from bank_equity_researcher.schema import Attribution, EvidenceRecord, enforce_evidence_gate
+
+    attribution = enforce_evidence_gate(
+        Attribution(
+            bank="BANK",
+            metric="roe",
+            period="FY26",
+            comparator="FY25",
+            basis="cash",
+            headline_evidence=["ev-1", "ev-404", "ev-1"],
+            evidence_records=[
+                EvidenceRecord(id="ev-1", doc_id="BANK/FY26/x", pdf_page=1, quote="q")
+            ],
+        )
+    )
+    assert attribution.headline_evidence == ["ev-1"]
+
+
+# ---------------------------------------------------------------------------
 # Crossref: coverage is not correctness (finding 7)
 # ---------------------------------------------------------------------------
 

@@ -1,0 +1,182 @@
+{
+  "bank": "CBA",
+  "metric": "impairment",
+  "period": "FY26",
+  "comparator": "FY25",
+  "basis": "cash",
+  "movement": {
+    "from_value": 726.0,
+    "to_value": 788.0,
+    "delta": 62.0,
+    "unit": "$m"
+  },
+  "movement_source": "row 'Loan impairment expense/(benefit)', column Full Year Ended 30 Jun 25 $M -> column Full Year Ended 30 Jun 26 $M",
+  "headline": "CBA’s credit impairment charge rose to $788 million in FY26 from $726 million in FY25, an increase of $62 million (+9%). The loss rate against average GLAA increased 1 bps to 8 bps. The movement is attributable to: +$150m in net collective provision funding (driven by portfolio growth and macro/geopolitical uncertainty), +$17m in net new/increased individual provisions (partly offset by larger write-backs of -$71m). Divisionally, Retail drove the increase (+$106m to $378m), while Business Banking (-$45m to $310m) and IB&M (-$16m to $33m) improved, partially offset by higher NZ impairment (+$11m to $66m).",
+  "headline_evidence": [],
+  "drivers": [
+    {
+      "canonical": "collective.volume",
+      "bank_label": null,
+      "contribution": {
+        "value": 150.0,
+        "unit": "$m"
+      },
+      "columns": "FY26 vs FY25",
+      "narrative": "Net collective provision funding rose $150m to $606m (FY25: $456m). The bank states this reflects 'portfolio growth, increased geopolitical risk and macroeconomic uncertainty' (ev-3, ev-6, ev-7, ev-8).",
+      "confidence": 85,
+      "evidence": [
+        "ev-4",
+        "ev-3"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "individual_provisions",
+      "bank_label": null,
+      "contribution": {
+        "value": -54.0,
+        "unit": "$m"
+      },
+      "columns": "FY26 vs FY25",
+      "narrative": "Net new and increased individual provisioning was $422m (FY25: $439m), a decrease of $17m. Write-backs of individually assessed provisions were ($240m) in FY26 vs ($169m) in FY25, an additional $71m benefit. The net effect on charge from IAP movements is -$54m (i.e., lower charge). Business Banking noted 'lower individually assessed provision charges, including an increase in write-backs' (ev-7) and IB&M cited 'release of individually assessed provisions' (ev-8).",
+      "confidence": 85,
+      "evidence": [
+        "ev-4",
+        "ev-7",
+        "ev-8"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "other_unmapped",
+      "bank_label": null,
+      "contribution": null,
+      "columns": "FY26 vs FY25",
+      "narrative": "The provision-type bridge sums to $150m (collective) - $17m (IAP new) + $71m (IAP write-back delta) = $204m positive contribution. However, the total LIE movement is only $62m. The remaining $142m difference is unexplained by the three canonical provision-type rows published. The bank does not provide a fourth row (e.g., direct write-offs impacting P&L separately, FX, or other adjustments) that reconciles the $788m total to the sum of these three components. Corporate Centre showed a $6m swing from ($5m) benefit to $1m expense, contributing $6m.",
+      "confidence": 40,
+      "evidence": [
+        "ev-4",
+        "ev-5"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    }
+  ],
+  "residual": null,
+  "notable_items": [
+    "Corporate Centre and Other swung from a $5m benefit in FY25 to a $1m expense in FY26, a $6m negative contribution to the movement.",
+    "The loss rate increased 1 bps to 8 bps on average GLAA."
+  ],
+  "disagreements": [],
+  "attribution_confidence": 40,
+  "limitations": [
+    "No primary-period walk/bridge chart found in the results presentation; the quantified bridge is built from the appendix table on p118 which lists the three provision-type components but does not explicitly state they sum to the $788m total. The sum of the deltas (Collective +$150m, IAP new -$17m, IAP write-back +$71m) equals +$204m, which exceeds the $62m actual movement by $142m. This residual gap is not explained by any disclosed component.",
+    "Divisional deltas sum to $106m (RBS) - $45m (BB) - $16m (IB&M) + $11m (NZ) + $6m (Corp) = $62m, which matches the headline movement exactly. The divisional breakdown is therefore internally consistent, but the provision-type split does not reconcile to the total without an unquantified residual.",
+    "Confidence is limited by the inability to fully reconcile the provision-type bridge to the reported LIE total. The bank's narrative attributes the overall increase to 'higher collective provisions' but does not quantify the offsetting factors that reduce the $204m provision-type delta to $62m.",
+    "Research stopped early: the tool-call budget (40 calls) was reached, so the evidence behind this answer is less complete than a full run's.",
+    "Failed check: drivers_reconcile (drivers +96.0 + residual +0.0 != delta +62.0, tol 1.0)"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense was $788 million, an increase of $62 million or 9% on the prior year.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense as a percentage of average gross loans and acceptances (GLAA) increased 1 basis point to 8 basis points.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 3,
+      "kind": "text",
+      "quote": "Loan impairment expense (LIE) increased $62 million, with higher collective provisions mainly reflecting portfolio growth, increased geopolitical risk and macroeconomic uncertainty.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 65,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense was $378 million, an increase of $106 million or 39% on the prior year. The result was mainly driven by increased geopolitical risk, macroeconomic uncertainty, and rising cost-of-living pressures.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 65,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense as a percentage of average gross loans and acceptances increased 2 basis points on the prior year to 0.07%.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 69,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense was $310 million, a decrease of $45 million or 13% on the prior year, primarily driven by lower individually assessed provision charges, including an increase in write-backs, partly offset by higher collective provisions reflecting portfolio growth, increased geopolitical risk and macroeconomic uncertainty.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 69,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense as a percentage of average gross loans and acceptances decreased 3 basis points to 0.11%.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY26/profit_announcement",
+      "pdf_page": 73,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense was $33 million, a decrease of $16 million or 33% on the prior year. This was primarily driven by release of individually assessed provisions, partly offset by higher collective provisions reflecting increased geopolitical risk, macroeconomic uncertainty, and portfolio growth.",
+      "numbers": [],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "agentic-cheap",
+    "models": "agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash",
+    "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
+    "generated": "2026-08-30T12:34:55+00:00",
+    "seconds": 133.2,
+    "cost_usd": 0.0332,
+    "tokens": "961251 in / 6020 out",
+    "orchestration": "agent",
+    "tool_calls": 40,
+    "pages_read": 23,
+    "charts_read": 0,
+    "budget_exhausted": "the tool-call budget (40 calls)"
+  }
+}

@@ -11,21 +11,25 @@
     "unit": "ppt"
   },
   "movement_source": "row 'Return on equity (cash basis)', column FY25 -> column FY26",
-  "headline": "CBA's cash ROE rose 50 bps to 14.0% in FY26, driven by a 7% increase in cash NPAT ($10,982m) which lifted ROE by approximately 94 bpts at constant equity. This was partially offset by a higher average net asset base ($78,238m vs $75,710m), contributing a negative drag of approximately 44 bpts.",
+  "headline": "CBA's cash ROE rose 50 bps to 14.0% in FY26, driven by a 7% increase in cash NPAT ($10,982m) which was partially offset by higher average net assets ($78,238m). The earnings effect contributed approximately +39 bps, while the equity effect reduced ROE by approximately -39 bps.",
+  "headline_evidence": [
+    "ev-1",
+    "ev-7",
+    "ev-8"
+  ],
   "drivers": [
     {
       "canonical": "earnings_effect",
-      "bank_label": "Higher cash NPAT",
+      "bank_label": null,
       "contribution": {
-        "value": 0.94,
+        "value": 0.39,
         "unit": "ppt"
       },
       "columns": "stated vs FY25",
-      "narrative": "Derived: Prior ROE (13.5%) x Cash NPAT growth (7%). Ev-8 cites $730m (+7%) cash NPAT growth. Narrative states this drove the increase.",
+      "narrative": "Derived: Prior ROE (13.5%) multiplied by cash NPAT growth rate (7%). Cash NPAT increased $730m or 7% to $10,982m (ev-8). This lift at constant equity is derived, not disclosed.",
       "confidence": 80,
       "evidence": [
         "ev-1",
-        "ev-7",
         "ev-8"
       ],
       "checks_passed": [
@@ -35,17 +39,17 @@
     },
     {
       "canonical": "equity_effect",
-      "bank_label": "Higher net assets",
+      "bank_label": null,
       "contribution": {
-        "value": -0.44,
+        "value": 0.11,
         "unit": "ppt"
       },
       "columns": "stated vs FY25",
-      "narrative": "Derived: Total delta (0.5 ppt) minus earnings effect (0.94 ppt). Ev-1 shows avg net assets grew from $75,710m to $78,238m (+3.3%), diluting ROE.",
+      "narrative": "Residual: Total delta (0.5 ppt) minus earnings effect (0.39 ppt). Average net assets grew from $75,710m to $78,238m (ev-1). Higher retained earnings likely drove equity growth, dampening ROE expansion. Derived, not disclosed.",
       "confidence": 80,
       "evidence": [
         "ev-1",
-        "ev-7"
+        "ev-8"
       ],
       "checks_passed": [
         "single_source"
@@ -61,7 +65,7 @@
   "disagreements": [],
   "attribution_confidence": 80,
   "limitations": [
-    "Earnings and equity effects are derived arithmetic contributions, not explicitly quantified splits in the bank's disclosure."
+    "Earnings and equity effects are quantified via arithmetic derivation using reported ROE and profit growth rates; these specific driver contributions are not explicitly disclosed by the bank."
   ],
   "evidence_records": [
     {
@@ -459,7 +463,7 @@
           "basis": "statutory"
         },
         {
-          "label": "Statutory NPAT growth",
+          "label": "Statutory NPAT growth FY26 vs FY25",
           "value": 7.7,
           "unit": "%",
           "basis": null
@@ -482,7 +486,7 @@
           "basis": "cash"
         },
         {
-          "label": "Cash NPAT growth",
+          "label": "Cash NPAT growth FY26 vs FY25",
           "value": 7.1,
           "unit": "%",
           "basis": null
@@ -505,7 +509,7 @@
           "basis": "cash"
         },
         {
-          "label": "ROE cash change",
+          "label": "ROE cash change FY26 vs FY25",
           "value": 0.5,
           "unit": "ppt",
           "basis": "cash"
@@ -519,10 +523,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-08-29T20:54:35+00:00",
-    "seconds": 37.9,
+    "generated": "2026-08-30T12:35:05+00:00",
+    "seconds": 32.0,
     "cost_usd": 0.0015,
-    "tokens": "34584 in / 3607 out",
+    "tokens": "34979 in / 3778 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": []

@@ -6,6 +6,23 @@ from __future__ import annotations
 from .schema import Attribution
 
 
+def _quote_lines(attribution: Attribution, evidence_ids: list[str]) -> list[str]:
+    """One block-quote line per cited record, in the order the answer cites it.
+
+    Block quotes, always: judge.answer_prose drops every line that starts with
+    ">" before it asks whether the note STATES a fact, so a pasted quote can
+    never be mistaken for the note's own words.
+    """
+    lines = []
+    for ev_id in evidence_ids:
+        record = next((r for r in attribution.evidence_records if r.id == ev_id), None)
+        if record is None:
+            continue
+        page = f"printed p{record.printed_page}" if record.printed_page else f"PDF p{record.pdf_page}"
+        lines.append(f"> [{ev_id}] {record.doc_id}, {page}: \"{record.quote}\"")
+    return lines
+
+
 def render_report(attribution: Attribution) -> str:
     a = attribution
     lines: list[str] = []
@@ -25,6 +42,12 @@ def render_report(attribution: Attribution) -> str:
     lines.append("")
     lines.append(a.headline)
     lines.append("")
+    # The headline's own citations: the facts it carries belong to no driver,
+    # so this is the only list a reader can check them against.
+    headline_quotes = _quote_lines(a, a.headline_evidence)
+    if headline_quotes:
+        lines.extend(headline_quotes)
+        lines.append("")
 
     quantified = [d for d in a.drivers if d.contribution]
     if quantified:
@@ -58,11 +81,7 @@ def render_report(attribution: Attribution) -> str:
             lines.append(f"*Failed checks: {'; '.join(d.checks_failed)}*")
         lines.append("")
         lines.append(d.narrative)
-        for ev_id in d.evidence:
-            record = next((r for r in a.evidence_records if r.id == ev_id), None)
-            if record:
-                page = f"printed p{record.printed_page}" if record.printed_page else f"PDF p{record.pdf_page}"
-                lines.append(f"> [{ev_id}] {record.doc_id}, {page}: \"{record.quote}\"")
+        lines.extend(_quote_lines(a, d.evidence))
         lines.append("")
 
     if a.notable_items:

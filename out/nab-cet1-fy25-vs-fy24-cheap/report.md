@@ -4,7 +4,12 @@
 
 *Read from: row 'Capital ratios CET1', column 30 Sep 24 -> column 30 Sep 25*
 
-NAB's Group CET1 ratio declined by 65 bps to 11.70% in FY25 (ev-14). The primary driver was a 45 bps reduction from Credit RWA growth, partially offset by 82 bps of cash earnings generation and a 61 bps dividend outflow (ev-2). Other factors included model changes (-13 bps) and other items (-8 bps) (ev-2, ev-8, ev-10).
+NAB's APRA Level 2 CET1 ratio declined by 65 bps to 11.70% in FY25 (ev-11). The movement is driven primarily by a 45 bps negative impact from Credit RWA growth and quality, partially offset by an 82 bps positive contribution from cash earnings generation. Dividends reduced the ratio by 61 bps. Other factors, including model changes and non-credit RWA movements, had minor impacts.
+
+> [ev-1] NAB/FY25/results_book, printed p28: "Capital ratios CET1 As at 30 Sep 25 11.70 31 Mar 25 12.01 30 Sep 24 12.35"
+> [ev-9] NAB/FY25/results_book, printed p66: "Capital ratios CET1 30 Sep 25 11.70 31 Mar 25 12.01 30 Sep 24 12.35"
+> [ev-10] NAB/FY25/results_book, printed p4: "Group CET1 ratio(i) (%) ... FY24 12.35 ... FY25 11.70"
+> [ev-11] NAB/FY25/results_book, printed p4: "Group CET1 ratio of 11.70%, down (65 bps) from September 2024."
 
 ## Drivers
 
@@ -12,60 +17,59 @@ NAB's Group CET1 ratio declined by 65 bps to 11.70% in FY25 (ev-14). The primary
 |---|---|---|---|---|---|
 | `earnings_generation` | Cash earnings | +82 bps | 85 | 1 (single_source) | ev-2 |
 | `dividend_net_drp` | Dividend | -61 bps | 85 | 1 (single_source) | ev-2 |
-| `rwa.credit` | Credit RWA | -45 bps | 85 | 1 (single_source) | ev-2, ev-5, ev-6, ev-7, ev-8 |
-| `rwa` | Other RWA | +1 bps | 85 | 1 (single_source) | ev-2, ev-9 |
-| `deductions_other` | Other | -8 bps | 85 | 1 (single_source) | ev-2, ev-10 |
+| `rwa.credit` | Credit RWA | -45 bps | 85 | 1 (single_source) | ev-5 |
+| `rwa` | Other RWA | +1 bps | 85 | 1 (single_source) | ev-6 |
+| `deductions_other` | Other | -8 bps | 85 | 1 (single_source) | ev-7 |
 | *residual (unexplained)* | — | -34 bps | — | — |
 
 ### earnings_generation — "Cash earnings"
 *+82 bps | confidence 85/100*
 
-Cash earnings generated an increase of 82 bps to the CET1 ratio for the full year (ev-2).
+Cash earnings contributed +82 bps to the CET1 ratio for the full year. This reflects the bank's core profit generation over the period (ev-2).
 > [ev-2] NAB/FY25/results_book, printed p28: "Movements in CET1 capital ratio (%) Mar 25 12.01 Cash earnings 0.82 Dividend (0.61) Credit RWA¹ (0.45) Other RWA 0.01 Other (0.08) Sep 25 11.70"
 
 ### dividend_net_drp — "Dividend"
 *-61 bps | confidence 85/100*
 
-The 2025 interim dividend resulted in a decrease of 61 bps to the CET1 ratio (ev-2).
+Dividends paid during the period reduced the CET1 ratio by 61 bps (ev-2).
 > [ev-2] NAB/FY25/results_book, printed p28: "Movements in CET1 capital ratio (%) Mar 25 12.01 Cash earnings 0.82 Dividend (0.61) Credit RWA¹ (0.45) Other RWA 0.01 Other (0.08) Sep 25 11.70"
 
 ### rwa.credit — "Credit RWA"
 *-45 bps | confidence 85/100*
 
-An increase in credit RWA decreased the CET1 capital ratio by 45 bps, driven by volume growth (-27 bps), asset quality deterioration (-5 bps), and model/methodology changes (-13 bps) (ev-5, ev-6, ev-7, ev-8).
-> [ev-2] NAB/FY25/results_book, printed p28: "Movements in CET1 capital ratio (%) Mar 25 12.01 Cash earnings 0.82 Dividend (0.61) Credit RWA¹ (0.45) Other RWA 0.01 Other (0.08) Sep 25 11.70"
-> [ev-5] NAB/FY25/results_book, printed p28: "an increase in credit RWA decreasing the CET1 capital ratio by 45 basis points"
-> [ev-6] NAB/FY25/results_book, printed p28: "volume growth contributing to a decrease of 27 basis points"
-> [ev-7] NAB/FY25/results_book, printed p28: "asset quality deterioration contributing to a decrease of 5 basis points"
-> [ev-8] NAB/FY25/results_book, printed p28: "model and methodology changes contributing to a decrease of 13 basis points"
+Credit RWA decreased the ratio by 45 bps. Drivers: volume growth (-27 bps), asset quality deterioration (-5 bps), and model/methodology changes (-13 bps) (ev-5).
+> [ev-5] NAB/FY25/results_book, printed p28: "an increase in credit RWA decreasing the CET1 capital ratio by 45 basis points, driven by: – volume growth contributing to a decrease of 27 basis points, – asset quality deterioration contributing to a decrease of 5 basis points, and – model and methodology changes contributing to a decrease of 13 basis points."
 
 ### rwa — "Other RWA"
 *+1 bps | confidence 85/100*
 
-A decrease in other (non-credit) RWA increased the CET1 capital ratio by 1 bps (ev-2, ev-9).
-> [ev-2] NAB/FY25/results_book, printed p28: "Movements in CET1 capital ratio (%) Mar 25 12.01 Cash earnings 0.82 Dividend (0.61) Credit RWA¹ (0.45) Other RWA 0.01 Other (0.08) Sep 25 11.70"
-> [ev-9] NAB/FY25/results_book, printed p28: "a decrease in other (non-credit) RWA increasing the CET1 capital ratio by 1 basis point"
+Non-credit RWA increased the ratio by 1 bp. Components: operational risk (+1 bp), traded market risk (+1 bp), IRRBB (+2 bps), capital floor adjustment (-3 bps) (ev-6).
+> [ev-6] NAB/FY25/results_book, printed p28: "a decrease in other (non-credit) RWA increasing the CET1 capital ratio by 1 basis point, driven mainly by: – operational risk contributing to an increase of 1 basis point, – traded market risk contributing to an increase of 1 basis point, – interest rate risk in the banking book contributing to an increase of 2 basis points, and – the capital floor adjustment contributing to a decrease of 3 basis points."
 
 ### deductions_other — "Other"
 *-8 bps | confidence 85/100*
 
-Other items decreased the CET1 capital ratio by 8 bps (ev-2, ev-10).
-> [ev-2] NAB/FY25/results_book, printed p28: "Movements in CET1 capital ratio (%) Mar 25 12.01 Cash earnings 0.82 Dividend (0.61) Credit RWA¹ (0.45) Other RWA 0.01 Other (0.08) Sep 25 11.70"
-> [ev-10] NAB/FY25/results_book, printed p28: "other items decreasing the CET1 capital ratio by 8 basis points"
+Other items decreased the ratio by 8 bps, primarily due to net foreign exchange translation impacts (ev-7).
+> [ev-7] NAB/FY25/results_book, printed p28: "other items decreasing the CET1 capital ratio by 8 basis points, including net foreign exchange translation"
+
+## Source disagreements
+- **Proforma CET1 Ratio** (definitional): 11.70% (Reported) vs 11.81% (Proforma)
+  Preferred: 11.70%. The proforma ratio of 11.81% adjusts for the sale of MLC Life which completed after the balance date (Oct 31). The reported ratio of 11.70% is the actual statutory result at Sep 30.
 
 ## Limitations
-- The bank only provides a half-on-half capital walk (Mar 25 -> Sep 25) with quantified drivers (ev-2). No published walk exists for the full-year FY24 -> FY25 comparison.
-- The sum of the stated drivers (-31 bps) does not reconcile to the total movement (-65 bps), leaving a residual of -34 bps which is unquantified in the source text.
-- Confidence is limited because the specific drivers contributing to the residual are not disclosed.
+- The provided evidence contains a half-on-half capital walk (Mar 25 -> Sep 25) but no published full-year (FY24 -> FY25) driver table.
+- The sum of the quantified drivers from the half-on-half walk (+82 -61 -45 +1 -8 = -31 bps) does not reconcile with the full-year delta of -65 bps.
+- A residual of -34 bps is required to bridge the gap between the available half-on-half data and the full-year headline movement.
+- Specific drivers affecting the first half of the year (Oct 24 -> Mar 25) are not explicitly quantified in the provided text, preventing a precise attribution of the full-year variance.
 
 ## Provenance
 - combo: cheap
 - models: extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash
 - documents: NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)
-- generated: 2026-08-29T21:01:31+00:00
-- seconds: 48.6
-- cost_usd: 0.002
-- tokens: 42038 in / 5403 out
+- generated: 2026-08-30T12:41:44+00:00
+- seconds: 48.0
+- cost_usd: 0.0022
+- tokens: 44292 in / 6337 out
 - orchestration: pipeline
 - pages_extracted: 14
 - reference_follow: []

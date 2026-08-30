@@ -88,6 +88,14 @@ class Attribution(BaseModel):
     # half-on-half one (defect 24).
     movement_source: str | None = None
     headline: str = ""
+    # Evidence ids the HEADLINE's own statements rest on. A headline carries
+    # facts that belong to no single driver — the movement as another document
+    # states it, the statutory-versus-cash framing, the summary measures the
+    # bank leads with — and until this list existed those facts had no citation
+    # list at all. A reader checks a claim against the records the answer cites,
+    # and so does the grounding judge, so a headline fact with no citation could
+    # never be graded however well the pipeline had sourced it.
+    headline_evidence: list[str] = []
     drivers: list[DriverClaim] = []
     residual: Contribution | None = None
     notable_items: list[str] = []
@@ -103,6 +111,12 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
     """Structural never-guess rule: strip any quantified contribution that has
     no resolvable evidence reference. The strip is logged, never silent."""
     known_ids = {record.id for record in attribution.evidence_records}
+    # The headline's citation list obeys the same structural rule: an id that
+    # resolves to no record cites nothing, so it is dropped before a reader or
+    # a judge can read it as grounding.
+    attribution.headline_evidence = [
+        e for e in dict.fromkeys(attribution.headline_evidence) if e in known_ids
+    ]
     for driver in attribution.drivers:
         driver.evidence = [e for e in driver.evidence if e in known_ids]
         if driver.contribution is not None and not driver.evidence:

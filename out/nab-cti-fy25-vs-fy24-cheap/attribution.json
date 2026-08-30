@@ -11,14 +11,20 @@
     "unit": "ppt"
   },
   "movement_source": "row 'Cost to income ratio', column FY24 -> column FY25",
-  "headline": "NAB's cash cost-to-income ratio (CTI) increased by 80 bps to 47.3% in FY25 from 46.5% in FY24. The movement was driven by operating expense growth of 4.6%, which outpaced the implied operating income growth. A significant portion of this expense increase ($130 million) was attributable to payroll review and remediation costs.",
+  "headline": "NAB's cash cost-to-income ratio (CTI) increased by 80 basis points (0.8 ppt) in FY25 to 47.3%, up from 46.5% in FY24. This deterioration was driven by operating expense growth of 4.6% outpacing the implied operating income growth. A key driver was a $130 million increase in payroll review and remediation costs; excluding this, underlying expenses grew only 3.2%. The statutory CTI also rose, increasing by 110 bps to 49.6%.",
+  "headline_evidence": [
+    "ev-1",
+    "ev-2",
+    "ev-3",
+    "ev-4"
+  ],
   "drivers": [
     {
       "canonical": "expense_growth",
       "bank_label": "Operating expenses",
       "contribution": null,
       "columns": "stated vs FY24",
-      "narrative": "Total operating expenses rose $435 million or 4.6% to $9,848 million (ev-3). Excluding $130 million for payroll review and remediation, underlying expenses grew only 3.2% (ev-4). This expense growth contributed positively to the rising CTI.",
+      "narrative": "Total operating expenses increased by $435 million or 4.6% to $9,848 million (ev-3, ev-4). Excluding $130 million for payroll review and remediation, underlying expenses grew 3.2% (ev-4). Expense growth exceeded income growth, raising the ratio.",
       "confidence": 80,
       "evidence": [
         "ev-3",
@@ -32,22 +38,37 @@
       "bank_label": "Operating income",
       "contribution": null,
       "columns": "derived vs FY24",
-      "narrative": "Implied operating income growth was lower than expense growth, contributing negatively to the CTI movement. Specific income drivers are not quantified in the provided evidence records.",
+      "narrative": "Income growth is derived from the CTI movement and expense levels. With CTI rising 0.8 ppt on $9,413m FY24 expenses, implied income growth was approximately 2.5%, trailing expense growth of 4.6% (ev-1, ev-2, ev-3).",
       "confidence": 60,
-      "evidence": [],
+      "evidence": [
+        "ev-1",
+        "ev-2",
+        "ev-3"
+      ],
       "checks_passed": [],
       "checks_failed": []
     }
   ],
   "residual": null,
   "notable_items": [
-    "Payroll review and remediation costs ($130 million)"
+    "Payroll review and remediation costs ($130m)"
   ],
-  "disagreements": [],
+  "disagreements": [
+    {
+      "topic": "Basis of CTI Movement",
+      "values": [
+        "0.8 ppt increase (Cash basis)",
+        "1.1 ppt increase (Statutory basis)"
+      ],
+      "preferred": "Cash basis",
+      "reason": "definitional",
+      "explanation": "The bank reports two CTI measures. Cash earnings is the primary basis per vocabulary. Statutory CTI moved differently due to notable items."
+    }
+  ],
   "attribution_confidence": 75,
   "limitations": [
-    "Quantified driver contributions (ppt) are not provided because the specific operating income level for FY24 is not available in the evidence records to calculate the exact jaws split.",
-    "The narrative relies on the bank's stated expense growth rates rather than a full walk chart.",
+    "No explicit operating income level provided for FY24/FY25 to calculate exact jaws contribution.",
+    "Quantified driver contributions are unquantified as evidence does not provide a walk chart or explicit income growth rate.",
     "Failed check: no_quantified_drivers"
   ],
   "evidence_records": [
@@ -106,20 +127,14 @@
       "quote": "Total operating expenses(1) 9,848 9,413 4.6 5,043 4,805 5.0",
       "numbers": [
         {
-          "label": "Total operating expenses FY25",
-          "value": 9848.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
           "label": "Total operating expenses FY24",
           "value": 9413.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total operating expenses H1 FY25",
-          "value": 5043.0,
+          "label": "Total operating expenses FY25",
+          "value": 9848.0,
           "unit": "$m",
           "basis": null
         }
@@ -145,12 +160,6 @@
           "value": 9848.0,
           "unit": "$m",
           "basis": null
-        },
-        {
-          "label": "Operating expenses change ex-notables FY25 vs FY24",
-          "value": 305.0,
-          "unit": "$m",
-          "basis": "ex_notables"
         }
       ],
       "provenance": null
@@ -161,10 +170,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-08-29T21:00:42+00:00",
-    "seconds": 33.5,
+    "generated": "2026-08-30T12:40:56+00:00",
+    "seconds": 28.9,
     "cost_usd": 0.0013,
-    "tokens": "34626 in / 1862 out",
+    "tokens": "35010 in / 2006 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": []

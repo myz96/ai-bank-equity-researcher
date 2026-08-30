@@ -11,7 +11,12 @@
     "unit": "bps"
   },
   "movement_source": "row 'Net interest margin (%)', column FY20 -> column FY21",
-  "headline": "CBA's Group net interest margin decreased 4 basis points to 203 bps in FY21 (from 207 bps in FY20). The decline was primarily driven by higher liquid assets (-4 bps) and lower asset pricing (-2 bps), partially offset by favourable portfolio mix (+2 bps) and basis risk (+3 bps). Funding costs contributed negatively (-3 bps), while capital and other factors reduced the margin by 2 bps. Treasury & Markets were flat (+2 bps).",
+  "headline": "CBA's Group net interest margin decreased 4 basis points to 203 bps in FY21 (from 207 bps in FY20). The decline was driven by higher liquid assets (-4 bps), lower asset pricing (-2 bps), and increased funding costs (-3 bps). These were partially offset by favourable portfolio mix (+2 bps), positive basis risk (+3 bps), and Treasury & Markets contributions (+2 bps), alongside a negative capital impact (-2 bps).",
+  "headline_evidence": [
+    "ev-14",
+    "ev-38",
+    "ev-42"
+  ],
   "drivers": [
     {
       "canonical": "liquids",
@@ -21,14 +26,15 @@
         "unit": "bps"
       },
       "columns": "stated vs FY20",
-      "narrative": "Higher liquid assets reduced NIM by 4 bps, reflecting stable non-lending interest earning asset balances during the period.",
-      "confidence": 95,
+      "narrative": "Higher liquidity levels reduced NIM by 4 bps. The bank notes minimal impact on Net Interest Income (NII) from this driver.",
+      "confidence": 85,
       "evidence": [
-        "ev-1",
-        "ev-2",
-        "ev-17"
+        "ev-14",
+        "ev-15"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "single_source"
+      ],
       "checks_failed": []
     },
     {
@@ -39,13 +45,19 @@
         "unit": "bps"
       },
       "columns": "stated vs FY20",
-      "narrative": "Decreased by 2 bps due to home lending competition (-2 bps) and switching from variable to fixed rate loans (-3 bps), partly offset by repricing (+3 bps).",
-      "confidence": 95,
+      "narrative": "Asset pricing fell 2 bps due to home lending competition (-2 bps) and customer switching to fixed rates (-3 bps), partly offset by repricing (+3 bps). Business lending (-1 bps) and consumer finance (-1 bps) also contributed negatively.",
+      "confidence": 85,
       "evidence": [
-        "ev-2",
-        "ev-5"
+        "ev-14",
+        "ev-16",
+        "ev-17",
+        "ev-19",
+        "ev-20",
+        "ev-21"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "single_source"
+      ],
       "checks_failed": []
     },
     {
@@ -56,13 +68,18 @@
         "unit": "bps"
       },
       "columns": "stated vs FY20",
-      "narrative": "Funding costs increased margin by 1 bps (deposit repricing +3 bps, cash rate decrease -1 bps, replicating portfolio -1 bps). However, the walk labels this driver as -3 bps. Reconciling with text: Text says 'Funding costs: Increased margin by 1 basis point'. Walk says '-3'. There is a discrepancy. Let's look closer. Ev-6 says 'Funding costs: Increased margin by 1 basis point'. Ev-2 says 'Deposit Pricing & Funding': -3. This is a disagreement. I must report the primary walk value but note the disagreement. Wait, Rule 8 says 'NEVER MIX FRAMINGS'. I must adopt the book's framing. But if the book's walk bar contradicts the book's text explanation for the same label, that's a disagreement. The prompt asks to attribute movement to drivers. If I use the walk, I use -3. If I use the text, I use +1. The validation results show 'Deposit Pricing & Funding' at -3 in ev-2. Ev-6 text says +1. This is a definitional or error disagreement. I will list the walk value as primary but flag it. Actually, looking at ev-46, 'Deposit Pricing & Funding' is listed as -4 in a different context? No, ev-46 is page 63 text. Ev-2 is page 63 chart. They are from the same source. Ev-2 chart says -3. Ev-6 text says +1. This is a clear internal contradiction in the bank's disclosure. I will prioritize the walk chart as per Rule 8 ('results book's walk... is the primary framing'). I will report -3 and note the text says +1.",
+      "narrative": "Funding costs rose 3 bps. Lower earnings on deposits due to cash rate cuts (-8 bps) were the main drag, offset by investment deposit repricing (+1 bps), replicating portfolio benefits (+2 bps), and wholesale funding improvements (+2 bps).",
       "confidence": 85,
       "evidence": [
-        "ev-2",
-        "ev-6"
+        "ev-14",
+        "ev-22",
+        "ev-23",
+        "ev-24",
+        "ev-25"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "single_source"
+      ],
       "checks_failed": []
     },
     {
@@ -73,13 +90,15 @@
         "unit": "bps"
       },
       "columns": "stated vs FY20",
-      "narrative": "Decreased by 2 bps. Text (Ev-7) states 'Capital and other: Increased margin by 1 basis point'. Another discrepancy. Walk says -2. Text says +1. Prioritizing walk.",
+      "narrative": "Capital and other items reduced NIM by 2 bps, primarily due to lower earnings on Group capital (-3 bps) in the falling rate environment, partly offset by New Zealand contributions (+2 bps).",
       "confidence": 85,
       "evidence": [
-        "ev-2",
-        "ev-7"
+        "ev-14",
+        "ev-26"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "single_source"
+      ],
       "checks_failed": []
     },
     {
@@ -90,13 +109,16 @@
         "unit": "bps"
       },
       "columns": "stated vs FY20",
-      "narrative": "Increased margin by 2 bps. Driven by favourable funding mix from TFF drawdown and switch to at-call deposits (+2 bps) and favourable lending mix from decline in institutional lending (+1 bps). Total stated in text is +3 bps (Ev-4). Walk says +2. Discrepancy. Prioritizing walk.",
+      "narrative": "Portfolio mix added 2 bps, driven by the drawdown of the Term Funding Facility (TFF) and customers switching to at-call deposits (+2 bps), as well as a decline in lower-margin institutional lending balances (+1 bps).",
       "confidence": 85,
       "evidence": [
-        "ev-2",
-        "ev-4"
+        "ev-14",
+        "ev-12",
+        "ev-13"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "single_source"
+      ],
       "checks_failed": []
     },
     {
@@ -107,13 +129,14 @@
         "unit": "bps"
       },
       "columns": "stated vs FY20",
-      "narrative": "Increased margin by 3 bps. Basis risk spread and exposure remained broadly flat (Ev-10).",
-      "confidence": 95,
+      "narrative": "Basis risk contributed positively by 3 bps. This reflects the benefit of the bills/OIS spread dynamics during the period.",
+      "confidence": 85,
       "evidence": [
-        "ev-2",
-        "ev-10"
+        "ev-14"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "single_source"
+      ],
       "checks_failed": []
     },
     {
@@ -124,65 +147,22 @@
         "unit": "bps"
       },
       "columns": "stated vs FY20",
-      "narrative": "Increased margin by 2 bps. Text (Ev-8) states 'Flat'. Discrepancy. Walk says +2. Prioritizing walk.",
+      "narrative": "Treasury and Markets contributed 2 bps to the margin improvement.",
       "confidence": 85,
       "evidence": [
-        "ev-2",
-        "ev-8"
+        "ev-14"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "single_source"
+      ],
       "checks_failed": []
     }
   ],
   "residual": null,
   "notable_items": [],
-  "disagreements": [
-    {
-      "topic": "Funding Costs / Deposit Pricing & Funding",
-      "values": [
-        "-3 bps (Walk Chart, Ev-2)",
-        "+1 bps (Text Narrative, Ev-6)"
-      ],
-      "preferred": "-3 bps",
-      "reason": "definitional",
-      "explanation": "The walk chart on page 63 lists 'Deposit Pricing & Funding' as -3 bps, while the Profit Announcement narrative on page 33 states 'Funding costs: Increased margin by 1 basis point'. The walk chart is adopted as primary per source hierarchy."
-    },
-    {
-      "topic": "Capital & Other",
-      "values": [
-        "-2 bps (Walk Chart, Ev-2)",
-        "+1 bps (Text Narrative, Ev-7)"
-      ],
-      "preferred": "-2 bps",
-      "reason": "definitional",
-      "explanation": "The walk chart on page 63 lists 'Capital & Other' as -2 bps, while the Profit Announcement narrative on page 33 states 'Capital and other: Increased margin by 1 basis point'. The walk chart is adopted as primary."
-    },
-    {
-      "topic": "Portfolio Mix",
-      "values": [
-        "+2 bps (Walk Chart, Ev-2)",
-        "+3 bps (Text Narrative, Ev-4)"
-      ],
-      "preferred": "+2 bps",
-      "reason": "rounding",
-      "explanation": "The walk chart on page 63 lists 'Portfolio Mix' as +2 bps, while the Profit Announcement narrative on page 33 states 'Portfolio mix: Increased margin by 3 basis points'. The walk chart is adopted as primary."
-    },
-    {
-      "topic": "Treasury & Markets",
-      "values": [
-        "+2 bps (Walk Chart, Ev-2)",
-        "0 bps (Text Narrative, Ev-8)"
-      ],
-      "preferred": "+2 bps",
-      "reason": "definitional",
-      "explanation": "The walk chart on page 63 lists 'Treasury & Markets' as +2 bps, while the Profit Announcement narrative on page 33 states 'Treasury and Markets: Flat'. The walk chart is adopted as primary."
-    }
-  ],
-  "attribution_confidence": 85,
-  "limitations": [
-    "Significant discrepancies exist between the Group Margin Walk Chart (page 63) and the Profit Announcement narrative (page 33) for several drivers (Funding, Capital, Mix, Treasury). The walk chart values were prioritized as per source hierarchy rules, but the narrative provides detailed sub-component explanations that do not always align with the aggregate walk bars.",
-    "The 'Impact of lower rates' and 'Management actions/other' bars from the alternative walk (Ev-1) were not included in the primary driver table as they belong to a different framing than the detailed canonical walk (Ev-2)."
-  ],
+  "disagreements": [],
+  "attribution_confidence": 95,
+  "limitations": [],
   "evidence_records": [
     {
       "id": "ev-1",
@@ -216,10 +196,207 @@
     {
       "id": "ev-2",
       "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Impact of lower rates²: Impact of lower rates² -6",
+      "numbers": [
+        {
+          "label": "Impact of lower rates² Impact of lower rates²",
+          "value": -6.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Asset Pricing: Home loans:",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Asset Pricing: - Switching -3",
+      "numbers": [
+        {
+          "label": "Asset Pricing - Switching",
+          "value": -3.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Asset Pricing: - Discounting -2",
+      "numbers": [
+        {
+          "label": "Asset Pricing - Discounting",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Asset Pricing: - Pricing +3",
+      "numbers": [
+        {
+          "label": "Asset Pricing - Pricing",
+          "value": 3.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Deposit Pricing & Funding: Deposits reprice +3",
+      "numbers": [
+        {
+          "label": "Deposit Pricing & Funding Deposits reprice",
+          "value": 3.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Deposit Pricing & Funding: Impact of cash rate cut -1",
+      "numbers": [
+        {
+          "label": "Deposit Pricing & Funding Impact of cash rate cut",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Deposit Pricing & Funding: R. Portfolio -1",
+      "numbers": [
+        {
+          "label": "Deposit Pricing & Funding R. Portfolio",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Capital & Other: NZ +2",
+      "numbers": [
+        {
+          "label": "Capital & Other NZ",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Capital & Other: Capital -1",
+      "numbers": [
+        {
+          "label": "Capital & Other Capital",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Portfolio Mix: Drawdown of TFF and customers switching to at-call deposits +2",
+      "numbers": [
+        {
+          "label": "Portfolio Mix Drawdown of TFF and customers switching to at-call deposits",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Portfolio Mix: Decline in lower margin institutional lending balances +1",
+      "numbers": [
+        {
+          "label": "Portfolio Mix Decline in lower margin institutional lending balances",
+          "value": 1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 63,
       "printed_page": 63,
       "kind": "walk_vision",
-      "quote": "[walk chart] Group margin: FY20 207 -> FY21 203",
+      "quote": "[walk chart] Group margin: FY20 207.0 -> FY21 203.0",
       "numbers": [
         {
           "label": "Higher Liquids",
@@ -267,7 +444,197 @@
       "provenance": null
     },
     {
-      "id": "ev-3",
+      "id": "ev-15",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Higher Liquids: Minimal impact on NII",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Asset Pricing: Bus. Lending -1",
+      "numbers": [
+        {
+          "label": "Asset Pricing Bus. Lending",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Asset Pricing: Consumer Fin. -1",
+      "numbers": [
+        {
+          "label": "Asset Pricing Consumer Fin.",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Asset Pricing: Home loans:",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Asset Pricing: - Pricing +9",
+      "numbers": [
+        {
+          "label": "Asset Pricing - Pricing",
+          "value": 9.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Asset Pricing: - Switching -5",
+      "numbers": [
+        {
+          "label": "Asset Pricing - Switching",
+          "value": -5.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Asset Pricing: - Discounting -4",
+      "numbers": [
+        {
+          "label": "Asset Pricing - Discounting",
+          "value": -4.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Deposit Pricing & Funding: Impact of cash rate cut -8",
+      "numbers": [
+        {
+          "label": "Deposit Pricing & Funding Impact of cash rate cut",
+          "value": -8.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Deposit Pricing & Funding: Investment +1",
+      "numbers": [
+        {
+          "label": "Deposit Pricing & Funding Investment",
+          "value": 1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Deposit Pricing & Funding: R. Portfolio +2",
+      "numbers": [
+        {
+          "label": "Deposit Pricing & Funding R. Portfolio",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Deposit Pricing & Funding: Wholesale +2",
+      "numbers": [
+        {
+          "label": "Deposit Pricing & Funding Wholesale",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-26",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Capital & Other: Capital -3",
+      "numbers": [
+        {
+          "label": "Capital & Other Capital",
+          "value": -3.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-27",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 33,
       "printed_page": null,
@@ -287,13 +654,13 @@
           "basis": null
         },
         {
-          "label": "Avg interest earning assets FY21",
+          "label": "Avg Interest Earning Assets FY21",
           "value": 937.0,
           "unit": "$b",
           "basis": null
         },
         {
-          "label": "Avg interest earning assets delta vs PRIOR HALF",
+          "label": "Avg Interest Earning Assets delta vs PRIOR HALF",
           "value": 14.0,
           "unit": "$b",
           "basis": null
@@ -314,7 +681,7 @@
       "provenance": null
     },
     {
-      "id": "ev-4",
+      "id": "ev-28",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 33,
       "printed_page": null,
@@ -322,26 +689,20 @@
       "quote": "The Bank’s net interest margin increased 3 basis points on the prior half to 2.04%. The key drivers of the movement were: Portfolio mix: Increased margin by 3 basis points driven by favourable funding mix from the drawdown of the TFF and customers switching to at-call deposits (up 2 basis points), and favourable lending mix from the decline of lower margin institutional lending balances (up 1 basis point).",
       "numbers": [
         {
-          "label": "NIM total delta vs PRIOR HALF",
+          "label": "NIM delta vs PRIOR HALF",
           "value": 3.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Portfolio mix contribution to NIM vs PRIOR HALF",
+          "label": "NIM FY21",
+          "value": 2.04,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Portfolio mix NIM impact FY21",
           "value": 3.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Funding mix contribution to NIM vs PRIOR HALF",
-          "value": 2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Lending mix contribution to NIM vs PRIOR HALF",
-          "value": 1.0,
           "unit": "bps",
           "basis": null
         }
@@ -349,7 +710,104 @@
       "provenance": null
     },
     {
-      "id": "ev-5",
+      "id": "ev-29",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 33,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Average interest earning assets increased $14 billion or 2% on the prior half to $937 billion.",
+      "numbers": [
+        {
+          "label": "Avg Interest Earning Assets FY21",
+          "value": 937.0,
+          "unit": "$b",
+          "basis": null
+        },
+        {
+          "label": "Avg Interest Earning Assets delta vs PRIOR HALF",
+          "value": 14.0,
+          "unit": "$b",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-30",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 33,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Home loan average balances increased $14 billion or 3% to $509 billion.",
+      "numbers": [
+        {
+          "label": "Home Loan Avg Balances FY21",
+          "value": 509.0,
+          "unit": "$b",
+          "basis": null
+        },
+        {
+          "label": "Home Loan Avg Balances delta vs PRIOR HALF",
+          "value": 14.0,
+          "unit": "$b",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-31",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 33,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Consumer finance average balances decreased 1% on the prior half to $17 billion, driven by lower consumer demand for unsecured lending;",
+      "numbers": [
+        {
+          "label": "Consumer Finance Avg Balances FY21",
+          "value": 17.0,
+          "unit": "$b",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-32",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 33,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Business and corporate loan average balances were flat on the prior half at $216 billion, driven by a $7 billion decrease in institutional lending balances due to a continued focus on risk-adjusted returns and a highly liquid capital market, offset by a $6 billion increase in Business Banking business lending across a number of industries, and a $1 billion increase in New Zealand;",
+      "numbers": [
+        {
+          "label": "Business & Corporate Loan Avg Balances FY21",
+          "value": 216.0,
+          "unit": "$b",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-33",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 33,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Non-lending interest earning asset average balances were flat on the prior half at $195 billion.",
+      "numbers": [
+        {
+          "label": "Non-lending Interest Earning Asset Avg Balances FY21",
+          "value": 195.0,
+          "unit": "$b",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-34",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 33,
       "printed_page": null,
@@ -357,26 +815,8 @@
       "quote": "Asset pricing: Decreased margin by 2 basis points driven by home lending, reflecting the impact of customers switching to lower margin loans, particularly from variable rate to fixed rate loans (down 3 basis points) and increased competition (down 2 basis points), partly offset by repricing (up 3 basis points).",
       "numbers": [
         {
-          "label": "Asset pricing contribution to NIM vs PRIOR HALF",
+          "label": "Asset Pricing NIM impact FY21",
           "value": -2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Variable to fixed switch contribution to NIM vs PRIOR HALF",
-          "value": -3.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Competition contribution to NIM vs PRIOR HALF",
-          "value": -2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Repricing contribution to NIM vs PRIOR HALF",
-          "value": 3.0,
           "unit": "bps",
           "basis": null
         }
@@ -384,7 +824,7 @@
       "provenance": null
     },
     {
-      "id": "ev-6",
+      "id": "ev-35",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 33,
       "printed_page": null,
@@ -392,26 +832,8 @@
       "quote": "Funding costs: Increased margin by 1 basis point driven by the benefit of savings and investment deposit repricing (up 3 basis points), partly offset by lower earnings on deposits due to the decrease in the cash rate (down 1 basis point), and lower earnings from the replicating portfolio due to the falling interest rate environment (down 1 basis point).",
       "numbers": [
         {
-          "label": "Funding costs contribution to NIM vs PRIOR HALF",
+          "label": "Funding Costs NIM impact FY21",
           "value": 1.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Deposit repricing contribution to NIM vs PRIOR HALF",
-          "value": 3.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Cash rate decrease contribution to NIM vs PRIOR HALF",
-          "value": -1.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Replicating portfolio earnings contribution to NIM vs PRIOR HALF",
-          "value": -1.0,
           "unit": "bps",
           "basis": null
         }
@@ -419,28 +841,16 @@
       "provenance": null
     },
     {
-      "id": "ev-7",
+      "id": "ev-36",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 33,
       "printed_page": null,
       "kind": "text",
-      "quote": "Capital and other: Increased margin by 1 basis points due to increased contribution from New Zealand (up 2 basis points), reflect[ing] lower wholesale funding costs, and favourable portfolio mix and lending margins, partly offset by lower earnings on Group capital due to the falling interest rate environment (down 1 basis point).",
+      "quote": "Capital and other: Increased margin by 1 basis points due to increased contribution from New Zealand (up 2 basis points), reflectin g lower wholesale funding costs, and favourable portfolio mix and lending margins, partly offset by lower earnings on Group capital due to the falling interest rate environment (down 1 basis point).",
       "numbers": [
         {
-          "label": "Capital and other contribution to NIM vs PRIOR HALF",
+          "label": "Capital and Other NIM impact FY21",
           "value": 1.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "New Zealand contribution to NIM vs PRIOR HALF",
-          "value": 2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Group capital earnings contribution to NIM vs PRIOR HALF",
-          "value": -1.0,
           "unit": "bps",
           "basis": null
         }
@@ -448,37 +858,7 @@
       "provenance": null
     },
     {
-      "id": "ev-8",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 33,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Treasury and Markets: Flat.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-9",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 33,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Liquid assets: Flat, reflecting stable non-lending interest earning asset balances during the period.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-10",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 33,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Basis risk: Basis risk arises from the spread between the 3 month bank bill swap rate and the 3 month overnight index swap rate. The average spread and exposure remained broadly flat during the half.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-11",
+      "id": "ev-37",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 32,
       "printed_page": 12,
@@ -501,7 +881,7 @@
       "provenance": null
     },
     {
-      "id": "ev-12",
+      "id": "ev-38",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 32,
       "printed_page": 12,
@@ -524,64 +904,7 @@
       "provenance": null
     },
     {
-      "id": "ev-13",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 112,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Total interest earning assets 4 | 936,883 | 11,872 | 2.56 | 922,924 | 12,786 | 2.75",
-      "numbers": [
-        {
-          "label": "Avg Bal FY21",
-          "value": 936883.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Interest FY21",
-          "value": 11872.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Yield FY21",
-          "value": 2.56,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Avg Bal FY20",
-          "value": 922924.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Interest FY20",
-          "value": 12786.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Yield FY20",
-          "value": 2.75,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-14",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 112,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Used for calculating net interest margin.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-15",
+      "id": "ev-39",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 70,
       "printed_page": 46,
@@ -589,13 +912,13 @@
       "quote": "Net interest margin (%) | 2.60 | 2.63 | (3)bpts",
       "numbers": [
         {
-          "label": "NIM FY21",
+          "label": "Net interest margin FY21",
           "value": 2.6,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM FY20",
+          "label": "Net interest margin FY20",
           "value": 2.63,
           "unit": "%",
           "basis": null
@@ -604,7 +927,7 @@
       "provenance": null
     },
     {
-      "id": "ev-16",
+      "id": "ev-40",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 70,
       "printed_page": 46,
@@ -614,7 +937,7 @@
       "provenance": null
     },
     {
-      "id": "ev-17",
+      "id": "ev-41",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 11,
       "printed_page": null,
@@ -631,12 +954,12 @@
       "provenance": null
     },
     {
-      "id": "ev-18",
+      "id": "ev-42",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 11,
       "printed_page": null,
       "kind": "table",
-      "quote": "Net interest margin 2.03% FY21 FY20 2.07%",
+      "quote": "Net interest margin\n2.03% FY21\nFY20 2.07%",
       "numbers": [
         {
           "label": "NIM FY21",
@@ -654,7 +977,7 @@
       "provenance": null
     },
     {
-      "id": "ev-19",
+      "id": "ev-43",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -677,7 +1000,7 @@
       "provenance": null
     },
     {
-      "id": "ev-20",
+      "id": "ev-44",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -694,7 +1017,7 @@
       "provenance": null
     },
     {
-      "id": "ev-21",
+      "id": "ev-45",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 65,
       "printed_page": 65,
@@ -704,21 +1027,21 @@
       "provenance": null
     },
     {
-      "id": "ev-22",
+      "id": "ev-46",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 65,
       "printed_page": 65,
       "kind": "table",
-      "quote": "RBS1 bpts 209 227 2H20 1H21 2H21",
+      "quote": "RBS1 bpts 209 227 1H21 2H21",
       "numbers": [
         {
-          "label": "NIM RBS 2H20",
+          "label": "NIM RBS 1H21",
           "value": 209.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM RBS 1H21",
+          "label": "NIM RBS 2H21",
           "value": 227.0,
           "unit": "bps",
           "basis": null
@@ -727,7 +1050,7 @@
       "provenance": null
     },
     {
-      "id": "ev-23",
+      "id": "ev-47",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 65,
       "printed_page": 65,
@@ -742,6 +1065,12 @@
         },
         {
           "label": "NIM IB&M 1H21",
+          "value": 95.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "NIM IB&M 2H21",
           "value": 106.0,
           "unit": "bps",
           "basis": null
@@ -750,21 +1079,27 @@
       "provenance": null
     },
     {
-      "id": "ev-24",
+      "id": "ev-48",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 65,
       "printed_page": 65,
       "kind": "table",
-      "quote": "BB bpts 262 260 259 2H20 1H21 2H21 Lower deposits and capital earnings from impact of low rate environment, continued home loan competition and switching, partly offset by lower funding costs and home loan repricing",
+      "quote": "Lower deposits and capital earnings from impact of low rate environment, continued home loan competition and switching, partly offset by lower funding costs and home loan repricing 262 260 259 2H20 1H21 2H21",
       "numbers": [
         {
-          "label": "NIM BB 2H20",
+          "label": "NIM Lower deposits 2H20",
           "value": 262.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM BB 1H21",
+          "label": "NIM Lower deposits 1H21",
+          "value": 260.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "NIM Lower deposits 2H21",
           "value": 259.0,
           "unit": "bps",
           "basis": null
@@ -773,21 +1108,27 @@
       "provenance": null
     },
     {
-      "id": "ev-25",
+      "id": "ev-49",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 65,
       "printed_page": 65,
       "kind": "table",
-      "quote": "NZ (ASB)2 bpts 304 302 295 2H20 1H21 2H21 Higher Global Markets income due to lower funding costs and increased commodities margins, partly offset by lower earnings on deposits and capital due to low interest rates Lower wholesale funding costs and the impact of favourable portfolio mix, partly offset by lower deposit margins Lower deposits and business lending margins partly offset by favourable portfolio mix from strong at-call deposit growth and lower wholesale funding costs",
+      "quote": "Higher Global Markets income due to lower funding costs and increased commodities margins, partly offset by lower earnings on deposits and capital due to low interest rates 304 302 295 2H20 1H21 2H21",
       "numbers": [
         {
-          "label": "NIM NZ (ASB) 2H20",
+          "label": "NIM Higher Global Markets 2H20",
           "value": 304.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM NZ (ASB) 1H21",
+          "label": "NIM Higher Global Markets 1H21",
+          "value": 302.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "NIM Higher Global Markets 2H21",
           "value": 295.0,
           "unit": "bps",
           "basis": null
@@ -796,7 +1137,27 @@
       "provenance": null
     },
     {
-      "id": "ev-26",
+      "id": "ev-50",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 65,
+      "printed_page": 65,
+      "kind": "text",
+      "quote": "Lower wholesale funding costs and the impact of favourable portfolio mix, partly offset by lower deposit margins 65",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-51",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 65,
+      "printed_page": 65,
+      "kind": "text",
+      "quote": "Lower deposits and business lending margins partly offset by favourable portfolio mix from strong at-call deposit growth and lower wholesale funding costs",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-52",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 28,
       "printed_page": 28,
@@ -819,31 +1180,15 @@
       "provenance": null
     },
     {
-      "id": "ev-27",
+      "id": "ev-53",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 28,
       "printed_page": 28,
       "kind": "text",
-      "quote": "Lower margin in low-rate environment",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-28",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 28,
-      "printed_page": 28,
-      "kind": "table",
-      "quote": "Home Loans Avg. Volume Growth +3.6% Margin -4bpts",
+      "quote": "Lower margin in low-rate environment -4bpts",
       "numbers": [
         {
-          "label": "Home Loans Avg. Volume Growth FY21",
-          "value": 3.6,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Home Loans Margin Change FY21 vs FY20",
+          "label": "Margin impact",
           "value": -4.0,
           "unit": "bps",
           "basis": null
@@ -852,7 +1197,7 @@
       "provenance": null
     },
     {
-      "id": "ev-29",
+      "id": "ev-54",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 64,
       "printed_page": 64,
@@ -862,7 +1207,7 @@
       "provenance": "reference_follow:CBA/FY21/results_presentation p29 -> page 64"
     },
     {
-      "id": "ev-30",
+      "id": "ev-55",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 64,
       "printed_page": 64,
@@ -872,7 +1217,7 @@
       "provenance": "reference_follow:CBA/FY21/results_presentation p29 -> page 64"
     },
     {
-      "id": "ev-31",
+      "id": "ev-56",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 64,
       "printed_page": 64,
@@ -889,12 +1234,12 @@
       "provenance": "reference_follow:CBA/FY21/results_presentation p29 -> page 64"
     },
     {
-      "id": "ev-32",
+      "id": "ev-57",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 64,
       "printed_page": 64,
       "kind": "table",
-      "quote": "Domestic Equity Hedge Balance $bn 57 2H21 Avg. Rate 0.80% Exit Tractor1 Rate 0.76% Average investment term 3 yrs",
+      "quote": "Domestic Equity Hedge Balance $bn 57 2H21 Avg. Rate 0.80% Tractor1 Exit Rate 0.76% Average investment term 3 yrs",
       "numbers": [
         {
           "label": "Balance $bn",
@@ -909,7 +1254,7 @@
           "basis": null
         },
         {
-          "label": "Exit Tractor1 Rate %",
+          "label": "Tractor1 Exit Rate %",
           "value": 0.76,
           "unit": "%",
           "basis": null
@@ -918,12 +1263,12 @@
       "provenance": "reference_follow:CBA/FY21/results_presentation p29 -> page 64"
     },
     {
-      "id": "ev-33",
+      "id": "ev-58",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 64,
       "printed_page": 64,
       "kind": "table",
-      "quote": "Deposit Hedge Balance $bn 96 2H21 Avg. Rate 1.22% Exit Tractor1 Rate 1.18% Average investment term 5 yrs",
+      "quote": "Deposit Hedge Balance $bn 96 2H21 Avg. Rate 1.22% Tractor1 Exit Rate 1.18% Average investment term 5 yrs",
       "numbers": [
         {
           "label": "Balance $bn",
@@ -938,7 +1283,7 @@
           "basis": null
         },
         {
-          "label": "Exit Tractor1 Rate %",
+          "label": "Tractor1 Exit Rate %",
           "value": 1.18,
           "unit": "%",
           "basis": null
@@ -947,7 +1292,7 @@
       "provenance": "reference_follow:CBA/FY21/results_presentation p29 -> page 64"
     },
     {
-      "id": "ev-34",
+      "id": "ev-59",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 64,
       "printed_page": 64,
@@ -964,7 +1309,7 @@
       "provenance": "reference_follow:CBA/FY21/results_presentation p29 -> page 64"
     },
     {
-      "id": "ev-35",
+      "id": "ev-60",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 64,
       "printed_page": 64,
@@ -981,7 +1326,7 @@
       "provenance": "reference_follow:CBA/FY21/results_presentation p29 -> page 64"
     },
     {
-      "id": "ev-36",
+      "id": "ev-61",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -989,7 +1334,7 @@
       "quote": "Group margin1 Up 3bpts this half (mix, NZ) but lower over 12 months - ongoing pressures from low interest rates, competition",
       "numbers": [
         {
-          "label": "NIM movement FY21 vs FY20",
+          "label": "Group margin change FY21 vs FY20",
           "value": -4.0,
           "unit": "bps",
           "basis": null
@@ -998,7 +1343,7 @@
       "provenance": null
     },
     {
-      "id": "ev-37",
+      "id": "ev-62",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -1006,7 +1351,7 @@
       "quote": "This Half +3bpts",
       "numbers": [
         {
-          "label": "NIM movement This Half (H1 FY21 vs H2 FY20)",
+          "label": "Group margin change This Half",
           "value": 3.0,
           "unit": "bps",
           "basis": null
@@ -1015,25 +1360,47 @@
       "provenance": null
     },
     {
-      "id": "ev-38",
+      "id": "ev-63",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 29,
       "printed_page": 29,
       "kind": "text",
-      "quote": "Home loans: Switching (3) Discounting (2) Pricing +3",
+      "quote": "Home loans: Switching (3)",
       "numbers": [
         {
           "label": "Home loans switching impact on NIM",
           "value": -3.0,
           "unit": "bps",
           "basis": null
-        },
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-64",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "text",
+      "quote": "Discounting (2)",
+      "numbers": [
         {
           "label": "Home loans discounting impact on NIM",
           "value": -2.0,
           "unit": "bps",
           "basis": null
-        },
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-65",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "text",
+      "quote": "Pricing +3",
+      "numbers": [
         {
           "label": "Home loans pricing impact on NIM",
           "value": 3.0,
@@ -1044,7 +1411,7 @@
       "provenance": null
     },
     {
-      "id": "ev-39",
+      "id": "ev-66",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -1061,7 +1428,7 @@
       "provenance": null
     },
     {
-      "id": "ev-40",
+      "id": "ev-67",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -1078,7 +1445,7 @@
       "provenance": null
     },
     {
-      "id": "ev-41",
+      "id": "ev-68",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -1095,7 +1462,7 @@
       "provenance": null
     },
     {
-      "id": "ev-42",
+      "id": "ev-69",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 29,
       "printed_page": 29,
@@ -1124,125 +1491,25 @@
       "provenance": null
     },
     {
-      "id": "ev-43",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 29,
-      "printed_page": 29,
-      "kind": "text",
-      "quote": "Higher liquids (2)",
-      "numbers": [
-        {
-          "label": "Higher liquidity impact on NIM",
-          "value": -2.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-44",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 29,
-      "printed_page": 29,
-      "kind": "text",
-      "quote": "Impact of lower rates 201",
-      "numbers": [
-        {
-          "label": "Lower rates impact on NIM",
-          "value": 201.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-45",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 29,
-      "printed_page": 29,
-      "kind": "text",
-      "quote": "Management actions/other 204",
-      "numbers": [
-        {
-          "label": "Management actions/other impact on NIM",
-          "value": 204.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-46",
+      "id": "ev-70",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 63,
       "printed_page": 63,
       "kind": "text",
       "quote": "Group margin1 Flat ex liquids – pressure from lower interest rates, offset by favourable portfolio mix, lower wholesale funding costs",
-      "numbers": [
-        {
-          "label": "Liquids",
-          "value": 2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Asset Pricing",
-          "value": 2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Deposit Pricing & Funding",
-          "value": -4.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Capital & Other",
-          "value": -2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Portfolio Mix",
-          "value": -3.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Basis Risk (incl RP)",
-          "value": -2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Treasury & Markets",
-          "value": 207.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Full year",
-          "value": 203.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
+      "numbers": [],
       "provenance": null
     },
     {
-      "id": "ev-47",
+      "id": "ev-71",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 63,
       "printed_page": 63,
       "kind": "text",
-      "quote": "Higher deposit funding ratio and at-call deposit balances, drawdown of the TFF",
+      "quote": "Higher Liquids +4",
       "numbers": [
         {
-          "label": "Deposit Pricing & Funding",
+          "label": "Liquids FY21 vs FY20",
           "value": 4.0,
           "unit": "bps",
           "basis": null
@@ -1251,15 +1518,15 @@
       "provenance": null
     },
     {
-      "id": "ev-48",
+      "id": "ev-72",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 63,
       "printed_page": 63,
       "kind": "text",
-      "quote": "Decline in higher margin consumer fin. balances",
+      "quote": "Asset Pricing (2)",
       "numbers": [
         {
-          "label": "Consumer Fin.",
+          "label": "Asset Pricing FY21 vs FY20",
           "value": -2.0,
           "unit": "bps",
           "basis": null
@@ -1268,26 +1535,43 @@
       "provenance": null
     },
     {
-      "id": "ev-49",
+      "id": "ev-73",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 63,
       "printed_page": 63,
       "kind": "text",
-      "quote": "Minimal impact on NII",
+      "quote": "Deposit Pricing & Funding (4)bpts",
+      "numbers": [
+        {
+          "label": "Deposit Pricing & Funding FY21 vs FY20",
+          "value": -4.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-74",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 63,
+      "printed_page": 63,
+      "kind": "text",
+      "quote": "Capital & Other Minimal impact on NII",
       "numbers": [],
       "provenance": null
     },
     {
-      "id": "ev-50",
+      "id": "ev-75",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 63,
       "printed_page": 63,
       "kind": "text",
-      "quote": "Impact of cash rate cut",
+      "quote": "Portfolio Mix (2)",
       "numbers": [
         {
-          "label": "Investment R. Portfolio",
-          "value": -8.0,
+          "label": "Portfolio Mix FY21 vs FY20",
+          "value": -2.0,
           "unit": "bps",
           "basis": null
         }
@@ -1295,16 +1579,16 @@
       "provenance": null
     },
     {
-      "id": "ev-51",
+      "id": "ev-76",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 63,
       "printed_page": 63,
       "kind": "text",
-      "quote": "Wholesale",
+      "quote": "Basis Risk (incl RP) (3)",
       "numbers": [
         {
-          "label": "Wholesale",
-          "value": 1.0,
+          "label": "Basis Risk (incl RP) FY21 vs FY20",
+          "value": -3.0,
           "unit": "bps",
           "basis": null
         }
@@ -1312,16 +1596,16 @@
       "provenance": null
     },
     {
-      "id": "ev-52",
+      "id": "ev-77",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 63,
       "printed_page": 63,
       "kind": "text",
-      "quote": "Capital NZ",
+      "quote": "Treasury & Markets (2)",
       "numbers": [
         {
-          "label": "Capital NZ",
-          "value": 2.0,
+          "label": "Treasury & Markets FY21 vs FY20",
+          "value": -2.0,
           "unit": "bps",
           "basis": null
         }
@@ -1329,16 +1613,16 @@
       "provenance": null
     },
     {
-      "id": "ev-53",
+      "id": "ev-78",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 63,
       "printed_page": 63,
       "kind": "text",
-      "quote": "Bus. Lending",
+      "quote": "Higher deposit funding ratio and at-call deposit balances, drawdown of the TFF +4",
       "numbers": [
         {
-          "label": "Bus. Lending",
-          "value": 9.0,
+          "label": "Deposit Funding/TFF Impact FY21 vs FY20",
+          "value": 4.0,
           "unit": "bps",
           "basis": null
         }
@@ -1346,22 +1630,16 @@
       "provenance": null
     },
     {
-      "id": "ev-54",
+      "id": "ev-79",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 63,
       "printed_page": 63,
       "kind": "text",
-      "quote": "Home loans: - Pricing - Switching - Discounting",
+      "quote": "Decline in higher margin consumer fin. balances (2)",
       "numbers": [
         {
-          "label": "Home loans: Pricing",
-          "value": -5.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Home loans: Switching",
-          "value": -4.0,
+          "label": "Consumer Fin. Balance Decline FY21 vs FY20",
+          "value": -2.0,
           "unit": "bps",
           "basis": null
         }
@@ -1374,10 +1652,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/FY21/profit_announcement (ffdff75173e7), CBA/FY21/results_presentation (b1bbbd626803), CBA/FY20/profit_announcement (2c2179a200a3)",
-    "generated": "2026-08-29T20:47:51+00:00",
-    "seconds": 78.7,
-    "cost_usd": 0.0027,
-    "tokens": "49915 in / 9000 out",
+    "generated": "2026-08-30T12:27:10+00:00",
+    "seconds": 94.9,
+    "cost_usd": 0.0029,
+    "tokens": "57550 in / 8910 out",
     "orchestration": "pipeline",
     "pages_extracted": 17,
     "reference_follow": [
