@@ -7,7 +7,7 @@ from __future__ import annotations
 import re
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class NumberFact(BaseModel):
@@ -51,7 +51,14 @@ class DriverClaim(BaseModel):
     # (WBC impairment FY25, round-3 log). An unstated self-report is LOW
     # confidence, not a crash: 40 is the fatal-cap floor, so the claim can
     # never read as confident and the calibration table shows it honestly.
+    # The validator covers the other common form of an unstated field, an
+    # explicit JSON null (Codex round-4 finding 5).
     confidence: int = Field(default=40, ge=0, le=100)
+
+    @field_validator("confidence", mode="before")
+    @classmethod
+    def _null_confidence_is_low(cls, value):
+        return 40 if value is None else value
     evidence: list[str] = []
     checks_passed: list[str] = []
     checks_failed: list[str] = []

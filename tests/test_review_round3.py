@@ -428,3 +428,12 @@ def test_the_movement_check_still_passes_a_movement_that_adds_up():
     assert check_movement(
         Movement(from_value=5132.0, to_value=5445.0, delta=313.0, unit="$m")
     ) == (["movement_arithmetic"], [])
+
+
+def test_null_confidence_is_low_not_a_crash():
+    """Codex round-4 finding 5: an explicit JSON null is the other common
+    form of an unstated self-report; both forms mean LOW, never a crash."""
+    from bank_equity_researcher.schema import DriverClaim
+
+    assert DriverClaim(canonical="x").confidence == 40
+    assert DriverClaim(canonical="x", confidence=None).confidence == 40
