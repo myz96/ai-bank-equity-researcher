@@ -137,6 +137,24 @@ def runner_for(combo_name: str):
     return run_case
 
 
+def question_runner_for(combo_name: str):
+    """The free-form question runner a combo's orchestration selects.
+
+    The same rule as runner_for, over the other task: `ask --combo agentic`
+    and `evals run --suite questions --combo agentic` must both reach the
+    closed loop, and `--combo cheap` must reach the open-loop baseline. Both
+    runners take (bank, question, combo, periods) and return (output, out_dir),
+    so no caller needs an adapter or a branch of its own.
+    """
+    if COMBOS[combo_name].orchestration == "agent":
+        from .research_agent import run_agent_question
+
+        return run_agent_question
+    from .ask import run_ask
+
+    return run_ask
+
+
 def openrouter_api_key() -> str:
     key = os.environ.get("OPENROUTER_API_KEY")
     if not key:

@@ -147,3 +147,112 @@ pipeline runs.
   cheap arm did this three times on the impairment case.
 - Not measured: the narrative checklist (`scripts/bakeoff_judge.py`), the full
   25-case dev suite on either agentic combo, and any bank other than CBA.
+
+### Question mode (2026-08-30)
+
+Codex critique finding 7 said: do not maintain a second open-loop author; merge
+`ask` into the research loop with a smaller submit payload. That is built. One
+loop, one tool surface, one citation gate and one artifact now serve both
+tasks - a metric movement and a free-form research question.
+
+**What was built**
+
+- `research_agent.research_loop(llm, combo, research, messages, submit_spec,
+  started)` - the loop, lifted out of `run_agent_case` and given the submit
+  schema as a parameter. Both tasks drive the same copy, so the budgets, the
+  latch, the turn bound, the prose nudge and the submit-rejection retry are one
+  piece of code and a fix to any of them reaches both.
+- `research_agent.run_agent_question(bank, question, combo, periods)` - the
+  question shell. It resolves the scope, runs the loop with
+  `QUESTION_SUBMIT_SPEC`, and writes `out/ask-<slug>-<combo>/answer.md` and
+  `answer.json` with the provenance the movement artifact carries (models,
+  cost, seconds, tool calls, pages read, charts read, orchestration "agent",
+  budget_exhausted).
+- The submit payload is `{answer, key_facts:[{fact, citations}], confidence,
+  limitations}` over the SAME `evidence` schema object the movement submit uses
+  (`_EVIDENCE_SCHEMA`, shared by identity and pinned by a test). The citation
+  gate is unchanged: `build_records` re-checks every quote against its page.
+- `schema.enforce_answer_gate` - the never-guess gate for an answer, moved out
+  of `ask.py` and shared by both shells. A key fact with a number and no
+  resolvable citation is deleted, the deletion is named in limitations, and an
+  answer with nothing left is capped at confidence 20.
+- `corpus.documents_for_question` - the scope of a question, read from the
+  question's own words (`banks_named`, `periods_named`), with the bank and the
+  periods as optional hints. The bank vocabulary comes from the registry's
+  `full_name`, never from a hand-written table.
+- `corpus.doc_alias_index` / `resolve_doc_name` - a document named as a person
+  writes it ("WBC/FY25/presentation-and-IDP") resolves onto its doc_id
+  ("WBC/FY25/investor_discussion_pack") through the manifest's own file names.
+  All 4 crossref and all 12 researcher-question gold names resolve.
+- `config.question_runner_for(combo)` - the second routing point, the twin of
+  `runner_for`. Both runners take `(bank, question, combo, periods)` and return
+  `(output, out_dir)`, so no caller needs an adapter or a branch of its own.
+- `evals.run_answer_suite(kind, gold_cases, combo)` - ONE runner and one
+  scorecard writer for both answer suites (finding 8). `run_crossref_suite` and
+  `run_question_suite` are wrappers that differ only in the gold they load, and
+  both route through `question_runner_for`, so a crossref run can no longer
+  measure the baseline while wearing the agent's label (finding 1).
+- `evals.load_question_gold(split, bank)` and the `evals run --suite questions`
+  route. Scoring is `score_crossref` unchanged apart from one new argument, the
+  doc-name index.
+
+**Reused, not rewritten**
+
+- `ask.py` keeps its retrieval, page budgeting, extraction and author rounds:
+  it is still the measured open-loop control, reachable at `--combo cheap`. It
+  lost its private evidence gate to the shared one, `_slugify` became public
+  `slugify`, and `render_answer` now renders both shells' artifacts.
+- `evals.py`: the scorer, the pass rule, the two-judge protocol and the
+  scorecard layout are untouched; only the run loop was generalised.
+- The metric `SYSTEM_PROMPT` is byte-identical apart from ONE word: rule 1 now
+  reads "a quantified claim" where it read "a quantified driver", because the
+  rule is now shared (`NEVER_GUESS_RULES`). `HOW_TO_RESEARCH` (the tool
+  descriptions) and the budget note are shared too.
+
+**The two probes** (`evals run --suite questions --only
+nab-business-growth-quality`)
+
+| Arm | Coverage | Fact accuracy | Flagged | Conf | Tool calls | Pages | Cost | Seconds |
+|---|---|---|---|---|---|---|---|---|
+| agentic-cheap (qwen3.7-flash) | 1/3 | 0/4 | 1 | 78 | 31 | 10 | $0.0117 | 114 |
+| agentic (opus-5) | 3/3 | 0/4 | 2 | 83 | 31 | 14 | $0.7431 | 209 |
+
+Scorecards: `evals/results/20260830-1345-agentic-cheap-questions.md` and
+`evals/results/20260830-1347-agentic-questions.md`. Artifacts:
+`out/ask-assess-whether-nab-s-fy25-business-private-banking-{agentic,agentic-cheap}/`.
+The opus arm cited all three required pages, minted 50 records over 14 pages,
+and wrote 19 key facts; the cheap arm answered mostly out of the results book
+and reached one required page. Both artifacts validate and every citation is a
+verbatim quote from a real page.
+
+**Findings from the probes**
+
+1. FACT ACCURACY IS NOT COVERAGE, AND THE JUDGE WINDOW BINDS. The opus answer
+   scored 0/4 with full coverage. Two facts are judge splits, not failures.
+   The other two fail on entailment: the researcher-question gold facts are
+   long conjunctions of printed values ("the chart shows X and Y and the page
+   also states Z"), and `judge.py` requires EVERY load-bearing number to appear
+   in the cited quotes. The answer cited 39 records; `MAX_QUOTES = 24` means 15
+   of them never reached the entailment judge. A more thorough answer therefore
+   loses grounding it actually has. NOT changed here - the caps are part of the
+   frozen protocol and moving them mid-round would break comparability with the
+   crossref set - but the head-to-head must read fact accuracy with this in
+   mind, or measure it after raising the window for BOTH arms.
+2. The cheap arm reads the results book and the opus arm reads both documents.
+   The gold locates this question's answer in the investor presentation, so the
+   coverage gap (1/3 against 3/3) is a real difference in reading strategy, not
+   a harness artifact.
+3. `read_chart` was never called by either arm on this question. The chart
+   pages the gold points at (p49, p50, p27) were read as text, and the text
+   layer carried enough. In question mode a chart is stamped "unclassified"
+   because a question fixes no comparison to classify against.
+
+**Left undone**
+
+- The other four dev questions are unrun on purpose (Monday's head-to-head).
+- `ask` on `--combo cheap` was not re-run against the live corpus. It is now
+  covered offline end to end (finding 7 asked for that test), which pins the
+  signature, the shared gate and the artifact shape, but the baseline arm's
+  answer quality on these questions is still unmeasured.
+- The answer note ran to 460 words against a 400-word instruction. The cap is
+  not enforced in code, unlike the movement headline's.

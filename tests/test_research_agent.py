@@ -675,13 +675,16 @@ def test_finalise_caps_drivers_at_85_without_a_primary_walk(docs, case):
 
 @pytest.fixture
 def wired(monkeypatch, tmp_path, docs):
-    """run_agent_case with the corpus, the registry and out/ replaced."""
+    """The runners with the corpus, the registry and out/ replaced."""
     registry_dir = tmp_path / "registry"
     registry_dir.mkdir()
     (registry_dir / "cba.json").write_text(json.dumps(REGISTRY))
     monkeypatch.setattr(RA, "REGISTRY_DIR", registry_dir)
     monkeypatch.setattr(RA, "OUT_DIR", tmp_path / "out")
     monkeypatch.setattr(RA, "documents_for_period", lambda bank, *periods: docs)
+    monkeypatch.setattr(
+        RA, "documents_for_question", lambda question, bank=None, periods=None: docs
+    )
     monkeypatch.setattr(
         RA, "retrieve",
         lambda doc, query, top_k=6: [(12, 1.0)] if len(doc.page_texts()) > 13 else [],
@@ -922,6 +925,282 @@ def test_the_tool_surface_is_the_documented_one():
     for spec in [*RA.TOOL_SPECS, RA.SUBMIT_SPEC]:
         assert spec["function"]["parameters"]["type"] == "object"
         assert spec["function"]["description"]
+
+
+# ---------------------------------------------------------------------------
+# Question mode: the same loop, the smaller submission
+# ---------------------------------------------------------------------------
+
+QUESTION = "How did CBA's net interest margin move in FY26, and what drove it?"
+
+
+def _answer_submission(**overrides) -> dict:
+    payload = {
+        "evidence": [
+            {
+                "id": "e1",
+                "doc_id": "CBA/FY26/profit_announcement",
+                "pdf_page": 12,
+                "quote": "Net interest margin    2.05%    2.08%",
+            }
+        ],
+        "answer": "The margin fell 3 basis points, from 2.08% to 2.05%.",
+        "key_facts": [
+            {"fact": "NIM was 2.05% in FY26 against 2.08% in FY25.", "citations": ["e1"]}
+        ],
+        "confidence": 80,
+        "limitations": ["The bank's own decomposition was not read."],
+    }
+    payload.update(overrides)
+    return payload
+
+
+def _run_question(llm, monkeypatch, combo=None):
+    monkeypatch.setattr(RA, "LLM", lambda: llm)
+    monkeypatch.setitem(RA.COMBOS, "agentic", combo or _Combo())
+    return RA.run_agent_question("CBA", QUESTION, "agentic", ["FY26", "FY25"])
+
+
+def test_the_question_submit_spec_asks_for_the_smaller_payload():
+    spec = RA.QUESTION_SUBMIT_SPEC["function"]
+    assert spec["name"] == "submit"
+    properties = spec["parameters"]["properties"]
+    assert set(properties) == {"evidence", "answer", "key_facts", "confidence", "limitations"}
+    assert spec["parameters"]["required"] == ["evidence", "answer", "key_facts", "confidence"]
+    # The evidence contract is the movement's own, not a second one.
+    assert properties["evidence"] is RA._EVIDENCE_SCHEMA
+
+
+def test_a_question_submission_becomes_an_answer_artifact(wired, monkeypatch):
+    llm = _LLM(
+        [
+            _assistant(_tool_call("c1", "read_page",
+                                  {"doc_id": "CBA/FY26/profit_announcement", "pdf_page": 12})),
+            _assistant(_tool_call("c2", "submit", _answer_submission())),
+        ]
+    )
+    output, out = _run_question(llm, monkeypatch)
+    assert output["question"] == QUESTION
+    assert output["answer"].startswith("The margin fell")
+    assert output["confidence"] == 80
+    assert output["provenance"]["orchestration"] == "agent"
+    assert output["provenance"]["tool_calls"] == 1
+    assert output["provenance"]["budget_exhausted"] == "no"
+    assert "cost_usd" in output["provenance"] and "seconds" in output["provenance"]
+    # The fact keeps its citation, remapped onto the record code minted.
+    ids = {r["id"] for r in output["evidence_records"]}
+    assert output["key_facts"][0]["evidence"][0] in ids
+    assert out.name == f"ask-{RA.slugify(QUESTION)}-agentic"
+    assert out.parent.name == "out"
+    saved = json.loads((out / "answer.json").read_text())
+    assert saved["key_facts"] == output["key_facts"]
+    assert (out / "answer.md").read_text().startswith(f"# Q: {QUESTION}")
+
+
+def test_the_question_artifact_names_the_combo(wired, monkeypatch):
+    """Two shells answer the same question; neither may overwrite the other."""
+    llm = _LLM([_assistant(_tool_call("c1", "submit", _answer_submission()))])
+    _output, out = _run_question(llm, monkeypatch)
+    assert out.name.endswith("-agentic")
+
+
+def test_an_unquotable_citation_loses_the_fact_that_rests_on_it(wired, monkeypatch):
+    """The never-guess gate, applied to a question: no quote, no number."""
+    bad = _answer_submission(
+        evidence=[{"id": "e1", "doc_id": "CBA/FY26/profit_announcement", "pdf_page": 12,
+                   "quote": "the margin fell three basis points"}]
+    )
+    llm = _LLM([_assistant(_tool_call(f"c{i}", "submit", bad)) for i in range(4)])
+    output, _out = _run_question(llm, monkeypatch)
+    assert output["key_facts"] == []
+    assert output["confidence"] <= 20
+    assert any("Stripped unsupported quantified fact" in item
+               for item in output["limitations"])
+
+
+def test_a_question_fact_may_cite_a_record_the_evidence_list_forgot(wired, monkeypatch):
+    llm = _LLM(
+        [
+            _assistant(_tool_call("c1", "cite", {
+                "doc_id": "CBA/FY26/profit_announcement", "pdf_page": 12,
+                "quotes": [{"quote": "Net interest margin    2.05%    2.08%"}],
+            })),
+            _assistant(_tool_call("c2", "submit", _answer_submission(
+                evidence=[],
+                key_facts=[{"fact": "NIM was 2.05% in FY26.", "citations": ["ev-1"]}],
+            ))),
+        ]
+    )
+    output, _out = _run_question(llm, monkeypatch)
+    assert [r["id"] for r in output["evidence_records"]] == ["ev-1"]
+    assert output["key_facts"][0]["evidence"] == ["ev-1"]
+
+
+def test_a_question_that_never_submits_still_ships_an_artifact(wired, monkeypatch):
+    llm = _LLM([{"role": "assistant", "content": "Here is my analysis in prose."}] * 6)
+    output, out = _run_question(llm, monkeypatch)
+    assert output["answer"] == ""
+    assert output["confidence"] == 0
+    assert any("without a submitted answer" in item for item in output["limitations"])
+    assert (out / "answer.md").exists()
+
+
+def test_the_question_budget_forces_a_submission(wired, monkeypatch):
+    combo = _Combo(max_tool_calls=1)
+    search = _assistant(_tool_call("c", "search_pages", {"query": "margin"}))
+    llm = _LLM([search, _assistant(_tool_call("cs", "submit", _answer_submission()))])
+    output, _out = _run_question(llm, monkeypatch, combo)
+    assert output["provenance"]["budget_exhausted"].startswith("the tool-call budget")
+    assert any("Research stopped early" in item for item in output["limitations"])
+    assert llm.turns[-1] == ["submit"]
+
+
+def test_a_chart_read_for_a_question_is_not_classified_against_a_comparison(docs):
+    """A question fixes no comparison, so no chart may be called primary."""
+    llm = _LLM(
+        [],
+        walk_reply={
+            "title": "Expenses", "start_label": "FY24", "start_bps": 10944,
+            "bars": [{"label": "Staff costs", "bps": 397}],
+            "end_label": "FY25", "end_bps": 11341,
+        },
+    )
+    case, metric_cfg, registries = RA.question_scope(QUESTION, docs)
+    research = RA.Research(llm, _Combo(), docs, case, metric_cfg, {}, registries)
+    out = research.read_chart("CBA/FY26/profit_announcement", 14, unit="$m")
+    assert out["walk"]["comparison"] == "unclassified"
+    assert research.records[0].kind == "walk_vision"
+
+
+def test_bank_language_answers_for_the_bank_the_question_asks_about(docs):
+    case, metric_cfg, _registries = RA.question_scope(QUESTION, docs)
+    registries = {"CBA": REGISTRY, "NAB": {"measures": {"core_profit": "cash earnings"}}}
+    research = RA.Research(llm := _LLM([]), _Combo(), docs, case, metric_cfg, {}, registries)
+    assert research.bank_language("NAB")["measures"]["core_profit"] == "cash earnings"
+    assert research.bank_language("CBA")["measures"]["core_profit"].startswith("cash NPAT")
+    # A question has no metric, so no walk-label list is offered for one.
+    assert not any(key.endswith("_walk_labels") for key in research.bank_language("CBA"))
+    del llm
+
+
+def test_the_open_loop_arm_emits_the_same_artifact(monkeypatch, tmp_path, docs):
+    """The baseline arm answers the same question into the same shape.
+
+    Both shells feed one renderer, one scorer and one judge, so a difference in
+    the artifact would make the head-to-head a comparison of two formats
+    instead of two research strategies.
+    """
+    from bank_equity_researcher import ask
+    from bank_equity_researcher.schema import EvidenceRecord
+
+    record = EvidenceRecord(
+        id="ev-1", doc_id="CBA/FY26/profit_announcement", pdf_page=12, kind="table",
+        quote="Net interest margin    2.05%    2.08%",
+    )
+
+    class _AskLLM(_LLM):
+        def chat_json(self, model, prompt, image_png=None, max_tokens=None):
+            if "retrieval queries" in prompt:
+                return ["net interest margin"]
+            return {
+                "answer": "The margin fell 3 basis points.",
+                "key_facts": [{"fact": "NIM was 2.05% in FY26.", "evidence": ["ev-1"]},
+                              {"fact": "Deposits cost 4 bps.", "evidence": ["ev-9"]}],
+                "confidence": 70,
+                "limitations": [],
+            }
+
+    monkeypatch.setattr(ask, "LLM", lambda: _AskLLM([]))
+    monkeypatch.setattr(ask, "OUT_DIR", tmp_path / "out")
+    monkeypatch.setattr(
+        ask, "documents_for_question", lambda question, bank=None, periods=None: docs
+    )
+    monkeypatch.setattr(ask, "retrieve", lambda doc, query, top_k=4: [(12, 1.0)])
+    monkeypatch.setattr(
+        ask, "extract_text_evidence",
+        lambda llm, model, doc, page, question, next_id: [record],
+    )
+    output, out = ask.run_ask("CBA", QUESTION, "cheap", ["FY26", "FY25"])
+    assert set(output) >= {
+        "question", "bank", "periods", "answer", "key_facts", "confidence",
+        "limitations", "evidence_records", "provenance",
+    }
+    # The same never-guess gate: the fact citing no record loses its place.
+    assert [fact["fact"] for fact in output["key_facts"]] == ["NIM was 2.05% in FY26."]
+    assert any("Stripped unsupported quantified fact" in item
+               for item in output["limitations"])
+    assert out.name == f"ask-{ask.slugify(QUESTION)}-cheap"
+    assert (out / "answer.md").exists() and (out / "answer.json").exists()
+
+
+def test_the_combo_chooses_the_question_shell(monkeypatch):
+    """`ask --combo X` routes on orchestration exactly as `analyse` does."""
+    from bank_equity_researcher.ask import run_ask
+    from bank_equity_researcher.config import question_runner_for
+    from bank_equity_researcher.research_agent import run_agent_question
+
+    assert question_runner_for("agentic") is run_agent_question
+    assert question_runner_for("agentic-cheap") is run_agent_question
+    assert question_runner_for("cheap") is run_ask
+    assert question_runner_for("normal") is run_ask
+    del monkeypatch
+
+
+# ---------------------------------------------------------------------------
+# Which documents a question may read, and what a document is called
+# ---------------------------------------------------------------------------
+
+
+def test_a_question_names_its_own_banks_and_periods():
+    from bank_equity_researcher.corpus import banks_named, periods_named
+
+    question = "Across CBA, NAB and Westpac in FY25, which bank converted best?"
+    assert banks_named(question) == ["CBA", "NAB", "WBC"]
+    assert periods_named(question) == ["FY25"]
+    assert periods_named("from FY25 to FY26, and the 1H26 half") == ["FY25", "FY26", "1H26"]
+    # A bank the question does not name is not in scope.
+    assert "ANZ" not in banks_named(question)
+
+
+def test_the_newest_period_sorts_last():
+    from bank_equity_researcher.corpus import period_sort_key
+
+    assert sorted(["1H26", "FY25", "FY26", "2H25"], key=period_sort_key) == [
+        "FY25", "2H25", "1H26", "FY26"
+    ]
+
+
+class _NamedDoc:
+    """A corpus Document as the alias index reads one."""
+
+    def __init__(self, bank, period, doc_type, filename):
+        self.bank, self.period, self.doc_type, self.filename = bank, period, doc_type, filename
+
+    @property
+    def doc_id(self):
+        return f"{self.bank}/{self.period}/{self.doc_type}"
+
+
+def test_a_document_name_resolves_however_a_person_spells_it():
+    """Gold names a document by its file; the corpus knows it by its type."""
+    from bank_equity_researcher.corpus import doc_alias_index, resolve_doc_name
+
+    index = doc_alias_index([
+        _NamedDoc("NAB", "FY25", "investor_presentation", "NAB-FY25-investor-presentation.pdf"),
+        _NamedDoc("WBC", "FY25", "investor_discussion_pack", "WBC-FY25-presentation-and-IDP.pdf"),
+        _NamedDoc("CBA", "FY26", "results_presentation", "CBA-FY26-results-presentation.pdf"),
+    ])
+    assert resolve_doc_name("NAB/FY25/investor-presentation", index) == (
+        "NAB/FY25/investor_presentation"
+    )
+    assert resolve_doc_name("WBC/FY25/presentation-and-IDP", index) == (
+        "WBC/FY25/investor_discussion_pack"
+    )
+    assert resolve_doc_name("CBA/FY26/results_presentation", index) == (
+        "CBA/FY26/results_presentation"
+    )
+    # A name no document carries resolves to nothing, and never to a guess.
+    assert resolve_doc_name("CBA/FY26/transcript", index) is None
 
 
 def test_runner_for_routes_on_orchestration():

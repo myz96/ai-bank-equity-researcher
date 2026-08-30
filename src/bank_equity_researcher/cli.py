@@ -19,10 +19,13 @@ def main() -> int:
                          help="model combo: agentic | agentic-cheap | cheap | normal")
 
     ask = sub.add_parser("ask", help="answer a free-form question from the corpus")
-    ask.add_argument("--bank", required=True, help="e.g. CBA, NAB, WBC")
-    ask.add_argument("--periods", required=True, help="comma-separated, e.g. FY26,FY25")
+    ask.add_argument("--bank", default=None,
+                     help="e.g. CBA, NAB, WBC; omit when the question names its banks")
+    ask.add_argument("--periods", default=None,
+                     help="comma-separated, e.g. FY26,FY25; omit when the question names them")
     ask.add_argument("--question", required=True, help="the question to answer")
-    ask.add_argument("--combo", default="cheap", help="model combo: cheap | normal")
+    ask.add_argument("--combo", default="agentic",
+                     help="model combo: agentic | agentic-cheap | cheap | normal")
 
     discover_cmd = sub.add_parser("discover", help="agentically build a manifest for a bank")
     discover_cmd.add_argument("--bank", required=True)
@@ -31,7 +34,8 @@ def main() -> int:
 
     evals_cmd = sub.add_parser("evals", help="run the eval harness")
     evals_cmd.add_argument("action", choices=["run", "crossref", "rescore", "judge"])
-    evals_cmd.add_argument("--suite", default="dev", help="dev | holdout")
+    evals_cmd.add_argument("--suite", default="dev",
+                           help="dev | holdout | questions (free-form researcher questions)")
     evals_cmd.add_argument("--combo", default="cheap")
     evals_cmd.add_argument("--only", default=None,
                            help="run: subset filter for fast loops, comma-separated matches "
@@ -64,6 +68,12 @@ def main() -> int:
 
             card = rescore(args.suite, args.combo, args.bank, args.since, args.until,
                            args.baseline, args.label)
+        elif args.suite == "questions":
+            # Free-form researcher questions: the answer suite, scored on
+            # location coverage and judged fact accuracy.
+            from .evals import run_question_suite
+
+            card = run_question_suite(args.combo, args.bank, only=args.only)
         else:
             from .evals import run_suite
 
@@ -72,10 +82,15 @@ def main() -> int:
         return 0
 
     if args.command == "ask":
-        from .ask import run_ask
+        # The combo chooses the shell here exactly as it does for analyse.
+        from .config import question_runner_for
 
-        _, out_dir = run_ask(
-            args.bank.upper(), args.periods.split(","), args.question, args.combo
+        run_question = question_runner_for(args.combo)
+        _, out_dir = run_question(
+            args.bank.upper() if args.bank else None,
+            args.question,
+            args.combo,
+            args.periods.split(",") if args.periods else None,
         )
         print((out_dir / "answer.md").read_text())
         print(f"\n[saved to {out_dir}]")

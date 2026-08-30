@@ -29,6 +29,7 @@ import re
 import time
 from datetime import datetime, timezone
 
+from .ask import render_answer, slugify
 from .author import (
     _percent_evidenced,
     _settle_basis,
@@ -36,7 +37,7 @@ from .author import (
     settle_charge_sign,
 )
 from .config import COMBOS, OUT_DIR, REGISTRY_DIR
-from .corpus import Document, documents_for_period
+from .corpus import Document, documents_for_period, documents_for_question
 from .extract import extract_walk, printed_page_of
 from .llm import LLM
 from .refs import scan_page
@@ -48,6 +49,7 @@ from .schema import (
     DriverClaim,
     EvidenceRecord,
     NumberFact,
+    enforce_answer_gate,
     enforce_evidence_gate,
 )
 from .taxonomy import METRIC_ALIASES, TAXONOMY
@@ -91,13 +93,10 @@ MAX_TURNS_AFTER_BUDGET = 10
 HARD_STOP_FACTOR = 1.5
 
 
-SYSTEM_PROMPT = """You are a first-pass banking-sector equity research analyst.
-
-You research ONE question against a bank's own published documents, then you
-submit a structured attribution. Nothing is handed to you: you decide what to
-read, in what order, and when you have enough.
-
-HOW TO RESEARCH
+# The tool surface, described once. Both research tasks — a metric movement and
+# a free-form question — drive the SAME loop over the SAME tools, so a change to
+# a tool changes one paragraph, not two.
+HOW_TO_RESEARCH = """HOW TO RESEARCH
 - search_pages finds candidate pages by keyword and by meaning. Search with
   the words the BANK would print, not the words of the question.
 - read_page returns one page's text. Read before you cite.
@@ -113,17 +112,11 @@ HOW TO RESEARCH
   gives you the reason, the component rows and the split. Follow those pointers
   - the explanation almost never sits on the page that states the total.
 - bank_language returns this bank's own vocabulary for its measures.
-- submit ends the research and delivers the answer, citing records by id.
+- submit ends the research and delivers the answer, citing records by id."""
 
-A good order of work: find the headline row and read the movement off the two
-period columns; find the bank's own decomposition of that movement (a walk
-chart, a bridge table, a note); follow the references behind it for the reason;
-then check a second document for the same movement before you submit. Cite as
-you go - a page you leave uncited is a page you cannot use.
-
-ABSOLUTE RULES - never break these:
-1. NEVER GUESS. Every number you state must come from an evidence record you
-   submit and cite. A quantified driver with no evidence id is deleted before
+# The two rules no research task may break, in the words both prompts use.
+NEVER_GUESS_RULES = """1. NEVER GUESS. Every number you state must come from an evidence record you
+   submit and cite. A quantified claim with no evidence id is deleted before
    the answer ships. If you do not know, say so in limitations.
 2. CITATION CONTRACT. An evidence record is a VERBATIM quote from ONE page you
    read, with the document and the PDF page it came from. Copy the words off
@@ -133,7 +126,29 @@ ABSOLUTE RULES - never break these:
    out of two lines loses you the record and every claim resting on it. Quote a
    table row as the page prints it: the row label followed by its printed
    values, in the order the page prints them. Never quote a page you did not
-   read, and never cite a record id no tool gave you.
+   read, and never cite a record id no tool gave you."""
+
+BUDGET_NOTE = """You have a bounded budget of tool calls. Spend it on reading, not on
+re-checking what you already read. If the budget runs out you will be told to
+submit what you have: an honest partial answer with its gaps in limitations is
+the correct outcome, never a guess that fills them."""
+
+SYSTEM_PROMPT = f"""You are a first-pass banking-sector equity research analyst.
+
+You research ONE question against a bank's own published documents, then you
+submit a structured attribution. Nothing is handed to you: you decide what to
+read, in what order, and when you have enough.
+
+{HOW_TO_RESEARCH}
+
+A good order of work: find the headline row and read the movement off the two
+period columns; find the bank's own decomposition of that movement (a walk
+chart, a bridge table, a note); follow the references behind it for the reason;
+then check a second document for the same movement before you submit. Cite as
+you go - a page you leave uncited is a page you cannot use.
+
+ABSOLUTE RULES - never break these:
+{NEVER_GUESS_RULES}
 3. BASIS. "basis" names the basis of the numbers inside "movement" - nothing
    else. Use the bank's own primary reporting basis (the one bank_language
    calls its core measure, normally cash) unless the row you actually read is
@@ -227,10 +242,7 @@ ABSOLUTE RULES - never break these:
    driver's narrative, and add the qualification to limitations when it changes
    what the movement means.
 
-You have a bounded budget of tool calls. Spend it on reading, not on
-re-checking what you already read. If the budget runs out you will be told to
-submit what you have: an honest partial answer with its gaps in limitations is
-the correct outcome, never a guess that fills them."""
+{BUDGET_NOTE}"""
 
 
 CASE_PROMPT = """TASK: explain how {bank}'s {metric_name} moved in {period} against
@@ -257,6 +269,86 @@ DOCUMENTS IN THE CORPUS for this case (doc_id, period, pages):
 
 Begin by searching. Submit only when you have the movement, the bank's own
 decomposition of it, and the reason behind each driver."""
+
+
+# --------------------------------------------------------------------------
+# The second task the same loop serves: a free-form research question.
+#
+# A question has no movement, no taxonomy and no single comparison, so its
+# submission is smaller: the note, the facts it rests on, a confidence and the
+# gaps. Everything else is shared - the tools, the loop, the budgets, and the
+# citation gate that checks every quote against its page.
+# --------------------------------------------------------------------------
+
+
+QUESTION_SYSTEM_PROMPT = f"""You are a first-pass banking-sector equity research analyst.
+
+You answer ONE question against the banks' own published documents, then you
+submit a short note with the evidence under it. Nothing is handed to you: you
+decide what to read, in what order, and when you have enough.
+
+{HOW_TO_RESEARCH}
+
+A good order of work: take the question apart into the things it asks, and
+find the page that carries each one. A question with three clauses is answered
+on three pages far more often than on one. Cite a page's facts while you have
+it in front of you, follow what it points at, and read a second document for
+the same fact before you submit.
+
+ABSOLUTE RULES - never break these:
+{NEVER_GUESS_RULES}
+3. ANSWER THE WHOLE QUESTION. Every clause is a part you must answer or
+   declare unanswerable. A question that asks you to reconcile two things is
+   not answered by describing one of them.
+4. CARRY THE PRINTED FIGURES. Give the bank's own numbers with the period and
+   the units the page prints, and the direction of every movement. A judgement
+   with no number under it is an opinion.
+5. SAY WHAT A FIGURE IS AND WHAT IT IS NOT. A bank qualifies its own numbers: a
+   measure that excludes named items, a target rather than an outcome, a
+   period flow rather than a closing stock, one large exposure inside a
+   portfolio total, a growth rate on a base that was restated. Repeat the
+   bank's OWN qualifying words beside the figure, and never let a qualified
+   figure answer as though it were unqualified.
+6. BASIS AND PERIOD. Name the basis (cash, statutory, ex-notable, underlying)
+   and the period of every figure, in the bank's own words. Never set two
+   figures against each other on different bases without saying so.
+7. SOURCE HIERARCHY when sources disagree: audited statements and results-book
+   tables > results-book narrative > presentation slides > transcripts > else.
+   Restated comparatives from the newer document win. Report a disagreement you
+   find rather than choosing one figure silently.
+8. COMPARING BANKS. Two banks' headline measures are not one measure. Compare
+   each bank on the measure it prefers, name that measure, and state the limits
+   of the comparison instead of blending the definitions.
+9. CONFIDENCE is 0-100: the probability the answer would be judged correct
+   against the banks' own disclosure. A claim seen in only one document must
+   not exceed 85. An answer that leaves part of the question unread must not
+   exceed 60.
+10. LIMITATIONS. Name everything the question asks for that the documents do
+   not establish, and every caveat that changes how the answer reads.
+
+{BUDGET_NOTE}"""
+
+
+QUESTION_PROMPT = """TASK: answer this question from the banks' own published
+documents, then submit the note.
+
+QUESTION: {question}
+
+DOCUMENTS IN SCOPE (doc_id, period, pages):
+{documents}
+
+THE NOTE ("answer", markdown, at most 400 words): lead with the direct answer
+to the question that was asked, in one or two sentences. Then give the
+reasoning that supports it, carrying the printed figures, and close with what
+the evidence does not settle. Write for a reader who will check every number
+against the pages you cite.
+
+KEY FACTS: one entry for each load-bearing fact the note states, with the ids
+of the records that print it. A fact carrying a number and no id is deleted
+before the note ships.
+
+Begin by searching. Submit when every clause of the question is answered or
+declared unanswerable."""
 
 
 # --------------------------------------------------------------------------
@@ -419,6 +511,33 @@ TOOL_SPECS: list[dict] = [
     },
 ]
 
+# The evidence list is the same contract whatever is being submitted: the
+# citation gate reads it the same way for a movement and for a question.
+_EVIDENCE_SCHEMA: dict = {
+    "type": "array",
+    "description": (
+        "Every record your answer cites. For anything you already cited "
+        "or read as a chart, pass {\"id\": \"ev-N\"} and nothing else. A "
+        "record you did not cite earlier must carry its doc_id, pdf_page "
+        "and a VERBATIM quote, and is checked the same way."
+    ),
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "string", "description": "e.g. ev-1"},
+            "doc_id": {"type": "string"},
+            "pdf_page": {"type": "integer"},
+            "quote": {
+                "type": "string",
+                "description": "VERBATIM from that page, 50 words maximum",
+            },
+            "kind": {"type": "string", "description": "text | table"},
+            "numbers": {"type": "array", "items": _NUMBER_SCHEMA},
+        },
+        "required": ["id"],
+    },
+}
+
 SUBMIT_SPEC: dict = {
     "type": "function",
     "function": {
@@ -430,30 +549,7 @@ SUBMIT_SPEC: dict = {
         "parameters": {
             "type": "object",
             "properties": {
-                "evidence": {
-                    "type": "array",
-                    "description": (
-                        "Every record your answer cites. For anything you already cited "
-                        "or read as a chart, pass {\"id\": \"ev-N\"} and nothing else. A "
-                        "record you did not cite earlier must carry its doc_id, pdf_page "
-                        "and a VERBATIM quote, and is checked the same way."
-                    ),
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "id": {"type": "string", "description": "e.g. ev-1"},
-                            "doc_id": {"type": "string"},
-                            "pdf_page": {"type": "integer"},
-                            "quote": {
-                                "type": "string",
-                                "description": "VERBATIM from that page, 50 words maximum",
-                            },
-                            "kind": {"type": "string", "description": "text | table"},
-                            "numbers": {"type": "array", "items": _NUMBER_SCHEMA},
-                        },
-                        "required": ["id"],
-                    },
-                },
+                "evidence": _EVIDENCE_SCHEMA,
                 "movement": {
                     "type": "object",
                     "properties": {
@@ -523,6 +619,49 @@ SUBMIT_SPEC: dict = {
     },
 }
 
+QUESTION_SUBMIT_SPEC: dict = {
+    "type": "function",
+    "function": {
+        "name": "submit",
+        "description": (
+            "Deliver the finished note and end the research. Every quoted evidence "
+            "record is checked against its page before the answer is accepted."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "evidence": _EVIDENCE_SCHEMA,
+                "answer": {
+                    "type": "string",
+                    "description": (
+                        "the note itself, markdown, at most 400 words: the direct "
+                        "answer first, then the reasoning with its printed figures"
+                    ),
+                },
+                "key_facts": {
+                    "type": "array",
+                    "description": "one entry per load-bearing fact the note states",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "fact": {"type": "string", "description": "<=40 words"},
+                            "citations": {
+                                "type": "array",
+                                "description": "ids of the records that print this fact",
+                                "items": {"type": "string"},
+                            },
+                        },
+                        "required": ["fact", "citations"],
+                    },
+                },
+                "confidence": {"type": "integer", "description": "0-100"},
+                "limitations": {"type": "array", "items": {"type": "string"}},
+            },
+            "required": ["evidence", "answer", "key_facts", "confidence"],
+        },
+    },
+}
+
 
 # --------------------------------------------------------------------------
 # Verbatim quoting
@@ -564,7 +703,7 @@ class Research:
     """
 
     def __init__(self, llm: LLM, combo, docs: list[Document], case: dict, metric_cfg: dict,
-                 registry: dict) -> None:
+                 registry: dict, registries: dict[str, dict] | None = None) -> None:
         self.llm = llm
         self.combo = combo
         self.docs = docs
@@ -572,6 +711,9 @@ class Research:
         self.case = case
         self.metric_cfg = metric_cfg
         self.registry = registry
+        # A question may span banks, so bank_language answers for the bank it
+        # is asked about. A metric case has one bank and leaves this empty.
+        self.registries = registries or {}
         self.calendar = registry.get("calendar", {})
         self.records: list[EvidenceRecord] = []
         self.walks: list[dict] = []
@@ -665,8 +807,18 @@ class Research:
         self.validation["passed"] += passed
         self.validation["failed"] += walk["checks_failed"]
         # Classify the chart against the task comparison before the agent reads
-        # it, with the same code the pipeline uses on the author's behalf.
-        annotate_walks([walk], self.calendar, self.case["period"], self.case["comparator"])
+        # it, with the same code the pipeline uses on the author's behalf. A
+        # free-form question fixes no single comparison, so there is nothing to
+        # classify against: the agent reads the span off the chart's own labels.
+        if self.case.get("period") and self.case.get("comparator"):
+            annotate_walks([walk], self.calendar, self.case["period"], self.case["comparator"])
+        else:
+            walk["comparison"] = "unclassified"
+            walk["comparison_note"] = (
+                "This question fixes no single comparison, so this chart was not matched "
+                "against one. Read its endpoint labels before you use a bar, and name the "
+                "span the bar belongs to."
+            )
         self.walks.append(walk)
         self.records.append(record)
         self.pages_read.add((doc.doc_id, page))
@@ -770,14 +922,17 @@ class Research:
 
     def bank_language(self, bank: str | None = None) -> dict:
         """The registry entry, labels only. The registry holds no figures."""
-        del bank  # the case fixes the bank; the argument only names it
-        metric = self.case["metric"]
-        return {
-            "bank": self.case["bank"],
-            "measures": self.registry.get("measures", {}),
-            "calendar": self.calendar,
-            f"{metric}_walk_labels": self.registry.get(f"{metric}_walk_labels", {}),
+        wanted = str(bank or self.case.get("bank") or "").upper()
+        registry = self.registries.get(wanted, self.registry)
+        language = {
+            "bank": wanted or self.case.get("bank"),
+            "measures": registry.get("measures", {}),
+            "calendar": registry.get("calendar", {}),
         }
+        metric = self.case.get("metric")
+        if metric:
+            language[f"{metric}_walk_labels"] = registry.get(f"{metric}_walk_labels", {})
+        return language
 
     def dispatch(self, name: str, arguments: dict) -> dict:
         handlers = {
@@ -1210,65 +1365,17 @@ def _tool_result(call_id: str, payload: dict) -> dict:
     return {"role": "tool", "tool_call_id": call_id, "content": json.dumps(payload)[:60000]}
 
 
-def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
-                   combo_name: str = "agentic"):
-    """Research one case in a closed loop, then write the pipeline's artifacts."""
-    from .pipeline import build_period_note, default_comparator
+def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
+                  submit_spec: dict, started: float) -> tuple[dict | None, str | None]:
+    """Drive the closed loop until it submits, or until a budget ends it.
 
-    started = time.time()
-    combo = COMBOS[combo_name]
-    if not combo.agent:
-        raise ValueError(f"combo {combo_name} declares no agent model")
-    llm = LLM()
-    metric_key = METRIC_ALIASES[metric.lower()]
-    metric_cfg = TAXONOMY[metric_key]
-    comparator = comparator or default_comparator(period)
-    case = {"bank": bank, "metric": metric_key, "period": period, "comparator": comparator}
-    case["description"] = f"{bank} {metric_cfg['name']} in {period} vs {comparator}"
-
-    registry_path = REGISTRY_DIR / f"{bank.lower()}.json"
-    registry = json.loads(registry_path.read_text()) if registry_path.exists() else {}
-    period_note = build_period_note(period, comparator, registry.get("calendar", {}))
-    headline_label = registry.get("measures", {}).get(
-        {
-            "cash_earnings": "core_profit",
-            "cti": "cti_label",
-            "roe": "roe_label",
-            "impairment": "impairment_line",
-        }.get(metric_key, "")
-    )
-
-    docs = documents_for_period(bank, period, comparator)
-    if not docs:
-        raise RuntimeError(f"no documents in corpus for {bank} {period}/{comparator}")
-    research = Research(llm, combo, docs, case, metric_cfg, registry)
-
-    tools = [*TOOL_SPECS, SUBMIT_SPEC]
-    messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {
-            "role": "user",
-            "content": CASE_PROMPT.format(
-                bank=bank,
-                metric_name=metric_cfg["name"],
-                period=period,
-                comparator=comparator,
-                period_note=period_note,
-                method_hint=metric_cfg.get("method_hint", ""),
-                taxonomy=json.dumps(metric_cfg["drivers"], indent=1),
-                headline_row=headline_label
-                or (
-                    "the registry records no row for this metric - take the bank's own "
-                    "headline measure from the results book's KPI table"
-                ),
-                unit=metric_cfg["unit"],
-                documents="\n".join(
-                    f"- {d.doc_id} ({d.period}, {len(d.page_texts())} pages)" for d in docs
-                ),
-            ),
-        },
-    ]
-
+    Returns (the submitted payload or None, the budget that ran out or None).
+    The loop knows nothing about what is being submitted: it moves tool calls
+    to the toolbox and results back, and it runs the citation gate over any
+    submission before it accepts one. That is why a movement and a free-form
+    question share it - only the submit schema and the prompts differ.
+    """
+    tools = [*TOOL_SPECS, submit_spec]
     payload: dict | None = None
     submit_attempts = 0
     prose_turns = 0
@@ -1301,13 +1408,13 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
                         "content": (
                             f"The research budget is spent: you reached {exhausted}. Call "
                             "submit now with the answer your evidence already supports. "
-                            "Leave unproved drivers unquantified, name every gap in "
-                            "limitations, and lower attribution_confidence to match. Do "
-                            "not state a number you did not read."
+                            "Leave unproved claims unquantified, name every gap in "
+                            "limitations, and lower your confidence to match. Do not "
+                            "state a number you did not read."
                         ),
                     }
                 )
-        turn_tools = [SUBMIT_SPEC] if exhausted else tools
+        turn_tools = [submit_spec] if exhausted else tools
         message = llm.chat_tools(
             combo.agent, messages, turn_tools, max_tokens=combo.agent_max_tokens
         )
@@ -1322,7 +1429,7 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
                     "role": "user",
                     "content": (
                         "Answer only by calling a tool. Keep researching, or call submit "
-                        "with the attribution."
+                        "with the answer."
                     ),
                 }
             )
@@ -1365,6 +1472,68 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
                 continue
             payload = arguments
             messages.append(_tool_result(call_id, {"accepted": True}))
+    return payload, exhausted
+
+
+def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
+                   combo_name: str = "agentic"):
+    """Research one case in a closed loop, then write the pipeline's artifacts."""
+    from .pipeline import build_period_note, default_comparator
+
+    started = time.time()
+    combo = COMBOS[combo_name]
+    if not combo.agent:
+        raise ValueError(f"combo {combo_name} declares no agent model")
+    llm = LLM()
+    metric_key = METRIC_ALIASES[metric.lower()]
+    metric_cfg = TAXONOMY[metric_key]
+    comparator = comparator or default_comparator(period)
+    case = {"bank": bank, "metric": metric_key, "period": period, "comparator": comparator}
+    case["description"] = f"{bank} {metric_cfg['name']} in {period} vs {comparator}"
+
+    registry_path = REGISTRY_DIR / f"{bank.lower()}.json"
+    registry = json.loads(registry_path.read_text()) if registry_path.exists() else {}
+    period_note = build_period_note(period, comparator, registry.get("calendar", {}))
+    headline_label = registry.get("measures", {}).get(
+        {
+            "cash_earnings": "core_profit",
+            "cti": "cti_label",
+            "roe": "roe_label",
+            "impairment": "impairment_line",
+        }.get(metric_key, "")
+    )
+
+    docs = documents_for_period(bank, period, comparator)
+    if not docs:
+        raise RuntimeError(f"no documents in corpus for {bank} {period}/{comparator}")
+    research = Research(llm, combo, docs, case, metric_cfg, registry)
+
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {
+            "role": "user",
+            "content": CASE_PROMPT.format(
+                bank=bank,
+                metric_name=metric_cfg["name"],
+                period=period,
+                comparator=comparator,
+                period_note=period_note,
+                method_hint=metric_cfg.get("method_hint", ""),
+                taxonomy=json.dumps(metric_cfg["drivers"], indent=1),
+                headline_row=headline_label
+                or (
+                    "the registry records no row for this metric - take the bank's own "
+                    "headline measure from the results book's KPI table"
+                ),
+                unit=metric_cfg["unit"],
+                documents="\n".join(
+                    f"- {d.doc_id} ({d.period}, {len(d.page_texts())} pages)" for d in docs
+                ),
+            ),
+        },
+    ]
+
+    payload, exhausted = research_loop(llm, combo, research, messages, SUBMIT_SPEC, started)
 
     if payload is None:
         # The loop ended without a submission. An artifact still ships: it
@@ -1410,12 +1579,193 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
     return attribution, out
 
 
+# --------------------------------------------------------------------------
+# The question shell: the same loop, a smaller submission.
+# --------------------------------------------------------------------------
+
+
+def question_scope(question: str, docs: list[Document]) -> tuple[dict, dict, dict]:
+    """The case, the metric config and the registries a question researches with.
+
+    A question has no metric, so the fields the toolbox reads off a metric are
+    filled from the question itself: its own words are the relevance terms
+    reference-following ranks by, and there is no period pair to classify a
+    chart against.
+    """
+    banks = list(dict.fromkeys(doc.bank for doc in docs))
+    registries: dict[str, dict] = {}
+    for bank in banks:
+        path = REGISTRY_DIR / f"{bank.lower()}.json"
+        registries[bank] = json.loads(path.read_text()) if path.exists() else {}
+    case = {
+        "bank": ", ".join(banks),
+        "metric": None,
+        "period": None,
+        "comparator": None,
+        "description": str(question)[:300],
+    }
+    metric_cfg = {
+        "name": "the question",
+        "unit": "$m",
+        "method": "free_form",
+        "retrieval_queries": [str(question)],
+        "drivers": {},
+    }
+    return case, metric_cfg, registries
+
+
+def build_answer(payload: dict, research: Research, question: str, docs: list[Document]) -> dict:
+    """Assemble the answer artifact one submission describes.
+
+    Every record is re-checked against its page here, exactly as a movement's
+    records are: the loop's own check is a dry run that mints nothing. The
+    output is the shape ask.py emits, so the renderer, the scorers and the
+    judge read one artifact whichever shell produced it.
+    """
+    records, rejections, id_map = research.build_records(payload.get("evidence"))
+    # A record a tool minted and the note cites, but the evidence list forgot,
+    # is carried in rather than stripped: it was verified against the page's
+    # own words when the tool minted it (the same rule the movement path uses).
+    minted_by_id = {record.id: record for record in research.records}
+    present = {record.id for record in records}
+    for fact in payload.get("key_facts") or []:
+        if not isinstance(fact, dict):
+            continue
+        for cited in fact.get("citations", fact.get("evidence")) or []:
+            key = str(cited)
+            if key in minted_by_id and key not in present and key not in id_map:
+                records.append(minted_by_id[key])
+                present.add(key)
+
+    def remap(fact: dict) -> dict:
+        cited = fact.get("citations", fact.get("evidence")) or []
+        cited = [cited] if isinstance(cited, str) else list(cited)
+        return {
+            "fact": str(fact.get("fact", "")),
+            "citations": [id_map.get(str(e), str(e)) for e in cited],
+        }
+
+    raw_limitations = payload.get("limitations") or []
+    if isinstance(raw_limitations, str):
+        raw_limitations = [raw_limitations]
+    limitations = [str(item) for item in raw_limitations]
+    if rejections:
+        limitations.append(
+            "These citations were dropped because the quote was not found on the page "
+            "given: " + "; ".join(rejections)
+        )
+    key_facts, limitations, confidence = enforce_answer_gate(
+        [remap(f) for f in payload.get("key_facts") or [] if isinstance(f, dict)],
+        limitations,
+        int(payload.get("confidence") or 0),
+        {record.id for record in records},
+    )
+    return {
+        "question": question,
+        "bank": ", ".join(dict.fromkeys(doc.bank for doc in docs)),
+        "periods": list(dict.fromkeys(doc.period for doc in docs)),
+        "answer": str(payload.get("answer") or ""),
+        "key_facts": key_facts,
+        "confidence": confidence,
+        "limitations": limitations,
+        "evidence_records": [record.model_dump() for record in records],
+    }
+
+
+def run_agent_question(bank: str | None, question: str, combo_name: str = "agentic",
+                       periods: list[str] | None = None):
+    """Answer one free-form question in the closed loop. Returns (output, out_dir).
+
+    The signature matches ask.run_ask, so config.question_runner_for hands a
+    caller either shell without an adapter. `bank` and `periods` are hints from
+    a caller that already knows them; a question that names its own banks and
+    periods needs neither.
+    """
+    started = time.time()
+    combo = COMBOS[combo_name]
+    if not combo.agent:
+        raise ValueError(f"combo {combo_name} declares no agent model")
+    llm = LLM()
+
+    docs = documents_for_question(question, bank, periods)
+    if not docs:
+        raise RuntimeError(
+            f"no documents in corpus for {bank or 'the banks named'} "
+            f"{'/'.join(periods or []) or 'in the question'}"
+        )
+    case, metric_cfg, registries = question_scope(question, docs)
+    research = Research(
+        llm, combo, docs, case, metric_cfg,
+        next(iter(registries.values()), {}), registries,
+    )
+
+    messages = [
+        {"role": "system", "content": QUESTION_SYSTEM_PROMPT},
+        {
+            "role": "user",
+            "content": QUESTION_PROMPT.format(
+                question=question,
+                documents="\n".join(
+                    f"- {d.doc_id} ({d.period}, {len(d.page_texts())} pages)" for d in docs
+                ),
+            ),
+        },
+    ]
+    payload, exhausted = research_loop(
+        llm, combo, research, messages, QUESTION_SUBMIT_SPEC, started
+    )
+    if payload is None:
+        # The loop ended without a submission. An artifact still ships: it
+        # carries what was read and says plainly that nothing was concluded.
+        payload = {
+            "evidence": [{"id": record.id} for record in research.records],
+            "answer": "",
+            "key_facts": [],
+            "confidence": 0,
+            "limitations": [
+                "The research loop ended without a submitted answer "
+                f"({exhausted or 'the model stopped calling tools'})."
+            ],
+        }
+    output = build_answer(payload, research, question, docs)
+    if exhausted:
+        output["limitations"].append(
+            f"Research stopped early: {exhausted} was reached, so the evidence behind this "
+            "answer is less complete than a full run's."
+        )
+    output["provenance"] = {
+        "combo": combo.name,
+        "models": f"agent={combo.agent}, vision={combo.vision}",
+        "documents": ", ".join(f"{d.doc_id} ({(d.sha256 or '')[:12]})" for d in docs),
+        "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "seconds": round(time.time() - started, 1),
+        "cost_usd": round(llm.usage.cost_usd, 4),
+        "tokens": f"{llm.usage.prompt_tokens} in / {llm.usage.completion_tokens} out",
+        "orchestration": "agent",
+        "tool_calls": research.tool_calls,
+        "pages_read": len(research.pages_read),
+        "charts_read": len(research.walks),
+        "budget_exhausted": exhausted or "no",
+    }
+
+    out = OUT_DIR / f"ask-{slugify(question)}-{combo.name}"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "answer.json").write_text(json.dumps(output, indent=2))
+    (out / "answer.md").write_text(render_answer(output))
+    return output, out
+
+
 __all__ = [
+    "QUESTION_SUBMIT_SPEC",
     "SUBMIT_SPEC",
     "TOOL_SPECS",
     "Research",
+    "build_answer",
     "build_attribution",
     "finalise",
+    "question_scope",
     "quote_key",
+    "research_loop",
     "run_agent_case",
+    "run_agent_question",
 ]

@@ -1,0 +1,511 @@
+{
+  "bank": "CBA",
+  "metric": "cet1",
+  "period": "1H26",
+  "comparator": "1H25",
+  "basis": "cash",
+  "movement": {
+    "from_value": 1220.0,
+    "to_value": 1230.0,
+    "delta": 10.0,
+    "unit": "bps"
+  },
+  "movement_source": "row 'Common Equity Tier 1 (CET1) APRA Level 2', column 31 Dec 2024 column -> column 31 Dec 2025 column",
+  "headline": "CBA's APRA Level 2 CET1 ratio increased 10 bps to 12.3% at 31 December 2025 from 12.2% at 31 December 2024. The movement was driven by capital generated from earnings (cash NPAT rose 6% to $5,445 million), partly offset by the payment of the 2025 final dividend (including a DRP on-market purchase with CET1 impact of -13 bps) and higher total RWA ($505.3 billion, up $22.9 billion or 5% from $482.4 billion). Higher Credit Risk, Traded Market Risk and Operational Risk RWA were partly offset by lower IRRBB RWA which includes the impact of adoption of the revised APS 117 framework (CET1 impact of +24 bps). Other regulatory adjustments and movement in reserves also contributed. The International CET1 ratio declined 50 bps to 18.3%.",
+  "headline_evidence": [
+    "ev-6",
+    "ev-16",
+    "ev-18",
+    "ev-29",
+    "ev-30"
+  ],
+  "drivers": [
+    {
+      "canonical": "earnings_generation",
+      "bank_label": null,
+      "contribution": null,
+      "columns": null,
+      "narrative": "The bank states capital generated from earnings as a key driver. Cash NPAT from continuing operations increased $313 million or 6% to $5,445 million in 1H26 versus 1H25 (ev-27). This positive contribution reflects higher operating income (+7%) and stable loan impairment expense. The bank does not disclose a specific bps figure for this driver in the YoY context.",
+      "confidence": 60,
+      "evidence": [
+        "ev-27",
+        "ev-28"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "dividend_net_drp",
+      "bank_label": null,
+      "contribution": null,
+      "columns": null,
+      "narrative": "The 2025 final dividend was paid during the period. The DRP on-market purchase had a CET1 impact of -13 bps (ev-7). No share buy-back activity was undertaken during 1H26 (ev-9). The bank states the payment of the 2H25 dividend as an offsetting factor (ev-14).",
+      "confidence": 70,
+      "evidence": [
+        "ev-7",
+        "ev-9",
+        "ev-14"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "rwa",
+      "bank_label": null,
+      "contribution": null,
+      "columns": null,
+      "narrative": "Total RWA increased $22.9 billion or 5% to $505.3 billion from $482.4 billion at 31 December 2024 (ev-17, ev-22). Higher Credit Risk RWA (+$10.2 billion), Operational Risk RWA (+$3.4 billion) and Traded Market Risk RWA (+$0.2 billion) were partly offset by lower IRRBB RWA (-$4.7 billion, driven by APS 117 adoption with CET1 impact of +24 bps) (ev-22, ev-23, ev-24, ev-25, ev-26). The bank states higher Credit Risk, Traded Market Risk and Operational Risk RWA as offsets, partly offset by lower IRRBB RWA (ev-15).",
+      "confidence": 60,
+      "evidence": [
+        "ev-15",
+        "ev-22",
+        "ev-23",
+        "ev-24",
+        "ev-25",
+        "ev-26"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "regulatory_model_changes",
+      "bank_label": null,
+      "contribution": {
+        "value": 24.0,
+        "unit": "bps"
+      },
+      "columns": null,
+      "narrative": "The adoption of the revised APS 117 framework effective 1 October 2025 reduced IRRBB RWA by approximately $10 billion, with a CET1 impact of +24 bps (ev-8). This is a quantified regulatory change within the comparison window.",
+      "confidence": 85,
+      "evidence": [
+        "ev-8",
+        "ev-24"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "deductions_other",
+      "bank_label": null,
+      "contribution": null,
+      "columns": null,
+      "narrative": "Other regulatory adjustments and movement in reserves contributed positively. This includes intangibles, FX impact on Credit RWA, equity accounted profits/losses and impairments from associates, movements in reserves and other regulatory adjustments (ev-10). The bank states this as a key driver (ev-13) but does not disclose a specific bps figure.",
+      "confidence": 50,
+      "evidence": [
+        "ev-10",
+        "ev-13"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    }
+  ],
+  "residual": null,
+  "notable_items": [],
+  "disagreements": [
+    {
+      "topic": "Level 1 vs Level 2 CET1 ratio",
+      "values": [
+        "Level 1: 12.1% to 12.2% (+10 bps)",
+        "Level 2: 12.2% to 12.3% (+10 bps)"
+      ],
+      "preferred": "Level 2 CET1 ratio (APRA) at 12.3%",
+      "reason": "definitional",
+      "explanation": "The task specifies taking the APRA Level 2 (Group) CET1 ratio row. Level 1 and International ratios are different measures and must not supply the movement."
+    }
+  ],
+  "attribution_confidence": 40,
+  "limitations": [
+    "No primary YoY CET1 walk chart exists; only half-on-half (Jun 25 to Dec 25) walks are published. Driver contributions are therefore unquantified except for APS 117 adoption (+24 bps) and DRP impact (-13 bps) which the bank explicitly states.",
+    "The half-on-half walk shows Cash NPAT +107 bps, Dividend -87 bps, RWA -33 bps, Other +9 bps (ev-1), but these bars cannot be used as YoY contributions per the task rules.",
+    "Earnings generation, RWA total movement, and 'other' drivers are described qualitatively by the bank without specific bps figures for the YoY comparison.",
+    "Level 1 CET1 ratio moved from 12.1% to 12.2% (+10 bps), and International CET1 ratio moved from 18.8% to 18.3% (-50 bps); these are different measures from the APRA Level 2 ratio.",
+    "Failed check: drivers_reconcile (drivers +24.0 + residual +0.0 != delta +10.0, tol 1.0)"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "table",
+      "quote": "Common Equity Tier 1 (CET1) 12.3 12.3 12.2 – 10 bpts",
+      "numbers": [
+        {
+          "label": "31 Dec 25 CET1",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "30 Jun 25 CET1",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "31 Dec 24 CET1",
+          "value": 12.2,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "The 2025 final dividend included the on-market purchase of $643 million of shares (CET1 impact of -13 bpts) in respect of the Dividend Reinvestment Plan.",
+      "numbers": [
+        {
+          "label": "DRP on-market purchase CET1 impact",
+          "value": -13.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Includes the impact of the reduction to IRRBB RWA of ~$10 billion (CET1 impact of +24 bpts) on adoption of the revised APS 117 framework effective 1 October 2025.",
+      "numbers": [
+        {
+          "label": "APS 117 adoption CET1 impact",
+          "value": 24.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "As at 31 December 2025, the Group has completed $300 million of the $1 billion on-market share buy-back previously announced on 9 August 2023 (2,706,964 ordinary shares at an average price of $110.72). No share buy-back activity was undertaken during the December 2025 half.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Includes the impact of intangibles, FX impact on Credit RWA, equity accounted profits/losses and impairments from associates, movements in reserves and other regulatory adjustments.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "The key drivers of the change in CET1 for the 6 months ended 31 December 2025 were:",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Capital generated from earnings; and",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Other regulatory adjustments and movement in reserves; partly offset by",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "The payment of the 2H25 dividend; and",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 48,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "Higher Credit Risk, Traded Market Risk and Operational Risk RWA, partly offset by lower IRRBB RWA which includes the impact of adoption of the revised APS 117 framework, effective 1 October 2025.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Common Equity Tier 1 (APRA) (%) 12.3 12.3 12.2 – 10 bpts",
+      "numbers": [
+        {
+          "label": "31 Dec 25 CET1 APRA",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "30 Jun 25 CET1 APRA",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "31 Dec 24 CET1 APRA",
+          "value": 12.2,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Risk weighted assets (RWA) ($M) 505,310 496,145 482,369 2 5",
+      "numbers": [
+        {
+          "label": "31 Dec 25 RWA",
+          "value": 505310.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "30 Jun 25 RWA",
+          "value": 496145.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "31 Dec 24 RWA",
+          "value": 482369.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 103,
+      "printed_page": 103,
+      "kind": "table",
+      "quote": "Key capital ratios (%) Dec 24 Jun 25 Dec 25 CET1 capital ratio 12.2 12.3 12.3",
+      "numbers": [
+        {
+          "label": "Dec 24 CET1 capital ratio",
+          "value": 12.2,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Jun 25 CET1 capital ratio",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Dec 25 CET1 capital ratio",
+          "value": 12.3,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 103,
+      "printed_page": 103,
+      "kind": "table",
+      "quote": "Level 1 CET1 ratio 12.1 12.4 12.2",
+      "numbers": [
+        {
+          "label": "Dec 24 Level 1 CET1",
+          "value": 12.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Jun 25 Level 1 CET1",
+          "value": 12.4,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Dec 25 Level 1 CET1",
+          "value": 12.2,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 103,
+      "printed_page": 103,
+      "kind": "table",
+      "quote": "International ratios Leverage ratio 5.5 5.2 5.1 CET1 capital ratio 18.8 18.7 18.3",
+      "numbers": [
+        {
+          "label": "Dec 24 International CET1",
+          "value": 18.8,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Jun 25 International CET1",
+          "value": 18.7,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Dec 25 International CET1",
+          "value": 18.3,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 49,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Total RWA increased $9.2bn on the prior half to $505.3 billion.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-27",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "Cash net profit after tax (\"cash NPAT\" or \"cash profit\") from continuing operations increased $313 million or 6% on the prior comparative period to $5,445 million.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-28",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 26,
+      "printed_page": 2,
+      "kind": "text",
+      "quote": "CET1 was 12.3% as at 31 December 2025, in line with 30 June 2025, well above APRA's regulatory requirements. The movement was driven by capital generated from earnings, partly offset by payment of the 2025 final dividend and higher total RWA. The increase in Credit Risk, Traded Market Risk and Operational Risk RWA was partly offset by lower IRRBB RWA which includes the impact of the revised APS 117 framework, effective 1 October 2025.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-29",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 53,
+      "printed_page": 53,
+      "kind": "table",
+      "quote": "Capital – CET12,5 (Int'l) 18.3% (50bpts)",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-30",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 53,
+      "printed_page": 53,
+      "kind": "table",
+      "quote": "Capital – CET12 (APRA) 12.3% +10bpts",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 49,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Credit Risk RWA increased $10.2 billion or 2.6% on the prior half to $409.1 billion.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 49,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "IRRBB RWA decreased $4.7 billion or 12% on the prior half to $35.2 billion, driven by the implementation of the revised APS 117, effective 1 October 2025, partly offset by the impact of higher long-term interest rates in Australia reducing embedded gains.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 49,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The increase in Operational Risk RWA by $3.4 billion or 7.2% on the prior half to $51.0 billion was primarily driven by higher average net interest income over the years ended 30 June 2025, 2024 and 2023 due to higher interest rates and lending growth.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-26",
+      "doc_id": "CBA/1H26/profit_announcement",
+      "pdf_page": 49,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Traded Market Risk RWA increased $0.2 billion or 2% on the prior half to $10.0 billion.",
+      "numbers": [],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "agentic-cheap",
+    "models": "agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash",
+    "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
+    "generated": "2026-08-30T13:48:13+00:00",
+    "seconds": 240.6,
+    "cost_usd": 0.0496,
+    "tokens": "1111539 in / 10639 out",
+    "orchestration": "agent",
+    "tool_calls": 44,
+    "pages_read": 15,
+    "charts_read": 2,
+    "budget_exhausted": "no"
+  }
+}

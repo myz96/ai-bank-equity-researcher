@@ -1,14 +1,16 @@
-"""Corpus access: manifests, cached page text, page rendering."""
+"""Corpus access: manifests, cached page text, page rendering, and which
+documents one task is allowed to read."""
 
 from __future__ import annotations
 
 import json
+import re
 from functools import lru_cache
 from pathlib import Path
 
 import pymupdf
 
-from .config import DATA_DIR, MANIFEST_DIR
+from .config import DATA_DIR, MANIFEST_DIR, REGISTRY_DIR
 
 
 class Document:
@@ -52,3 +54,151 @@ def load_documents(bank: str) -> list[Document]:
 
 def documents_for_period(bank: str, *periods: str) -> list[Document]:
     return [d for d in load_documents(bank) if d.period in periods]
+
+
+def manifest_banks() -> list[str]:
+    """Every bank the manifests cover, by ticker."""
+    return sorted(path.stem.upper() for path in MANIFEST_DIR.glob("*.json"))
+
+
+def all_documents() -> list[Document]:
+    return [doc for bank in manifest_banks() for doc in load_documents(bank)]
+
+
+# ---------------------------------------------------------------------------
+# Which documents a free-form question may read.
+#
+# A metric case names its bank and its two periods, so its corpus is given. A
+# question names them in prose ("Westpac's FY25 expense bridge", "Across CBA,
+# NAB and Westpac in FY25"), so the scope is read out of the question with the
+# same vocabulary the registry already holds: the ticker, and the distinctive
+# word of the bank's full name. Nothing here is specific to one bank or to one
+# document shape.
+# ---------------------------------------------------------------------------
+
+# Words that name no bank on their own: every Australian bank's legal name is
+# built from them, so a match on one of them identifies nothing.
+_GENERIC_NAME_WORDS = {
+    "australia", "australian", "bank", "banking", "corporation", "group",
+    "holdings", "limited", "ltd", "national", "of", "the",
+}
+
+_PERIOD_RE = re.compile(r"\b(FY|1H|2H)\s?(?:20)?(\d{2})\b", re.IGNORECASE)
+
+
+@lru_cache(maxsize=1)
+def bank_name_words() -> dict[str, str]:
+    """Distinctive lower-case name words -> ticker, from the registry."""
+    words: dict[str, str] = {}
+    for bank in manifest_banks():
+        path = REGISTRY_DIR / f"{bank.lower()}.json"
+        if not path.exists():
+            continue
+        full_name = str(json.loads(path.read_text()).get("full_name") or "")
+        for word in re.findall(r"[A-Za-z]+", full_name):
+            if word.lower() not in _GENERIC_NAME_WORDS:
+                words[word.lower()] = bank
+    return words
+
+
+def banks_named(text: str) -> list[str]:
+    """The banks a question names, in the order it names them.
+
+    A ticker matches case-sensitively, because "nab" is an English verb and
+    "anz" is not a word at all; a name word matches case-insensitively.
+    """
+    found: list[tuple[int, str]] = []
+    for bank in manifest_banks():
+        match = re.search(rf"\b{bank}\b", text or "")
+        if match:
+            found.append((match.start(), bank))
+    for word, bank in bank_name_words().items():
+        match = re.search(rf"\b{word}\b", text or "", re.IGNORECASE)
+        if match and bank not in [b for _, b in found]:
+            found.append((match.start(), bank))
+    return [bank for _, bank in sorted(found)]
+
+
+def periods_named(text: str) -> list[str]:
+    """The reporting periods a question names, in the order it names them."""
+    seen: list[str] = []
+    for prefix, year in _PERIOD_RE.findall(text or ""):
+        period = f"{prefix.upper()}{year}"
+        if period not in seen:
+            seen.append(period)
+    return seen
+
+
+def period_sort_key(period: str) -> tuple[int, int]:
+    """Newest last. A full year ends with its second half, so FY25 > 1H25."""
+    match = re.fullmatch(r"(FY|1H|2H)(\d{2})", str(period).upper())
+    if not match:
+        return (0, 0)
+    return (int(match.group(2)), 1 if match.group(1) == "1H" else 2)
+
+
+def latest_period(bank: str) -> str | None:
+    periods = {doc.period for doc in load_documents(bank)}
+    return max(periods, key=period_sort_key) if periods else None
+
+
+def documents_for_question(
+    question: str, bank: str | None = None, periods: list[str] | None = None
+) -> list[Document]:
+    """The documents one question may read.
+
+    `bank` and `periods` are hints from a caller that already knows them; when
+    they are absent the question's own words decide. A period the manifest does
+    not hold is dropped rather than refused: a question about FY26 guidance is
+    answered out of the FY25 documents that publish it.
+    """
+    banks = [bank.upper()] if bank else banks_named(question)
+    if not banks:
+        raise RuntimeError(
+            "the question names no bank in the corpus; name one of "
+            f"{', '.join(manifest_banks())} in the question or pass --bank"
+        )
+    wanted = list(periods or []) or periods_named(question)
+    docs: list[Document] = []
+    for name in banks:
+        available = load_documents(name)
+        held = [p for p in wanted if any(d.period == p for d in available)]
+        if not held:
+            held = [p for p in [latest_period(name)] if p]
+        docs += [d for d in available if d.period in held]
+    return docs
+
+
+# ---------------------------------------------------------------------------
+# Document names as a human writes them.
+#
+# A doc_id is "BANK/PERIOD/doc_type"; a person writing about the same document
+# uses the file's own name ("WBC/FY25/presentation-and-IDP") or hyphenates the
+# type ("NAB/FY25/investor-presentation"). Both spellings resolve here, so no
+# caller has to keep a table of nicknames.
+# ---------------------------------------------------------------------------
+
+
+def _doc_key(text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", str(text or "").lower()).strip("-")
+
+
+def doc_alias_index(documents: list[Document] | None = None) -> dict[str, str]:
+    """Every spelling of a document's name that resolves to its doc_id."""
+    index: dict[str, str] = {}
+    for doc in all_documents() if documents is None else documents:
+        stem = Path(doc.filename).stem
+        trimmed = re.sub(rf"^{doc.bank}[-_]{doc.period}[-_]", "", stem, flags=re.IGNORECASE)
+        for name in (doc.doc_id, f"{doc.bank}/{doc.period}/{stem}",
+                     f"{doc.bank}/{doc.period}/{trimmed}"):
+            index.setdefault(_doc_key(name), doc.doc_id)
+    return index
+
+
+def resolve_doc_name(name: str, index: dict[str, str]) -> str | None:
+    """The doc_id one written document name means, or None when it is unclear."""
+    key = _doc_key(name)
+    if key in index:
+        return index[key]
+    matches = {doc_id for alias, doc_id in index.items() if key and (key in alias or alias in key)}
+    return matches.pop() if len(matches) == 1 else None

@@ -506,3 +506,87 @@ def test_an_unjudged_case_is_not_a_pass():
 )
 def test_crossref_pass_needs_both(coverage, accuracy, expected):
     assert crossref_passes(coverage, accuracy) is expected
+
+
+# ---------------------------------------------------------------------------
+# Researcher questions: the same scorer, over documents named as a person
+# writes them
+# ---------------------------------------------------------------------------
+
+QUESTION_GOLD = {
+    "id": "nab-business-growth-quality",
+    "gold_answer_facts": ["Business lending grew 6.7%"],
+    "required_locations": [
+        {"doc": "NAB/FY25/investor-presentation", "pdf_page": 49, "holds": "the growth chart"},
+        {"doc": "WBC/FY25/presentation-and-IDP", "pdf_page": 27, "holds": "the expense bridge"},
+    ],
+}
+QUESTION_OUTPUT = {
+    "answer": "Business lending grew 6.7%.",
+    "key_facts": [{"fact": "Business lending grew 6.7%", "evidence": ["ev-1"]}],
+    "evidence_records": [
+        {"id": "ev-1", "doc_id": "NAB/FY25/investor_presentation", "pdf_page": 49,
+         "quote": "Business lending 155.0 166.3 6.7%"},
+        {"id": "ev-2", "doc_id": "WBC/FY25/investor_discussion_pack", "pdf_page": 27,
+         "quote": "Staff costs 397"},
+    ],
+    "confidence": 80,
+    "limitations": [],
+    "provenance": {"cost_usd": 0.4, "seconds": 60},
+}
+DOC_INDEX = {
+    "nab-fy25-investor-presentation": "NAB/FY25/investor_presentation",
+    "nab-fy25-investor_presentation": "NAB/FY25/investor_presentation",
+    "wbc-fy25-presentation-and-idp": "WBC/FY25/investor_discussion_pack",
+    "wbc-fy25-investor-discussion-pack": "WBC/FY25/investor_discussion_pack",
+}
+
+
+def test_coverage_maps_a_written_document_name_onto_the_corpus():
+    """The gold names the file; the corpus names the doc_type. One document."""
+    row = score_crossref(QUESTION_GOLD, QUESTION_OUTPUT, doc_index=DOC_INDEX)
+    hit = next(loc for loc in row["locations"] if loc["pdf_page"] == 49)
+    assert hit["hit"] is True and hit["cited_by"] == ["ev-1"]
+    # ev-2 is on a required page but no key fact cites it, so it is not
+    # coverage: an uncited record is not part of the answer.
+    missed = next(loc for loc in row["locations"] if loc["pdf_page"] == 27)
+    assert missed["hit"] is False
+    assert row["location_coverage"] == "1/2"
+    assert row["coverage_fraction"] == 0.5
+
+
+def test_coverage_without_the_index_still_matches_on_the_name():
+    """The crossref gold writes doc_ids, so the old substring path must hold."""
+    gold = {
+        "id": "x",
+        "gold_answer_facts": [],
+        "required_locations": [
+            {"doc": "NAB/FY25/investor_presentation", "pdf_page": 49, "holds": ""}
+        ],
+    }
+    assert score_crossref(gold, QUESTION_OUTPUT)["location_coverage"] == "1/1"
+
+
+def test_a_question_case_is_scored_by_the_same_two_populations():
+    row = score_crossref(
+        QUESTION_GOLD, QUESTION_OUTPUT, FakeLLM(both(STATED, ENTAILED)), JUDGES, DOC_INDEX
+    )
+    assert row["fact_accuracy"] == "1/1"
+    # Coverage is incomplete, so the case fails however well it is judged.
+    assert row["passes"] is False
+    assert row["cost_usd"] == 0.4
+
+
+def test_the_question_gold_loads_as_its_own_suite():
+    from bank_equity_researcher.evals import load_crossref_gold, load_question_gold
+
+    questions = load_question_gold("dev")
+    assert questions, "the dev researcher-question set must load"
+    ids = {case["id"] for case in questions}
+    assert {case["id"] for case in load_crossref_gold()}.isdisjoint(ids)
+    for case in questions:
+        assert case["question"] and case["required_locations"] and case["gold_answer_facts"]
+        assert "movement" not in case
+    # The bank filter reads the banks a question names, since a case may span
+    # three of them.
+    assert {c["id"] for c in load_question_gold("dev", "NAB")} <= ids

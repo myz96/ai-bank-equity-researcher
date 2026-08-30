@@ -1,6 +1,12 @@
-"""Free-form question answering over the corpus (ticket 26): hybrid
-retrieval with model-generated query variants, evidence extraction, and an
-answer author under the same never-guess rules as the attribution author."""
+"""Free-form question answering, open loop (ticket 26): hybrid retrieval with
+model-generated query variants, evidence extraction, and an answer author under
+the same never-guess rules as the attribution author.
+
+ADR-0005 makes this the BASELINE arm, not the product: the closed-loop shell
+(research_agent.run_agent_question) answers the same question through the same
+tools the metric agent uses. Both shells emit the artifact this module defines
+- render_answer and slugify are shared, and so is the never-guess gate - so a
+reader, a scorer and a judge cannot tell which shell wrote what they read."""
 
 from __future__ import annotations
 
@@ -11,11 +17,11 @@ import time
 from datetime import datetime, timezone
 
 from .config import COMBOS, OUT_DIR
-from .corpus import Document, documents_for_period
+from .corpus import Document, documents_for_question
 from .extract import extract_text_evidence
 from .llm import LLM
 from .retrieve import retrieve
-from .schema import EvidenceRecord
+from .schema import EvidenceRecord, enforce_answer_gate
 
 MAX_ASK_PAGES = 12
 # Per-document cap so one long book cannot crowd out the other documents —
@@ -80,7 +86,7 @@ you, reply instead with: {{"request_evidence": "<one retrieval query>"}}
 (you may do this at most {rounds_left} more time(s))."""
 
 
-def _slugify(text: str, max_words: int = 8) -> str:
+def slugify(text: str, max_words: int = 8) -> str:
     words = re.findall(r"[a-z0-9]+", text.lower())[:max_words]
     return "-".join(words)[:64] or "question"
 
@@ -125,16 +131,27 @@ def render_answer(output: dict) -> str:
     return "\n".join(lines)
 
 
-def run_ask(bank: str, periods: list[str], question: str, combo_name: str = "cheap"):
-    """Answer a free-form question from the corpus. Returns (output_dict, out_dir)."""
+def run_ask(bank: str | None, question: str, combo_name: str = "cheap",
+            periods: list[str] | None = None):
+    """Answer a free-form question from the corpus. Returns (output_dict, out_dir).
+
+    The signature is the closed-loop question runner's too (research_agent.
+    run_agent_question), so config.question_runner_for can hand a caller either
+    shell without an adapter. `bank` and `periods` are hints: a question that
+    names its own banks and periods needs neither.
+    """
     started = time.time()
     combo = COMBOS[combo_name]
     llm = LLM()
-    bank = bank.upper()
 
-    docs = documents_for_period(bank, *periods)
+    docs = documents_for_question(question, bank, periods)
     if not docs:
-        raise RuntimeError(f"no documents in corpus for {bank} {'/'.join(periods)}")
+        raise RuntimeError(
+            f"no documents in corpus for {bank or 'the banks named'} "
+            f"{'/'.join(periods or []) or 'in the question'}"
+        )
+    bank = ", ".join(dict.fromkeys(d.bank for d in docs))
+    periods = list(dict.fromkeys(d.period for d in docs))
     doc_by_id: dict[str, Document] = {d.doc_id: d for d in docs}
 
     # 1. Retrieve candidate pages: the question plus 2-3 model variants,
@@ -208,30 +225,18 @@ def run_ask(bank: str, periods: list[str], question: str, combo_name: str = "che
     if not isinstance(reply, dict) or "answer" not in reply:
         raise RuntimeError(f"answer author returned no answer: {str(reply)[:200]}")
 
-    # 5. The never-guess gate, mirrored from schema.enforce_evidence_gate:
-    # a key fact carrying a number with no resolvable evidence id is deleted,
-    # and the deletion is logged, never silent.
+    # 5. The never-guess gate (schema.enforce_answer_gate): a key fact carrying
+    # a number with no resolvable evidence id is deleted, and the deletion is
+    # logged, never silent. The closed-loop shell calls the same gate.
     raw_limitations = reply.get("limitations", []) or []
     if isinstance(raw_limitations, str):  # models sometimes return one string
         raw_limitations = [raw_limitations]
-    limitations = [str(item) for item in raw_limitations]
-    known_ids = {record.id for record in records}
-    key_facts: list[dict] = []
-    for item in reply.get("key_facts", []):
-        if not isinstance(item, dict):
-            continue
-        evidence = item.get("evidence", [])
-        evidence = [evidence] if isinstance(evidence, str) else list(evidence)
-        resolved = [e for e in evidence if e in known_ids]
-        fact = str(item.get("fact", ""))
-        if re.search(r"\d", fact) and not resolved:
-            limitations.append(f"Stripped unsupported quantified fact: \"{fact[:80]}\"")
-            continue
-        key_facts.append({"fact": fact, "evidence": resolved})
-
-    confidence = int(reply.get("confidence", 0) or 0)
-    if not key_facts:
-        confidence = min(confidence, 20)
+    key_facts, limitations, confidence = enforce_answer_gate(
+        reply.get("key_facts", []),
+        [str(item) for item in raw_limitations],
+        int(reply.get("confidence", 0) or 0),
+        {record.id for record in records},
+    )
 
     output = {
         "question": question,
@@ -255,12 +260,14 @@ def run_ask(bank: str, periods: list[str], question: str, combo_name: str = "che
         },
     }
 
-    # 6. Save.
-    out = OUT_DIR / f"ask-{bank.lower()}-{_slugify(question)}"
+    # 6. Save. The combo is in the directory name because two shells and two
+    # model tiers answer the same question, and a run must never overwrite the
+    # arm it is being compared against.
+    out = OUT_DIR / f"ask-{slugify(question)}-{combo.name}"
     out.mkdir(parents=True, exist_ok=True)
     (out / "answer.json").write_text(json.dumps(output, indent=2))
     (out / "answer.md").write_text(render_answer(output))
     return output, out
 
 
-__all__ = ["render_answer", "run_ask"]
+__all__ = ["render_answer", "run_ask", "slugify"]

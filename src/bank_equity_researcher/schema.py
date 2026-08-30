@@ -4,6 +4,7 @@ a quantified claim without evidence references does not survive validation.
 
 from __future__ import annotations
 
+import re
 from enum import Enum
 
 from pydantic import BaseModel, Field
@@ -127,3 +128,41 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
             driver.contribution = None
             driver.confidence = min(driver.confidence, 20)
     return attribution
+
+
+# A free-form answer carries key facts instead of driver claims, so the same
+# structural rule needs a second shape to act on. Both shells that answer a
+# question — the open-loop author and the closed-loop research agent — call
+# this one function, so a question is gated exactly once however it was
+# answered.
+ANSWER_GATE_CONFIDENCE_CAP = 20
+
+
+def enforce_answer_gate(
+    key_facts: list, limitations: list[str], confidence: int, known_ids: set[str]
+) -> tuple[list[dict], list[str], int]:
+    """Strip every quantified key fact that cites no resolvable evidence.
+
+    Returns the surviving facts, the limitations with each strip recorded, and
+    the confidence, capped when nothing survived: an answer with no supported
+    fact left is not an answer anyone should act on.
+    """
+    kept: list[dict] = []
+    limitations = list(limitations)
+    for item in key_facts or []:
+        if not isinstance(item, dict):
+            continue
+        # "citations" is the tool-calling spelling and "evidence" the JSON
+        # author's; the artifact stores one of them, so every reader (the
+        # renderer, the scorer, the judge) sees one shape.
+        cited = item.get("citations", item.get("evidence")) or []
+        cited = [cited] if isinstance(cited, str) else list(cited)
+        resolved = [str(e) for e in cited if str(e) in known_ids]
+        fact = str(item.get("fact", ""))
+        if re.search(r"\d", fact) and not resolved:
+            limitations.append(f'Stripped unsupported quantified fact: "{fact[:80]}"')
+            continue
+        kept.append({"fact": fact, "evidence": resolved})
+    if not kept:
+        confidence = min(int(confidence or 0), ANSWER_GATE_CONFIDENCE_CAP)
+    return kept, limitations, int(confidence or 0)

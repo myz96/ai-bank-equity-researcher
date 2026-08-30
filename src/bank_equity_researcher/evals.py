@@ -96,6 +96,43 @@ def load_crossref_gold(bank: str | None = None) -> list[dict]:
     return cases
 
 
+def load_question_gold(split: str = "dev", bank: str | None = None) -> list[dict]:
+    """Free-form researcher questions: a case with a question and required
+    locations, in a gold file that fixes no single bank or period.
+
+    A question names its own banks and periods, so the case carries neither and
+    the runner resolves the scope from the question itself. `bank` filters on
+    the banks the question names, which is the only sense a bank filter has
+    when one case can span three of them.
+    """
+    from .corpus import banks_named
+
+    cases = []
+    for path in sorted(GOLD_DIR.glob("*.json")):
+        gold_file = json.loads(path.read_text())
+        if gold_file.get("case_class") == "crossref_consolidation":
+            continue
+        for case in gold_file["cases"]:
+            if "question" not in case or "movement" in case:
+                continue
+            if case.get("split", "dev") != split:
+                continue
+            if bank and bank.upper() not in banks_named(case["question"]):
+                continue
+            cases.append(dict(case))
+    return cases
+
+
+def _same_document(gold_doc: str, record_doc_id: str, index: dict[str, str] | None) -> bool:
+    """Whether a gold location's document name is the record's document."""
+    from .corpus import resolve_doc_name
+
+    resolved = resolve_doc_name(gold_doc, index) if index else None
+    if resolved is not None:
+        return record_doc_id == resolved
+    return str(gold_doc) in str(record_doc_id)
+
+
 def crossref_answer_prose(ask_output: dict) -> str:
     """The answer's own words: the prose plus its key-fact sentences.
 
@@ -111,12 +148,19 @@ def score_crossref(
     ask_output: dict,
     llm=None,
     judges: tuple[str, ...] | None = None,
+    doc_index: dict[str, str] | None = None,
 ) -> dict:
     """Location coverage AND judged fact accuracy — two populations, never one.
 
     Location coverage is the fraction of gold required_locations whose
-    (doc substring, pdf_page) appears among the evidence records cited by the
-    answer's key_facts. It measures retrieval, not correctness (finding 7).
+    (doc, pdf_page) appears among the evidence records cited by the answer's
+    key_facts. It measures retrieval, not correctness (finding 7).
+
+    A gold author writes a document's name as a person does — "NAB/FY25/
+    investor-presentation", "WBC/FY25/presentation-and-IDP" — and the corpus
+    knows it by its doc_id. `doc_index` (corpus.doc_alias_index) maps one onto
+    the other, so a spelling difference can never read as a missed page.
+    Without it the name is matched as a substring, as it always was.
 
     Fact accuracy is the fraction of gold_answer_facts that the judges rule
     BOTH stated by the answer AND entailed by its cited quotes. Pass `llm` and
@@ -130,7 +174,8 @@ def score_crossref(
     hits = 0
     for loc in gold_case.get("required_locations", []):
         hit_ids = [r["id"] for r in cited
-                   if loc["doc"] in r["doc_id"] and r["pdf_page"] == loc["pdf_page"]]
+                   if _same_document(loc["doc"], r["doc_id"], doc_index)
+                   and r["pdf_page"] == loc["pdf_page"]]
         hits += bool(hit_ids)
         locations.append({"doc": loc["doc"], "pdf_page": loc["pdf_page"],
                           "holds": loc.get("holds", ""), "hit": bool(hit_ids),
@@ -192,23 +237,34 @@ def crossref_passes(coverage_fraction: float | None, accuracy_fraction: float | 
     return coverage_fraction >= CROSSREF_COVERAGE_PASS and accuracy_fraction >= CROSSREF_FACT_PASS
 
 
-def run_crossref_suite(combo: str, bank: str | None = None) -> Path:
-    """Run every crossref HOLDOUT case through ask, then report location
-    coverage AND judged fact accuracy. Discipline: run at most once per
-    milestone; never iterate on it."""
-    from .ask import run_ask
+def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
+    """Run free-form question cases through the COMBO'S OWN shell and score them.
+
+    One runner serves both answer suites — the crossref holdout and the
+    researcher questions — because they differ only in which gold they load
+    (finding 8: the run/write loops belong behind one helper). The shell comes
+    from config.question_runner_for, so `--combo agentic` measures the closed
+    loop and `--combo cheap` measures the open-loop baseline (finding 1).
+    """
+    from .config import question_runner_for
+    from .corpus import doc_alias_index
     from .llm import LLM
 
+    run_question = question_runner_for(combo)
     judges = COMBOS[combo].judges
     judge_llm = LLM()
+    doc_index = doc_alias_index()
     rows = []
-    for gold in load_crossref_gold(bank):
-        label = f"{gold['bank']} {gold['id']}"
+    for gold in gold_cases:
+        label = f"{gold.get('bank') or 'multi-bank'} {gold['id']}"
         try:
-            output, _ = run_ask(
-                gold["bank"], [gold["period"], gold["comparator"]], gold["question"], combo
+            # A case that fixes its bank and periods passes them as hints; a
+            # question that names its own is scoped from the question itself.
+            periods = [p for p in (gold.get("period"), gold.get("comparator")) if p]
+            output, _ = run_question(
+                gold.get("bank"), gold["question"], combo, periods or None
             )
-            row = score_crossref(gold, output, judge_llm, judges)
+            row = score_crossref(gold, output, judge_llm, judges, doc_index)
         except Exception as exc:  # noqa: BLE001 - a crashed case is a scored failure
             row = {"case": label, "error": str(exc)[:300]}
         print(f"scored {label}: {json.dumps({k: v for k, v in row.items() if k not in ('locations', 'fact_check')})[:250]}")
@@ -216,10 +272,10 @@ def run_crossref_suite(combo: str, bank: str | None = None) -> Path:
 
     stamp = run_stamp()
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    raw_path = RESULTS_DIR / f"{stamp}-{combo}-crossref.jsonl"
+    raw_path = RESULTS_DIR / f"{stamp}-{combo}-{kind}.jsonl"
     raw_path.write_text("\n".join(json.dumps(r) for r in rows))
 
-    lines = [f"# Crossref scorecard — combo {combo}, {stamp}", ""]
+    lines = [f"# {kind.capitalize()} scorecard — combo {combo}, {stamp}", ""]
     lines += scorecard_meta(stamp, f"judges: {', '.join(judges)}")
     lines += [
         "",
@@ -263,9 +319,30 @@ def run_crossref_suite(combo: str, bank: str | None = None) -> Path:
         f"Judge cost: ${round(judge_llm.usage.cost_usd, 4)} over "
         f"{judge_llm.usage.calls} calls (on top of the per-case answer cost)."
     )
-    card_path = RESULTS_DIR / f"{stamp}-{combo}-crossref.md"
+    card_path = RESULTS_DIR / f"{stamp}-{combo}-{kind}.md"
     card_path.write_text("\n".join(lines) + "\n")
     return card_path
+
+
+def run_crossref_suite(combo: str, bank: str | None = None) -> Path:
+    """Run every crossref HOLDOUT case, then report location coverage AND
+    judged fact accuracy. Discipline: run at most once per milestone; never
+    iterate on it."""
+    return run_answer_suite("crossref", load_crossref_gold(bank), combo)
+
+
+def run_question_suite(combo: str, bank: str | None = None, split: str = "dev",
+                       only: str | None = None) -> Path:
+    """Run the free-form researcher questions, scored like the crossref cases.
+
+    `only` filters case ids for fast loops, exactly as it does for the metric
+    suite: a comma-separated list of fragments matched against the case id.
+    """
+    cases = load_question_gold(split, bank)
+    if only:
+        wanted = [w.strip().lower() for w in only.split(",") if w.strip()]
+        cases = [c for c in cases if any(w in c["id"].lower() for w in wanted)]
+    return run_answer_suite("questions", cases, combo)
 
 
 # ---------------------------------------------------------------------------
