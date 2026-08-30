@@ -1,6 +1,18 @@
 # Session state snapshot — 2026-08-29 ~14:15 HKT (pre-compaction)
 
-Read this alongside map.md. Deadline: hard 2026-09-03, internal target 2026-09-01.
+Read this alongside map.md. Deadline: hard 2026-09-03 (Thu).
+
+## SCHEDULE (user-set 2026-08-30 evening; supersedes the internal target)
+
+- Mon 2026-08-31 end of day: ALL building and iterating finished (research
+  agent head-to-head run and iterated; question-mode for researcher cases;
+  cite-discipline/weak-citation gate fix; NAB/WBC/ANZ generalisation runs).
+- Tue 2026-09-01: cleanup day — run the full review skill and the code
+  simplification skills SIX times until the repo and folder structure are
+  clean (ticket 33 executes; critique passes repeat). Freeze code at end.
+- Wed 2026-09-02: write the report and submit. Sealed + quarantine milestone
+  runs happen on the frozen code between Tue freeze and Wed write-up (user
+  administers the sealed run).
 
 ## Where the project stands
 

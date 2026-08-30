@@ -63,6 +63,11 @@ The user expects SEVERAL critique passes ("we will have to run a few of
 these to make sure we actually capture everything") — re-run the critique
 after the cleanup round and after the head-to-head settles the shells.
 
+SCHEDULED (user, 2026-08-30): this ticket executes on Tue 2026-09-01 — the
+full review skill and the code simplification skills run SIX times until
+the repo and folders are clean. Code freezes at the end of that day; the
+sealed/quarantine milestone runs on the frozen result.
+
 ## Constraints
 
 - Moves and logic changes NEVER share a commit. Restructure commits are
