@@ -63,10 +63,12 @@ The user expects SEVERAL critique passes ("we will have to run a few of
 these to make sure we actually capture everything") — re-run the critique
 after the cleanup round and after the head-to-head settles the shells.
 
-SCHEDULED (user, 2026-08-30): this ticket executes on Tue 2026-09-01 — the
-full review skill and the code simplification skills run SIX times until
-the repo and folders are clean. Code freezes at the end of that day; the
-sealed/quarantine milestone runs on the frozen result.
+SCHEDULED (user, 2026-08-30, revised same evening): the holdout milestone
+moved to Mon NIGHT, so this ticket executes Tue 2026-09-01 AFTER the
+holdout run. Consequence: every cleanup change must be behaviour-neutral —
+moves, dedupe, simplification with identical outputs. Gate: after the six
+passes, a dev subset re-runs and must score identically to the holdout-run
+commit; any behaviour delta reverts. The report cites the holdout commit.
 
 ## Constraints
 

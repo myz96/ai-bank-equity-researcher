@@ -4,15 +4,20 @@ Read this alongside map.md. Deadline: hard 2026-09-03 (Thu).
 
 ## SCHEDULE (user-set 2026-08-30 evening; supersedes the internal target)
 
-- Mon 2026-08-31 end of day: ALL building and iterating finished (research
-  agent head-to-head run and iterated; question-mode for researcher cases;
-  cite-discipline/weak-citation gate fix; NAB/WBC/ANZ generalisation runs).
-- Tue 2026-09-01: cleanup day — run the full review skill and the code
-  simplification skills SIX times until the repo and folder structure are
-  clean (ticket 33 executes; critique passes repeat). Freeze code at end.
-- Wed 2026-09-02: write the report and submit. Sealed + quarantine milestone
-  runs happen on the frozen code between Tue freeze and Wed write-up (user
-  administers the sealed run).
+- Sun night 2026-08-30 → Mon morning: maximum iteration cycles (agentic
+  suites, fix rounds, alternating Claude/Codex src reviews per ticket 34).
+  Goal: fully working closed-loop agent by Monday morning.
+- Mon 2026-08-31 daytime: head-to-head (25 metric + 5 researcher questions,
+  three shells), iterate on findings, weak-citation gate fix.
+- Mon NIGHT (user, 2026-08-30): FREEZE, then run the FULL agent on the FULL
+  holdout set — the 13-case quarantine tier (8 metric + 4 crossref webs +
+  longitudinal) + the ANZ unseen-bank probe, and the sealed tier (user
+  administers, one run, no per-case feedback). If it completes and
+  generalises, the user is satisfied → finalise.
+- Tue 2026-09-01: cleanup ×6 (ticket 33). MUST be behaviour-neutral because
+  it lands AFTER the holdout run: post-cleanup, a dev subset re-runs and
+  must score identically; the report cites the holdout commit.
+- Wed 2026-09-02: write the report and submit.
 
 ## Where the project stands
 
