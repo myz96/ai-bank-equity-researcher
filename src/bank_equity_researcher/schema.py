@@ -47,7 +47,11 @@ class DriverClaim(BaseModel):
     # subtracting it gives a half-on-half number, not the task's comparison.
     columns: str | None = None
     narrative: str = ""
-    confidence: int = Field(ge=0, le=100)
+    # An author reply that omits the field crashed a whole case mid-suite
+    # (WBC impairment FY25, round-3 log). An unstated self-report is LOW
+    # confidence, not a crash: 40 is the fatal-cap floor, so the claim can
+    # never read as confident and the calibration table shows it honestly.
+    confidence: int = Field(default=40, ge=0, le=100)
     evidence: list[str] = []
     checks_passed: list[str] = []
     checks_failed: list[str] = []
