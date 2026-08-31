@@ -20,6 +20,11 @@ PRICES: dict[str, tuple[float, float]] = {
     "deepseek/deepseek-v4-pro-0813": (1.122, 3.366),
     "z-ai/glm-5.3": (1.40, 4.40),
     "stealth/ox-alpha": (0.0, 0.0),
+    # Mid-tier reasoning candidates for the research loop (user, 2026-08-31):
+    # opus is too expensive to run often; these price the closed loop at
+    # cents per case. Catalogue prices read live 2026-08-31.
+    "z-ai/glm-5.3-flash": (0.07, 0.25),
+    "openai/gpt-5.6-luna": (0.20, 1.20),
     # Closed-loop research agent tiers (ADR-0005), from the OpenRouter
     # catalogue 2026-08-30. A tool loop reports its own cost per call, so
     # these are the fallback, not the primary accounting.
@@ -99,6 +104,33 @@ COMBOS: dict[str, Combo] = {
         # The densest anchor case cost $1.57; a $2 ceiling was close enough to
         # shape behaviour. $5 is a pure runaway-catch.
         cost_ceiling_usd=5.0,
+    ),
+    # Mid-tier reasoner in the closed loop (user candidate 2026-08-31): a
+    # reasoning model at 1/70th the opus price. If it holds the agentic
+    # quality bar it becomes the default's price point.
+    "agentic-glm": Combo(
+        name="agentic-glm",
+        extract="qwen/qwen3.7-flash",
+        vision="qwen/qwen3.7-flash",
+        author="z-ai/glm-5.3-flash",
+        author_max_tokens=16000,
+        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
+        orchestration="agent",
+        agent="z-ai/glm-5.3-flash",
+        agent_max_tokens=16000,
+        cost_ceiling_usd=1.0,
+    ),
+    "agentic-luna": Combo(
+        name="agentic-luna",
+        extract="qwen/qwen3.7-flash",
+        vision="qwen/qwen3.7-flash",
+        author="openai/gpt-5.6-luna",
+        author_max_tokens=16000,
+        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
+        orchestration="agent",
+        agent="openai/gpt-5.6-luna",
+        agent_max_tokens=16000,
+        cost_ceiling_usd=1.0,
     ),
     # A comparison arm, never the product (ADR-0005 point 4): it measures what
     # the model tier buys INSIDE a closed loop. qwen3.7-flash is the cheapest
