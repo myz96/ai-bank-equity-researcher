@@ -269,8 +269,9 @@ def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
     One runner serves both answer suites — the crossref holdout and the
     researcher questions — because they differ only in which gold they load
     (finding 8: the run/write loops belong behind one helper). The shell comes
-    from config.question_runner_for, so `--combo agentic` measures the closed
-    loop and `--combo cheap` measures the open-loop baseline (finding 1).
+    from config.question_runner_for and from nowhere else (finding 1), so a
+    suite can never measure one shell under the other's label. Since ticket 33
+    wave 3 that seam has one shell behind it, the closed loop.
     """
     from .config import question_runner_for
     from .corpus import doc_alias_index

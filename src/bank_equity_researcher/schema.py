@@ -121,7 +121,13 @@ class Attribution(BaseModel):
 
 def enforce_evidence_gate(attribution: Attribution) -> Attribution:
     """Structural never-guess rule: strip any quantified contribution that has
-    no resolvable evidence reference. The strip is logged, never silent."""
+    no resolvable evidence reference. The strip is logged, never silent.
+
+    The stripped driver used to be forced to confidence 20 as well. Ticket 33
+    replayed the estate: the strip fired on 0 of the 90 saved attributions, so
+    the 20 override carried no evidence and the wave-1 cleanup deleted it. The
+    strip stays: it is the structural rule, not a confidence judgment.
+    """
     known_ids = {record.id for record in attribution.evidence_records}
     # The headline's citation list obeys the same structural rule: an id that
     # resolves to no record cites nothing, so it is dropped before a reader or
@@ -137,7 +143,6 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
                 f"{driver.contribution.value}{driver.contribution.unit} had no evidence reference."
             )
             driver.contribution = None
-            driver.confidence = min(driver.confidence, 20)
     return attribution
 
 

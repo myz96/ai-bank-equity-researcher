@@ -29,19 +29,12 @@ import re
 import time
 from datetime import datetime, timezone
 
-from .ask import render_answer, slugify
-from .author import (
-    _settle_basis,
-    drop_off_unit_contributions,
-    primary_basis,
-    settle_charge_sign,
-)
 from .config import COMBOS, OUT_DIR, REGISTRY_DIR
 from .corpus import Document, documents_for_period, documents_for_question
 from .extract import extract_walk, extract_walk_annotations, printed_page_of
 from .llm import LLM
 from .refs import scan_page
-from .render import render_report
+from .render import render_answer, render_report, slugify
 from .retrieve import retrieve
 from .schema import (
     Attribution,
@@ -54,8 +47,11 @@ from .schema import (
 )
 from .taxonomy import METRIC_ALIASES, TAXONOMY
 from .validate import (
+    _movement_source,
     _percent_evidenced,
+    _settle_basis,
     annotate_walks,
+    build_period_note,
     cap_drivers_on_failed_walks,
     cap_unreconciled_drivers,
     cap_weakly_cited_claims,
@@ -70,10 +66,14 @@ from .validate import (
     check_walk,
     corroborate,
     cross_source_view,
+    default_comparator,
+    drop_off_unit_contributions,
     half_label,
     movement_arithmetic_tolerance,
     period_end_date,
+    primary_basis,
     quote_prints,
+    settle_charge_sign,
     settle_identity_scale,
     settle_ratio_scale,
     walks_for_view,
@@ -1270,8 +1270,6 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     agent writes the same reply shape, so it inherits the same corrections and
     the artifact stays one contract rather than two.
     """
-    from .author import _movement_source
-
     records, rejections, id_map = research.build_records(payload.get("evidence"))
     reply = dict(payload)
     movement = reply.get("movement")
@@ -1712,9 +1710,7 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
 
 def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
                    combo_name: str = "agentic"):
-    """Research one case in a closed loop, then write the pipeline's artifacts."""
-    from .pipeline import build_period_note, default_comparator
-
+    """Research one case in a closed loop, then write the case artifacts."""
     started = time.time()
     combo = COMBOS[combo_name]
     if not combo.agent:
@@ -1914,10 +1910,10 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = "agent
                        periods: list[str] | None = None):
     """Answer one free-form question in the closed loop. Returns (output, out_dir).
 
-    The signature matches ask.run_ask, so config.question_runner_for hands a
-    caller either shell without an adapter. `bank` and `periods` are hints from
-    a caller that already knows them; a question that names its own banks and
-    periods needs neither.
+    The signature is the one config.question_runner_for hands to every caller,
+    so no caller needs an adapter. `bank` and `periods` are hints from a caller
+    that already knows them; a question that names its own banks and periods
+    needs neither.
     """
     started = time.time()
     combo = COMBOS[combo_name]

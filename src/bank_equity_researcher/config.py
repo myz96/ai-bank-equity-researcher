@@ -16,10 +16,8 @@ OUT_DIR = REPO_ROOT / "out"
 # USD per 1M tokens (input, output), from the OpenRouter catalogue 2026-08-25.
 PRICES: dict[str, tuple[float, float]] = {
     "qwen/qwen3.7-flash": (0.03, 0.13),
-    "deepseek/deepseek-v4-flash-0731": (0.14, 0.28),
     "deepseek/deepseek-v4-pro-0813": (1.122, 3.366),
     "z-ai/glm-5.3": (1.40, 4.40),
-    "stealth/ox-alpha": (0.0, 0.0),
     # Mid-tier reasoning candidates for the research loop (user, 2026-08-31):
     # opus is too expensive to run often; these price the closed loop at
     # cents per case. Catalogue prices read live 2026-08-31.
@@ -29,7 +27,6 @@ PRICES: dict[str, tuple[float, float]] = {
     # catalogue 2026-08-30. A tool loop reports its own cost per call, so
     # these are the fallback, not the primary accounting.
     "anthropic/claude-opus-5": (5.00, 25.00),
-    "anthropic/claude-sonnet-5": (2.00, 10.00),
 }
 
 
@@ -45,10 +42,11 @@ class Combo:
     # (ticket 14), so its budget must cover reasoning + answer.
     author_max_tokens: int
     judges: tuple[str, str]
-    # Which orchestration shell answers a case: "pipeline" is the open-loop
-    # staged flow, "agent" is the closed-loop tool-use research agent
-    # (ADR-0005). The CLI reads this, so a combo chooses its own shell.
-    orchestration: str = "pipeline"
+    # Which orchestration shell answers a case. "agent", the closed-loop
+    # tool-use research agent (ADR-0005), is the only one left: ticket 33 wave
+    # 3 froze the open-loop "pipeline" shell at the tag
+    # `pipeline-baseline-final`. The field stays as the seam runner_for reads.
+    orchestration: str = "agent"
     # The tool-calling model that drives the research loop.
     agent: str = ""
     agent_max_tokens: int = 8000
@@ -64,25 +62,6 @@ class Combo:
 
 
 COMBOS: dict[str, Combo] = {
-    "cheap": Combo(
-        name="cheap",
-        extract="qwen/qwen3.7-flash",
-        vision="qwen/qwen3.7-flash",
-        author="qwen/qwen3.7-flash",
-        author_max_tokens=8000,
-        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
-    ),
-    "normal": Combo(
-        name="normal",
-        extract="qwen/qwen3.7-flash",
-        vision="qwen/qwen3.7-flash",
-        author="z-ai/glm-5.3",
-        # 24000 was not enough on the densest bridge prompt (CBA cash_earnings
-        # FY26): glm-5.3 spent the whole budget reasoning and returned empty
-        # content five times (bake-off, 2026-08-29).
-        author_max_tokens=40000,
-        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
-    ),
     # The closed-loop research agent (ADR-0005). The default combo runs the
     # strongest reliably tool-calling model in the OpenRouter catalogue:
     # anthropic/claude-opus-5 is the newest and the top of the Opus line
@@ -120,18 +99,6 @@ COMBOS: dict[str, Combo] = {
         agent_max_tokens=16000,
         cost_ceiling_usd=1.0,
     ),
-    "agentic-luna": Combo(
-        name="agentic-luna",
-        extract="qwen/qwen3.7-flash",
-        vision="qwen/qwen3.7-flash",
-        author="openai/gpt-5.6-luna",
-        author_max_tokens=16000,
-        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
-        orchestration="agent",
-        agent="openai/gpt-5.6-luna",
-        agent_max_tokens=16000,
-        cost_ceiling_usd=1.0,
-    ),
     # A comparison arm, never the product (ADR-0005 point 4): it measures what
     # the model tier buys INSIDE a closed loop. qwen3.7-flash is the cheapest
     # model in the catalogue that tool-called reliably on the live probe;
@@ -152,39 +119,50 @@ COMBOS: dict[str, Combo] = {
 
 
 def runner_for(combo_name: str):
-    """The case runner a combo's orchestration selects (ADR-0005).
+    """The case runner (ADR-0005).
 
-    Every caller that answers a case — the CLI and the eval harness — must go
-    through this one function, or `evals run --combo agentic` silently
-    measures the pipeline while wearing the agent's label (Codex architecture
-    critique 2026-08-30, finding 1). Imports are lazy so config stays free of
-    shell dependencies.
+    Every caller that answers a case — the CLI and the eval harness — goes
+    through this one function, or `evals run --combo agentic` silently measures
+    one shell while wearing the other's label (Codex architecture critique
+    2026-08-30, finding 1). The open-loop shell used to be the other branch
+    here; ticket 33 wave 3 froze it at the tag `pipeline-baseline-final` and
+    deleted it, so the closed loop is the only shell. The function stays
+    because it is the seam that kept the two honest, and every caller already
+    goes through it. The import is lazy so config stays free of shell
+    dependencies.
     """
-    if COMBOS[combo_name].orchestration == "agent":
-        from .research_agent import run_agent_case
+    _require_agent(combo_name)
+    from .research_agent import run_agent_case
 
-        return run_agent_case
-    from .pipeline import run_case
-
-    return run_case
+    return run_agent_case
 
 
 def question_runner_for(combo_name: str):
-    """The free-form question runner a combo's orchestration selects.
+    """The free-form question runner. The same rule as runner_for, over the
+    other task: `ask` and `evals run --suite questions` reach the same closed
+    loop. Both runners take (bank, question, combo, periods) and return
+    (output, out_dir), so no caller needs an adapter or a branch of its own."""
+    _require_agent(combo_name)
+    from .research_agent import run_agent_question
 
-    The same rule as runner_for, over the other task: `ask --combo agentic`
-    and `evals run --suite questions --combo agentic` must both reach the
-    closed loop, and `--combo cheap` must reach the open-loop baseline. Both
-    runners take (bank, question, combo, periods) and return (output, out_dir),
-    so no caller needs an adapter or a branch of its own.
+    return run_agent_question
+
+
+def _require_agent(combo_name: str) -> None:
+    """A combo that is not an agent combo has no shell to run since wave 3.
+
+    Saved artifacts from the deleted arm stay readable and `evals rescore`
+    still scores them by slug, so this refuses only a fresh RUN.
     """
-    if COMBOS[combo_name].orchestration == "agent":
-        from .research_agent import run_agent_question
-
-        return run_agent_question
-    from .ask import run_ask
-
-    return run_ask
+    combo = COMBOS.get(combo_name)
+    if combo is None:
+        raise KeyError(
+            f"unknown combo: {combo_name} (known: {', '.join(sorted(COMBOS))}). "
+            "The open-loop combos 'cheap' and 'normal' were frozen at the git tag "
+            "pipeline-baseline-final and removed from main."
+        )
+    if combo.orchestration != "agent":
+        raise ValueError(f"combo {combo_name} names no orchestration shell")
 
 
 def openrouter_api_key() -> str:

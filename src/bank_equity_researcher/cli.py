@@ -16,7 +16,7 @@ def main() -> int:
     analyse.add_argument("--period", required=True, help="e.g. FY26, 1H26")
     analyse.add_argument("--comparator", default=None, help="defaults: FY->prior FY, half->PCP")
     analyse.add_argument("--combo", default="agentic",
-                         help="model combo: agentic | agentic-cheap | cheap | normal")
+                         help="model combo: agentic | agentic-glm | agentic-cheap")
 
     ask = sub.add_parser("ask", help="answer a free-form question from the corpus")
     ask.add_argument("--bank", default=None,
@@ -25,7 +25,7 @@ def main() -> int:
                      help="comma-separated, e.g. FY26,FY25; omit when the question names them")
     ask.add_argument("--question", required=True, help="the question to answer")
     ask.add_argument("--combo", default="agentic",
-                     help="model combo: agentic | agentic-cheap | cheap | normal")
+                     help="model combo: agentic | agentic-glm | agentic-cheap")
 
     discover_cmd = sub.add_parser("discover", help="agentically build a manifest for a bank")
     discover_cmd.add_argument("--bank", required=True)
@@ -36,7 +36,8 @@ def main() -> int:
     evals_cmd.add_argument("action", choices=["run", "crossref", "rescore", "judge"])
     evals_cmd.add_argument("--suite", default="dev",
                            help="dev | holdout | questions (free-form researcher questions)")
-    evals_cmd.add_argument("--combo", default="cheap")
+    evals_cmd.add_argument("--combo", default="agentic",
+                           help="agentic | agentic-glm | agentic-cheap. rescore also accepts a\n                                retired combo name (cheap, normal): it reads saved artifacts by\n                                slug and runs no shell.")
     evals_cmd.add_argument("--only", default=None,
                            help="run: subset filter for fast loops, comma-separated matches "
                                 "against BANK-metric-PERIOD (e.g. 'cash_earnings' or 'nim-1H26')")
@@ -59,7 +60,7 @@ def main() -> int:
             card = run_crossref_suite(args.combo, args.bank)
         elif args.action == "judge":
             # Citation-grounding judge over SAVED out/*/ artifacts: it grades
-            # each case's narrative checklist and calls no pipeline stage.
+            # each case's narrative checklist and runs no research.
             from .evals import run_judge_suite
 
             card = run_judge_suite(args.suite, args.combo, args.bank)
@@ -82,7 +83,7 @@ def main() -> int:
         return 0
 
     if args.command == "ask":
-        # The combo chooses the shell here exactly as it does for analyse.
+        # One shell answers a question, reached through the same seam analyse uses.
         from .config import question_runner_for
 
         run_question = question_runner_for(args.combo)
@@ -105,9 +106,9 @@ def main() -> int:
         print(json.dumps(manifest, indent=2))
         return 0
 
-    # A combo chooses its own orchestration shell (ADR-0005): "agent" is the
-    # closed-loop research agent, anything else is the open-loop pipeline. Both
-    # shells write the same artifacts, so every downstream reader is unchanged.
+    # Every case runner is reached through config.runner_for (ADR-0005). Since
+    # ticket 33 wave 3 the closed-loop research agent is the only shell; the
+    # open-loop pipeline is frozen at the tag `pipeline-baseline-final`.
     from .config import runner_for
 
     run_case = runner_for(args.combo)

@@ -1,20 +1,24 @@
-"""Author-stage normalisers (ticket 27, NAB/WBC movement round).
+"""Movement, basis and sign normalisers (ticket 27, NAB/WBC movement round).
 
 Two defects the WBC FY25 cases exposed:
 
 - The impairment charge arrived re-signed. Westpac prints the line inside the
-  P&L, where an expense is bracketed, so the author reported -537 -> -424,
+  P&L, where an expense is bracketed, so the shell reported -537 -> -424,
   delta +113 for a charge that FELL by $113m.
-- The author read "Return on average ordinary equity" when Westpac headlines
-  ROTE ex Notable Items one line below. The registry already named the row; the
-  prompt never showed it.
+- The shell read "Return on average ordinary equity" when Westpac headlines
+  ROTE ex Notable Items one line below. The registry already named the row.
+
+These normalisers lived in author.py until ticket 33 wave 3 froze the open-loop
+arm at the tag `pipeline-baseline-final`. They now live in validate.py beside
+the checks that read their output, and the closed loop calls every one of them.
+The tests that reached them through the deleted author shell now call them
+directly or run through research_agent.build_attribution.
 """
 
 from __future__ import annotations
 
 import pytest
 
-from bank_equity_researcher.author import AUTHOR_PROMPT, author_attribution, settle_charge_sign
 from bank_equity_researcher.schema import (
     Attribution,
     Contribution,
@@ -28,6 +32,8 @@ from bank_equity_researcher.validate import (
     check_movement,
     check_movement_basis,
     check_movement_variant,
+    drop_off_unit_contributions,
+    settle_charge_sign,
     settle_identity_scale,
 )
 
@@ -87,61 +93,6 @@ def test_impairment_carries_the_charge_convention():
     """The flag lives in the taxonomy, so author.py stays bank-agnostic."""
     assert IMPAIRMENT["sign_convention"] == "positive_charge"
     assert "sign_convention" not in CASH_EARNINGS
-
-
-class _CapturingLLM:
-    """Answers one fixed reply and keeps every prompt it was given."""
-
-    def __init__(self):
-        self.prompts: list[str] = []
-
-    def chat_json(self, model, prompt, max_tokens=None):
-        self.prompts.append(prompt)
-        return {
-            "movement": {"from_value": 11.21, "to_value": 10.97, "delta": -0.24, "unit": "ppt"},
-            "movement_row": "ROTE",
-            "movement_from_column": "Full Year Sept 2024",
-            "movement_to_column": "Full Year Sept 2025",
-            "basis": "ex_notables",
-            "headline": "",
-            "drivers": [],
-            "attribution_confidence": 80,
-            "limitations": [],
-        }
-
-
-def _author(headline_row):
-    llm = _CapturingLLM()
-    author_attribution(
-        llm,
-        "model",
-        max_tokens=100,
-        case={"bank": "WBC", "metric": "roe", "period": "FY25", "comparator": "FY24"},
-        taxonomy=TAXONOMY["roe"],
-        registry={"measures": {"core_profit": "net profit excluding Notable Items"}},
-        evidence_records=[],
-        walks=[],
-        validation={},
-        fetch_more=lambda query: [],
-        headline_row=headline_row,
-    )
-    return llm.prompts[0]
-
-
-def test_prompt_names_the_registry_headline_row():
-    prompt = _author("ROTE (return on average tangible equity), also ex Notable Items")
-    assert "HEADLINE ROW for return on equity at this bank" in prompt
-    assert "ROTE (return on average tangible equity), also ex Notable Items" in prompt
-
-
-def test_prompt_falls_back_when_the_registry_names_no_row():
-    prompt = _author(None)
-    assert "the registry records no row for this metric" in prompt
-
-
-def test_prompt_template_still_carries_every_placeholder():
-    """A missing format key would raise at author time, never in a unit test."""
-    assert "{headline_row}" in AUTHOR_PROMPT
 
 
 # ---------------------------------------------------------------------------
@@ -511,101 +462,34 @@ def test_identity_scale_is_silent_without_a_movement():
 
 
 # ---------------------------------------------------------------------------
-# Review round 2
+# Review round 2: the off-unit contribution drop
+#
+# A contribution is a share of THIS movement, so it is stated in the movement's
+# own unit. The drop used to be reached only through the open-loop author, so
+# these tests went through that shell. It is gone; the rule is not, and the
+# closed loop calls it at research_agent.build_attribution. The end-to-end case
+# lives in test_research_agent.py; this is the rule on its own.
 # ---------------------------------------------------------------------------
 
 
-class _ReplyingLLM:
-    """Answers one caller-supplied reply."""
-
-    def __init__(self, reply: dict) -> None:
-        self.reply = reply
-        self.prompts: list[str] = []
-
-    def chat_json(self, model, prompt, max_tokens=None):
-        self.prompts.append(prompt)
-        return dict(self.reply)
-
-
-def _authored(reply: dict, metric: str = "cash_earnings") -> Attribution:
-    return author_attribution(
-        _ReplyingLLM(reply),
-        "model",
-        max_tokens=100,
-        case={"bank": "CBA", "metric": metric, "period": "FY26", "comparator": "FY25"},
-        taxonomy=TAXONOMY[metric],
-        registry={"measures": {"core_profit": "cash net profit after tax"}},
-        evidence_records=[
-            EvidenceRecord(id="ev-1", doc_id="CBA/FY26/profit_announcement", pdf_page=1,
-                           quote="Net interest income 19,473 18,916")
-        ],
-        walks=[],
-        validation={},
-        fetch_more=lambda query: [],
-        headline_row=None,
-    )
-
-
-def test_the_open_loop_author_drops_an_off_unit_contribution():
-    """The closed-loop shell has guarded this since it was written and the
-    open-loop author never did, so the same submission was corrected in one
-    shell and shipped in the other."""
-    attribution = _authored(
-        {
-            "movement": {"from_value": 5132, "to_value": 5445, "delta": 313, "unit": "$m"},
-            "basis": "cash",
-            "headline": "",
-            "drivers": [
-                {"canonical": "nii", "contribution": {"value": 310, "unit": "$m"},
-                 "narrative": "", "confidence": 90, "evidence": ["ev-1"]},
-                {"canonical": "mix", "contribution": {"value": -3, "unit": "bps"},
-                 "narrative": "", "confidence": 90, "evidence": ["ev-1"]},
-            ],
-            "attribution_confidence": 80,
-            "limitations": [],
-        }
-    )
-    off_unit = next(d for d in attribution.drivers if d.canonical == "mix")
-    assert off_unit.contribution is None
-    assert off_unit.confidence == 60
-    assert any("not the movement's unit" in item for item in attribution.limitations)
+def test_a_contribution_in_another_unit_stops_being_a_contribution():
+    drivers = [
+        {"canonical": "nii", "contribution": {"value": 310, "unit": "$m"}, "confidence": 90},
+        {"canonical": "mix", "contribution": {"value": -3, "unit": "bps"}, "confidence": 90},
+    ]
+    dropped = drop_off_unit_contributions(drivers, "$m")
+    assert drivers[0]["contribution"] == {"value": 310, "unit": "$m"}
+    assert drivers[1]["contribution"] is None
+    assert len(dropped) == 1
+    assert "not the movement's unit" in dropped[0]
+    # Ticket 33 wave 1 deleted the hardcoded fall to 60: the drop fired on 0 of
+    # the 90 saved artifacts, so the override cited no run. The drop stays.
+    assert drivers[1]["confidence"] == 90
 
 
 def test_a_unit_spelling_difference_is_not_an_off_unit_contribution():
     """"$M" and "$m" are one unit; the guard reads the canonical spelling."""
-    attribution = _authored(
-        {
-            "movement": {"from_value": 5132, "to_value": 5445, "delta": 313, "unit": "$m"},
-            "basis": "cash",
-            "headline": "",
-            "drivers": [
-                {"canonical": "nii", "contribution": {"value": 313, "unit": "$M"},
-                 "narrative": "", "confidence": 90, "evidence": ["ev-1"]},
-            ],
-            "attribution_confidence": 80,
-            "limitations": [],
-        }
-    )
-    assert attribution.drivers[0].contribution is not None
-
-
-def test_the_delta_harmoniser_repairs_a_ratio_slip_the_check_would_fail():
-    """Round 1 gave check_movement a unit-typed table and left the two
-    normalisers that REPAIR a delta on a flat 0.51, which is a basis-point
-    quantity. For a ppt movement the repair stayed silent exactly where the
-    check then failed at 0.1, so a repairable one-line slip sank the answer to
-    confidence 40."""
-    attribution = _authored(
-        {
-            "movement": {"from_value": 45.0, "to_value": 46.0, "delta": 1.5, "unit": "ppt"},
-            "basis": "cash",
-            "headline": "",
-            "drivers": [],
-            "attribution_confidence": 80,
-            "limitations": [],
-        },
-        metric="cti",
-    )
-    assert attribution.movement.delta == 1.0
-    assert any("delta normalised" in item for item in attribution.limitations)
-    assert check_movement(attribution.movement)[1] == []
+    drivers = [{"canonical": "nii", "contribution": {"value": 313, "unit": "$M"},
+                "confidence": 90}]
+    assert drop_off_unit_contributions(drivers, "$m") == []
+    assert drivers[0]["contribution"] is not None

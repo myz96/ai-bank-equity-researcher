@@ -389,12 +389,14 @@ def test_a_walk_that_sums_caps_nobody():
     assert attribution.limitations == []
 
 
-def test_a_comparison_leak_caps_the_driver_it_names():
-    """Reviewer C finding 6 and Codex finding 1.
+def test_a_comparison_leak_names_the_driver_it_finds():
+    """Reviewer C finding 6 and Codex finding 1, minus the cap.
 
-    B2's stated reason for capping the whole table is that code cannot name the
-    offender. `check_comparison_leak` CAN name it — it prints the bar, its
-    label and its source — and it capped nobody.
+    The check names the offender — it prints the bar, its label and its source.
+    It used to cap that driver at 80 as well. Ticket 33 wave 1 deleted the cap:
+    `comparison_leak_cap_80` fired on 0 of the 90 saved artifacts, so it cited
+    no run. The naming, and the fatal grading both shells apply to a failed
+    check, are untouched.
     """
     attribution = _attribution(
         drivers=[
@@ -409,9 +411,9 @@ def test_a_comparison_leak_caps_the_driver_it_names():
     failed = check_comparison_leak(attribution, primary_view, context_view)[1]
     assert any(f.startswith("comparison_leak") for f in failed)
     named = {d.canonical: d for d in attribution.drivers}
-    assert named["dividend_net_drp"].confidence == CLAIM_CITATION_CAP
-    assert "comparison_leak_cap_80" in named["dividend_net_drp"].checks_passed
-    # The driver the check does NOT name keeps its confidence.
+    # The check reports and no longer mutates: both drivers keep what they said.
+    assert named["dividend_net_drp"].confidence == 95
+    assert named["dividend_net_drp"].checks_passed == []
     assert named["net_interest_income"].confidence == 95
 
 

@@ -509,7 +509,6 @@ def test_an_unquotable_citation_loses_the_claim_that_rests_on_it(docs, case):
     )
     assert rejections
     assert attribution.drivers[0].contribution is None
-    assert attribution.drivers[0].confidence <= 20
     assert any("were dropped" in limit for limit in attribution.limitations)
 
 
@@ -600,11 +599,35 @@ def test_a_contribution_in_another_unit_stops_being_a_contribution(docs, case):
     )
     margin = next(d for d in attribution.drivers if d.canonical == "nii.margin")
     assert margin.contribution is None
-    assert margin.confidence <= 60
     assert margin.narrative == "NIM fell 3bpts."
     assert any("not the movement's unit" in limit for limit in attribution.limitations)
     # The dollar component is untouched, and the bridge still reconciles.
     assert next(d for d in attribution.drivers if d.canonical == "nii").contribution.value == 733
+
+
+def test_the_delta_harmoniser_repairs_a_ratio_slip_the_check_would_fail(docs, case):
+    """Round 1 gave check_movement a unit-typed table and left the two
+    normalisers that REPAIR a delta on a flat 0.51, which is a basis-point
+    quantity. For a ppt movement the repair stayed silent exactly where the
+    check then failed at 0.1, so a repairable one-line slip sank the answer to
+    confidence 40.
+
+    This ran through the open-loop author until ticket 33 wave 3 froze that arm
+    at the tag `pipeline-baseline-final`. The closed loop carries its own copy
+    of the harmoniser, so the rule is asserted here instead.
+    """
+    cti = case | {"metric": "cti"}
+    research = _research(_LLM([]), docs, cti, metric="cti")
+    payload = _submission(
+        movement={"from_value": 45.0, "to_value": 46.0, "delta": 1.5, "unit": "ppt"},
+        drivers=[],
+    )
+    attribution, _ = RA.build_attribution(payload, research, cti, TAXONOMY["cti"], REGISTRY)
+    from bank_equity_researcher.validate import check_movement
+
+    assert attribution.movement.delta == 1.0
+    assert any("delta normalised" in item for item in attribution.limitations)
+    assert check_movement(attribution.movement)[1] == []
 
 
 def test_one_malformed_sub_object_does_not_discard_the_run(docs, case):
@@ -884,10 +907,20 @@ def test_the_loop_can_cite_a_page_then_submit_by_id(wired, monkeypatch):
 
 
 def test_the_combo_chooses_the_orchestration_shell(monkeypatch, tmp_path, capsys):
-    """--combo routes to the shell the combo declares, and to nothing else."""
+    """--combo reaches the shell through config.runner_for, and nothing else.
+
+    Codex critique finding 1: every caller selects its runner through one
+    function, or `evals run --combo agentic` silently measures one shell while
+    wearing the other's label. Ticket 33 wave 3 left one shell behind that
+    seam, so the test now asserts that every live combo reaches the agent and
+    that a retired combo name is refused rather than quietly routed.
+    """
     import sys
 
-    from bank_equity_researcher import cli, pipeline, research_agent
+    import pytest
+
+    from bank_equity_researcher import cli, research_agent
+    from bank_equity_researcher.config import runner_for
 
     called: list[str] = []
 
@@ -901,18 +934,21 @@ def test_the_combo_chooses_the_orchestration_shell(monkeypatch, tmp_path, capsys
 
         return run
 
-    monkeypatch.setattr(pipeline, "run_case", _fake("pipeline"))
     monkeypatch.setattr(research_agent, "run_agent_case", _fake("agent"))
-    for combo, shell in (("cheap", "pipeline"), ("normal", "pipeline"),
-                         ("agentic", "agent"), ("agentic-cheap", "agent")):
+    for combo in ("agentic", "agentic-glm", "agentic-cheap"):
         monkeypatch.setattr(
             sys, "argv",
             ["x", "analyse", "--bank", "CBA", "--metric", "nim", "--period", "FY26",
              "--combo", combo],
         )
         assert cli.main() == 0
-        assert called[-1] == f"{shell}:{combo}"
+        assert called[-1] == f"agent:{combo}"
     capsys.readouterr()
+    # The frozen arm's combos are gone from main; a run under one of their
+    # names fails loudly instead of measuring the agent under a stale label.
+    for retired in ("cheap", "normal"):
+        with pytest.raises(KeyError, match="pipeline-baseline-final"):
+            runner_for(retired)
 
 
 def test_the_tool_surface_is_the_documented_one():
@@ -1083,69 +1119,6 @@ def test_bank_language_answers_for_the_bank_the_question_asks_about(docs):
     del llm
 
 
-def test_the_open_loop_arm_emits_the_same_artifact(monkeypatch, tmp_path, docs):
-    """The baseline arm answers the same question into the same shape.
-
-    Both shells feed one renderer, one scorer and one judge, so a difference in
-    the artifact would make the head-to-head a comparison of two formats
-    instead of two research strategies.
-    """
-    from bank_equity_researcher import ask
-    from bank_equity_researcher.schema import EvidenceRecord
-
-    record = EvidenceRecord(
-        id="ev-1", doc_id="CBA/FY26/profit_announcement", pdf_page=12, kind="table",
-        quote="Net interest margin    2.05%    2.08%",
-    )
-
-    class _AskLLM(_LLM):
-        def chat_json(self, model, prompt, image_png=None, max_tokens=None):
-            if "retrieval queries" in prompt:
-                return ["net interest margin"]
-            return {
-                "answer": "The margin fell 3 basis points.",
-                "key_facts": [{"fact": "NIM was 2.05% in FY26.", "evidence": ["ev-1"]},
-                              {"fact": "Deposits cost 4 bps.", "evidence": ["ev-9"]}],
-                "confidence": 70,
-                "limitations": [],
-            }
-
-    monkeypatch.setattr(ask, "LLM", lambda: _AskLLM([]))
-    monkeypatch.setattr(ask, "OUT_DIR", tmp_path / "out")
-    monkeypatch.setattr(
-        ask, "documents_for_question", lambda question, bank=None, periods=None, notes=None: docs
-    )
-    monkeypatch.setattr(ask, "retrieve", lambda doc, query, top_k=4: [(12, 1.0)])
-    monkeypatch.setattr(
-        ask, "extract_text_evidence",
-        lambda llm, model, doc, page, question, next_id: [record],
-    )
-    output, out = ask.run_ask("CBA", QUESTION, "cheap", ["FY26", "FY25"])
-    assert set(output) >= {
-        "question", "bank", "periods", "answer", "key_facts", "confidence",
-        "limitations", "evidence_records", "provenance",
-    }
-    # The same never-guess gate: the fact citing no record loses its place.
-    assert [fact["fact"] for fact in output["key_facts"]] == ["NIM was 2.05% in FY26."]
-    assert any("Stripped unsupported quantified fact" in item
-               for item in output["limitations"])
-    assert out.name == f"ask-{ask.slugify(QUESTION)}-cheap"
-    assert (out / "answer.md").exists() and (out / "answer.json").exists()
-
-
-def test_the_combo_chooses_the_question_shell(monkeypatch):
-    """`ask --combo X` routes on orchestration exactly as `analyse` does."""
-    from bank_equity_researcher.ask import run_ask
-    from bank_equity_researcher.config import question_runner_for
-    from bank_equity_researcher.research_agent import run_agent_question
-
-    assert question_runner_for("agentic") is run_agent_question
-    assert question_runner_for("agentic-cheap") is run_agent_question
-    assert question_runner_for("cheap") is run_ask
-    assert question_runner_for("normal") is run_ask
-    del monkeypatch
-
-
 # ---------------------------------------------------------------------------
 # Which documents a question may read, and what a document is called
 # ---------------------------------------------------------------------------
@@ -1201,20 +1174,6 @@ def test_a_document_name_resolves_however_a_person_spells_it():
     )
     # A name no document carries resolves to nothing, and never to a guess.
     assert resolve_doc_name("CBA/FY26/transcript", index) is None
-
-
-def test_runner_for_routes_on_orchestration():
-    """Codex critique finding 1: evals and the CLI must select the runner
-    through one function, or `evals run --combo agentic` silently measures
-    the pipeline while wearing the agent's label."""
-    from bank_equity_researcher.config import runner_for
-    from bank_equity_researcher.pipeline import run_case
-    from bank_equity_researcher.research_agent import run_agent_case
-
-    assert runner_for("agentic") is run_agent_case
-    assert runner_for("agentic-cheap") is run_agent_case
-    assert runner_for("cheap") is run_case
-    assert runner_for("normal") is run_case
 
 
 # ---------------------------------------------------------------------------
@@ -1681,38 +1640,3 @@ def test_the_scope_note_reaches_the_question_prompt(wired, monkeypatch, docs):
     assert any("researched in FY25 instead" in item for item in output["limitations"])
 
 
-def test_the_scope_note_reaches_the_open_loop_answer_prompt(monkeypatch, tmp_path, docs):
-    """The same gap in the open-loop question shell (ask.py)."""
-    from bank_equity_researcher import ask
-
-    seen: list[str] = []
-
-    class _AskLLM:
-        def __init__(self) -> None:
-            self.usage = _Usage()
-
-        def chat_json(self, model, prompt, image_png=None, max_tokens=None):
-            seen.append(prompt)
-            if "retrieval queries" in prompt:
-                return []
-            if "EVIDENCE RECORDS" in prompt:
-                return {"answer": "n/a", "key_facts": [], "confidence": 10, "limitations": []}
-            return {"quotes": []}
-
-    def _substituting(question, bank=None, periods=None, notes=None):
-        if notes is not None:
-            notes.append("the corpus holds no CBA document for FY26; researched in FY25 instead")
-        return docs
-
-    monkeypatch.setattr(ask, "LLM", _AskLLM)
-    monkeypatch.setattr(ask, "OUT_DIR", tmp_path / "out")
-    monkeypatch.setattr(ask, "documents_for_question", _substituting)
-    monkeypatch.setattr(ask, "retrieve", lambda doc, query, top_k=4: [(2, 1.0)])
-    monkeypatch.setattr(
-        ask, "extract_text_evidence",
-        lambda llm, model, doc, page, case, next_id, provenance=None: [],
-    )
-    ask.run_ask("CBA", "what happened in FY26?", "cheap")
-    assert any(
-        "researched in FY25 instead" in prompt for prompt in seen if "EVIDENCE RECORDS" in prompt
-    )

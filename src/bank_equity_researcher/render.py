@@ -1,7 +1,10 @@
-"""Deterministic markdown report rendered from the attribution JSON (ticket 06).
-No model writes prose here; the report cannot contradict its own data."""
+"""Deterministic markdown rendering of both artifacts — the attribution report
+(ticket 06) and the free-form answer. No model writes prose here; neither
+artifact can contradict its own data."""
 
 from __future__ import annotations
+
+import re
 
 from .schema import Attribution
 
@@ -70,7 +73,6 @@ def render_report(attribution: Attribution) -> str:
             lines.append(f"| *residual (unexplained)* | — | {a.residual.value:+g} {a.residual.unit} | — | — |")
         lines.append("")
 
-    narrative = [d for d in a.drivers if not d.contribution]
     for d in a.drivers:
         lines.append(f"### {d.canonical}" + (f" — \"{d.bank_label}\"" if d.bank_label else ""))
         contribution = (
@@ -103,5 +105,51 @@ def render_report(attribution: Attribution) -> str:
     for key, value in a.provenance.items():
         lines.append(f"- {key}: {value}")
     lines.append("")
-    del narrative
+    return "\n".join(lines)
+
+
+# --------------------------------------------------------------------------
+# The free-form ANSWER artifact
+#
+# A reader, a scorer and a judge must not be able to tell which shell wrote
+# an answer, so the answer's slug and its markdown have one implementation.
+# It lived in ask.py, the open-loop baseline; ticket 33 wave 3 froze that arm
+# at the tag `pipeline-baseline-final` and deleted it from main, so the
+# renderer moves here beside render_report. Nothing about it changed.
+# --------------------------------------------------------------------------
+
+
+
+def slugify(text: str, max_words: int = 8) -> str:
+    words = re.findall(r"[a-z0-9]+", text.lower())[:max_words]
+    return "-".join(words)[:64] or "question"
+
+
+def render_answer(output: dict) -> str:
+    lines = [f"# Q: {output['question']}", ""]
+    lines += [
+        (
+            f"*{output['bank']}, periods {', '.join(output['periods'])} — "
+            f"confidence {output['confidence']}/100*"
+        ),
+        "",
+    ]
+    lines += [output["answer"], ""]
+    records = {r["id"]: r for r in output["evidence_records"]}
+    if output["key_facts"]:
+        lines += ["## Key facts", ""]
+        for fact in output["key_facts"]:
+            lines.append(f"- {fact['fact']}")
+            for ev_id in fact["evidence"]:
+                record = records.get(ev_id)
+                if record:
+                    page = (f"printed p{record['printed_page']}" if record.get("printed_page")
+                            else f"PDF p{record['pdf_page']}")
+                    lines.append(f"  > [{ev_id}] {record['doc_id']}, {page}: \"{record['quote']}\"")
+        lines.append("")
+    if output["limitations"]:
+        lines += ["## Limitations"] + [f"- {item}" for item in output["limitations"]] + [""]
+    lines.append("## Provenance")
+    lines += [f"- {key}: {value}" for key, value in output["provenance"].items()]
+    lines.append("")
     return "\n".join(lines)

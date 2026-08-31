@@ -247,6 +247,48 @@ def label_end_date(label: str | None, calendar: dict) -> tuple[int, int] | None:
     return None
 
 
+def default_comparator(period: str) -> str:
+    """FY input -> prior FY; half input -> PCP (same half, prior year)."""
+    match = re.fullmatch(r"(FY|1H|2H)(\d{2})", period)
+    if not match:
+        raise ValueError(f"unrecognised period: {period} (expected FY26, 1H26, 2H25 ...)")
+    return f"{match.group(1)}{int(match.group(2)) - 1}"
+
+
+def _month_name(month: int) -> str:
+    return next(k for k, v in MONTH_NUMBERS.items() if v == month).capitalize()
+
+
+def build_period_note(period: str, comparator: str, calendar: dict) -> str:
+    """Spell out both balance dates, and the prior-half column that sits
+    between them (defect 24).
+
+    Half-year results tables print THREE period columns — the current period,
+    the prior half, and the same half one year earlier — with two comparison
+    columns beside them. The middle column is the trap: it is the prior half,
+    never the comparator. Full-year books print the same three columns.
+    """
+    end, start = period_end_date(period, calendar), period_end_date(comparator, calendar)
+    if end is None or start is None:
+        return f"- The task compares {period} against {comparator}."
+    span = "12 months" if period.upper().startswith("FY") else "half"
+    lines = [
+        f"- {period} = the {span} ended {_month_name(end[0])} {end[1]}. Its column gives to_value.",
+        (
+            f"- {comparator} = the {span} ended {_month_name(start[0])} {start[1]}. "
+            "Its column gives from_value."
+        ),
+    ]
+    middle = (end[0] - 6, end[1]) if end[0] > 6 else (end[0] + 6, end[1] - 1)
+    if middle != start:
+        lines.append(
+            f"- Results tables also print a column for the half ended {_month_name(middle[0])} "
+            f"{middle[1]} (the PRIOR HALF). That column is neither endpoint. A comparison "
+            "against it is half-on-half, which is a different question from this task."
+        )
+    return "\n".join(lines)
+
+
 def _span_text(start: tuple[int, int] | None, end: tuple[int, int] | None) -> str:
     def one(date):
         if date is None:
@@ -451,11 +493,15 @@ def cross_source_view(walks: list[dict], label_map: dict[str, str]) -> dict[str,
 
 
 def corroborate(attribution, cross_source: dict[str, list[dict]]) -> None:
-    """Annotate each quantified driver with its corroboration status; surface
-    cross-source divergence as a disagreement; cap single-source confidence.
-    Mutates the attribution in place."""
-    from .schema import Disagreement, DisagreementReason
+    """Annotate each quantified driver with its corroboration status and cap
+    single-source confidence. Mutates the attribution in place.
 
+    This used to synthesise a Disagreement whenever two walks decomposed one
+    movement past CORROBORATION_TOL. Ticket 33 replayed the estate: the branch
+    produced 0 auto-disagreements over 90 artifacts, and the model itself wrote
+    all 89 disagreements the estate holds. The wave-1 cleanup deleted it, with
+    the bare `gap <= 3` reason-picker that lived inside it.
+    """
     for driver in attribution.drivers:
         if driver.contribution is None:
             continue
@@ -469,21 +515,6 @@ def corroborate(attribution, cross_source: dict[str, list[dict]]) -> None:
             values = [e["value"] for e in entries]
             if max(values) - min(values) <= CORROBORATION_TOL:
                 driver.checks_passed.append(f"corroborated_{len(walk_docs)}_sources")
-            else:
-                driver.checks_passed.append("cross_source_divergence_surfaced")
-                gap = max(values) - min(values)
-                attribution.disagreements.append(
-                    Disagreement(
-                        topic=f"{driver.canonical} contribution",
-                        values=[f"{e['value']:+g} — {e['label']} ({e['source']})" for e in entries],
-                        preferred=f"{driver.contribution.value:+g} (per the source hierarchy)",
-                        reason=DisagreementReason.rounding if gap <= 3 else DisagreementReason.definitional,
-                        explanation="The documents decompose the same movement with different bar framings; "
-                        "the gap is framing/rounding, not a data conflict."
-                        if gap <= 3
-                        else "The documents use different decompositions of the same movement.",
-                    )
-                )
         elif n_sources <= 1:
             # Corroboration dimension (user, 2026-08-26): a quantified claim
             # seen in only one document cannot claim near-certainty.
@@ -504,12 +535,11 @@ def check_comparison_leak(
     a leak whether or not the bank published a walk for the task — where it did
     not, the other comparison's numbers belong in the driver narrative.
 
-    The check CAPS the driver it names. Mutates. The whole-table cap exists
-    because code usually cannot say which claim is wrong; here it can, so the
-    offender takes the evidence ladder's ceiling and its neighbours keep their
-    confidence. Without this the fatal failure lowered the answer's header to
-    40 and left the leaking driver at 95, which is the calibration hole B2 was
-    written to close, on the one path where the offender has a name.
+    The check REPORTS; it no longer caps. Ticket 33 replayed the estate: the
+    `comparison_leak_cap_80` override fired on 0 of the 90 saved artifacts, so
+    it carried no evidence under the hardcoded-override policy above and the
+    wave-1 cleanup deleted it. The named failure still reaches the fatal
+    grading both shells apply to a failed check.
     """
     passed, failed = [], []
     for driver in attribution.drivers:
@@ -534,9 +564,6 @@ def check_comparison_leak(
             f"'{context_bars[0]['label']}' bar of {context_bars[0]['source']}, a walk for a "
             f"different comparison; {reference})"
         )
-        if driver.confidence > CLAIM_CITATION_CAP:
-            driver.confidence = CLAIM_CITATION_CAP
-            driver.checks_passed.append("comparison_leak_cap_80")
     if not failed:
         passed.append("no_comparison_leak")
     return passed, failed
@@ -722,11 +749,10 @@ def check_component_columns(
     reported, so a claim that is right for a reason this code cannot see still
     passes.
 
-    The check CAPS the component it names. Mutates, on the same argument as
-    `check_comparison_leak`: this is a claim-specific failure with a named
-    offender, so the offender takes the evidence ladder's ceiling and the rest
-    of the table keeps its confidence. The fatal path used to lower the
-    answer's header to 40 and leave the wrong-column driver at 95.
+    The check REPORTS; it no longer caps, on the same ground as
+    `check_comparison_leak`: ticket 33 replayed the estate and the
+    `component_column_cap_80` override fired on 0 of the 90 saved artifacts,
+    so the wave-1 cleanup deleted it under the hardcoded-override policy.
     """
     passed, failed = [], []
     if attribution.movement is None:
@@ -767,9 +793,6 @@ def check_component_columns(
             "in the evidence; subtract the comparator column from the period column of that "
             "component's own row)"
         )
-        if driver.confidence > CLAIM_CITATION_CAP:
-            driver.confidence = CLAIM_CITATION_CAP
-            driver.checks_passed.append("component_column_cap_80")
     if not failed:
         passed.append("components_from_comparator_column")
     return passed, failed
@@ -957,6 +980,149 @@ def reconcile_tolerance(attribution) -> float:
 # run split a -0.24 ppt movement into -23.76 and +0.56 ppt, so a CORRECT
 # movement failed drivers_reconcile and shipped capped at 40.
 IDENTITY_SCALE = 100.0
+
+
+# --------------------------------------------------------------------------
+# Movement, basis and sign normalisers
+#
+# These read a model's own submission and restate it before any check runs,
+# so a check downstream of one of them is asserting that the restatement
+# worked. They lived in author.py, which was the open-loop baseline's
+# module; ticket 33 wave 3 froze that arm at the tag `pipeline-baseline-final`
+# and deleted it from main, so they move here beside the checks that read
+# their output. Nothing about them changed in the move.
+# --------------------------------------------------------------------------
+
+
+def _movement_source(reply: dict) -> str | None:
+    """Compose the citation from three short fields.
+
+    A single free-text field became a scratchpad: on the CBA 1H26 impairment
+    case the model wrote 120 words of reasoning into it, concluded the right
+    delta, and left the wrong numbers in "movement". Three capped fields leave
+    no room to think, and their long labels no longer carry the nested
+    double quotes that broke the JSON parse on both CTI cases.
+    """
+    parts = [str(reply.get(key) or "").strip()[:120] for key in
+             ("movement_row", "movement_from_column", "movement_to_column")]
+    row, from_column, to_column = parts
+    if not any(parts):
+        return None
+    return f"row '{row or '?'}', column {from_column or '?'} -> column {to_column or '?'}"
+
+
+_BASIS_WORDS = {
+    "statutory": ("statutory",),
+    "ex_notables": ("ex-notable", "ex notable", "excluding notable", "underlying"),
+    "cash": ("cash",),
+}
+
+
+def primary_basis(registry: dict) -> str:
+    """The bank's own headline basis, read from the registry vocabulary."""
+    core = str(registry.get("measures", {}).get("core_profit", "")).lower()
+    for basis, words in _BASIS_WORDS.items():
+        if any(word in core for word in words):
+            return basis
+    return "cash"
+
+
+def _basis_printed(basis: str, records: list[EvidenceRecord]) -> bool:
+    """True when a page we read prints the basis word itself."""
+    words = _BASIS_WORDS.get(basis, ())
+    return any(word in record.quote.lower() for record in records for word in words)
+
+
+def drop_off_unit_contributions(drivers: list[dict], unit: str) -> list[str]:
+    """A contribution stated in another unit stops being a contribution.
+
+    A contribution is a share of THIS movement, so it is stated in the
+    movement's own unit. A value in another unit is a fact about something
+    else: the CBA FY26 cash-earnings run claimed a -3 bps margin move as a
+    component of a $m bridge, where the reconciliation summed it as -3 dollars.
+    The number is not deleted — it stays in the narrative, where it belongs —
+    but it stops being a quantified contribution.
+
+    The driver used to fall to a hardcoded 60 as well. Ticket 33 replayed the
+    estate: the drop fired on 0 of the 90 saved artifacts, so the 60 override
+    carried no evidence and the wave-1 cleanup deleted it. The drop itself
+    stays, because it is a shape rule and not a confidence judgment.
+
+    The closed-loop shell has guarded this since it was written and the
+    open-loop author never did, so the same submission was corrected in one
+    shell and shipped in the other. Both call this. Mutates; returns the notes.
+    """
+    dropped: list[str] = []
+    for driver in drivers:
+        if not isinstance(driver, dict):
+            continue
+        contribution = driver.get("contribution")
+        if not isinstance(contribution, dict) or contribution.get("value") is None:
+            continue
+        given = str(contribution.get("unit") or unit).strip()
+        if normalize_unit(given) == normalize_unit(unit):
+            continue
+        driver["contribution"] = None
+        dropped.append(
+            f"{driver.get('canonical', '?')} was claimed as "
+            f"{contribution.get('value')} {given}, which is not the movement's unit "
+            f"({unit}); it is reported in the narrative and not as a contribution"
+        )
+    return dropped
+
+
+def settle_charge_sign(movement: dict, taxonomy: dict, reply: dict) -> dict:
+    """A charge metric states both endpoints as positive charge magnitudes.
+
+    Banks print the impairment line inside the P&L, where an expense carries
+    brackets. Westpac's FY25 row reads "Impairment (charges)/benefits (424) |
+    (537)" and CBA's FY21 group summary reads "(554) | (2,518)"; both periods
+    are charges, and the prose beside each table calls them "$424 million" and
+    "$554 million". An author that carries the bracket through re-signs the
+    whole movement, so a FALLING charge reports as a rise: Westpac FY25 came
+    back as -537 -> -424, delta +113, where the charge fell by $113m.
+
+    Only a pair of NEGATIVE endpoints is re-signed. Under the bracketed
+    presentation a benefit prints positive, so a negative pair can only be two
+    charges. A mixed pair is a charge in one period and a benefit in the other,
+    and it keeps the signs the author read.
+    """
+    if taxonomy.get("sign_convention") != "positive_charge" or not isinstance(movement, dict):
+        return movement
+    frm, to = movement.get("from_value"), movement.get("to_value")
+    if not (isinstance(frm, (int, float)) and isinstance(to, (int, float))):
+        return movement
+    if frm >= 0 or to >= 0:
+        return movement
+    movement["from_value"], movement["to_value"] = -frm, -to
+    movement["delta"] = round(-to + frm, 2)
+    reply.setdefault("limitations", []).append(
+        f"Movement re-signed from ({frm:g}, {to:g}) to charge magnitudes: the row prints the "
+        "charge inside the P&L, where an expense is bracketed. A charge is stated as a "
+        "positive number, so a falling charge gives a negative delta."
+    )
+    return movement
+
+
+def _settle_basis(basis: str, registry: dict, records: list[EvidenceRecord], reply: dict) -> str:
+    """A declared basis must be a word the bank printed on a page we read.
+
+    The extractor used to invent one: it tagged CBA's unlabelled Group NIM row
+    "statutory", and the author faithfully repeated it, so a correct movement
+    was scored wrong on its basis alone. When the claimed basis appears nowhere
+    in the cited quotes, fall back to the bank's headline basis from the
+    registry and record the substitution.
+    """
+    basis = str(basis or "").strip().lower() or "cash"
+    primary = primary_basis(registry)
+    if basis == primary or _basis_printed(basis, records):
+        return basis
+    reply.setdefault("limitations", []).append(
+        f"Basis normalised from '{basis}' to '{primary}': no page in evidence prints "
+        f"'{basis}' beside the movement, and the registry names {primary} as the bank's "
+        "headline basis."
+    )
+    return primary
 
 
 def _percent_evidenced(value: float, records) -> bool:
