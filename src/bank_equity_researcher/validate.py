@@ -2,6 +2,15 @@
 plus the deterministic comparison classifier (defect 24).
 
 Every constant carries the reason it has that value.
+
+HARDCODED-OVERRIDE POLICY (user directive, 2026-08-31): any line in this
+module that overrides an agent's own stated judgment - a cap, a threshold,
+a forced rule - stays SPARSE and must EARN its place. Each one's comment
+cites the experiment or run showing the failure it prevents - a defect
+number, an artifact, a scorecard - never a hunch. The default lean is to
+trust the self-report and let the evals catch failures; an override without
+traceable evidence is a cleanup-round deletion candidate (ticket 33 audits
+every one against this rule).
 """
 
 from __future__ import annotations

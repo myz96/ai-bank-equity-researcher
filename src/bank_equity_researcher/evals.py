@@ -317,8 +317,13 @@ def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
         (
             "Two populations, reported apart. **Location coverage** measures the "
             "retriever: did the answer cite the pages that carry the answer? "
-            "**Fact accuracy** measures the answer: did the judges rule each gold "
-            "fact both STATED by the answer and ENTAILED by its cited quotes? A "
+            "**Fully-grounded facts** measures citation discipline, not analysis "
+            "quality: did the judges rule each gold fact both STATED by the answer "
+            "and ENTAILED by its cited quotes, with EVERY load-bearing number "
+            "present in those quotes? An answer whose analysis is right but whose "
+            "quotes omit a number it used scores a fail here by design "
+            "(measured 2026-08-31: frontier agents state nearly every gold fact "
+            "and lose this column on quote completeness). A "
             f"case PASSES only when coverage is {CROSSREF_COVERAGE_PASS:.0%}, NO "
             "fact failed, and the facts the judges could not settle stay inside "
             f"{1 - CROSSREF_FACT_PASS:.0%} of the case. A flagged fact is neither "
@@ -328,7 +333,7 @@ def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
         ),
         "",
     ]
-    lines.append("| Case | Pass | Location coverage | Fact accuracy | Flagged | Missed locations | Conf | Cost |")
+    lines.append("| Case | Pass | Location coverage | Fully-grounded facts | Flagged | Missed locations | Conf | Cost |")
     lines.append("|---|---|---|---|---|---|---|---|")
     for r in rows:
         if "error" in r:

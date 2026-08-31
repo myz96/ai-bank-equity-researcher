@@ -58,6 +58,10 @@ backlog. Highlights:
 - Under-tested validators named by the critique (annotate_walks,
   corroborate, check_comparison_leak, ...) get table-driven tests BEFORE
   they are moved.
+- OVERRIDE AUDIT (user directive 2026-08-31): enumerate every hardcoded
+  line that overrides agent self-judgment (caps, thresholds, forced rules); each must cite the experiment/run backing it in its
+  comment (defect number, artifact, scorecard). One without traceable
+  evidence is deleted. Overrides stay sparse by policy (validate.py docstring).
 
 The user expects SEVERAL critique passes ("we will have to run a few of
 these to make sure we actually capture everything") — re-run the critique
