@@ -10,18 +10,14 @@
     "delta": -141.0,
     "unit": "$m"
   },
-  "movement_source": "row 'Net profit excluding Notable Items', column FY24 (Sep 2024) -> column FY25 (Sep 2025)",
-  "headline": "Westpac's cash earnings (net profit excluding Notable Items) fell $141 million (-2%) to $6,972 million in FY25 from $7,113 million in FY24. Total operating income grew 3% to $22,464 million, driven by a 3% rise in net interest income to $19,473 million and a 5% increase in non-interest income to $2,991 million. However, pre-provision profit declined 3% to $10,548 million as underlying operating expenses rose 6% (excluding restructuring charges). A $113 million reduction in credit impairment charges was more than offset by the expense growth. Statutory profit was $6,916 million.",
+  "movement_source": "row 'Net profit excluding Notable Items', column Full Year Sept 2024 -> column Full Year Sept 2025",
+  "headline": "Westpac's cash earnings (net profit excluding Notable Items) declined $141 million (-2%) to $6,972 million in FY25 from $7,113 million in FY24. The decline was driven by a $972 million increase in operating expenses, partially offset by a $557 million rise in net interest income and a $113 million reduction in credit impairment charges. Other operating income contributed $144 million, while tax expense increased by $24 million.",
   "headline_evidence": [
-    "ev-41",
-    "ev-34",
-    "ev-32",
-    "ev-33",
-    "ev-36",
-    "ev-35",
     "ev-37",
-    "ev-29",
-    "ev-28"
+    "ev-15",
+    "ev-1",
+    "ev-21",
+    "ev-22"
   ],
   "drivers": [
     {
@@ -31,13 +27,13 @@
         "value": 557.0,
         "unit": "$m"
       },
-      "columns": "FY24 -> FY25",
-      "narrative": "NII increased $557 million (+3%) to $19,473 million. The bank attributes this to volume growth, partially offset by a 1 bps margin decline to 1.94%. Core NII also rose 3% to $18,191 million.",
+      "columns": "Full Year Sept 2024 -> Full Year Sept 2025",
+      "narrative": "NII rose 3% to $19,473 million (FY24: $18,916 million). Core NII also grew 3% to $18,191 million. Treasury & Markets NII fell 2% to $1,039 million. NIM contracted 1 bps to 1.94%.",
       "confidence": 80,
       "evidence": [
         "ev-1",
-        "ev-8",
-        "ev-9",
+        "ev-2",
+        "ev-3",
         "ev-5"
       ],
       "checks_passed": [
@@ -53,12 +49,13 @@
         "value": 144.0,
         "unit": "$m"
       },
-      "columns": "FY24 -> FY25",
-      "narrative": "Non-interest income rose $144 million (+5%) to $2,991 million. Net fees contributed $60 million of growth, up 4% to $1,732 million.",
+      "columns": "Full Year Sept 2024 -> Full Year Sept 2025",
+      "narrative": "Other operating income increased 5% to $2,991 million (FY24: $2,847 million). Net fees rose 4% to $1,732 million; trading income rose 2% to $704 million.",
       "confidence": 80,
       "evidence": [
-        "ev-33",
-        "ev-42"
+        "ev-29",
+        "ev-38",
+        "ev-40"
       ],
       "checks_passed": [
         "single_source",
@@ -70,21 +67,41 @@
       "canonical": "operating_expenses",
       "bank_label": "Operating expenses (underlying)",
       "contribution": {
-        "value": -672.0,
+        "value": -699.0,
         "unit": "$m"
       },
-      "columns": "FY24 -> FY25",
-      "narrative": "Underlying operating expenses increased $672 million (+6%). Headline expenses were $11,916 million (+9%), including a $273 million restructuring charge. Staff costs rose 7% to $6,326 million; technology costs rose 13% to $3,136 million.",
+      "columns": "Full Year Sept 2024 -> Full Year Sept 2025",
+      "narrative": "Underlying operating expenses increased 6% to $11,643 million (FY24: $10,944 million). Increases were due to UNITE investment ramp-up, wage growth, and higher software amortisation, partially offset by lower occupancy costs.",
       "confidence": 80,
       "evidence": [
+        "ev-15",
+        "ev-9",
+        "ev-10",
         "ev-11",
-        "ev-12",
-        "ev-14",
-        "ev-16"
+        "ev-12"
       ],
       "checks_passed": [
         "single_source",
         "computed_delta_cap_80"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "notable_items",
+      "bank_label": "Fit for Growth restructuring expenses",
+      "contribution": {
+        "value": -273.0,
+        "unit": "$m"
+      },
+      "columns": "Full Year Sept 2024 -> Full Year Sept 2025",
+      "narrative": "Restructuring expenses of $273 million were incurred in H2 FY25 to support productivity initiatives under the Fit for Growth program. No comparable charge existed in FY24.",
+      "confidence": 80,
+      "evidence": [
+        "ev-13",
+        "ev-15"
+      ],
+      "checks_passed": [
+        "single_source"
       ],
       "checks_failed": []
     },
@@ -95,12 +112,12 @@
         "value": 113.0,
         "unit": "$m"
       },
-      "columns": "FY24 -> FY25",
-      "narrative": "Credit impairment charges decreased by $113 million (-21%) to $424 million, providing a positive contribution to earnings compared to the prior year's $537 million charge.",
+      "columns": "Full Year Sept 2024 -> Full Year Sept 2025",
+      "narrative": "Credit impairment charges decreased 21% to $424 million (FY24: $537 million), providing a positive contribution to earnings as loan losses normalized.",
       "confidence": 80,
       "evidence": [
-        "ev-37",
-        "ev-25"
+        "ev-21",
+        "ev-33"
       ],
       "checks_passed": [
         "single_source",
@@ -112,57 +129,37 @@
       "canonical": "tax_and_other",
       "bank_label": "Income tax expense",
       "contribution": {
-        "value": 24.0,
+        "value": -24.0,
         "unit": "$m"
       },
-      "columns": "FY24 -> FY25",
-      "narrative": "Tax expense decreased slightly by $34 million (-1%) to $3,135 million on a statutory basis. On an ex-notable basis, tax expense moved from $3,169 million to $3,135 million (a decrease of $34 million), contributing positively to the bottom line despite a slight increase in the effective tax rate.",
+      "columns": "Full Year Sept 2024 -> Full Year Sept 2025",
+      "narrative": "Tax expense remained broadly flat at $3,111 million (FY24: $3,117 million), with an effective tax rate of 30.97% compared to 30.84%.",
       "confidence": 80,
       "evidence": [
-        "ev-39",
-        "ev-30"
+        "ev-22",
+        "ev-26"
       ],
       "checks_passed": [
-        "single_source"
-      ],
-      "checks_failed": []
-    },
-    {
-      "canonical": "notable_items",
-      "bank_label": "Notable Items",
-      "contribution": {
-        "value": 67.0,
-        "unit": "$m"
-      },
-      "columns": "FY24 -> FY25",
-      "narrative": "Notable items reduced profit by $56 million in FY25, compared to a $123 million reduction in FY24. This represents a $67 million positive swing in the drag from notable items year-on-year.",
-      "confidence": 80,
-      "evidence": [
-        "ev-29",
-        "ev-55"
-      ],
-      "checks_passed": [
+        "single_source",
         "computed_delta_cap_80"
       ],
       "checks_failed": []
     }
   ],
   "residual": {
-    "value": -16.0,
+    "value": -6.0,
     "unit": "$m"
   },
   "notable_items": [
-    "Restructuring charges ($273m in H2 FY25)",
-    "Hedging/IFRS volatility adjustments (statutory vs cash reconciliation)"
+    "Fit for Growth restructuring expenses ($273m)"
   ],
   "disagreements": [],
   "attribution_confidence": 40,
   "limitations": [
-    "The residual of -$16 million is unexplained, likely due to rounding differences between the headline ex-notable profit and the sum of the statutory components adjusted for notable items.",
-    "Tax impact calculated using statutory tax expense delta as a proxy for the ex-notable tax movement.",
-    "Capped at 80: nii +557 $m, other_operating_income +144 $m, operating_expenses -672 $m, credit_impairment_charge +113 $m, notable_items +67 $m. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it.",
+    "Residual of -$6m exists, likely due to rounding differences between statutory and ex-notable bases or minor unmapped items.",
+    "Capped at 80: nii +557 $m, other_operating_income +144 $m, operating_expenses -699 $m, credit_impairment_charge +113 $m, tax_and_other -24 $m. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it.",
     "Expenses are claimed on the underlying/notable split; the bank equally publishes the combined headline framing, so both claims are capped at 80.",
-    "Failed check: drivers_reconcile (drivers +233.0 + residual -16.0 != delta -141.0, tol 1.0)"
+    "Failed check: drivers_reconcile (drivers -182.0 + residual -6.0 != delta -141.0, tol 1.0)"
   ],
   "evidence_records": [
     {
@@ -174,37 +171,37 @@
       "quote": "Net interest income 19,473 18,916 3 9,904 9,569 4",
       "numbers": [
         {
-          "label": "Net interest income FY25",
+          "label": "NII FY25",
           "value": 19473.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Net interest income FY24",
+          "label": "NII FY24",
           "value": 18916.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Net interest income % Mov't Sept 25 - Sept 24",
+          "label": "NII % Mov't FY25 vs FY24",
           "value": 3.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Net interest income Half Year Sept 2025",
+          "label": "NII H2 FY25",
           "value": 9904.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Net interest income Half Year March 2025",
+          "label": "NII H1 FY25",
           "value": 9569.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Net interest income % Mov't Sept 25 - Mar 25",
+          "label": "NII % Mov't H25 vs H15",
           "value": 4.0,
           "unit": "%",
           "basis": null
@@ -221,37 +218,37 @@
       "quote": "Core net interest income 18,191 17,608 3 9,231 8,960 3",
       "numbers": [
         {
-          "label": "Core net interest income FY25",
+          "label": "Core NII FY25",
           "value": 18191.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Core net interest income FY24",
+          "label": "Core NII FY24",
           "value": 17608.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Core net interest income % Mov't Sept 25 - Sept 24",
+          "label": "Core NII % Mov't FY25 vs FY24",
           "value": 3.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Core net interest income Half Year Sept 2025",
+          "label": "Core NII H2 FY25",
           "value": 9231.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Core net interest income Half Year March 2025",
+          "label": "Core NII H1 FY25",
           "value": 8960.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Core net interest income % Mov't Sept 25 - Mar 25",
+          "label": "Core NII % Mov't H25 vs H15",
           "value": 3.0,
           "unit": "%",
           "basis": null
@@ -280,25 +277,25 @@
           "basis": "ex_notables"
         },
         {
-          "label": "Treasury NII % Mov't Sept 25 - Sept 24",
+          "label": "Treasury NII % Mov't FY25 vs FY24",
           "value": -2.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Treasury NII Half Year Sept 2025",
+          "label": "Treasury NII H2 FY25",
           "value": 544.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Treasury NII Half Year March 2025",
+          "label": "Treasury NII H1 FY25",
           "value": 495.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Treasury NII % Mov't Sept 25 - Mar 25",
+          "label": "Treasury NII % Mov't H25 vs H15",
           "value": 10.0,
           "unit": "%",
           "basis": null
@@ -327,25 +324,25 @@
           "basis": "ex_notables"
         },
         {
-          "label": "Markets NII % Mov't Sept 25 - Sept 24",
+          "label": "Markets NII % Mov't FY25 vs FY24",
           "value": -4.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Markets NII Half Year Sept 2025",
+          "label": "Markets NII H2 FY25",
           "value": 129.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Markets NII Half Year March 2025",
+          "label": "Markets NII H1 FY25",
           "value": 114.0,
           "unit": "$m",
           "basis": "ex_notables"
         },
         {
-          "label": "Markets NII % Mov't Sept 25 - Mar 25",
+          "label": "Markets NII % Mov't H25 vs H15",
           "value": 13.0,
           "unit": "%",
           "basis": null
@@ -359,7 +356,7 @@
       "pdf_page": 11,
       "printed_page": null,
       "kind": "table",
-      "quote": "NIM (Excluding Notable Items, %) NIM 1.94% 1.95% (1 bps) 1.95% 1.92% 3 bps",
+      "quote": "NIM 1.94% 1.95% (1 bps) 1.95% 1.92% 3 bps",
       "numbers": [
         {
           "label": "NIM FY25",
@@ -374,25 +371,25 @@
           "basis": "ex_notables"
         },
         {
-          "label": "NIM % Mov't Sept 25 - Sept 24",
+          "label": "NIM % Mov't FY25 vs FY24",
           "value": -1.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM Half Year Sept 2025",
+          "label": "NIM H2 FY25",
           "value": 1.95,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "NIM Half Year March 2025",
+          "label": "NIM H1 FY25",
           "value": 1.92,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "NIM % Mov't Sept 25 - Mar 25",
+          "label": "NIM % Mov't H25 vs H15",
           "value": 3.0,
           "unit": "bps",
           "basis": null
@@ -421,25 +418,25 @@
           "basis": "ex_notables"
         },
         {
-          "label": "Core NIM % Mov't Sept 25 - Sept 24",
+          "label": "Core NIM % Mov't FY25 vs FY24",
           "value": -1.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Core NIM Half Year Sept 2025",
+          "label": "Core NIM H2 FY25",
           "value": 1.82,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "Core NIM Half Year March 2025",
+          "label": "Core NIM H1 FY25",
           "value": 1.8,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "Core NIM % Mov't Sept 25 - Mar 25",
+          "label": "Core NIM % Mov't H25 vs H15",
           "value": 2.0,
           "unit": "bps",
           "basis": null
@@ -456,31 +453,31 @@
       "quote": "Treasury & Markets impact on NIM 0.13% 0.13% - 0.13% 0.12% 1 bps",
       "numbers": [
         {
-          "label": "Treasury & Markets impact on NIM FY25",
+          "label": "T&M NIM Impact FY25",
           "value": 0.13,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "Treasury & Markets impact on NIM FY24",
+          "label": "T&M NIM Impact FY24",
           "value": 0.13,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "Treasury & Markets impact on NIM Half Year Sept 2025",
+          "label": "T&M NIM Impact H2 FY25",
           "value": 0.13,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "Treasury & Markets impact on NIM Half Year March 2025",
+          "label": "T&M NIM Impact H1 FY25",
           "value": 0.12,
           "unit": "%",
           "basis": "ex_notables"
         },
         {
-          "label": "Treasury & Markets impact on NIM % Mov't Sept 25 - Mar 25",
+          "label": "T&M NIM Impact % Mov't H25 vs H15",
           "value": 1.0,
           "unit": "bps",
           "basis": null
@@ -491,33 +488,56 @@
     {
       "id": "ev-8",
       "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 11,
+      "pdf_page": 18,
       "printed_page": null,
       "kind": "text",
-      "quote": "Full Year 2025 - Full Year 2024 Net interest income increased 3% to $19,473 million.",
-      "numbers": [
-        {
-          "label": "Net interest income level FY25",
-          "value": 19473.0,
-          "unit": "$m",
-          "basis": "ex_notables"
-        }
-      ],
+      "quote": "Operating expenses $m Full Year Sept 2025 Full Year Sept 2024 % Mov't Sept 25 - Sept 24 Half Year Sept 2025 Half Year March 2025 % Mov't Sept 25 - Mar 25",
+      "numbers": [],
       "provenance": null
     },
     {
       "id": "ev-9",
       "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 11,
+      "pdf_page": 18,
       "printed_page": null,
-      "kind": "text",
-      "quote": "Higher core net interest income, up 3% to $18,191 million.",
+      "kind": "table",
+      "quote": "Staff expensesa (6,326) (5,899) 7 (3,211) (3,115) 3",
       "numbers": [
         {
-          "label": "Core net interest income level FY25",
-          "value": 18191.0,
+          "label": "Staff expenses FY25",
+          "value": -6326.0,
           "unit": "$m",
-          "basis": "ex_notables"
+          "basis": null
+        },
+        {
+          "label": "Staff expenses FY24",
+          "value": -5899.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Staff expenses change FY25 vs FY24",
+          "value": 7.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Staff expenses H2 FY25",
+          "value": -3211.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Staff expenses H1 FY25",
+          "value": -3115.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Staff expenses change H2 FY25 vs H1 FY25",
+          "value": 3.0,
+          "unit": "%",
+          "basis": null
         }
       ],
       "provenance": null
@@ -525,16 +545,46 @@
     {
       "id": "ev-10",
       "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 11,
+      "pdf_page": 18,
       "printed_page": null,
-      "kind": "text",
-      "quote": "Treasury and Markets income, down 2% to $1,282 million due to a stronger performance from Treasury in the prior year.",
+      "kind": "table",
+      "quote": "Occupancy expenses (652) (700) (7) (334) (318) 5",
       "numbers": [
         {
-          "label": "Treasury and Markets income level FY25",
-          "value": 1282.0,
+          "label": "Occupancy expenses FY25",
+          "value": -652.0,
           "unit": "$m",
-          "basis": "ex_notables"
+          "basis": null
+        },
+        {
+          "label": "Occupancy expenses FY24",
+          "value": -700.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Occupancy expenses change FY25 vs FY24",
+          "value": -7.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Occupancy expenses H2 FY25",
+          "value": -334.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Occupancy expenses H1 FY25",
+          "value": -318.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Occupancy expenses change H2 FY25 vs H1 FY25",
+          "value": 5.0,
+          "unit": "%",
+          "basis": null
         }
       ],
       "provenance": null
@@ -544,13 +594,43 @@
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 18,
       "printed_page": null,
-      "kind": "text",
-      "quote": "Total operating expenses increased 9% to $11,916 million.",
+      "kind": "table",
+      "quote": "Technology expenses (3,136) (2,764) 13 (1,656) (1,480) 12",
       "numbers": [
         {
-          "label": "Total operating expenses FY25",
-          "value": 11916.0,
+          "label": "Technology expenses FY25",
+          "value": -3136.0,
           "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Technology expenses FY24",
+          "value": -2764.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Technology expenses change FY25 vs FY24",
+          "value": 13.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Technology expenses H2 FY25",
+          "value": -1656.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Technology expenses H1 FY25",
+          "value": -1480.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Technology expenses change H2 FY25 vs H1 FY25",
+          "value": 12.0,
+          "unit": "%",
           "basis": null
         }
       ],
@@ -561,20 +641,44 @@
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 18,
       "printed_page": null,
-      "kind": "text",
-      "quote": "The increase included a restructuring charge of $273 million in the Second Half of 2025... Excluding this charge, operating expenses increased by 6%",
+      "kind": "table",
+      "quote": "Other expensesa (1,529) (1,581) (3) (744) (785) (5)",
       "numbers": [
         {
-          "label": "Fit for Growth restructuring expenses FY25",
-          "value": 273.0,
+          "label": "Other expenses FY25",
+          "value": -1529.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Operating expenses ex-notables change FY25 vs FY24",
-          "value": 6.0,
+          "label": "Other expenses FY24",
+          "value": -1581.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other expenses change FY25 vs FY24",
+          "value": -3.0,
           "unit": "%",
-          "basis": "ex_notables"
+          "basis": null
+        },
+        {
+          "label": "Other expenses H2 FY25",
+          "value": -744.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other expenses H1 FY25",
+          "value": -785.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other expenses change H2 FY25 vs H1 FY25",
+          "value": -5.0,
+          "unit": "%",
+          "basis": null
         }
       ],
       "provenance": null
@@ -584,20 +688,20 @@
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 18,
       "printed_page": null,
-      "kind": "text",
-      "quote": "The expense to income ratio excluding Notable Items was 53.0%, up from 50.3%.",
+      "kind": "table",
+      "quote": "Fit for Growth restructuring expenses (273) - - (273) - -",
       "numbers": [
         {
-          "label": "Cost to income ratio ex-notables FY25",
-          "value": 53.0,
-          "unit": "%",
-          "basis": "ex_notables"
+          "label": "Fit for Growth restructuring expenses FY25",
+          "value": -273.0,
+          "unit": "$m",
+          "basis": null
         },
         {
-          "label": "Cost to income ratio ex-notables FY24",
-          "value": 50.3,
-          "unit": "%",
-          "basis": "ex_notables"
+          "label": "Fit for Growth restructuring expenses H2 FY25",
+          "value": -273.0,
+          "unit": "$m",
+          "basis": null
         }
       ],
       "provenance": null
@@ -607,13 +711,43 @@
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 18,
       "printed_page": null,
-      "kind": "text",
-      "quote": "Staff expenses1 increased by 7% to $6,326 million",
+      "kind": "table",
+      "quote": "Total operating expenses (11,916) (10,944) 9 (6,218) (5,698) 9",
       "numbers": [
         {
-          "label": "Staff expenses FY25",
-          "value": 6326.0,
+          "label": "Total operating expenses FY25",
+          "value": -11916.0,
           "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses FY24",
+          "value": -10944.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses change FY25 vs FY24",
+          "value": 9.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses H2 FY25",
+          "value": -6218.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses H1 FY25",
+          "value": -5698.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses change H2 FY25 vs H1 FY25",
+          "value": 9.0,
+          "unit": "%",
           "basis": null
         }
       ],
@@ -625,13 +759,37 @@
       "pdf_page": 18,
       "printed_page": null,
       "kind": "text",
-      "quote": "Occupancy expenses decreased by 7% to $652 million",
+      "quote": "Full Year 2025 - Full Year 2024 Total operating expenses increased 9% to $11,916 million. The increase included a restructuring charge of $273 million in the Second Half of 2025 to support targeted productivity initiatives under our Fit for Growth program. Excluding this charge, operating expenses increased by 6% due to the ramp up in UNITE investment, wage growth and higher software amortisation. Lower occupancy costs provided a partial offset. The expense to income ratio excluding Notable Items was 53.0%, up from 50.3%.",
       "numbers": [
         {
-          "label": "Occupancy expenses FY25",
-          "value": 652.0,
+          "label": "Total operating expenses level FY25",
+          "value": 11916.0,
           "unit": "$m",
           "basis": null
+        },
+        {
+          "label": "Restructuring charge level H2 FY25",
+          "value": 273.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses ex-notables change FY25 vs FY24",
+          "value": 6.0,
+          "unit": "%",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Expense to income ratio ex_notables FY25",
+          "value": 53.0,
+          "unit": "%",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Expense to income ratio ex_notables FY24",
+          "value": 50.3,
+          "unit": "%",
+          "basis": "ex_notables"
         }
       ],
       "provenance": null
@@ -642,67 +800,34 @@
       "pdf_page": 18,
       "printed_page": null,
       "kind": "text",
-      "quote": "Technology expenses increased 13% to $3,136 million",
+      "quote": "Second Half 2025 - First Half 2025 Total operating expenses increased 9% to $6,218 million. The increase included a restructuring charge of $273 million to support targeted productivity initiatives under the Fit for Growth program. Excluding this charge, operating expenses increased by 4% due to the ramp up in UNITE investment spend and higher staff costs. The expense to income ratio was 54.2%, up from 51.8%.",
       "numbers": [
         {
-          "label": "Technology expenses FY25",
-          "value": 3136.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-17",
-      "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 18,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Other Expenses1 decreased by 3% to $1,529 million",
-      "numbers": [
-        {
-          "label": "Other expenses FY25",
-          "value": 1529.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-18",
-      "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 18,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Total operating expenses increased 9% to $6,218 million.",
-      "numbers": [
-        {
-          "label": "Total operating expenses H1 FY25",
+          "label": "Total operating expenses level H2 FY25",
           "value": 6218.0,
           "unit": "$m",
           "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-19",
-      "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 18,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The expense to income ratio was 54.2%, up from 51.8%.",
-      "numbers": [
+        },
         {
-          "label": "Cost to income ratio H1 FY25",
+          "label": "Restructuring charge level H2 FY25",
+          "value": 273.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses ex-notables change H2 FY25 vs H1 FY25",
+          "value": 4.0,
+          "unit": "%",
+          "basis": "ex_notables"
+        },
+        {
+          "label": "Expense to income ratio H2 FY25",
           "value": 54.2,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Cost to income ratio H2 FY25",
+          "label": "Expense to income ratio H1 FY25",
           "value": 51.8,
           "unit": "%",
           "basis": null
@@ -711,24 +836,7 @@
       "provenance": null
     },
     {
-      "id": "ev-20",
-      "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 18,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Staff expenses1 increased by 3% to $3,211 million",
-      "numbers": [
-        {
-          "label": "Staff expenses H1 FY25",
-          "value": 3211.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-21",
+      "id": "ev-17",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 8,
       "printed_page": null,
@@ -748,25 +856,25 @@
           "basis": null
         },
         {
-          "label": "NII % Mov't Sept 25 - Sept 24",
+          "label": "NII FY25 vs FY24 %",
           "value": 3.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NII Half Year Sept 2025",
+          "label": "NII H1 FY25",
           "value": 10029.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "NII Half Year March 2025",
+          "label": "NII H1 FY24",
           "value": 9351.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "NII % Mov't Sept 25 - Mar 25",
+          "label": "NII H1 FY25 vs H1 FY24 %",
           "value": 7.0,
           "unit": "%",
           "basis": null
@@ -775,7 +883,7 @@
       "provenance": null
     },
     {
-      "id": "ev-22",
+      "id": "ev-18",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 8,
       "printed_page": null,
@@ -795,25 +903,25 @@
           "basis": null
         },
         {
-          "label": "Other Operating Income % Mov't Sept 25 - Sept 24",
+          "label": "Other Operating Income FY25 vs FY24 %",
           "value": 6.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Other Operating Income Half Year Sept 2025",
+          "label": "Other Operating Income H1 FY25",
           "value": 1562.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Other Operating Income Half Year March 2025",
+          "label": "Other Operating Income H1 FY24",
           "value": 1442.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Other Operating Income % Mov't Sept 25 - Mar 25",
+          "label": "Other Operating Income H1 FY25 vs H1 FY24 %",
           "value": 8.0,
           "unit": "%",
           "basis": null
@@ -822,7 +930,7 @@
       "provenance": null
     },
     {
-      "id": "ev-23",
+      "id": "ev-19",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 8,
       "printed_page": null,
@@ -842,25 +950,25 @@
           "basis": null
         },
         {
-          "label": "Total Operating Income % Mov't Sept 25 - Sept 24",
+          "label": "Total Operating Income FY25 vs FY24 %",
           "value": 4.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Total Operating Income Half Year Sept 2025",
+          "label": "Total Operating Income H1 FY25",
           "value": 11591.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total Operating Income Half Year March 2025",
+          "label": "Total Operating Income H1 FY24",
           "value": 10793.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total Operating Income % Mov't Sept 25 - Mar 25",
+          "label": "Total Operating Income H1 FY25 vs H1 FY24 %",
           "value": 7.0,
           "unit": "%",
           "basis": null
@@ -869,7 +977,7 @@
       "provenance": null
     },
     {
-      "id": "ev-24",
+      "id": "ev-20",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 8,
       "printed_page": null,
@@ -889,25 +997,25 @@
           "basis": null
         },
         {
-          "label": "Operating Expenses % Mov't Sept 25 - Sept 24",
+          "label": "Operating Expenses FY25 vs FY24 %",
           "value": 9.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Operating Expenses Half Year Sept 2025",
+          "label": "Operating Expenses H1 FY25",
           "value": -6218.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Operating Expenses Half Year March 2025",
+          "label": "Operating Expenses H1 FY24",
           "value": -5698.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Operating Expenses % Mov't Sept 25 - Mar 25",
+          "label": "Operating Expenses H1 FY25 vs H1 FY24 %",
           "value": 9.0,
           "unit": "%",
           "basis": null
@@ -916,7 +1024,7 @@
       "provenance": null
     },
     {
-      "id": "ev-25",
+      "id": "ev-21",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 8,
       "printed_page": null,
@@ -936,25 +1044,25 @@
           "basis": null
         },
         {
-          "label": "Loan Impairment Expense % Mov't Sept 25 - Sept 24",
+          "label": "Loan Impairment Expense FY25 vs FY24 %",
           "value": -21.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Loan Impairment Expense Half Year Sept 2025",
+          "label": "Loan Impairment Expense H1 FY25",
           "value": -174.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Loan Impairment Expense Half Year March 2025",
+          "label": "Loan Impairment Expense H1 FY24",
           "value": -250.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Loan Impairment Expense % Mov't Sept 25 - Mar 25",
+          "label": "Loan Impairment Expense H1 FY25 vs H1 FY24 %",
           "value": -30.0,
           "unit": "%",
           "basis": null
@@ -963,7 +1071,7 @@
       "provenance": null
     },
     {
-      "id": "ev-26",
+      "id": "ev-22",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 8,
       "printed_page": null,
@@ -983,19 +1091,19 @@
           "basis": null
         },
         {
-          "label": "Tax Expense Half Year Sept 2025",
+          "label": "Tax Expense H1 FY25",
           "value": -1591.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Tax Expense Half Year March 2025",
+          "label": "Tax Expense H1 FY24",
           "value": -1520.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Tax Expense % Mov't Sept 25 - Mar 25",
+          "label": "Tax Expense H1 FY25 vs H1 FY24 %",
           "value": 5.0,
           "unit": "%",
           "basis": null
@@ -1004,7 +1112,7 @@
       "provenance": null
     },
     {
-      "id": "ev-27",
+      "id": "ev-23",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 8,
       "printed_page": null,
@@ -1012,37 +1120,37 @@
       "quote": "Profit after income tax expense 6,933 6,990 (1) 3,608 3,325 9",
       "numbers": [
         {
-          "label": "Profit After Tax FY25",
+          "label": "Profit FY25",
           "value": 6933.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Profit After Tax FY24",
+          "label": "Profit FY24",
           "value": 6990.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Profit After Tax % Mov't Sept 25 - Sept 24",
+          "label": "Profit FY25 vs FY24 %",
           "value": -1.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Profit After Tax Half Year Sept 2025",
+          "label": "Profit H1 FY25",
           "value": 3608.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Profit After Tax Half Year March 2025",
+          "label": "Profit H1 FY24",
           "value": 3325.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Profit After Tax % Mov't Sept 25 - Mar 25",
+          "label": "Profit H1 FY25 vs H1 FY24 %",
           "value": 9.0,
           "unit": "%",
           "basis": null
@@ -1051,7 +1159,7 @@
       "provenance": null
     },
     {
-      "id": "ev-28",
+      "id": "ev-24",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 8,
       "printed_page": null,
@@ -1071,25 +1179,25 @@
           "basis": null
         },
         {
-          "label": "Net Profit Attributable to Owners % Mov't Sept 25 - Sept 24",
+          "label": "Net Profit Attributable to Owners FY25 vs FY24 %",
           "value": -1.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Net Profit Attributable to Owners Half Year Sept 2025",
+          "label": "Net Profit Attributable to Owners H1 FY25",
           "value": 3599.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Net Profit Attributable to Owners Half Year March 2025",
+          "label": "Net Profit Attributable to Owners H1 FY24",
           "value": 3317.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Net Profit Attributable to Owners % Mov't Sept 25 - Mar 25",
+          "label": "Net Profit Attributable to Owners H1 FY25 vs H1 FY24 %",
           "value": 9.0,
           "unit": "%",
           "basis": null
@@ -1098,7 +1206,7 @@
       "provenance": null
     },
     {
-      "id": "ev-29",
+      "id": "ev-25",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 8,
       "printed_page": null,
@@ -1106,34 +1214,34 @@
       "quote": "Notable Items reduced net profit after tax in 2025 by $56 million (2024: $123 million reduction) and increased net profit after tax in Second Half 2025 by $84 million (First Half 2025: $140 million reduction).",
       "numbers": [
         {
-          "label": "Notable Items Impact on Net Profit FY25",
+          "label": "Notable Items Impact FY25",
           "value": -56.0,
           "unit": "$m",
-          "basis": null
+          "basis": "ex_notables"
         },
         {
-          "label": "Notable Items Impact on Net Profit FY24",
+          "label": "Notable Items Impact FY24",
           "value": -123.0,
           "unit": "$m",
-          "basis": null
+          "basis": "ex_notables"
         },
         {
-          "label": "Notable Items Impact on Net Profit Half Year Sept 2025",
+          "label": "Notable Items Impact H1 FY25",
           "value": 84.0,
           "unit": "$m",
-          "basis": null
+          "basis": "ex_notables"
         },
         {
-          "label": "Notable Items Impact on Net Profit Half Year March 2025",
+          "label": "Notable Items Impact H1 FY24",
           "value": -140.0,
           "unit": "$m",
-          "basis": null
+          "basis": "ex_notables"
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-30",
+      "id": "ev-26",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 8,
       "printed_page": null,
@@ -1153,25 +1261,25 @@
           "basis": null
         },
         {
-          "label": "Effective Tax Rate % Mov't Sept 25 - Sept 24",
+          "label": "Effective Tax Rate FY25 vs FY24",
           "value": 13.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Effective Tax Rate Half Year Sept 2025",
+          "label": "Effective Tax Rate H1 FY25",
           "value": 30.6,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Effective Tax Rate Half Year March 2025",
+          "label": "Effective Tax Rate H1 FY24",
           "value": 31.37,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Effective Tax Rate % Mov't Sept 25 - Mar 25",
+          "label": "Effective Tax Rate H1 FY25 vs H1 FY24",
           "value": -77.0,
           "unit": "bps",
           "basis": null
@@ -1180,7 +1288,7 @@
       "provenance": null
     },
     {
-      "id": "ev-31",
+      "id": "ev-27",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1190,7 +1298,7 @@
       "provenance": null
     },
     {
-      "id": "ev-32",
+      "id": "ev-28",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1237,7 +1345,7 @@
       "provenance": null
     },
     {
-      "id": "ev-33",
+      "id": "ev-29",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1284,7 +1392,7 @@
       "provenance": null
     },
     {
-      "id": "ev-34",
+      "id": "ev-30",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1331,7 +1439,7 @@
       "provenance": null
     },
     {
-      "id": "ev-35",
+      "id": "ev-31",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1378,7 +1486,7 @@
       "provenance": null
     },
     {
-      "id": "ev-36",
+      "id": "ev-32",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1425,7 +1533,7 @@
       "provenance": null
     },
     {
-      "id": "ev-37",
+      "id": "ev-33",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1472,7 +1580,7 @@
       "provenance": null
     },
     {
-      "id": "ev-38",
+      "id": "ev-34",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1519,7 +1627,7 @@
       "provenance": null
     },
     {
-      "id": "ev-39",
+      "id": "ev-35",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1566,7 +1674,7 @@
       "provenance": null
     },
     {
-      "id": "ev-40",
+      "id": "ev-36",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1613,7 +1721,7 @@
       "provenance": null
     },
     {
-      "id": "ev-41",
+      "id": "ev-37",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -1660,7 +1768,7 @@
       "provenance": null
     },
     {
-      "id": "ev-42",
+      "id": "ev-38",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 53,
       "printed_page": null,
@@ -1678,36 +1786,81 @@
           "value": 1672.0,
           "unit": "$m",
           "basis": null
-        },
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-39",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 53,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net wealth management 476 441 8 242 234 3",
+      "numbers": [
         {
-          "label": "Net fees % Mov't Sept 25 - Sept 24",
-          "value": 4.0,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Net fees Half Year Sept 2025",
-          "value": 887.0,
+          "label": "Net wealth management FY25",
+          "value": 476.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Net fees Half Year March 2025",
-          "value": 845.0,
+          "label": "Net wealth management FY24",
+          "value": 441.0,
           "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net fees % Mov't Sept 25 - Mar 25",
-          "value": 5.0,
-          "unit": "%",
           "basis": null
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-43",
+      "id": "ev-40",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 53,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Trading 717 704 2 419 298 41",
+      "numbers": [
+        {
+          "label": "Trading FY25",
+          "value": 717.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Trading FY24",
+          "value": 704.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-41",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 53,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Total other 79 18 large 14 65 (78)",
+      "numbers": [
+        {
+          "label": "Total other FY25",
+          "value": 79.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total other FY24",
+          "value": 18.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-42",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 53,
       "printed_page": null,
@@ -1725,36 +1878,12 @@
           "value": 2835.0,
           "unit": "$m",
           "basis": null
-        },
-        {
-          "label": "Total non-interest income % Mov't Sept 25 - Sept 24",
-          "value": 6.0,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Total non-interest income Half Year Sept 2025",
-          "value": 1562.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total non-interest income Half Year March 2025",
-          "value": 1442.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total non-interest income % Mov't Sept 25 - Mar 25",
-          "value": 8.0,
-          "unit": "%",
-          "basis": null
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-44",
+      "id": "ev-43",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 56,
       "printed_page": null,
@@ -1764,7 +1893,7 @@
       "provenance": null
     },
     {
-      "id": "ev-45",
+      "id": "ev-44",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 56,
       "printed_page": null,
@@ -1784,7 +1913,7 @@
           "basis": null
         },
         {
-          "label": "Excluding Notable Items NII FY25",
+          "label": "Net profit ex Notable Items NII FY25",
           "value": 19473.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1793,7 +1922,7 @@
       "provenance": null
     },
     {
-      "id": "ev-46",
+      "id": "ev-45",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 56,
       "printed_page": null,
@@ -1807,7 +1936,7 @@
           "basis": "statutory"
         },
         {
-          "label": "Excluding Notable Items NFI FY25",
+          "label": "Net profit ex Notable Items NFI FY25",
           "value": 1732.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1816,7 +1945,7 @@
       "provenance": null
     },
     {
-      "id": "ev-47",
+      "id": "ev-46",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 56,
       "printed_page": null,
@@ -1830,7 +1959,7 @@
           "basis": "statutory"
         },
         {
-          "label": "Excluding Notable Items NWMI FY25",
+          "label": "Net profit ex Notable Items NWMI FY25",
           "value": 476.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1839,7 +1968,7 @@
       "provenance": null
     },
     {
-      "id": "ev-48",
+      "id": "ev-47",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 56,
       "printed_page": null,
@@ -1859,7 +1988,7 @@
           "basis": null
         },
         {
-          "label": "Excluding Notable Items TI FY25",
+          "label": "Net profit ex Notable Items TI FY25",
           "value": 704.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1868,7 +1997,7 @@
       "provenance": null
     },
     {
-      "id": "ev-49",
+      "id": "ev-48",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 56,
       "printed_page": null,
@@ -1882,7 +2011,7 @@
           "basis": "statutory"
         },
         {
-          "label": "Excluding Notable Items OI FY25",
+          "label": "Net profit ex Notable Items OI FY25",
           "value": 79.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1891,7 +2020,7 @@
       "provenance": null
     },
     {
-      "id": "ev-50",
+      "id": "ev-49",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 56,
       "printed_page": null,
@@ -1911,7 +2040,7 @@
           "basis": null
         },
         {
-          "label": "Excluding Notable Items NOI FY25",
+          "label": "Net profit ex Notable Items NOI FY25",
           "value": 22464.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1920,7 +2049,7 @@
       "provenance": null
     },
     {
-      "id": "ev-51",
+      "id": "ev-50",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 56,
       "printed_page": null,
@@ -1934,7 +2063,7 @@
           "basis": "statutory"
         },
         {
-          "label": "Excluding Notable Items OpEx FY25",
+          "label": "Net profit ex Notable Items OpEx FY25",
           "value": -11916.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1943,7 +2072,7 @@
       "provenance": null
     },
     {
-      "id": "ev-52",
+      "id": "ev-51",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 56,
       "printed_page": null,
@@ -1963,7 +2092,7 @@
           "basis": null
         },
         {
-          "label": "Excluding Notable Items PPP FY25",
+          "label": "Net profit ex Notable Items PPP FY25",
           "value": 10548.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1972,7 +2101,7 @@
       "provenance": null
     },
     {
-      "id": "ev-53",
+      "id": "ev-52",
       "doc_id": "WBC/FY25/results_announcement",
       "pdf_page": 56,
       "printed_page": null,
@@ -1986,7 +2115,7 @@
           "basis": "statutory"
         },
         {
-          "label": "Excluding Notable Items Impairment FY25",
+          "label": "Net profit ex Notable Items Impairment FY25",
           "value": -424.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1995,7 +2124,7 @@
       "provenance": null
     },
     {
-      "id": "ev-54",
+      "id": "ev-53",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 42,
       "printed_page": 42,
@@ -2005,7 +2134,7 @@
       "provenance": null
     },
     {
-      "id": "ev-55",
+      "id": "ev-54",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 42,
       "printed_page": 42,
@@ -2040,7 +2169,7 @@
       "provenance": null
     },
     {
-      "id": "ev-56",
+      "id": "ev-55",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 42,
       "printed_page": 42,
@@ -2075,7 +2204,7 @@
       "provenance": null
     },
     {
-      "id": "ev-57",
+      "id": "ev-56",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 42,
       "printed_page": 42,
@@ -2110,7 +2239,7 @@
       "provenance": null
     },
     {
-      "id": "ev-58",
+      "id": "ev-57",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 42,
       "printed_page": 42,
@@ -2145,7 +2274,7 @@
       "provenance": null
     },
     {
-      "id": "ev-59",
+      "id": "ev-58",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 42,
       "printed_page": 42,
@@ -2180,7 +2309,7 @@
       "provenance": null
     },
     {
-      "id": "ev-60",
+      "id": "ev-59",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 119,
       "printed_page": 119,
@@ -2209,7 +2338,7 @@
       "provenance": null
     },
     {
-      "id": "ev-61",
+      "id": "ev-60",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 119,
       "printed_page": 119,
@@ -2238,7 +2367,7 @@
       "provenance": null
     },
     {
-      "id": "ev-62",
+      "id": "ev-61",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 119,
       "printed_page": 119,
@@ -2267,7 +2396,7 @@
       "provenance": null
     },
     {
-      "id": "ev-63",
+      "id": "ev-62",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 119,
       "printed_page": 119,
@@ -2296,7 +2425,7 @@
       "provenance": null
     },
     {
-      "id": "ev-64",
+      "id": "ev-63",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 119,
       "printed_page": 119,
@@ -2325,7 +2454,7 @@
       "provenance": null
     },
     {
-      "id": "ev-65",
+      "id": "ev-64",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 119,
       "printed_page": 119,
@@ -2354,7 +2483,7 @@
       "provenance": null
     },
     {
-      "id": "ev-66",
+      "id": "ev-65",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 119,
       "printed_page": 119,
@@ -2383,7 +2512,7 @@
       "provenance": null
     },
     {
-      "id": "ev-67",
+      "id": "ev-66",
       "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 119,
       "printed_page": 119,
@@ -2417,10 +2546,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
-    "generated": "2026-08-30T19:03:05+00:00",
-    "seconds": 108.2,
-    "cost_usd": 0.0047,
-    "tokens": "72958 in / 19250 out",
+    "generated": "2026-08-30T23:43:35+00:00",
+    "seconds": 100.2,
+    "cost_usd": 0.0049,
+    "tokens": "75131 in / 20424 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": []

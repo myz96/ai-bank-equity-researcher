@@ -2,70 +2,79 @@
 
 **Movement (cash basis):** 1230bps → 1200bps (-30bps) | **Attribution confidence:** 40/100
 
-*Read from: row 'Common Equity Tier 1 (CET1) APRA Level 2 Group', column 30 Jun 25 column -> column 30 Jun 26 column*
+*Read from: row 'Common Equity Tier 1 (CET1) APRA Level 2 ratio', column 30 Jun 25 column, CET1 row -> column 30 Jun 26 column, CET1 row*
 
-CBA's APRA Level 2 CET1 ratio fell 30 bps to 12.0% in FY26 from 12.3% in FY25. The decline reflects 72 bps of capital deployed into credit RWA (driven by strong volume growth in commercial portfolios and domestic residential mortgages), partially offset by earnings generation of $10.98 billion cash NPAT (up 7% on FY25's $10.25 billion). Full-year dividends of $8.45 billion (including $530 million DRP share purchase at -10 bps CET1 impact) absorbed capital. No buyback activity occurred in FY26. Divisional organic capital generation totalled $8.75 billion across Retail Banking Services (+81 bps), Business Banking (+54 bps), Institutional Banking & Markets (+17 bps) and ASB/New Zealand (+21 bps). The half-on-half CET1 walk (Dec 25→Jun 26) showed Cash NPAT +106 bps, Dividend -76 bps, RWA -46 bps and Other -8 bps, but no full-year walk is published.
+CBA's APRA Level 2 CET1 ratio declined 30 bpts to 12.0% in FY26 from 12.3% in FY25, remaining well above APRA's 10.25% minimum. The decline was driven by capital deployed into Credit RWA growth (the bank deployed 72 bpts of capital into Credit RWA across the year for volume growth in commercial portfolios and domestic residential mortgages), offset by capital generated from earnings (Cash NPAT of $10,982m, up 7% on FY25). The full-year dividend of $5.05 per share (77% payout ratio of cash NPAT) was fully DRP-neutralised via on-market share purchases. No buy-back activity occurred during FY26 ($300m of the $1bn programme was completed in prior periods). Total RWA grew $26.3 billion to $522.4 billion (+5.3%). The Level 1 CET1 ratio moved from 12.4% to 12.1% (-30 bpts), and the International CET1 ratio was flat at 18.3%.
 
-> [ev-21] CBA/FY26/profit_announcement, PDF p48: "Common Equity Tier 1 (CET1) 12.0 12.3 12.3 (30)bpts (30)bpts"
-> [ev-22] CBA/FY26/profit_announcement, PDF p48: "The Group's CET1 Capital ratio was 12.0% as at 30 June 2026, a decrease of 30 basis points from 31 December 2025 and 30 June 2025."
-> [ev-36] CBA/FY26/results_presentation, printed p55: "10,252 10,982 FY25 FY26"
-> [ev-37] CBA/FY26/results_presentation, printed p55: "12.3% 12.0% FY25 FY26"
+> [ev-9] CBA/FY26/profit_announcement, PDF p48: "The Group's CET1 Capital ratio was 12.0% as at 30 June 2026, a decrease of 30 basis points from 31 December 2025 and 30 June 2025."
+> [ev-24] CBA/FY26/results_presentation, printed p106: "CET1 capital ratio 12.3 12.3 12.0"
 
 ## Drivers
 
 | Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
 |---|---|---|---|---|---|
-| `rwa.credit` | Credit Risk RWA | -72 bps | 80 | 1 (single_source) | ev-25 |
+| `rwa.credit` | Credit Risk RWA growth | -72 bps | 80 | 1 (single_source) | ev-17, ev-21 |
+| `capital_returns` | Share buy-back | +0 bps | 80 | 1 (single_source) | ev-18 |
+| *residual (unexplained)* | — | -30 bps | — | — |
 
-### rwa.credit — "Credit Risk RWA"
+### rwa.credit — "Credit Risk RWA growth"
 *-72 bps | confidence 80/100*
 
-The bank states it deployed 72 bps of capital into credit RWA across the year, driven by strong volume growth particularly in commercial portfolios and domestic residential mortgages.
-> [ev-25] CBA/FY26/profit_announcement, PDF p9: "Across the year we deployed 72bpts of capital into credit risk weighted assets with strong volume growth particularly in commercial portfolios and domestic residential mortgages."
+The bank deployed 72 bpts of capital into Credit RWA across the year, driven by strong volume growth particularly in commercial portfolios and domestic residential mortgages. Credit RWA grew $23.8 billion to $422.7 billion (from $398.9 billion in Jun 25), an increase of 6.0%, mainly from volume growth in commercial lending and domestic residential mortgages.
+> [ev-17] CBA/FY26/profit_announcement, PDF p9: "Across the year we deployed 72bpts of capital into credit risk weighted assets with strong volume growth particularly in commercial portfolios and domestic residential mortgages."
+> [ev-21] CBA/FY26/profit_announcement, PDF p122: "Total risk weighted assets 522,407 505,310 496,145"
 
-### dividend_net_drp — "Dividend including DRP"
-*unquantified | confidence 75/100*
+### earnings_generation — "Capital generated from earnings"
+*unquantified | confidence 60/100*
 
-Full-year dividends totalled $8,451 million (vs $8,116 million in FY25). The interim DRP included an on-market purchase of $530 million of shares with a CET1 impact of -10 bps. No buyback activity was undertaken during FY26.
-> [ev-34] CBA/FY26/profit_announcement, PDF p146: "Total dividends ($M) 8,451 8,116"
-> [ev-43] CBA/FY26/profit_announcement, PDF p48: "The 2026 interim dividend included the on-market purchase of $530 million of shares (CET1 impact of -10 bpts) in respect of the Dividend Reinvestment Plan."
-> [ev-44] CBA/FY26/profit_announcement, PDF p48: "No buy-back activity was undertaken during FY26."
+Cash NPAT of $10,982 million increased 7% on FY25 ($10,252 million implied), driven by a 6% increase in operating income supported by lending volume growth and broadly stable underlying NIM. The bank states capital was generated from earnings as a key driver supporting the CET1 position. No specific bpts figure is disclosed for the full-year earnings contribution.
+> [ev-16] CBA/FY26/profit_announcement, PDF p9: "The Group's Common Equity Tier 1 (CET1) ratio of 12.0% was well above APRA's minimum regulatory requirement of 10.25%."
 
-### earnings_generation — "Cash NPAT"
-*unquantified | confidence 70/100*
+### dividend_net_drp — "Dividends net of DRP"
+*unquantified | confidence 60/100*
 
-Cash NPAT was $10,982 million (up 7% from $10,253 million in FY25). Divisional organic capital generation totalled $8,749 million: Retail Banking Services $4,145 million (+81 bps), Business Banking $2,716 million (+54 bps), IBM $831 million (+17 bps), and ASB $1,057 million (+21 bps).
-> [ev-33] CBA/FY26/profit_announcement, PDF p145: "Net profit after tax – cash basis 10,982 10,253"
-> [ev-27] CBA/FY26/profit_announcement, PDF p65: "Retail Banking Services generated $4,145 million of organic capital 1 for the Group in the current year. This contributed 81 basis points to the Group's CET1 ratio."
-> [ev-28] CBA/FY26/profit_announcement, PDF p69: "Business Banking generated $2,716 million of organic capital 1 for the Group in the current year. This contributed 54 basis points to the Group's CET1 ratio."
-> [ev-29] CBA/FY26/profit_announcement, PDF p73: "Institutional Banking and Markets generated $831 million of organic capital 2 for the Group in the current year. This impacted the Group's CET1 ratio by 17 basis points."
-> [ev-32] CBA/FY26/profit_announcement, PDF p79: "This contributed 21 basis points to the Group's CET1 ratio."
+Full-year dividend of $5.05 per share (final $2.70 + interim $2.35) was paid at a 77% payout ratio of cash NPAT. Both the 2025 final and 2026 interim DRPs were satisfied in full by on-market purchase of shares (participation rates 14.8% and 13.5% respectively). The half-on-half walk shows the 1H26 dividend (DRP neutralised) had a -76 bpts impact; the 2H25 final dividend (also DRP neutralised) would have had a similar negative CET1 impact. No specific full-year bpts figure is disclosed.
+> [ev-18] CBA/FY26/profit_announcement, PDF p9: "The $1 billion on-market share buy-back, of which $300 million has been completed, expires on 12 August 2026 and will not be extended."
 
-### other_unmapped — "Other regulatory adjustments"
-*unquantified | confidence 40/100*
+### capital_returns — "Share buy-back"
+*+0 bps | confidence 80/100*
 
+No buy-back activity was undertaken during FY26. The $300 million of the $1 billion on-market share buy-back programme that was completed as at 30 June 2026 relates to activity in prior periods. The buy-back expires on 12 August 2026 and will not be extended.
+> [ev-18] CBA/FY26/profit_announcement, PDF p9: "The $1 billion on-market share buy-back, of which $300 million has been completed, expires on 12 August 2026 and will not be extended."
 
-> [ev-42] CBA/FY26/profit_announcement, PDF p48: "Other regulatory adjustments and movement in reserves"
+### other_unmapped — "Other regulatory adjustments and movement in reserves"
+*unquantified | confidence 50/100*
+
+The half-on-half walk shows 'Other' at -8 bpts, which includes intangibles, FX impact on Credit RWA, equity accounted profits/losses and impairments from associates, movements in reserves and other regulatory adjustments. For the full year, no specific bpts figure is disclosed. The bank does not disclose a separate full-year figure for this category.
+> [ev-16] CBA/FY26/profit_announcement, PDF p9: "The Group's Common Equity Tier 1 (CET1) ratio of 12.0% was well above APRA's minimum regulatory requirement of 10.25%."
+
+## Source disagreements
+- **Level 1 vs Level 2 CET1 ratio** (definitional): Level 1: 12.4% → 12.1% (-30 bpts) vs Level 2: 12.3% → 12.0% (-30 bpts)
+  Preferred: Level 2 CET1 ratio of 12.0% at 30 Jun 26, down 30 bpts from 12.3% at 30 Jun 25. Both Level 1 and Level 2 show -30 bpts movement, but the task specifies taking the APRA Level 2 (Group) CET1 ratio row as the headline measure. Level 1 is a different measure.
+- **International CET1 ratio** (definitional): 18.7% → 18.3% (-40 bpts)
+  Preferred: Not used as movement basis. The International CET1 ratio is a different measure from the APRA Level 2 CET1 ratio specified in the task. It is reported as context only.
 
 ## Limitations
-- No full-year CET1 walk chart is published by CBA; only a half-on-half (Dec 25→Jun 26) walk is available, which cannot be used as driver contributions for the FY25→FY26 comparison per the walk preference rules.
-- Earnings generation and dividend impacts are not quantified in basis points for the full year; only the half-on-half walk provides bps figures (+106 bps NPAT, -76 bps dividend).
-- The residual between quantified drivers (credit RWA -72 bps, DRP -10 bps) and the total -30 bps movement is not explained by the bank for the full year.
-- Divisional organic capital contributions (summing to 173 bps) net out intra-division RWA changes and do not map directly to CET1 walk components.
-- Failed check: drivers_reconcile (drivers -72.0 + residual +0.0 != delta -30.0, tol 1.0)
-- Failed check: walk_sum (start 1230 + bars -24.0 = 1206.0 != end 1200, tol 1.0 bps) [CBA/FY26/profit_announcement PDF p48 (ev-5)]
+- No full-year CET1 walk chart exists in the published documents. Only a half-on-half (Dec 25 → Jun 26) CET1 walk is provided, which is context-only and cannot be used as the primary driver table for the FY25→FY26 comparison.
+- The bank discloses that 72 bpts of capital was deployed into Credit RWA across the year, but does not provide a full-year bpts breakdown for earnings generation, dividends, or other regulatory adjustments.
+- The half-on-half walk (ev-1) shows Cash NPAT +106 bpts, 1H26 Dividend -76 bpts, RWA -46 bpts, Other -8 bpts, but these are for H1 only and the sum check failed (-24 bpts vs actual -30 bpts).
+- The Level 1 CET1 ratio (12.4% → 12.1%) and International CET1 ratio (18.7% → 18.3%) are different measures from the APRA Level 2 CET1 ratio and are reported as context/disagreements.
+- Driver contributions for earnings generation, dividends, and other adjustments are unquantified for the full year because the bank does not disclose full-year bpts impacts for these categories.
+- Capped at 80: capital_returns +0 bps. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it.
+- Failed check: drivers_reconcile (drivers -72.0 + residual -30.0 != delta -30.0, tol 1.0)
+- Failed check: walk_sum (start 1230 + bars -24.0 = 1206.0 != end 1200, tol 1.0 bps) [CBA/FY26/profit_announcement PDF p48 (ev-1)]
 - Capped at 80: rwa.credit -72 bps. drivers_reconcile failed, so the parts and the whole disagree. That proves one of these claims is wrong without saying which, so none of them may claim near-certainty.
 
 ## Provenance
 - combo: agentic-cheap
 - models: agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash
 - documents: CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)
-- generated: 2026-08-30T19:52:26+00:00
-- seconds: 279.9
-- cost_usd: 0.1261
-- tokens: 2704329 in / 14106 out
+- generated: 2026-08-31T01:01:47+00:00
+- seconds: 174.6
+- cost_usd: 0.056
+- tokens: 1520270 in / 10938 out
 - orchestration: agent
-- tool_calls: 69
-- pages_read: 20
-- charts_read: 3
+- tool_calls: 61
+- pages_read: 25
+- charts_read: 1
 - budget_exhausted: no

@@ -2,51 +2,51 @@
 
 *NAB, periods FY25 — confidence 78/100*
 
-NAB's FY25 Business & Private Banking (B&PB) growth was partially value-accretive but came at the expense of margin. Cash earnings rose just 1.6% to $3,330m on 2.1% net operating income growth ($8,531m), while business lending expanded 7.3% to $166.3bn and housing lending 5.8% to $109.3bn. The NIM compressed 8 bps to 3.01%, reflecting competitive pressures and higher deposit costs that offset the benefit of $12.8bn in average earning asset growth. Expense growth (underlying +$102m, 3.2%) absorbed much of the revenue upside, leaving thin earnings accretion.
-
-Credit quality presents a mixed picture. The annualised CIC-to-GLA ratio improved marginally from 0.20% to 0.19%, and the B&PB CIC rose only $6m to $529m (1.1%). However, the Group's individually assessed provisions surged 53.8% to $1,163m, primarily driven by the B&PB business lending portfolio. Impaired assets to GLAs in B&PB rose 10 bps to 0.49%, and default-but-not-impaired assets rose 31 bps to 2.05%. The Group-level non-performing exposures increased 18.2% to $12,094m, mainly from B&PB business lending deterioration plus a small number of customers in C&IB and NZ Banking.
-
-Growth was broad-based: the investor presentation confirms diversified Australian business lending growth across Agri (3.5%), Health (5.9%), CRE (7.4%), and Other (10.4%), with NAB Small Business up 9.2%. However, credit deterioration was concentrated — the results book attributes individually assessed provision increases to "a small number of customers" in B&PB, C&IB, and NZ Banking, and H2 separately notes "downgrade of a small number of large customers in the Agriculture portfolio." This suggests the credit cost was not purely broad-based but included single-name or concentrated exposure impacts.
-
-In sum, growth was margin-dilutive (NIM −8 bps) and required meaningful expense investment (+3.2% underlying). Earnings accretion was modest (1.6%). Credit quality deteriorated in dollar terms despite a stable loss-rate ratio, with concentrated impairment events layered on top of broader portfolio weakness.
+NAB's FY25 Business & Private Banking (B&PB) growth was broadly value-accretive, with cash earnings up 1.6% ($3,330m vs $3,277m) on 6.8% GLA growth ($279.5bn vs $261.7bn), despite an 8 bps NIM decline to 3.01%. The growth was funded by net operating income growth of 2.1% ($8,531m vs $8,358m), which outpaced a 2.9% rise in operating expenses ($3,232m vs $3,141m). Credit quality showed mixed signals: the B&PB credit impairment charge rose modestly by $6m (1.1%) to $529m, keeping the CIC-to-GLAs ratio flat at 0.19% (vs 0.20%). However, impaired assets to GLAs rose 10 bps to 0.49%, driven by a small number of single-name impairments across business lending (including two large well-secured Agri customers, per investor presentation p27). Excluding these two names, the underlying NPL ratio fell 3 bps to 3.01%. Growth was broad-based across sectors — Agri +3.5%, Health +5.9%, CRE +7.4%, Other +10.4% — rather than single-name driven, though individually assessed charges rose 51.6% group-wide ($964m vs $636m) due to a small number of customer downgrades in C&IB and NZ Banking alongside B&PB business lending deterioration. The cost-to-income ratio widened 30 bps to 37.9%, reflecting investment in additional bankers and technology. In H2, NIM stabilised (+1 bp to 3.02%), and watch loans declined for the first time since March 2023. The key caveat is that while the CIC rate remained stable, the NPL ratio rose meaningfully, and the individually assessed charge spike was concentrated in a few large names outside B&PB.
 
 ## Key facts
 
-- B&PB cash earnings grew 1.6% to $3,330m on 2.1% NOI growth to $8,531m
-  > [ev-13] NAB/FY25/results_book, printed p34: "Net operating income 8,531 8,358 2.1"
-  > [ev-16] NAB/FY25/results_book, printed p34: "Cash earnings 3,330 3,277 1.6"
-- Business lending grew 7.3% to $166.3bn; housing lending grew 5.8% to $109.3bn
-  > [ev-17] NAB/FY25/results_book, printed p34: "Business lending 166.3 155.0 7.3"
-- B&PB NIM declined 8 bps to 3.01%, driven by competitive pressures and higher deposit costs
-  > [ev-20] NAB/FY25/results_book, printed p34: "Net interest margin 3.01 3.09 (8 bps)"
-- B&PB CIC rose $6m to $529m (1.1%); annualised CIC/GLA improved to 0.19% from 0.20%
-  > [ev-24] NAB/FY25/results_book, printed p34: "Credit impairment charge to GLAs - annualised 0.19 0.20 (1 bp)"
-- Group individually assessed provisions surged 53.8% to $1,163m, primarily from B&PB business lending
-  > [ev-25] NAB/FY25/results_book, PDF p27: "Individually assessed provisions increased by $407 million or 53.8% to $1,163 million"
-- B&PB impaired assets/GLAs rose 10 bps to 0.49%; default-but-not-impaired rose 31 bps to 2.05%
-  > [ev-22] NAB/FY25/results_book, printed p34: "Impaired assets to GLAs 0.49 0.39 10 bps"
-- Growth was broad-based across sectors including Trade, Manufacturing, Construction, Transport
-  > [ev-33] NAB/FY25/investor_presentation, printed p50: "Broad based growth across most sectors including Trade, Manufacturing, Construction, Transport"
-- Non-performing exposures rose 18.2% to $12,094m, mainly from B&PB business lending plus a small number of customers in C&IB and NZ Banking
-  > [ev-30] NAB/FY25/results_book, printed p26: "Non-performing exposures increased by $1,864 million or 18.2% to $12,094 million. This was mainly driven by deterioration in the Business and Private Banking business lending portfolio, combined with the impairment of a small number of customers in both Corporate and Institutional Banking and New Zealand Banking."
-- Underlying expenses rose 3.2% (+$102m) due to personnel costs, additional bankers, and technology investment
-  > [ev-29] NAB/FY25/results_book, PDF p27: "an increase in provisions held for the Business and Private Banking business lending portfolio due to volume growth and deterioration in asset quality,"
+- B&PB cash earnings grew 1.6% to $3,330m on 6.8% GLA growth to $279.5bn
+  > [ev-8] NAB/FY25/results_book, printed p34: "Cash earnings 3,330 3,277 1.6"
+  > [ev-11] NAB/FY25/results_book, printed p34: "Gross loans and acceptances 279.5 261.7 6.8"
+- B&PB NIM fell 8 bps to 3.01%, but stabilised in H2 (+1 bp)
+  > [ev-12] NAB/FY25/results_book, printed p34: "Net interest margin 3.01 3.09 (8 bps)"
+  > [ev-38] NAB/FY25/results_book, PDF p17: "Business and Private Banking(1) 3.01 3.09 (8 bps)"
+- Net operating income grew 2.1% to $8,531m, outpacing expense growth of 2.9%
+  > [ev-4] NAB/FY25/results_book, printed p34: "Net operating income 8,531 8,358 2.1"
+  > [ev-5] NAB/FY25/results_book, printed p34: "Operating expenses(2) (3,232) (3,141) 2.9"
+- B&PB CIC rose only $6m (1.1%) to $529m; CIC-to-GLAs flat at 0.19%
+  > [ev-7] NAB/FY25/results_book, printed p34: "Credit impairment charge (529) (523) 1.1"
+  > [ev-16] NAB/FY25/results_book, printed p34: "Credit impairment charge to GLAs - annualised 0.19 0.20 (1 bp)"
+- Impaired assets to GLAs rose 10 bps to 0.49%; default-but-not-impaired rose 31 bps to 2.05%
+  > [ev-14] NAB/FY25/results_book, printed p34: "Impaired assets to GLAs 0.49 0.39 10 bps"
+  > [ev-15] NAB/FY25/results_book, printed p34: "Default but not impaired assets to GLAs(3) 2.05 1.74 31 bps"
+- Growth was broad-based: Agri +3.5%, Health +5.9%, CRE +7.4%, Other +10.4%
+  > [ev-30] NAB/FY25/investor_presentation, printed p50: "Broad based growth across most sectors including Trade, Manufacturing, Construction, Transport"
+- Excluding two large Agri names, underlying NPL ratio fell 3 bps to 3.01%
+  > [ev-34] NAB/FY25/investor_presentation, printed p27: "Excluding two large well secured Agri customers, underlying NPL ratio down 3bps to 3.01%"
+- Group individually assessed CIC rose 51.6% to $964m, driven by small number of single names in C&IB and NZ Banking
+  > [ev-25] NAB/FY25/results_book, printed p24: "Total individually assessed credit impairment charge 964 636 51.6"
+- Cost-to-income ratio widened 30 bps to 37.9% on investment in bankers and technology
+  > [ev-13] NAB/FY25/results_book, printed p34: "Cost to income ratio 37.9 37.6 30 bps"
 
 ## Limitations
-- 
-The documents do not break out the exact dollar contribution of each sector to the B&PB lending growth, so the breadth claim relies on the investor presentation's aggregate sector growth rates rather than B&PB-specific segment P&L. The "small number of customers" language for impairments means we cannot quantify whether a single name drove a material portion of the individually assessed charges. The B&PB CIC/GLA ratio improvement masks the fact that the absolute CIC rose and the impaired asset ratio worsened significantly. Comparative data has been restated for portfolio transfers between PB and B&PB.
-
+- The results book does not provide a full sector-level breakdown of B&PB CIC or NPLs by industry within the division — only aggregate B&PB figures and group-level sector tables.
+- "Broad-based" claim relies on investor presentation chart showing YoY growth rates by sector, which are segment-level not necessarily B&PB-only.
+- Single-name impact is described qualitatively as "a small number of customers" without specific dollar attribution to individual names.
+- H2 improvement in asset quality trends (watch loans down) may not persist.
+- Comparatives were restated for portfolio transfers between PB and B&PB.
 
 ## Provenance
 - combo: agentic-cheap
 - models: agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash
 - documents: NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)
-- generated: 2026-08-30T13:44:30+00:00
-- seconds: 114.4
-- cost_usd: 0.0117
-- tokens: 537100 in / 7054 out
+- generated: 2026-08-31T00:47:14+00:00
+- seconds: 323.5
+- cost_usd: 0.0424
+- tokens: 989977 in / 18473 out
 - orchestration: agent
-- tool_calls: 31
-- pages_read: 10
-- charts_read: 1
+- tool_calls: 38
+- pages_read: 13
+- charts_read: 3
 - budget_exhausted: no

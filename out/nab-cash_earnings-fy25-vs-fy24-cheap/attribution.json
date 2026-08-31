@@ -11,14 +11,16 @@
     "unit": "$m"
   },
   "movement_source": "row 'Cash earnings', column FY24 -> column FY25",
-  "headline": "NAB's cash earnings decreased by $11 million to $7,091 million in FY25 (FY24: $7,102 million). Total operating income increased by $644 million (3.8%) driven by higher NII and other operating income. Operating expenses rose significantly by $435 million (4.6%), including $130 million of notable payroll review and remediation costs. Credit impairment charges were flat at $833 million. Income tax expense increased by $27 million. The net result was a slight decline in core profit.",
+  "headline": "NAB's cash earnings decreased by $11 million (0.2%) to $7,091 million in FY25 from $7,102 million in FY24. Statutory net profit fell $201 million to $6,759 million. Total operating income increased $577 million (2.8%) to $20,813 million, driven by a $644 million rise in NII and partially offset by a $67 million drop in other operating income. Operating expenses rose $435 million (4.6%) to $10,348 million, including $130 million of notable payroll review costs. Credit impairment charges were $833 million. Income tax expense increased $27 million to $3,002 million.",
   "headline_evidence": [
-    "ev-59",
+    "ev-57",
+    "ev-63",
+    "ev-39",
     "ev-8",
-    "ev-11",
-    "ev-23",
-    "ev-43",
-    "ev-35"
+    "ev-15",
+    "ev-21",
+    "ev-41",
+    "ev-33"
   ],
   "drivers": [
     {
@@ -29,7 +31,7 @@
         "unit": "$m"
       },
       "columns": "stated vs FY24",
-      "narrative": "Increased by $644 million (3.8%). Driven by volume growth of $22.5 billion (2.3%) in average interest earning assets and a 3 bps margin expansion. Includes a $74 million decrease from economic hedges, offset in other operating income.",
+      "narrative": "Increased $644 million (3.8%). Driven by higher average interest earning assets (+$22.5bn) and a 3 bps margin improvement. Includes a $74 million decrease due to economic hedges, offset in other operating income.",
       "confidence": 80,
       "evidence": [
         "ev-8",
@@ -50,13 +52,13 @@
         "unit": "$m"
       },
       "columns": "stated vs FY24",
-      "narrative": "Decreased by $67 million (1.9%). Net fees fell $132 million; trading rose $33 million; other income rose $32 million. A $74 million hedge movement reducing NII was fully offset here.",
+      "narrative": "Decreased $67 million (1.9%). Net fees and commissions fell $132 million (5.8%), trading income rose $33 million (2.8%), and other income rose $32 million. The $74 million hedge movement reducing NII was offset here.",
       "confidence": 80,
       "evidence": [
-        "ev-11",
-        "ev-12",
-        "ev-13",
-        "ev-14"
+        "ev-15",
+        "ev-16",
+        "ev-17",
+        "ev-18"
       ],
       "checks_passed": [
         "single_source",
@@ -66,20 +68,20 @@
     },
     {
       "canonical": "operating_expenses",
-      "bank_label": "Operating expenses (underlying)",
+      "bank_label": "Operating expenses",
       "contribution": {
-        "value": -305.0,
+        "value": -435.0,
         "unit": "$m"
       },
       "columns": "stated vs FY24",
-      "narrative": "Underlying operating expenses increased by $305 million (3.2%), excluding notable items. Personnel costs rose $170 million, technology $71 million, general $52 million, and occupancy $12 million.",
+      "narrative": "Increased $435 million (4.6%). Personnel expenses rose $271 million, technology $71 million, general $81 million, and occupancy $12 million.",
       "confidence": 80,
       "evidence": [
+        "ev-21",
+        "ev-22",
         "ev-23",
         "ev-24",
-        "ev-25",
-        "ev-26",
-        "ev-27"
+        "ev-25"
       ],
       "checks_passed": [
         "single_source"
@@ -94,12 +96,12 @@
         "unit": "$m"
       },
       "columns": "stated vs FY24",
-      "narrative": "Notable increase of $130 million for payroll review and remediation costs ($101 million in personnel, $29 million in general expenses).",
+      "narrative": "Notable increase of $130 million for payroll review and remediation costs ($101 million in personnel, $29 million in general). Excluding this, underlying operating expenses rose $305 million.",
       "confidence": 80,
       "evidence": [
-        "ev-23",
-        "ev-24",
-        "ev-27"
+        "ev-21",
+        "ev-22",
+        "ev-25"
       ],
       "checks_passed": [
         "single_source"
@@ -113,15 +115,14 @@
         "value": 0.0,
         "unit": "$m"
       },
-      "columns": "stated vs FY24",
-      "narrative": "No change. Cash credit impairment charge remained flat at $833 million in both periods.",
-      "confidence": 80,
+      "columns": "null",
+      "narrative": "No quantified year-on-year movement disclosed in the provided evidence records. The statutory-to-cash reconciliation shows no difference in CIC between statutory and cash bases for FY25 (-$833m both), implying no variance impact on the cash earnings bridge relative to statutory.",
+      "confidence": 60,
       "evidence": [
-        "ev-43"
+        "ev-41"
       ],
       "checks_passed": [
-        "single_source",
-        "computed_delta_cap_80"
+        "single_source"
       ],
       "checks_failed": []
     },
@@ -133,11 +134,11 @@
         "unit": "$m"
       },
       "columns": "stated vs FY24",
-      "narrative": "Tax expense increased by $27 million (0.9%) due to higher pre-tax earnings and a 10 bps rise in the effective tax rate to 29.6%.",
+      "narrative": "Increased $27 million (0.9%) to $3,002 million, driven by higher cash earnings before tax and a 10 bps increase in the effective tax rate to 29.6%.",
       "confidence": 80,
       "evidence": [
-        "ev-35",
-        "ev-36"
+        "ev-33",
+        "ev-34"
       ],
       "checks_passed": [
         "single_source",
@@ -147,18 +148,20 @@
     }
   ],
   "residual": {
-    "value": 0.0,
+    "value": 64.0,
     "unit": "$m"
   },
   "notable_items": [
-    "Payroll review and remediation costs ($130m)"
+    "Payroll review and remediation costs: $130 million increase."
   ],
   "disagreements": [],
   "attribution_confidence": 40,
   "limitations": [
-    "Capped at 80: credit_impairment_charge +0 $m. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it.",
+    "The sum of claimed drivers (-11.0 + 64.0 = 53.0) does not reconcile to the total delta of -11.0, leaving a residual of +64.0 million. This likely reflects unquantified credit impairment movements or other minor components not explicitly stated as a delta in the text.",
+    "Credit impairment charge movement is not explicitly quantified in the provided text; only the level is given.",
+    "Confidence is limited by the inability to fully reconcile the bridge without the explicit CIC delta or a full walk chart.",
     "Expenses are claimed on the underlying/notable split; the bank equally publishes the combined headline framing, so both claims are capped at 80.",
-    "Failed check: drivers_reconcile (drivers +115.0 + residual +0.0 != delta -11.0, tol 1.0)",
+    "Failed check: drivers_reconcile (drivers -15.0 + residual +64.0 != delta -11.0, tol 1.0)",
     "Capped at 80: nii +644 $m, other_operating_income -67 $m, tax_and_other -27 $m. drivers_reconcile failed, so the parts and the whole disagree. That proves one of these claims is wrong without saying which, so none of them may claim near-certainty."
   ],
   "evidence_records": [
@@ -312,37 +315,37 @@
       "quote": "Net interest margin by division (%) Business and Private Banking(1) 3.01 3.09 (8 bps) 3.02 3.01 1 bp",
       "numbers": [
         {
-          "label": "NIM Business and Private Banking FY25",
+          "label": "Business and Private Banking NIM FY25",
           "value": 3.01,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Business and Private Banking FY24",
+          "label": "Business and Private Banking NIM FY24",
           "value": 3.09,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Business and Private Banking change FY25 vs FY24",
+          "label": "Business and Private Banking NIM change FY25 vs FY24",
           "value": -8.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM Business and Private Banking H1 FY25",
+          "label": "Business and Private Banking NIM H1 FY25",
           "value": 3.02,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Business and Private Banking H1 FY24",
+          "label": "Business and Private Banking NIM H1 FY24",
           "value": 3.01,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Business and Private Banking change H1 FY25 vs H1 FY24",
+          "label": "Business and Private Banking NIM change H1 FY25 vs H1 FY24",
           "value": 1.0,
           "unit": "bps",
           "basis": null
@@ -356,40 +359,40 @@
       "pdf_page": 17,
       "printed_page": null,
       "kind": "table",
-      "quote": "Personal Banking(1) 1.75 1.72 3 bps 1.80 1.70 10 bps",
+      "quote": "Net interest margin by division (%) Personal Banking(1) 1.75 1.72 3 bps 1.80 1.70 10 bps",
       "numbers": [
         {
-          "label": "NIM Personal Banking FY25",
+          "label": "Personal Banking NIM FY25",
           "value": 1.75,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Personal Banking FY24",
+          "label": "Personal Banking NIM FY24",
           "value": 1.72,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Personal Banking change FY25 vs FY24",
+          "label": "Personal Banking NIM change FY25 vs FY24",
           "value": 3.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM Personal Banking H1 FY25",
+          "label": "Personal Banking NIM H1 FY25",
           "value": 1.8,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Personal Banking H1 FY24",
+          "label": "Personal Banking NIM H1 FY24",
           "value": 1.7,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Personal Banking change H1 FY25 vs H1 FY24",
+          "label": "Personal Banking NIM change H1 FY25 vs H1 FY24",
           "value": 10.0,
           "unit": "bps",
           "basis": null
@@ -403,40 +406,40 @@
       "pdf_page": 17,
       "printed_page": null,
       "kind": "table",
-      "quote": "Corporate and Institutional Banking 1.09 1.05 4 bps 1.12 1.07 5 bps",
+      "quote": "Net interest margin by division (%) Corporate and Institutional Banking 1.09 1.05 4 bps 1.12 1.07 5 bps",
       "numbers": [
         {
-          "label": "NIM Corporate and Institutional Banking FY25",
+          "label": "Corporate and Institutional Banking NIM FY25",
           "value": 1.09,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Corporate and Institutional Banking FY24",
+          "label": "Corporate and Institutional Banking NIM FY24",
           "value": 1.05,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Corporate and Institutional Banking change FY25 vs FY24",
+          "label": "Corporate and Institutional Banking NIM change FY25 vs FY24",
           "value": 4.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM Corporate and Institutional Banking H1 FY25",
+          "label": "Corporate and Institutional Banking NIM H1 FY25",
           "value": 1.12,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Corporate and Institutional Banking H1 FY24",
+          "label": "Corporate and Institutional Banking NIM H1 FY24",
           "value": 1.07,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM Corporate and Institutional Banking change H1 FY25 vs H1 FY24",
+          "label": "Corporate and Institutional Banking NIM change H1 FY25 vs H1 FY24",
           "value": 5.0,
           "unit": "bps",
           "basis": null
@@ -450,40 +453,40 @@
       "pdf_page": 17,
       "printed_page": null,
       "kind": "table",
-      "quote": "New Zealand Banking 2.41 2.35 6 bps 2.45 2.37 8 bps",
+      "quote": "Net interest margin by division (%) New Zealand Banking 2.41 2.35 6 bps 2.45 2.37 8 bps",
       "numbers": [
         {
-          "label": "NIM New Zealand Banking FY25",
+          "label": "New Zealand Banking NIM FY25",
           "value": 2.41,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM New Zealand Banking FY24",
+          "label": "New Zealand Banking NIM FY24",
           "value": 2.35,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM New Zealand Banking change FY25 vs FY24",
+          "label": "New Zealand Banking NIM change FY25 vs FY24",
           "value": 6.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM New Zealand Banking H1 FY25",
+          "label": "New Zealand Banking NIM H1 FY25",
           "value": 2.45,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM New Zealand Banking H1 FY24",
+          "label": "New Zealand Banking NIM H1 FY24",
           "value": 2.37,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "NIM New Zealand Banking change H1 FY25 vs H1 FY24",
+          "label": "New Zealand Banking NIM change H1 FY25 vs H1 FY24",
           "value": 8.0,
           "unit": "bps",
           "basis": null
@@ -521,13 +524,13 @@
           "label": "Underlying NII change FY25 vs FY24",
           "value": 718.0,
           "unit": "$m",
-          "basis": null
+          "basis": "underlying"
         },
         {
           "label": "Underlying NII change % FY25 vs FY24",
           "value": 4.3,
           "unit": "%",
-          "basis": null
+          "basis": "underlying"
         }
       ],
       "provenance": null
@@ -564,43 +567,43 @@
       "quote": "The Group's net interest margin increased by 3 basis points due to: an increase of 9 basis points mainly driven by higher earnings on deposit and capital replicating portfolios, an increase of 2 basis points driven by a lower mix of lower yielding HQLA, and an increase of 2 basis points in Markets and Treasury. These increases were partially offset by: a decrease of 7 basis points mainly driven by higher deposit costs including competitive pressures, combined with deposit mix impacts, a decrease of 2 basis points driven by higher wholesale funding costs, and a decrease of 1 basis point in lend",
       "numbers": [
         {
-          "label": "NIM change FY25 vs FY24 total",
+          "label": "NIM change FY25 vs FY24",
           "value": 3.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM change FY25 vs FY24 deposit/capital earnings",
+          "label": "Deposit/capital replicating portfolio impact on NIM FY25 vs FY24",
           "value": 9.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM change FY25 vs FY24 HQLA mix",
+          "label": "HQLA mix impact on NIM FY25 vs FY24",
           "value": 2.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM change FY25 vs FY24 Markets & Treasury",
+          "label": "Markets and Treasury impact on NIM FY25 vs FY24",
           "value": 2.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM change FY25 vs FY24 deposit costs",
+          "label": "Deposit costs/mix impact on NIM FY25 vs FY24",
           "value": -7.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM change FY25 vs FY24 wholesale funding",
+          "label": "Wholesale funding costs impact on NIM FY25 vs FY24",
           "value": -2.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "NIM change FY25 vs FY24 lending margin",
+          "label": "Lending margin impact on NIM FY25 vs FY24",
           "value": -1.0,
           "unit": "bps",
           "basis": null
@@ -610,142 +613,6 @@
     },
     {
       "id": "ev-11",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 18,
-      "printed_page": 16,
-      "kind": "text",
-      "quote": "Other operating income decreased by $67 million or 1.9%.",
-      "numbers": [
-        {
-          "label": "Total other operating income change FY25 vs FY24",
-          "value": -67.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-12",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 18,
-      "printed_page": 16,
-      "kind": "text",
-      "quote": "Net fees and commissions decreased by $132 million or 5.8%.",
-      "numbers": [
-        {
-          "label": "Net fees and commissions change FY25 vs FY24",
-          "value": -132.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-13",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 18,
-      "printed_page": 16,
-      "kind": "text",
-      "quote": "Trading income increased by $33 million or 2.8%.",
-      "numbers": [
-        {
-          "label": "Trading income change FY25 vs FY24",
-          "value": 33.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-14",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 18,
-      "printed_page": 16,
-      "kind": "text",
-      "quote": "Other income increased by $32 million primarily due to higher earnings relating to the investment in MLC Life until December 2024 when it was classified as held for sale, and FirstCape NZ.",
-      "numbers": [
-        {
-          "label": "Other income change FY25 vs FY24",
-          "value": 32.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-15",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 18,
-      "printed_page": 16,
-      "kind": "text",
-      "quote": "Other operating income decreased by $231 million or 12.7%.",
-      "numbers": [
-        {
-          "label": "Total other operating income change H25 vs H24",
-          "value": -231.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-16",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 18,
-      "printed_page": 16,
-      "kind": "text",
-      "quote": "Net fees and commissions increased by $9 million or 0.9%.",
-      "numbers": [
-        {
-          "label": "Net fees and commissions change H25 vs H24",
-          "value": 9.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-17",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 18,
-      "printed_page": 16,
-      "kind": "text",
-      "quote": "Trading income decreased by $216 million or 30.5%.",
-      "numbers": [
-        {
-          "label": "Trading income change H25 vs H24",
-          "value": -216.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-18",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 18,
-      "printed_page": 16,
-      "kind": "text",
-      "quote": "Other income decreased by $24 million primarily due to non-recurrence of earnings relating to the investment in MLC Life.",
-      "numbers": [
-        {
-          "label": "Other income change H25 vs H24",
-          "value": -24.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-19",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 18,
       "printed_page": 16,
@@ -765,25 +632,25 @@
           "basis": null
         },
         {
-          "label": "Net fees and commissions change FY25 vs FY24 %",
+          "label": "Net fees and commissions change FY25 vs FY24",
           "value": -5.8,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Net fees and commissions H25",
+          "label": "Net fees and commissions H1 FY25",
           "value": 1067.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Net fees and commissions H24",
+          "label": "Net fees and commissions H1 FY24",
           "value": 1058.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Net fees and commissions change H25 vs H24 %",
+          "label": "Net fees and commissions change H1 FY25 vs H1 FY24",
           "value": 0.9,
           "unit": "%",
           "basis": null
@@ -792,7 +659,7 @@
       "provenance": null
     },
     {
-      "id": "ev-20",
+      "id": "ev-12",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 18,
       "printed_page": 16,
@@ -812,25 +679,25 @@
           "basis": null
         },
         {
-          "label": "Trading income change FY25 vs FY24 %",
+          "label": "Trading income change FY25 vs FY24",
           "value": 2.8,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Trading income H25",
+          "label": "Trading income H1 FY25",
           "value": 492.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Trading income H24",
+          "label": "Trading income H1 FY24",
           "value": 708.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Trading income change H25 vs H24 %",
+          "label": "Trading income change H1 FY25 vs H1 FY24",
           "value": -30.5,
           "unit": "%",
           "basis": null
@@ -839,7 +706,7 @@
       "provenance": null
     },
     {
-      "id": "ev-21",
+      "id": "ev-13",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 18,
       "printed_page": 16,
@@ -847,37 +714,37 @@
       "quote": "Other(2) 90 58 55.2 33 57 (42.1)",
       "numbers": [
         {
-          "label": "Other FY25",
+          "label": "Other operating income FY25",
           "value": 90.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Other FY24",
+          "label": "Other operating income FY24",
           "value": 58.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Other change FY25 vs FY24 %",
+          "label": "Other operating income change FY25 vs FY24",
           "value": 55.2,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Other H25",
+          "label": "Other operating income H1 FY25",
           "value": 33.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Other H24",
+          "label": "Other operating income H1 FY24",
           "value": 57.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Other change H25 vs H24 %",
+          "label": "Other operating income change H1 FY25 vs H1 FY24",
           "value": -42.1,
           "unit": "%",
           "basis": null
@@ -886,7 +753,7 @@
       "provenance": null
     },
     {
-      "id": "ev-22",
+      "id": "ev-14",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 18,
       "printed_page": 16,
@@ -906,25 +773,25 @@
           "basis": null
         },
         {
-          "label": "Total other operating income change FY25 vs FY24 %",
+          "label": "Total other operating income change FY25 vs FY24",
           "value": -1.9,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Total other operating income H25",
+          "label": "Total other operating income H1 FY25",
           "value": 1592.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total other operating income H24",
+          "label": "Total other operating income H1 FY24",
           "value": 1823.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total other operating income change H25 vs H24 %",
+          "label": "Total other operating income change H1 FY25 vs H1 FY24",
           "value": -12.7,
           "unit": "%",
           "basis": null
@@ -933,7 +800,139 @@
       "provenance": null
     },
     {
-      "id": "ev-23",
+      "id": "ev-15",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 18,
+      "printed_page": 16,
+      "kind": "text",
+      "quote": "Other operating income decreased by $67 million or 1.9%.",
+      "numbers": [
+        {
+          "label": "Other operating income change FY25 vs FY24 level",
+          "value": -67.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other operating income change FY25 vs FY24 pct",
+          "value": -1.9,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 18,
+      "printed_page": 16,
+      "kind": "text",
+      "quote": "Net fees and commissions decreased by $132 million or 5.8%.",
+      "numbers": [
+        {
+          "label": "Net fees and commissions change FY25 vs FY24 level",
+          "value": -132.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net fees and commissions change FY25 vs FY24 pct",
+          "value": -5.8,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 18,
+      "printed_page": 16,
+      "kind": "text",
+      "quote": "Trading income increased by $33 million or 2.8%.",
+      "numbers": [
+        {
+          "label": "Trading income change FY25 vs FY24 level",
+          "value": 33.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Trading income change FY25 vs FY24 pct",
+          "value": 2.8,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 18,
+      "printed_page": 16,
+      "kind": "text",
+      "quote": "Other income increased by $32 million primarily due to higher earnings relating to the investment in MLC Life until December 2024 when it was classified as held for sale, and FirstCape NZ.",
+      "numbers": [
+        {
+          "label": "Other income change FY25 vs FY24 level",
+          "value": 32.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 18,
+      "printed_page": 16,
+      "kind": "text",
+      "quote": "Other operating income decreased by $231 million or 12.7%.",
+      "numbers": [
+        {
+          "label": "Other operating income change H1 FY25 vs H1 FY24 level",
+          "value": -231.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other operating income change H1 FY25 vs H1 FY24 pct",
+          "value": -12.7,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 18,
+      "printed_page": 16,
+      "kind": "text",
+      "quote": "Net fees and commissions increased by $9 million or 0.9%.",
+      "numbers": [
+        {
+          "label": "Net fees and commissions change H1 FY25 vs H1 FY24 level",
+          "value": 9.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net fees and commissions change H1 FY25 vs H1 FY24 pct",
+          "value": 0.9,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 20,
       "printed_page": 18,
@@ -947,7 +946,7 @@
           "basis": null
         },
         {
-          "label": "Total operating expenses change ex-notables FY25 vs FY24",
+          "label": "Total operating expenses change FY25 vs FY24 ex_notables",
           "value": 305.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -956,7 +955,7 @@
       "provenance": null
     },
     {
-      "id": "ev-24",
+      "id": "ev-22",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 20,
       "printed_page": 18,
@@ -970,7 +969,7 @@
           "basis": null
         },
         {
-          "label": "Personnel expenses change ex-notables FY25 vs FY24",
+          "label": "Personnel expenses change FY25 vs FY24 ex_notables",
           "value": 170.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -979,7 +978,7 @@
       "provenance": null
     },
     {
-      "id": "ev-25",
+      "id": "ev-23",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 20,
       "printed_page": 18,
@@ -996,7 +995,7 @@
       "provenance": null
     },
     {
-      "id": "ev-26",
+      "id": "ev-24",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 20,
       "printed_page": 18,
@@ -1013,7 +1012,7 @@
       "provenance": null
     },
     {
-      "id": "ev-27",
+      "id": "ev-25",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 20,
       "printed_page": 18,
@@ -1027,7 +1026,7 @@
           "basis": null
         },
         {
-          "label": "General expenses change ex-notables FY25 vs FY24",
+          "label": "General expenses change FY25 vs FY24 ex_notables",
           "value": 52.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1036,7 +1035,7 @@
       "provenance": null
     },
     {
-      "id": "ev-28",
+      "id": "ev-26",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 20,
       "printed_page": 18,
@@ -1050,7 +1049,7 @@
           "basis": null
         },
         {
-          "label": "Total operating expenses change ex-notables H1 FY25 vs H1 FY24",
+          "label": "Total operating expenses change H1 FY25 vs H1 FY24 ex_notables",
           "value": 194.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1059,7 +1058,7 @@
       "provenance": null
     },
     {
-      "id": "ev-29",
+      "id": "ev-27",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 20,
       "printed_page": 18,
@@ -1073,7 +1072,7 @@
           "basis": null
         },
         {
-          "label": "Personnel expenses change ex-notables H1 FY25 vs H1 FY24",
+          "label": "Personnel expenses change H1 FY25 vs H1 FY24 ex_notables",
           "value": 143.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1082,7 +1081,7 @@
       "provenance": null
     },
     {
-      "id": "ev-30",
+      "id": "ev-28",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 20,
       "printed_page": 18,
@@ -1099,7 +1098,7 @@
       "provenance": null
     },
     {
-      "id": "ev-31",
+      "id": "ev-29",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 20,
       "printed_page": 18,
@@ -1116,7 +1115,7 @@
       "provenance": null
     },
     {
-      "id": "ev-32",
+      "id": "ev-30",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 20,
       "printed_page": 18,
@@ -1130,7 +1129,7 @@
           "basis": null
         },
         {
-          "label": "General expenses change ex-notables H1 FY25 vs H1 FY24",
+          "label": "General expenses change H1 FY25 vs H1 FY24 ex_notables",
           "value": 23.0,
           "unit": "$m",
           "basis": "ex_notables"
@@ -1139,7 +1138,7 @@
       "provenance": null
     },
     {
-      "id": "ev-33",
+      "id": "ev-31",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 23,
       "printed_page": null,
@@ -1186,7 +1185,7 @@
       "provenance": null
     },
     {
-      "id": "ev-34",
+      "id": "ev-32",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 23,
       "printed_page": null,
@@ -1233,7 +1232,7 @@
       "provenance": null
     },
     {
-      "id": "ev-35",
+      "id": "ev-33",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 23,
       "printed_page": null,
@@ -1256,7 +1255,7 @@
       "provenance": null
     },
     {
-      "id": "ev-36",
+      "id": "ev-34",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 23,
       "printed_page": null,
@@ -1279,7 +1278,7 @@
       "provenance": null
     },
     {
-      "id": "ev-37",
+      "id": "ev-35",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 23,
       "printed_page": null,
@@ -1302,7 +1301,7 @@
       "provenance": null
     },
     {
-      "id": "ev-38",
+      "id": "ev-36",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 23,
       "printed_page": null,
@@ -1325,7 +1324,7 @@
       "provenance": null
     },
     {
-      "id": "ev-39",
+      "id": "ev-37",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 75,
       "printed_page": null,
@@ -1348,7 +1347,7 @@
       "provenance": null
     },
     {
-      "id": "ev-40",
+      "id": "ev-38",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 75,
       "printed_page": null,
@@ -1371,7 +1370,7 @@
       "provenance": null
     },
     {
-      "id": "ev-41",
+      "id": "ev-39",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 75,
       "printed_page": null,
@@ -1394,7 +1393,7 @@
       "provenance": null
     },
     {
-      "id": "ev-42",
+      "id": "ev-40",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 75,
       "printed_page": null,
@@ -1417,7 +1416,7 @@
       "provenance": null
     },
     {
-      "id": "ev-43",
+      "id": "ev-41",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 75,
       "printed_page": null,
@@ -1440,7 +1439,7 @@
       "provenance": null
     },
     {
-      "id": "ev-44",
+      "id": "ev-42",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 75,
       "printed_page": null,
@@ -1463,7 +1462,7 @@
       "provenance": null
     },
     {
-      "id": "ev-45",
+      "id": "ev-43",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 75,
       "printed_page": null,
@@ -1477,7 +1476,7 @@
           "basis": "statutory"
         },
         {
-          "label": "Profit cash FY25",
+          "label": "Cash earnings FY25",
           "value": 7091.0,
           "unit": "$m",
           "basis": "cash"
@@ -1486,7 +1485,7 @@
       "provenance": null
     },
     {
-      "id": "ev-46",
+      "id": "ev-44",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 45,
       "printed_page": null,
@@ -1533,7 +1532,7 @@
       "provenance": null
     },
     {
-      "id": "ev-47",
+      "id": "ev-45",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 45,
       "printed_page": null,
@@ -1580,7 +1579,7 @@
       "provenance": null
     },
     {
-      "id": "ev-48",
+      "id": "ev-46",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 45,
       "printed_page": null,
@@ -1627,7 +1626,7 @@
       "provenance": null
     },
     {
-      "id": "ev-49",
+      "id": "ev-47",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 45,
       "printed_page": null,
@@ -1674,7 +1673,7 @@
       "provenance": null
     },
     {
-      "id": "ev-50",
+      "id": "ev-48",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 45,
       "printed_page": null,
@@ -1715,7 +1714,7 @@
       "provenance": null
     },
     {
-      "id": "ev-51",
+      "id": "ev-49",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 45,
       "printed_page": null,
@@ -1756,7 +1755,7 @@
       "provenance": null
     },
     {
-      "id": "ev-52",
+      "id": "ev-50",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 45,
       "printed_page": null,
@@ -1803,7 +1802,7 @@
       "provenance": null
     },
     {
-      "id": "ev-53",
+      "id": "ev-51",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 45,
       "printed_page": null,
@@ -1820,7 +1819,7 @@
       "provenance": null
     },
     {
-      "id": "ev-54",
+      "id": "ev-52",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 45,
       "printed_page": null,
@@ -1843,7 +1842,7 @@
       "provenance": null
     },
     {
-      "id": "ev-55",
+      "id": "ev-53",
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 45,
       "printed_page": null,
@@ -1866,7 +1865,7 @@
       "provenance": null
     },
     {
-      "id": "ev-56",
+      "id": "ev-54",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -1876,7 +1875,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p21 -> page 39"
     },
     {
-      "id": "ev-57",
+      "id": "ev-55",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -1886,7 +1885,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p21 -> page 39"
     },
     {
-      "id": "ev-58",
+      "id": "ev-56",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -1896,7 +1895,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p21 -> page 39"
     },
     {
-      "id": "ev-59",
+      "id": "ev-57",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -1943,7 +1942,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p21 -> page 39"
     },
     {
-      "id": "ev-60",
+      "id": "ev-58",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -1990,7 +1989,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p21 -> page 39"
     },
     {
-      "id": "ev-61",
+      "id": "ev-59",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -2037,7 +2036,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p21 -> page 39"
     },
     {
-      "id": "ev-62",
+      "id": "ev-60",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -2084,7 +2083,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p21 -> page 39"
     },
     {
-      "id": "ev-63",
+      "id": "ev-61",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -2131,7 +2130,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p21 -> page 39"
     },
     {
-      "id": "ev-64",
+      "id": "ev-62",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -2178,7 +2177,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p21 -> page 39"
     },
     {
-      "id": "ev-65",
+      "id": "ev-63",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 39,
       "printed_page": 39,
@@ -2225,7 +2224,7 @@
       "provenance": "reference_follow:NAB/FY25/investor_presentation p21 -> page 39"
     },
     {
-      "id": "ev-66",
+      "id": "ev-64",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 21,
       "printed_page": 21,
@@ -2248,7 +2247,7 @@
       "provenance": null
     },
     {
-      "id": "ev-67",
+      "id": "ev-65",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 21,
       "printed_page": 21,
@@ -2271,7 +2270,7 @@
       "provenance": null
     },
     {
-      "id": "ev-68",
+      "id": "ev-66",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 21,
       "printed_page": 21,
@@ -2294,7 +2293,7 @@
       "provenance": null
     },
     {
-      "id": "ev-69",
+      "id": "ev-67",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 21,
       "printed_page": 21,
@@ -2323,7 +2322,7 @@
       "provenance": null
     },
     {
-      "id": "ev-70",
+      "id": "ev-68",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 21,
       "printed_page": 21,
@@ -2352,7 +2351,7 @@
       "provenance": null
     },
     {
-      "id": "ev-71",
+      "id": "ev-69",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 21,
       "printed_page": 21,
@@ -2381,7 +2380,7 @@
       "provenance": null
     },
     {
-      "id": "ev-72",
+      "id": "ev-70",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 21,
       "printed_page": 21,
@@ -2408,6 +2407,115 @@
         }
       ],
       "provenance": null
+    },
+    {
+      "id": "ev-71",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 36,
+      "printed_page": 36,
+      "kind": "table",
+      "quote": "Operating expenses ($m) Sep 25 5,043 Mar 25 4,805",
+      "numbers": [
+        {
+          "label": "Operating expenses FY25",
+          "value": 5043.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses PRIOR HALF",
+          "value": 4805.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-72",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 36,
+      "printed_page": 36,
+      "kind": "text",
+      "quote": "HoH increase +5.0% (ex payroll review +4.1%)",
+      "numbers": [
+        {
+          "label": "Operating expenses HoH change",
+          "value": 5.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses HoH change ex payroll review",
+          "value": 4.1,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-73",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 36,
+      "printed_page": 36,
+      "kind": "text",
+      "quote": "Payroll review and remediation costs of $87m in 2H25 ($43m in 1H25)",
+      "numbers": [
+        {
+          "label": "Payroll review and remediation 2H25",
+          "value": 87.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Payroll review and remediation 1H25",
+          "value": 43.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-74",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 36,
+      "printed_page": 36,
+      "kind": "text",
+      "quote": "EU-related costs of $1m in 2H25 ($17m in 1H25)",
+      "numbers": [
+        {
+          "label": "EU-related costs 2H25",
+          "value": 1.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "EU-related costs 1H25",
+          "value": 17.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-75",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 36,
+      "printed_page": 36,
+      "kind": "text",
+      "quote": "$32m related to restructuring costs",
+      "numbers": [
+        {
+          "label": "Restructuring costs",
+          "value": 32.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
     }
   ],
   "suggested_registry_patches": [],
@@ -2415,10 +2523,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-08-30T18:58:33+00:00",
-    "seconds": 170.4,
-    "cost_usd": 0.005,
-    "tokens": "74534 in / 21167 out",
+    "generated": "2026-08-31T00:53:38+00:00",
+    "seconds": 105.2,
+    "cost_usd": 0.0051,
+    "tokens": "76421 in / 21251 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": [

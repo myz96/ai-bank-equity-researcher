@@ -10,11 +10,13 @@
     "delta": 0.8,
     "unit": "ppt"
   },
-  "movement_source": "row 'Cost to income ratio', column FY24 -> column FY25",
-  "headline": "NAB's cash cost-to-income ratio (CTI) increased by 80 basis points (0.8 ppt) in FY25 to 47.3%, up from 46.5% in FY24. This deterioration was driven by operating expense growth of 4.6% outpacing the implied operating income growth. A key driver was a $130 million increase in payroll review and remediation costs; excluding this, underlying expenses grew only 3.2%. The statutory CTI also rose, increasing by 110 bps to 49.6%.",
+  "movement_source": "row 'Cost to income ratio', column Sep 24 -> column Sep 25",
+  "headline": "NAB's cash cost-to-income ratio (CTI) increased by 80 basis points (0.8 ppt) in FY25 to 47.3% from 46.5% in FY24. This deterioration was driven by operating expense growth of 4.6%, which outpaced the bank's operating income growth. The statutory CTI also rose, increasing by 110 bps to 49.6%. A key driver of the expense increase was $130 million in payroll review and remediation costs.",
   "headline_evidence": [
     "ev-1",
-    "ev-2"
+    "ev-2",
+    "ev-3",
+    "ev-4"
   ],
   "drivers": [
     {
@@ -22,7 +24,7 @@
       "bank_label": "Operating expenses",
       "contribution": null,
       "columns": "stated vs FY24",
-      "narrative": "Total operating expenses increased by $435 million or 4.6% year-on-year (ev-3, ev-4). This expense growth exceeded income growth, widening the ratio. Excluding $130 million for payroll review and remediation, underlying expenses grew 3.2% (ev-4).",
+      "narrative": "Total operating expenses grew 4.6% ($9,413m to $9,848m), a $435m increase. Excluding $130m for payroll review and remediation, underlying expenses grew 3.2%. Expense growth outran income growth, raising the ratio.",
       "confidence": 80,
       "evidence": [
         "ev-3",
@@ -36,41 +38,38 @@
       "bank_label": "Operating income",
       "contribution": null,
       "columns": "derived vs FY24",
-      "narrative": "Implied operating income growth was approximately 3.2%, calculated from the CTI movement and expense growth. Income growth lagged expense growth, contributing positively to the ratio increase. Specific income drivers are not quantified in the provided evidence.",
+      "narrative": "Implied by the CTI movement and expense growth, operating income growth was lower than the 4.6% expense growth. Specific income drivers are not quantified in the provided evidence records.",
       "confidence": 60,
       "evidence": [
-        "ev-1",
         "ev-2",
-        "ev-3",
-        "ev-4"
+        "ev-3"
       ],
       "checks_passed": [],
       "checks_failed": []
     }
   ],
   "residual": {
-    "value": 0.0,
+    "value": 0.8,
     "unit": "ppt"
   },
   "notable_items": [
-    "$130 million increase in payroll review and remediation costs"
+    "Payroll review and remediation costs ($130m)"
   ],
   "disagreements": [
     {
-      "topic": "Basis of Headline Ratio",
+      "topic": "Basis of CTI",
       "values": [
-        "Cash: +80 bps (ev-2)",
-        "Statutory: +110 bps (ev-1)"
+        "0.8 ppt increase (Cash)",
+        "1.1 ppt increase (Statutory)"
       ],
       "preferred": "Cash",
       "reason": "definitional",
-      "explanation": "The bank reports two distinct CTI measures. Per instructions, the primary basis (Cash) is used for the headline movement. The Statutory measure shows a larger deterioration (+110 bps vs +80 bps)."
+      "explanation": "The bank reports both Cash and Statutory CTI. Per instructions, the primary basis (Cash) is used for the headline movement. The Statutory CTI moved differently due to notable items."
     }
   ],
   "attribution_confidence": 80,
   "limitations": [
-    "Quantified contributions (ppt split between income and expense) are not explicitly provided in the source text. Contributions are derived from aggregate growth rates rather than a published walk chart.",
-    "Income growth is inferred from the CTI delta and expense growth; specific income line-item drivers are not detailed in the provided evidence.",
+    "No walk chart or explicit income growth rate was provided in the evidence records. Income growth was derived implicitly from the CTI delta and expense growth. Therefore, specific ppt contributions for income and expense cannot be precisely quantified without the explicit income figure.",
     "Failed check: no_quantified_drivers"
   ],
   "evidence_records": [
@@ -83,37 +82,37 @@
       "quote": "Cost to income ratio 49.6% 48.5% 110 bps 50.2% 48.9% 130 bps",
       "numbers": [
         {
-          "label": "cost to income ratio statutory FY25",
+          "label": "cost to income ratio statutory Sep 25",
           "value": 49.6,
           "unit": "%",
           "basis": "statutory"
         },
         {
-          "label": "cost to income ratio statutory FY24",
+          "label": "cost to income ratio statutory Sep 24",
           "value": 48.5,
           "unit": "%",
           "basis": "statutory"
         },
         {
-          "label": "cost to income ratio statutory change FY25 vs FY24",
+          "label": "cost to income ratio statutory change Sep 25 v Sep 24",
           "value": 1.1,
           "unit": "ratio",
           "basis": "statutory"
         },
         {
-          "label": "cost to income ratio statutory prior half",
+          "label": "cost to income ratio statutory Mar 25",
           "value": 50.2,
           "unit": "%",
           "basis": "statutory"
         },
         {
-          "label": "cost to income ratio statutory prior year half",
+          "label": "cost to income ratio statutory prior half (Sep 24)",
           "value": 48.9,
           "unit": "%",
           "basis": "statutory"
         },
         {
-          "label": "cost to income ratio statutory change prior half vs prior year half",
+          "label": "cost to income ratio statutory change Mar 25 v Sep 24",
           "value": 1.3,
           "unit": "ratio",
           "basis": "statutory"
@@ -130,40 +129,40 @@
       "quote": "Cost to income ratio 47.3% 46.5% 80 bps 47.8% 46.8% 100 bps",
       "numbers": [
         {
-          "label": "cost to income ratio cash FY25",
+          "label": "cost to income ratio cash Sep 25",
           "value": 47.3,
           "unit": "%",
-          "basis": "cash"
+          "basis": "cash earnings basis"
         },
         {
-          "label": "cost to income ratio cash FY24",
+          "label": "cost to income ratio cash Sep 24",
           "value": 46.5,
           "unit": "%",
-          "basis": "cash"
+          "basis": "cash earnings basis"
         },
         {
-          "label": "cost to income ratio cash change FY25 vs FY24",
+          "label": "cost to income ratio cash change Sep 25 v Sep 24",
           "value": 0.8,
           "unit": "ratio",
-          "basis": "cash"
+          "basis": "cash earnings basis"
         },
         {
-          "label": "cost to income ratio cash prior half",
+          "label": "cost to income ratio cash Mar 25",
           "value": 47.8,
           "unit": "%",
-          "basis": "cash"
+          "basis": "cash earnings basis"
         },
         {
-          "label": "cost to income ratio cash prior year half",
+          "label": "cost to income ratio cash prior half (Sep 24)",
           "value": 46.8,
           "unit": "%",
-          "basis": "cash"
+          "basis": "cash earnings basis"
         },
         {
-          "label": "cost to income ratio cash change prior half vs prior year half",
+          "label": "cost to income ratio cash change Mar 25 v Sep 24",
           "value": 1.0,
           "unit": "ratio",
-          "basis": "cash"
+          "basis": "cash earnings basis"
         }
       ],
       "provenance": null
@@ -214,10 +213,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-08-30T18:59:38+00:00",
-    "seconds": 27.8,
+    "generated": "2026-08-30T23:40:31+00:00",
+    "seconds": 26.3,
     "cost_usd": 0.0014,
-    "tokens": "35702 in / 2590 out",
+    "tokens": "35778 in / 2586 out",
     "orchestration": "pipeline",
     "pages_extracted": 14,
     "reference_follow": []

@@ -11,14 +11,11 @@
     "unit": "bps"
   },
   "movement_source": "row 'Common Equity Tier 1 (APRA Level 2)', column 30 Jun 20 column -> column 30 Jun 21 column",
-  "headline": "CBA's APRA Level 2 CET1 ratio rose 150 bps to 13.1% in FY21 vs 11.6% in FY20, driven by strong organic capital generation from cash NPAT (+185 bps across both halves), divestment proceeds (+42 bps from BoCommLife, CommInsure Life and other sales), and an APRA operational risk add-on reduction (+17 bps). These were partly offset by dividends paid (-91 bps total, including a DRP-neutralised interim dividend via on-market share purchase) and a modest net RWA headwind (-5 bps). The internationally comparable CET1 ratio was 19.4% (+200 bps).",
+  "headline": "CBA's APRA Level 2 CET1 ratio rose 150 bps to 13.1% in FY21 (from 11.6% in FY20), driven by strong organic capital generation from earnings (+185 bps across both halves), divestment proceeds (+42 bps), and an APRA operational risk add-on reduction (+17 bps), partially offset by dividends paid (-91 bps) and a modest net RWA increase (-5 bps). The internationally comparable CET1 ratio was 19.4% (up 200 bps from 17.4%).",
   "headline_evidence": [
-    "ev-1",
-    "ev-3",
-    "ev-6",
     "ev-11",
-    "ev-18",
-    "ev-20"
+    "ev-14",
+    "ev-21"
   ],
   "drivers": [
     {
@@ -28,14 +25,36 @@
         "value": 185.0,
         "unit": "bps"
       },
-      "columns": "30 Jun 20 vs 30 Jun 21",
-      "narrative": "Cash NPAT generated +88 bps in 2H20 and +97 bps in 1H21, totalling +185 bps. Cash NPAT rose 19.8% to $8,653m (FY20: $7,225m), supported by improved economic outlook, lower loan impairment expense (-78% to $554m) and strong operational performance.",
+      "columns": "Jun 20 vs Jun 20 | Jun 21 vs Dec 20",
+      "narrative": "Capital generated from earnings contributed +88 bps in 2H20 and +97 bps in 1H21 (excluding net equity accounted profits from associates), totaling +185 bps for the full year. The bank states business fundamentals remained strong with cash NPAT supporting CET1 throughout FY21.",
       "confidence": 80,
       "evidence": [
-        "ev-7",
-        "ev-18"
+        "ev-1",
+        "ev-24"
       ],
       "checks_passed": [
+        "single_source",
+        "computed_delta_cap_80"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "dividend_net_drp",
+      "bank_label": "Dividend",
+      "contribution": {
+        "value": -91.0,
+        "unit": "bps"
+      },
+      "columns": "Jun 20 vs Dec 20 | Dec 20 vs Jun 21",
+      "narrative": "Total dividends reduced CET1 by -91 bps: the 2020 final dividend (DRP satisfied by issuance of $264 million shares) contributed -32 bps, and the 2021 interim dividend (DRP neutralised by on-market purchase of $418 million shares) contributed -59 bps.",
+      "confidence": 80,
+      "evidence": [
+        "ev-1",
+        "ev-23",
+        "ev-24"
+      ],
+      "checks_passed": [
+        "single_source",
         "computed_delta_cap_80"
       ],
       "checks_failed": []
@@ -47,13 +66,12 @@
         "value": 42.0,
         "unit": "bps"
       },
-      "columns": "30 Jun 20 vs 30 Jun 21",
-      "narrative": "Divestment proceeds contributed +42 bps, reflecting final proceeds from BoCommLife (completed Dec 2020, post-tax gain $369m), CommInsure Life (statutory asset transfer to AIA Apr 2021), and other prior divestments. The bank notes excess CET1 capital of $6.2bn released from divestments since 1H19.",
+      "columns": "Jun 20 vs Dec 20",
+      "narrative": "Divestment proceeds contributed +42 bps, including the receipt of final proceeds from the sale of CommInsure Life (+2 bps) and the completion of the sale of PT Commonwealth Life. Additional proceeds from Colonial First State and CommInsure General Insurance were expected but not yet completed.",
       "confidence": 85,
       "evidence": [
-        "ev-7",
-        "ev-12",
-        "ev-13"
+        "ev-1",
+        "ev-25"
       ],
       "checks_passed": [
         "single_source"
@@ -67,35 +85,15 @@
         "value": 17.0,
         "unit": "bps"
       },
-      "columns": "30 Jun 20 vs 30 Jun 21",
-      "narrative": "APRA's Nov 2020 announcement halved CBA's operational RWA add-on from $12.5bn to $6.25bn, contributing +17 bps to the CET1 ratio. This is a regulatory treatment change, not an organic RWA improvement.",
+      "columns": "Jun 20 vs Dec 20",
+      "narrative": "APRA's November 2020 announcement resulted in a 50% reduction in CBA's operational RWA add-on (from $12.5 billion to $6.25 billion), contributing +17 bps to the CET1 ratio in 2H20.",
       "confidence": 85,
       "evidence": [
-        "ev-7",
-        "ev-12"
+        "ev-1",
+        "ev-22"
       ],
       "checks_passed": [
         "single_source"
-      ],
-      "checks_failed": []
-    },
-    {
-      "canonical": "dividend_net_drp",
-      "bank_label": "Dividend",
-      "contribution": {
-        "value": -91.0,
-        "unit": "bps"
-      },
-      "columns": "30 Jun 20 vs 30 Jun 21",
-      "narrative": "Total dividend impact was -91 bps: 2H20 dividend (-32 bps) with DRP satisfied by share issuance ($264m, 15.2% participation), and 1H21 interim dividend (-59 bps) with DRP neutralised via on-market share purchase (~$557m, 15.7% participation). The full year dividend was $3.50 per share, fully franked.",
-      "confidence": 80,
-      "evidence": [
-        "ev-7",
-        "ev-14"
-      ],
-      "checks_passed": [
-        "single_source",
-        "computed_delta_cap_80"
       ],
       "checks_failed": []
     },
@@ -106,15 +104,16 @@
         "value": -5.0,
         "unit": "bps"
       },
-      "columns": "30 Jun 20 vs 30 Jun 21",
-      "narrative": "Net RWA movement was -5 bps: underlying RWA contributed -13 bps in 2H20 (total RWA fell from $454.9bn at Jun 20 to $453.6bn at Dec 20, then to $450.7bn at Jun 21), while 1H21 RWA added +8 bps. Credit Risk RWA increased from $374.2bn to $381.6bn (+$7.4bn), but Operational Risk RWA fell sharply from $57.2bn to $46.2bn (-$11.0bn).",
+      "columns": "Jun 20 vs Dec 20 | Dec 20 vs Jun 21",
+      "narrative": "Net RWA movement was -5 bps: underlying RWA decreased by -13 bps in 2H20 (driven by reductions in Operational Risk RWA, Traded Market Risk RWA, and IRRBB RWA, partly offset by higher Credit Risk RWA), while RWA increased by +8 bps in 1H21.",
       "confidence": 80,
       "evidence": [
-        "ev-7",
-        "ev-16",
-        "ev-17"
+        "ev-1"
       ],
-      "checks_passed": [],
+      "checks_passed": [
+        "single_source",
+        "computed_delta_cap_80"
+      ],
       "checks_failed": []
     },
     {
@@ -124,12 +123,12 @@
         "value": 2.0,
         "unit": "bps"
       },
-      "columns": "30 Jun 20 vs 30 Jun 21",
-      "narrative": "Other items netted +2 bps: -2 bps in 2H20 and +4 bps in 1H21. The 1H21 'Other' includes the receipt of final proceeds from the sale of CommInsure Life (+2 bpts).",
+      "columns": "Jun 20 vs Dec 20 | Dec 20 vs Jun 21",
+      "narrative": "Other movements contributed -2 bps in 2H20 and +4 bps in 1H21, netting +2 bps for the full year. The 1H21 'other' includes the CommInsure Life sale proceeds impact of +2 bps.",
       "confidence": 85,
       "evidence": [
-        "ev-7",
-        "ev-13"
+        "ev-1",
+        "ev-25"
       ],
       "checks_passed": [
         "single_source"
@@ -141,103 +140,18 @@
     "value": 0.0,
     "unit": "bps"
   },
-  "notable_items": [
-    "The 2021 interim dividend DRP was satisfied entirely by on-market share purchase of ~$557m (CET1 impact: 9 bps per page 53 of profit announcement)",
-    "Expected further CET1 uplift of 39-49 bps from pending Colonial First State and CommInsure General Insurance divestments (subject to regulatory approval)",
-    "Internationally comparable CET1 ratio was 19.4% (+200 bps vs FY20's 17.4%)"
-  ],
+  "notable_items": [],
   "disagreements": [],
   "attribution_confidence": 90,
   "limitations": [
-    "The results presentation chart decomposes RWA into 'Underlying RWA' for 2H20 and 'RWA' for 1H21; the bank does not provide a single consistent RWA label across both halves. The full-year RWA contribution is therefore inferred as the sum of the two half-period bars.",
-    "The bank does not disclose a separate breakdown of the 'Other' line beyond the CommInsure Life proceeds (+2 bpts) noted in the chart footnote.",
-    "No standalone full-year CET1 walk chart exists in the profit announcement; the primary decomposition comes from the results presentation slide deck.",
-    "Capped at 80: earnings_generation +185 bps, dividend_net_drp -91 bps. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it."
+    "The walk chart on page 111 of the results presentation is the primary source for the full-year decomposition. The profit announcement (page 53) only discloses half-on-half drivers for 1H21, not the full-year breakdown.",
+    "The bank does not separately quantify the full-year earnings generation driver; the +185 bps figure is derived by summing the 2H20 (+88 bps) and 1H21 (+97 bps) Cash NPAT bars from the walk chart.",
+    "No off-market buy-back occurred in FY21; the $6 billion buy-back mentioned on page 13 was announced but not executed within the period.",
+    "Capped at 80: earnings_generation +185 bps, dividend_net_drp -91 bps, rwa -5 bps. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it."
   ],
   "evidence_records": [
     {
       "id": "ev-1",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 53,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The Group's CET1 ratio (APRA) was 13.1% as at 30 June 2021, an increase of 50 basis points from 31 December 2020 and an increase of 150 basis points from 30 June 2020.",
-      "numbers": [
-        {
-          "label": "CET1 ratio at 30 Jun 2021",
-          "value": 13.1,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "increase from 31 Dec 2020",
-          "value": 50.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "increase from 30 Jun 2020",
-          "value": 150.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-3",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 53,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Common Equity Tier 1 13.1 12.6 11.6 50 bpts 150 bpts",
-      "numbers": [
-        {
-          "label": "CET1 ratio at 30 Jun 21",
-          "value": 13.1,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 ratio at 31 Dec 20",
-          "value": 12.6,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 ratio at 30 Jun 20",
-          "value": 11.6,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-6",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 8,
-      "printed_page": 8,
-      "kind": "table",
-      "quote": "CET1 (%, Level 2) 13.1% 150bpts",
-      "numbers": [
-        {
-          "label": "CET1 ratio FY21",
-          "value": 13.1,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 movement vs FY20",
-          "value": 150.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-7",
       "doc_id": "CBA/FY21/results_presentation",
       "pdf_page": 111,
       "printed_page": 111,
@@ -281,7 +195,7 @@
           "basis": null
         },
         {
-          "label": "1H21 Div.",
+          "label": "1H21 Div. 3",
           "value": -59.0,
           "unit": "bps",
           "basis": null
@@ -308,56 +222,27 @@
       "provenance": null
     },
     {
-      "id": "ev-11",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 111,
-      "printed_page": 111,
+      "id": "ev-9",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 53,
+      "printed_page": null,
       "kind": "text",
-      "quote": "CET1 ratio of 13.1%, +50bpts vs Dec 20, +150bpts vs Jun 20",
-      "numbers": [
-        {
-          "label": "CET1 ratio at Jun 21",
-          "value": 13.1,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "movement vs Dec 20",
-          "value": 50.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "movement vs Jun 20",
-          "value": 150.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-12",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 111,
-      "printed_page": 111,
-      "kind": "text",
-      "quote": "Reflects APRA's announcement on 20 November 2020 resulting in a 50% reduction in CBA's operational RWA add-on (from $12.5bn to $6.25bn).",
+      "quote": "The Group's CET1 ratio (APRA) was 13.1% as at 30 June 2021, an increase of 50 basis points from 31 December 2020 and an increase of 150 basis points from 30 June 2020.",
       "numbers": [],
       "provenance": null
     },
     {
-      "id": "ev-13",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 111,
-      "printed_page": 111,
+      "id": "ev-11",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 53,
+      "printed_page": null,
       "kind": "text",
-      "quote": "Includes the receipt of the final proceeds from the sale of CommInsure Life (+2bpts)",
+      "quote": "Common Equity Tier 1 13. 1 12. 6 11. 6",
       "numbers": [
         {
-          "label": "CommInsure Life sale proceeds impact on Other",
-          "value": 2.0,
-          "unit": "bps",
+          "label": "Common Equity Tier 1 as at 30 Jun 21",
+          "value": 13.1,
+          "unit": "%",
           "basis": null
         }
       ],
@@ -369,97 +254,126 @@
       "pdf_page": 111,
       "printed_page": 111,
       "kind": "text",
-      "quote": "2020 final dividend - DRP satisfied by the issuance of shares. 2021 interim dividend - DRP neutralised.",
+      "quote": "Key Capital ratios (%) Jun 20 Dec 20 Jun 21 CET1 capital ratio 11.6 12.6 13.1",
+      "numbers": [
+        {
+          "label": "CET1 capital ratio as at Jun 20",
+          "value": 11.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 capital ratio as at Dec 20",
+          "value": 12.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 capital ratio as at Jun 21",
+          "value": 13.1,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/FY20/profit_announcement",
+      "pdf_page": 53,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Common Equity Tier 1 11. 6 11. 7 10. 7",
       "numbers": [],
       "provenance": null
     },
     {
-      "id": "ev-16",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 130,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Total risk weighted assets 450,680 453,616 454,948",
-      "numbers": [
-        {
-          "label": "Total RWA at 30 Jun 21",
-          "value": 450680.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total RWA at 31 Dec 20",
-          "value": 453616.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total RWA at 30 Jun 20",
-          "value": 454948.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-17",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 130,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Operational risk 46,204 49,994 57,212",
-      "numbers": [
-        {
-          "label": "Operational Risk RWA at 30 Jun 21",
-          "value": 46204.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Operational Risk RWA at 30 Jun 20",
-          "value": 57212.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-18",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 9,
+      "id": "ev-21",
+      "doc_id": "CBA/FY20/profit_announcement",
+      "pdf_page": 53,
       "printed_page": null,
       "kind": "text",
-      "quote": "Net profit after tax $8,843m $8,653m Statutory NPAT Cash NPAT",
+      "quote": "The Bank's CET1 ratio (APRA) was 11.6% as at 30 June 2020",
       "numbers": [
         {
-          "label": "Statutory NPAT FY21",
-          "value": 8843.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT FY21",
-          "value": 8653.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-20",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 9,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Common Equity Tier 1 capital ratio 13.1% APRA (Level 2)",
-      "numbers": [
-        {
-          "label": "CET1 ratio at 30 Jun 21",
-          "value": 13.1,
+          "label": "CET1 ratio (APRA) as at 30 Jun 20",
+          "value": 11.6,
           "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 111,
+      "printed_page": 111,
+      "kind": "text",
+      "quote": "Reflects APRA's announcement on 20 November 2020 resulting in a 50% reduction in CBA's operational RWA add-on (from $12.5bn to $6.25bn).",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 111,
+      "printed_page": 111,
+      "kind": "text",
+      "quote": "2020 final dividend: included the issuance of shares in respect of the Dividend Reinvestment Plan (DRP).",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 111,
+      "printed_page": 111,
+      "kind": "text",
+      "quote": "2021 interim dividend included the on-market purchase of shares in respect of the DRP.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 111,
+      "printed_page": 111,
+      "kind": "text",
+      "quote": "Includes the receipt of the final proceeds from the sale of CommInsure Life (+2bpts)",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-31",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 53,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Key drivers of the change in CET1 for the 6 months ended 30 June 2021 were capital generated from earnings (+97 basis points, excluding net equity accounted profits from associates), lower total RWA (+8 basis points) and other regulatory adjustments (+4 basis points), partly offset by the 2021 interim dividend (-59 basis points) in which the DRP was satisfied in full by the on-market purchase of shares.",
+      "numbers": [
+        {
+          "label": "capital generated from earnings 6M to Jun 21",
+          "value": 97.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "lower total RWA 6M to Jun 21",
+          "value": 8.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "other regulatory adjustments 6M to Jun 21",
+          "value": 4.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "2021 interim dividend 6M to Jun 21",
+          "value": -59.0,
+          "unit": "bps",
           "basis": null
         }
       ],
@@ -471,13 +385,13 @@
     "combo": "agentic-cheap",
     "models": "agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash",
     "documents": "CBA/FY21/profit_announcement (ffdff75173e7), CBA/FY21/results_presentation (b1bbbd626803), CBA/FY20/profit_announcement (2c2179a200a3)",
-    "generated": "2026-08-30T19:36:23+00:00",
-    "seconds": 158.3,
-    "cost_usd": 0.038,
-    "tokens": "1530502 in / 11050 out",
+    "generated": "2026-08-31T00:08:07+00:00",
+    "seconds": 193.5,
+    "cost_usd": 0.0393,
+    "tokens": "1148621 in / 9724 out",
     "orchestration": "agent",
-    "tool_calls": 55,
-    "pages_read": 16,
+    "tool_calls": 45,
+    "pages_read": 14,
     "charts_read": 1,
     "budget_exhausted": "no"
   }

@@ -1,98 +1,775 @@
 # CBA — cet1 — 1H26 vs 1H25
 
-**Movement (cash basis):** 1220bps → 1230bps (+10bps) | **Attribution confidence:** 40/100
+**Movement (cash basis):** 1220bps → 1230bps (+10bps) | **Attribution confidence:** 70/100
 
-*Read from: row 'Common Equity Tier 1 (CET1) row, Summary Group Capital Adequacy Ratios table', column 31 Dec 24 column -> column 31 Dec 25 column*
+*Read from: row 'Common Equity Tier 1 (APRA) (%)', column 31 Dec 24 column -> column 31 Dec 25 column*
 
-CBA's APRA Level 2 CET1 ratio rose 10 bpts to 12.3% at 31 December 2025 from 12.2% at 31 December 2024. The increase was driven by capital generated from earnings (cash NPAT up 6% to $5,445 million) and other regulatory adjustments, partly offset by the payment of the 2025 final dividend (including a $643 million DRP on-market purchase with a -13 bpts CET1 impact) and higher total RWA ($505 billion, up $23 billion from $482 billion). The largest single quantified driver was the revised APS 117 framework adoption on 1 October 2025, which reduced IRRBB RWA by ~$10 billion and contributed +24 bpts to CET1. The Level 1 CET1 ratio moved from 12.1% to 12.2% (+10 bpts), broadly consistent.
+CBA's APRA Level 2 CET1 ratio rose +10 bpts to 12.3% at 31 Dec 2025 from 12.2% at 31 Dec 2024, broadly flat year-on-year. The movement was driven by capital generated from earnings (cash NPAT up 6% to $5,445m), partly offset by the payment of the 2025 final dividend and higher total RWA ($482.4bn → $505.3bn, +$22.9bn). Higher Credit Risk RWA (+$10.2bn), Operational Risk RWA (+$3.4bn) and Traded Market Risk RWA (+$0.2bn) were partly offset by lower IRRBB RWA (-$4.7bn), which included the impact of adopting the revised APS 117 framework effective 1 October 2025. Other regulatory adjustments and movement in reserves also contributed positively. No separate YoY CET1 bridge chart is published; the bank only provides a half-on-half (Jun 25→Dec 25) walk.
 
-> [ev-8] CBA/1H26/profit_announcement, printed p28: "Common Equity Tier 1 (CET1) 12.3 12.3 12.2 – 10 bpts"
-> [ev-33] CBA/1H26/results_presentation, printed p103: "Key capital ratios (%) Dec 24 Jun 25 Dec 25 CET1 capital ratio 12.2 12.3 12.3"
-> [ev-35] CBA/1H26/results_presentation, printed p103: "Level 1 CET1 ratio 12.1 12.4 12.2"
+> [ev-32] CBA/1H26/profit_announcement, PDF p19: "Common Equity Tier 1 (APRA) (%) 12.3 12.3 12.2 – 10 bpts"
+> [ev-33] CBA/1H26/profit_announcement, PDF p19: "Risk weighted assets (RWA) ($M) 505,310 496,145 482,369 2 5"
+> [ev-34] CBA/1H26/profit_announcement, printed p2: "CET1 was 12.3% as at 31 December 2025, in line with 30 June 2025, well above APRA's regulatory requirements. The movement was driven by capital generated from earnings, partly offset by payment of the 2025 final dividend and higher total RWA. The increase in Credit Risk, Traded Market Risk and Operational Risk RWA was partly offset by lower IRRBB RWA which includes the impact of the revised APS 117 framework, effective 1 October 2025."
 
-## Drivers
-
-| Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
-|---|---|---|---|---|---|
-| `regulatory_model_changes` | Revised APS 117 framework | +24 bps | 85 | 1 (single_source) | ev-10, ev-13 |
-| *residual (unexplained)* | — | -14 bps | — | — |
-
-### earnings_generation — "Capital generated from earnings"
+### earnings_generation
 *unquantified | confidence 75/100*
 
-Cash NPAT increased 6% to $5,445 million (up $313 million on 1H25), driven by a 7% increase in operating income (NII up 6% on $96 billion AIEA growth, partly offset by 4 bpts NIM decline; other operating income up 8%) and a 5% increase in operating expenses. Divisional organic capital generation totaled $3,931 million across Retail Banking ($1,869 million, +37 bpts), Business Banking ($1,393 million, +27 bpts), New Zealand ($670 million, +14 bpts) and ASB ($689 million, +14 bpts). The bank states capital generated from earnings as a key positive driver of the CET1 movement.
-> [ev-11] CBA/1H26/profit_announcement, printed p28: "The key drivers of the change in CET1 for the 6 months ended 31 December 2025 were: • Capital generated from earnings; and • Other regulatory adjustments and movement in reserves; partly offset by • The payment of the 2H25 dividend; and • Higher Credit Risk, Traded Market Risk and Operational Risk RWA, partly offset by lower IRRBB RWA which includes the impact of adoption of the revised APS 117 framework, effective 1 October 2025."
-> [ev-28] CBA/1H26/profit_announcement, printed p2: "Cash net profit after tax ("cash NPAT" or "cash profit") from continuing operations increased $313 million or 6% on the prior comparative period to $5,445 million."
-> [ev-29] CBA/1H26/profit_announcement, printed p2: "CET1 was 12.3% as at 31 December 2025, in line with 30 June 2025, well above APRA's regulatory requirements. The movement was driven by capital generated from earnings, partly offset by payment of the 2025 final dividend and higher total RWA."
-> [ev-23] CBA/1H26/profit_announcement, PDF p65: "Retail Banking Services generated $1,869 million of organic capital 1 for the Group in the current half. This contributed 37 basis points to the Group's CET1 ratio."
-> [ev-24] CBA/1H26/profit_announcement, PDF p69: "Business Banking generated $1,393 million of organic capital 1 for the Group in the current half. This contributed 27 basis points to the Group's CET1 ratio."
-> [ev-27] CBA/1H26/profit_announcement, PDF p79: "ASB generated AUD689 million of organic capital 4 for the Group in the current half. This contributed 14 basis points to the Group's CET1 ratio."
+Cash NPAT from continuing operations increased $313 million or 6% on the prior comparative period to $5,445 million, generating organic capital that supported the CET1 ratio. ASB alone contributed AUD689 million of organic capital, adding 14 bpts to the Group CET1 ratio on a half-on-half basis.
+> [ev-34] CBA/1H26/profit_announcement, printed p2: "CET1 was 12.3% as at 31 December 2025, in line with 30 June 2025, well above APRA's regulatory requirements. The movement was driven by capital generated from earnings, partly offset by payment of the 2025 final dividend and higher total RWA. The increase in Credit Risk, Traded Market Risk and Operational Risk RWA was partly offset by lower IRRBB RWA which includes the impact of the revised APS 117 framework, effective 1 October 2025."
+> [ev-37] CBA/1H26/profit_announcement, PDF p79: "ASB generated AUD689 million of organic capital 4 for the Group in the current half. This contributed 14 basis points to the Group's CET1 ratio."
 
-### dividend_net_drp — "Payment of the 2H25 dividend"
-*unquantified | confidence 80/100*
+### dividend_net_drp
+*unquantified | confidence 60/100*
 
-The 2025 final dividend included the on-market purchase of $643 million of shares in respect of the DRP, with a stated CET1 impact of -13 bpts. The DRP participation rate was 14.8%. No additional share buy-back activity was undertaken during the December 2025 half (the $1 billion on-market buy-back had $300 million completed as at 31 Dec 25, with no activity in this half). The bank identifies the payment of the 2H25 dividend as a key offsetting driver.
-> [ev-9] CBA/1H26/profit_announcement, printed p28: "The 2025 final dividend included the on-market purchase of $643 million of shares (CET1 impact of -13 bpts) in respect of the Dividend Reinvestment Plan."
-> [ev-11] CBA/1H26/profit_announcement, printed p28: "The key drivers of the change in CET1 for the 6 months ended 31 December 2025 were: • Capital generated from earnings; and • Other regulatory adjustments and movement in reserves; partly offset by • The payment of the 2H25 dividend; and • Higher Credit Risk, Traded Market Risk and Operational Risk RWA, partly offset by lower IRRBB RWA which includes the impact of adoption of the revised APS 117 framework, effective 1 October 2025."
+The 2025 final dividend was paid during the half, with DRP satisfied in full by on-market purchase of shares (participation rate 14.8%). The half-on-half walk shows a -87 bpts CET1 impact from the 2H25 dividend (DRP neutralised); no specific YoY bpts figure is disclosed for this driver.
+> [ev-34] CBA/1H26/profit_announcement, printed p2: "CET1 was 12.3% as at 31 December 2025, in line with 30 June 2025, well above APRA's regulatory requirements. The movement was driven by capital generated from earnings, partly offset by payment of the 2025 final dividend and higher total RWA. The increase in Credit Risk, Traded Market Risk and Operational Risk RWA was partly offset by lower IRRBB RWA which includes the impact of the revised APS 117 framework, effective 1 October 2025."
 
-### rwa — "Higher Credit Risk, Traded Market Risk and Operational Risk RWA, partly offset by lower IRRBB RWA"
+### rwa.credit
 *unquantified | confidence 70/100*
 
-Total RWA increased $23 billion (from $482 billion to $505 billion). Credit RWA rose $10.2 billion (2.6%) to $409.1 billion, driven by volume growth (+$17.3 billion across commercial, domestic RM, and NZ portfolios) and data & methodology changes (+$4.9 billion from residential mortgage overlay increase), partly offset by credit quality improvement (-$6.5 billion), FX movements (-$4.1 billion), and derivatives/other (-$1.4 billion). Traded Market Risk RWA increased $0.2 billion to $10.0 billion. Operational Risk RWA rose $3.4 billion (7.2%) to $51.0 billion due to higher average NII over years ended 30 June 2025, 2024 and 2023. IRRBB RWA decreased $4.7 billion (12%) to $35.2 billion, driven by revised APS 117 implementation effective 1 October 2025.
-> [ev-12] CBA/1H26/profit_announcement, PDF p49: "Total Group Risk Weighted Assets Total RWA increased $9.2bn on the prior half to $505.3 billion. Increases in Credit Risk RWA, Operational Risk RWA and Traded Market Risk RWA were partly offset by lower IRRBB RWA."
-> [ev-15] CBA/1H26/profit_announcement, PDF p49: "Credit Risk RWA increased $10.2 billion or 2.6% on the prior half to $409.1 billion."
-> [ev-16] CBA/1H26/profit_announcement, PDF p49: "Credit Risk RWA increased $10.2 billion or 2.6% on the prior half to $409.1 billion."
-> [ev-17] CBA/1H26/profit_announcement, PDF p49: "Volume growth (increase of $17.3 billion) across commercial portfolios, domestic residential mortgages, and New Zealand portfolios"
-> [ev-18] CBA/1H26/profit_announcement, PDF p49: "Data & methodology (increase of $4.9 billion) due to an increase in the residential mortgage overlay"
-> [ev-19] CBA/1H26/profit_announcement, PDF p49: "Credit quality improvement (decrease of $6.5 billion) primarily from lower risk weights for residential mortgages"
-> [ev-20] CBA/1H26/profit_announcement, PDF p49: "Foreign currency movements (decrease of $4.1 billion)"
-> [ev-21] CBA/1H26/profit_announcement, PDF p49: "Derivatives and other (decrease of $1.4 billion) mainly from lower derivatives"
-> [ev-22] CBA/1H26/profit_announcement, PDF p49: "Traded Market Risk RWA increased $0.2 billion or 2% on the prior half to $10.0 billion"
-> [ev-13] CBA/1H26/profit_announcement, PDF p49: "IRRBB RWA decreased $4.7 billion or 12% on the prior half to $35.2 billion, driven by the implementation of the revised APS 117, effective 1 October 2025, partly offset by the impact of higher long-term interest rates in Australia reducing embedded gains."
-> [ev-14] CBA/1H26/profit_announcement, PDF p49: "The increase in Operational Risk RWA by $3.4 billion or 7.2% on the prior half to $51.0 billion was primarily driven by higher average net interest income over the years ended 30 June 2025, 2024 and 2023 due to higher interest rates and lending growth."
+Credit Risk RWA increased $10.2 billion or 2.6% on the prior half to $409.1 billion, driven by volume growth (+$17.3bn) across commercial portfolios, domestic residential mortgages, and New Zealand portfolios, and data & methodology changes (+$4.9bn from an increase in the residential mortgage overlay), partly offset by credit quality improvement (-$6.5bn), foreign currency movements (-$4.1bn), and derivatives/other (-$1.4bn).
+> [ev-10] CBA/1H26/profit_announcement, PDF p49: "Credit Risk RWA increased $10.2 billion or 2.6% on the prior half to $409.1 billion."
+> [ev-9] CBA/1H26/profit_announcement, PDF p49: "Total RWA increased $9.2bn on the prior half to $505.3 billion."
 
-### regulatory_model_changes — "Revised APS 117 framework"
-*+24 bps | confidence 85/100*
+### rwa.operational
+*unquantified | confidence 70/100*
 
-The adoption of the revised APS 117 framework effective 1 October 2025 reduced IRRBB RWA by approximately $10 billion, with a stated CET1 impact of +24 bpts. This is the most precisely quantified single driver in the bank's disclosure for this comparison period.
-> [ev-10] CBA/1H26/profit_announcement, printed p28: "Includes the impact of the reduction to IRRBB RWA of ~$10 billion (CET1 impact of +24 bpts) on adoption of the revised APS 117 framework effective 1 October 2025."
-> [ev-13] CBA/1H26/profit_announcement, PDF p49: "IRRBB RWA decreased $4.7 billion or 12% on the prior half to $35.2 billion, driven by the implementation of the revised APS 117, effective 1 October 2025, partly offset by the impact of higher long-term interest rates in Australia reducing embedded gains."
+Operational Risk RWA increased $3.4 billion or 7.2% on the prior half to $51.0 billion, primarily driven by higher average net interest income over the years ended 30 June 2025, 2024 and 2023 due to higher interest rates and lending growth.
+> [ev-13] CBA/1H26/profit_announcement, PDF p49: "The increase in Operational Risk RWA by $3.4 billion or 7.2% on the prior half to $51.0 billion was primarily driven by higher average net interest income over the years ended 30 June 2025, 2024 and 2023 due to higher interest rates and lending growth."
 
-### deductions_other — "Other regulatory adjustments and movement in reserves"
-*unquantified | confidence 50/100*
+### rwa.market
+*unquantified | confidence 70/100*
 
-The bank identifies 'other regulatory adjustments and movement in reserves' as a key positive driver alongside earnings. This footnote (note 6 on page 28) includes the impact of intangibles, FX impact on Credit RWA, equity accounted profits/losses and impairments from associates, movements in reserves and other regulatory adjustments. The bank does not disclose a specific bpts figure for this category for the Dec 24→Dec 25 comparison.
-> [ev-11] CBA/1H26/profit_announcement, printed p28: "The key drivers of the change in CET1 for the 6 months ended 31 December 2025 were: • Capital generated from earnings; and • Other regulatory adjustments and movement in reserves; partly offset by • The payment of the 2H25 dividend; and • Higher Credit Risk, Traded Market Risk and Operational Risk RWA, partly offset by lower IRRBB RWA which includes the impact of adoption of the revised APS 117 framework, effective 1 October 2025."
+Traded Market Risk RWA increased $0.2 billion or 2% on the prior half to $10.0 billion.
+> [ev-11] CBA/1H26/profit_announcement, PDF p49: "Traded Market Risk RWA increased $0.2 billion or 2% on the prior half to $10.0 billion."
 
-## Notable items
-- APS 117 revision (+24 bpts) partially offsets negative RWA pressure
-- DRP on-market purchase (-13 bpts) is the largest single capital return
-- No share buy-back activity in 1H26 half
-- Level 1 CET1 also rose 10 bpts (12.1% to 12.2%)
+### rwa.irrbb
+*unquantified | confidence 70/100*
 
-## Source disagreements
-- **Level 1 vs Level 2 CET1 ratio** (definitional): Level 2: 12.2% → 12.3% (+10 bpts) vs Level 1: 12.1% → 12.2% (+10 bpts)
-  Preferred: Level 2 CET1 ratio of 12.3%. The task asks for the CET1 ratio. CBA reports both Level 1 (12.2%) and Level 2 (12.3%) CET1. Level 2 is the APRA-regulated measure and the one used in the KPI table and capital adequacy summary. Both show +10 bpts movement.
+IRRBB RWA decreased $4.7 billion or 12% on the prior half to $35.2 billion, driven by the implementation of the revised APS 117, effective 1 October 2025, partly offset by the impact of higher long-term interest rates in Australia reducing embedded gains. Footnote 5 states the APS 117 adoption reduced IRRBB RWA by ~$10 billion with a CET1 impact of +24 bpts.
+> [ev-12] CBA/1H26/profit_announcement, PDF p49: "IRRBB RWA decreased $4.7 billion or 12% on the prior half to $35.2 billion, driven by the implementation of the revised APS 117, effective 1 October 2025, partly offset by the impact of higher long-term interest rates in Australia reducing embedded gains."
+
+### deductions_other
+*unquantified | confidence 60/100*
+
+Other regulatory adjustments and movement in reserves contributed positively to CET1. The half-on-half walk shows +9 bpts from 'Other', which includes intangibles, FX impact on Credit RWA, equity accounted profits/losses and impairments from associates, and other regulatory adjustments per footnote 6.
+> [ev-34] CBA/1H26/profit_announcement, printed p2: "CET1 was 12.3% as at 31 December 2025, in line with 30 June 2025, well above APRA's regulatory requirements. The movement was driven by capital generated from earnings, partly offset by payment of the 2025 final dividend and higher total RWA. The increase in Credit Risk, Traded Market Risk and Operational Risk RWA was partly offset by lower IRRBB RWA which includes the impact of the revised APS 117 framework, effective 1 October 2025."
 
 ## Limitations
-- No primary walk chart exists for the Dec 24 → Dec 25 comparison; the published CET1 walk chart covers Jun 25 → Dec 25 (half-on-half) and cannot be used as driver contributions for this task.
-- Earnings generation contribution is unquantified in bpts for the Dec 24→Dec 25 window; only the context chart (Jun→Dec) shows Cash NPAT at +107 bpts.
-- Dividend net of DRP contribution is unquantified for the full-year comparison; only the DRP on-market purchase component (-13 bpts) is disclosed.
-- RWA movement contribution is unquantified in bpts for the Dec 24→Dec 25 window; the context chart shows RWA at -33 bpts for Jun→Dec.
-- The residual of -14 bpts reflects that the quantified APS 117 impact (+24 bpts) plus the unquantified drivers do not sum to the total +10 bpts movement.
-- Divisional organic capital figures (Retail +37 bpts, Business +27 bpts, NZ +14 bpts, ASB +14 bpts) are reported against the prior half, not the year-on-year comparison.
-- Failed check: walk_sum (start 1230 + bars -4.0 = 1226.0 != end 1230, tol 0.1 %) [CBA/1H26/profit_announcement PDF p48 (ev-1)]
+- 
+
+- [
+- "
+- N
+- o
+-  
+- s
+- e
+- p
+- a
+- r
+- a
+- t
+- e
+-  
+- Y
+- o
+- Y
+-  
+- (
+- D
+- e
+- c
+-  
+- 2
+- 4
+- →
+- D
+- e
+- c
+-  
+- 2
+- 5
+- )
+-  
+- C
+- E
+- T
+- 1
+-  
+- b
+- r
+- i
+- d
+- g
+- e
+- /
+- w
+- a
+- l
+- k
+-  
+- c
+- h
+- a
+- r
+- t
+-  
+- i
+- s
+-  
+- p
+- u
+- b
+- l
+- i
+- s
+- h
+- e
+- d
+-  
+- b
+- y
+-  
+- C
+- B
+- A
+- .
+-  
+- O
+- n
+- l
+- y
+-  
+- a
+-  
+- h
+- a
+- l
+- f
+- -
+- o
+- n
+- -
+- h
+- a
+- l
+- f
+-  
+- (
+- J
+- u
+- n
+-  
+- 2
+- 5
+- →
+- D
+- e
+- c
+-  
+- 2
+- 5
+- )
+-  
+- w
+- a
+- l
+- k
+-  
+- i
+- s
+-  
+- p
+- r
+- o
+- v
+- i
+- d
+- e
+- d
+- ,
+-  
+- s
+- o
+-  
+- d
+- r
+- i
+- v
+- e
+- r
+-  
+- c
+- o
+- n
+- t
+- r
+- i
+- b
+- u
+- t
+- i
+- o
+- n
+- s
+-  
+- a
+- r
+- e
+-  
+- u
+- n
+- q
+- u
+- a
+- n
+- t
+- i
+- f
+- i
+- e
+- d
+-  
+- f
+- o
+- r
+-  
+- t
+- h
+- e
+-  
+- t
+- a
+- s
+- k
+-  
+- c
+- o
+- m
+- p
+- a
+- r
+- i
+- s
+- o
+- n
+- .
+-  
+- D
+- r
+- i
+- v
+- e
+- r
+-  
+- n
+- a
+- r
+- r
+- a
+- t
+- i
+- v
+- e
+- s
+-  
+- d
+- e
+- s
+- c
+- r
+- i
+- b
+- e
+-  
+- t
+- h
+- e
+-  
+- h
+- a
+- l
+- f
+- -
+- o
+- n
+- -
+- h
+- a
+- l
+- f
+-  
+- c
+- o
+- m
+- p
+- o
+- n
+- e
+- n
+- t
+- s
+-  
+- a
+- s
+-  
+- c
+- o
+- n
+- t
+- e
+- x
+- t
+-  
+- b
+- u
+- t
+-  
+- c
+- a
+- n
+- n
+- o
+- t
+-  
+- b
+- e
+-  
+- m
+- a
+- p
+- p
+- e
+- d
+-  
+- p
+- r
+- e
+- c
+- i
+- s
+- e
+- l
+- y
+-  
+- t
+- o
+-  
+- t
+- h
+- e
+-  
+- Y
+- o
+- Y
+-  
+- d
+- e
+- l
+- t
+- a
+- .
+- "
+- ,
+-  
+- "
+- T
+- h
+- e
+-  
+- +
+- 1
+- 0
+-  
+- b
+- p
+- t
+- s
+-  
+- Y
+- o
+- Y
+-  
+- m
+- o
+- v
+- e
+- m
+- e
+- n
+- t
+-  
+- i
+- s
+-  
+- t
+- a
+- k
+- e
+- n
+-  
+- d
+- i
+- r
+- e
+- c
+- t
+- l
+- y
+-  
+- f
+- r
+- o
+- m
+-  
+- t
+- h
+- e
+-  
+- K
+- P
+- I
+-  
+- t
+- a
+- b
+- l
+- e
+-  
+- (
+- p
+- a
+- g
+- e
+-  
+- 1
+- 9
+- )
+-  
+- a
+- n
+- d
+-  
+- c
+- a
+- p
+- i
+- t
+- a
+- l
+-  
+- a
+- d
+- e
+- q
+- u
+- a
+- c
+- y
+-  
+- t
+- a
+- b
+- l
+- e
+-  
+- (
+- p
+- a
+- g
+- e
+-  
+- 4
+- 8
+- )
+- .
+-  
+- I
+- n
+- d
+- i
+- v
+- i
+- d
+- u
+- a
+- l
+-  
+- d
+- r
+- i
+- v
+- e
+- r
+-  
+- b
+- p
+- t
+- s
+-  
+- i
+- m
+- p
+- a
+- c
+- t
+- s
+-  
+- f
+- o
+- r
+-  
+- t
+- h
+- e
+-  
+- Y
+- o
+- Y
+-  
+- w
+- i
+- n
+- d
+- o
+- w
+-  
+- a
+- r
+- e
+-  
+- n
+- o
+- t
+-  
+- d
+- i
+- s
+- c
+- l
+- o
+- s
+- e
+- d
+-  
+- b
+- y
+-  
+- t
+- h
+- e
+-  
+- b
+- a
+- n
+- k
+- .
+- "
+- ,
+-  
+- "
+- A
+- S
+- B
+- '
+- s
+-  
+- 1
+- 4
+-  
+- b
+- p
+- t
+- s
+-  
+- c
+- o
+- n
+- t
+- r
+- i
+- b
+- u
+- t
+- i
+- o
+- n
+-  
+- t
+- o
+-  
+- C
+- E
+- T
+- 1
+-  
+- i
+- s
+-  
+- s
+- t
+- a
+- t
+- e
+- d
+-  
+- o
+- n
+-  
+- a
+-  
+- h
+- a
+- l
+- f
+- -
+- o
+- n
+- -
+- h
+- a
+- l
+- f
+-  
+- b
+- a
+- s
+- i
+- s
+- ,
+-  
+- n
+- o
+- t
+-  
+- Y
+- o
+- Y
+- .
+- "
+- ,
+-  
+- "
+- T
+- h
+- e
+-  
+- A
+- P
+- S
+-  
+- 1
+- 1
+- 7
+-  
+- +
+- 2
+- 4
+-  
+- b
+- p
+- t
+- s
+-  
+- C
+- E
+- T
+- 1
+-  
+- i
+- m
+- p
+- a
+- c
+- t
+-  
+- i
+- s
+-  
+- f
+- o
+- o
+- t
+- n
+- o
+- t
+- e
+- d
+-  
+- a
+- g
+- a
+- i
+- n
+- s
+- t
+-  
+- t
+- h
+- e
+-  
+- h
+- a
+- l
+- f
+- -
+- o
+- n
+- -
+- h
+- a
+- l
+- f
+-  
+- w
+- a
+- l
+- k
+- ,
+-  
+- n
+- o
+- t
+-  
+- t
+- h
+- e
+-  
+- Y
+- o
+- Y
+-  
+- c
+- o
+- m
+- p
+- a
+- r
+- i
+- s
+- o
+- n
+- .
+- "
+- ]
+- }
+- 
+
+- Failed check: walk_sum (start 1230 + bars -4.0 = 1226.0 != end 1230, tol 0.1 %) [CBA/1H26/profit_announcement PDF p48 (ev-14)]
+- Failed check: walk_sum (start 1230 + bars -4.0 = 1226.0 != end 1230, tol 1.0 bps) [CBA/1H26/profit_announcement PDF p48 (ev-19)]
+- Failed check: no_quantified_drivers
+- No published walk covers 1H26 vs 1H25: the bank's walk for this metric describes another comparison, so the driver split is not walk-verified for this comparison. Confidence is capped at 85.
 
 ## Provenance
 - combo: agentic-cheap
 - models: agent=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash
 - documents: CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)
-- generated: 2026-08-30T19:29:03+00:00
-- seconds: 148.1
-- cost_usd: 0.0706
-- tokens: 1190970 in / 11536 out
+- generated: 2026-08-30T23:56:32+00:00
+- seconds: 189.2
+- cost_usd: 0.0406
+- tokens: 1190093 in / 12338 out
 - orchestration: agent
-- tool_calls: 48
-- pages_read: 14
-- charts_read: 1
+- tool_calls: 45
+- pages_read: 12
+- charts_read: 4
 - budget_exhausted: no

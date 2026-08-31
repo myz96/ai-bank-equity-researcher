@@ -10,32 +10,35 @@
     "delta": -4.0,
     "unit": "bps"
   },
-  "movement_source": "row 'Net interest margin (%)', column 31 Dec 24 -> column 31 Dec 25",
-  "headline": "CBA's Group net interest margin (cash basis) decreased by 4 bps to 204 bps in 1H26 vs 1H25. The decline was driven by lower asset pricing (-2 bps), higher funding costs (-3 bps), and a negative Treasury & Markets contribution (-3 bps). These were partially offset by favourable portfolio mix (+1 bps) and strong earnings from the replicating portfolio and capital hedges (+6 bps). Liquids drag contributed -3 bps, while basis risk was flat.",
+  "movement_source": "row 'Net interest margin', column 31 Dec 24 -> column 31 Dec 25",
+  "headline": "CBA's Group net interest margin decreased 4 basis points to 204 bps in 1H26 (ended Dec 2025) from 208 bps in 1H25 (ended Dec 2024). The decline was primarily driven by a 4 bps drag from higher liquid assets and institutional repos, alongside a 2 bps reduction in asset pricing due to competitive pressures in home and business lending. These were partially offset by a 6 bps benefit from the replicating portfolio and capital hedges, and a 1 bps positive contribution from favorable funding mix.",
   "headline_evidence": [
-    "ev-1",
-    "ev-23",
+    "ev-22",
+    "ev-39",
     "ev-40",
-    "ev-41"
+    "ev-56",
+    "ev-57"
   ],
   "drivers": [
     {
       "canonical": "liquids",
-      "bank_label": "Liquids",
+      "bank_label": "Liquids & repos",
       "contribution": {
-        "value": -3.0,
+        "value": -4.0,
         "unit": "bps"
       },
       "columns": "stated vs 1H25",
-      "narrative": "Contributed -3 bps. The bank notes that growth in liquid assets has broadly neutral impacts on net interest income (ev-24, ev-42).",
-      "confidence": 90,
+      "narrative": "Decreased by 4 bps. Driven by an increase in liquid assets (-3 bps) and an increase in institutional repos (-1 bps), which had minimal impact on earnings but reduced the margin ratio.",
+      "confidence": 85,
       "evidence": [
-        "ev-1",
-        "ev-24",
-        "ev-42"
+        "ev-14",
+        "ev-15",
+        "ev-16",
+        "ev-61",
+        "ev-62"
       ],
       "checks_passed": [
-        "corroborated_2_sources"
+        "single_source"
       ],
       "checks_failed": []
     },
@@ -47,14 +50,19 @@
         "unit": "bps"
       },
       "columns": "stated vs 1H25",
-      "narrative": "Decreased margin by 2 bps. Driven by home lending pricing down 2 bps and business lending pricing down 1 bps due to elevated competition, partly offset by consumer finance margins up 1 bps (ev-43).",
-      "confidence": 90,
+      "narrative": "Decreased by 2 bps. Home loan pricing fell 2 bps due to elevated competition. Business lending pricing fell 1 bps for similar reasons, partly offset by consumer finance margins rising 1 bps.",
+      "confidence": 85,
       "evidence": [
-        "ev-1",
-        "ev-43"
+        "ev-14",
+        "ev-17",
+        "ev-18",
+        "ev-19",
+        "ev-63",
+        "ev-64",
+        "ev-65"
       ],
       "checks_passed": [
-        "corroborated_2_sources"
+        "single_source"
       ],
       "checks_failed": []
     },
@@ -66,15 +74,13 @@
         "unit": "bps"
       },
       "columns": "stated vs 1H25",
-      "narrative": "Decreased margin by 3 bps. Driven by declining interest rates, unfavourable deposit mix, and increased deposit price competition (ev-44).",
+      "narrative": "Decreased by 3 bps. Driven by declining interest rates, unfavorable deposit mix, and increased deposit price competition.",
       "confidence": 90,
       "evidence": [
-        "ev-1",
-        "ev-44"
+        "ev-14",
+        "ev-43"
       ],
-      "checks_passed": [
-        "corroborated_2_sources"
-      ],
+      "checks_passed": [],
       "checks_failed": []
     },
     {
@@ -85,30 +91,32 @@
         "unit": "bps"
       },
       "columns": "stated vs 1H25",
-      "narrative": "Increased margin by 1 bps. Driven by favourable funding mix from strong growth in at-call deposits (ev-45).",
+      "narrative": "Increased by 1 bps. Driven by favorable funding mix resulting from strong growth in average deposits relative to assets.",
       "confidence": 90,
       "evidence": [
-        "ev-1",
-        "ev-45"
+        "ev-14",
+        "ev-11",
+        "ev-44"
       ],
-      "checks_passed": [
-        "corroborated_2_sources"
-      ],
+      "checks_passed": [],
       "checks_failed": []
     },
     {
-      "canonical": "basis_risk",
-      "bank_label": "Basis risk",
+      "canonical": "capital_replicating",
+      "bank_label": "Interest rate risk hedging",
       "contribution": {
-        "value": 0.0,
+        "value": 6.0,
         "unit": "bps"
       },
       "columns": "stated vs 1H25",
-      "narrative": "Flat. No impact on margin movement (ev-46).",
+      "narrative": "Increased by 6 bps. Replicating portfolio contributed +5 bps due to changes in portfolio rate and volume. Higher earnings on capital hedges contributed +1 bps.",
       "confidence": 85,
       "evidence": [
-        "ev-1",
-        "ev-46"
+        "ev-14",
+        "ev-20",
+        "ev-21",
+        "ev-66",
+        "ev-67"
       ],
       "checks_passed": [
         "single_source"
@@ -116,41 +124,20 @@
       "checks_failed": []
     },
     {
-      "canonical": "capital_replicating",
-      "bank_label": "Capital, Replicating and Other",
-      "contribution": {
-        "value": 6.0,
-        "unit": "bps"
-      },
-      "columns": "stated vs 1H25",
-      "narrative": "Increased margin by 6 bps. Driven by the replicating portfolio (up 5 bps due to rate/volume changes) and higher earnings on capital hedges (up 1 bps) (ev-47).",
-      "confidence": 90,
-      "evidence": [
-        "ev-1",
-        "ev-47"
-      ],
-      "checks_passed": [
-        "corroborated_2_sources"
-      ],
-      "checks_failed": []
-    },
-    {
       "canonical": "markets_treasury",
       "bank_label": "Treasury & Markets",
       "contribution": {
-        "value": -3.0,
+        "value": -2.0,
         "unit": "bps"
       },
       "columns": "stated vs 1H25",
-      "narrative": "Decreased margin by 3 bps. Includes lower risk management income in Treasury and an increase in reverse sale and repurchase agreement balances (ev-55).",
+      "narrative": "Decreased by 2 bps. Due to lower risk management income in Treasury and an increase in reverse sale and repurchase agreement balances.",
       "confidence": 90,
       "evidence": [
-        "ev-1",
-        "ev-55"
+        "ev-14",
+        "ev-54"
       ],
-      "checks_passed": [
-        "corroborated_2_sources"
-      ],
+      "checks_passed": [],
       "checks_failed": []
     }
   ],
@@ -158,77 +145,36 @@
   "notable_items": [],
   "disagreements": [
     {
-      "topic": "Treasury & Markets Contribution",
+      "topic": "Funding costs framing",
       "values": [
-        "-3 bps — CBA/1H26/profit_announcement PDF p28 (ev-1)",
-        "-2 bps — CBA/1H26/results_presentation PDF p59 (ev-15)"
+        "-3 bps — CBA/1H26/results_presentation PDF p59 (ev-14)",
+        "0 bps — CBA/1H26/profit_announcement PDF p29 (ev-1)"
       ],
       "preferred": "-3 bps",
       "reason": "definitional",
-      "explanation": "The Profit Announcement (primary source per hierarchy) states -3 bps for Treasury & Markets. The Results Presentation slide shows -2 bps. We adopt the primary source value."
+      "explanation": "The primary 1H25-to-1H26 walk (ev-14) attributes a -3 bps movement to funding costs. The half-on-half walk (ev-1) shows 0 bps for funding costs. As ev-1 is context-only for this task, the -3 bps figure is adopted."
+    },
+    {
+      "topic": "Capital/Replicating framing",
+      "values": [
+        "+6 bps — CBA/1H26/results_presentation PDF p59 (ev-14)",
+        "+1 bps — CBA/1H26/profit_announcement PDF p29 (ev-1)"
+      ],
+      "preferred": "+6 bps",
+      "reason": "definitional",
+      "explanation": "The primary 1H25-to-1H26 walk (ev-14) groups replicating portfolio (+5 bps) and capital hedges (+1 bps) into a single +6 bps 'Interest rate risk hedging' bar. The half-on-half walk (ev-1) reports only +1 bps for 'Capital, Replicating & Other'. The larger, more detailed primary walk is adopted."
     }
   ],
   "attribution_confidence": 90,
   "limitations": [
-    "The Treasury & Markets driver value differs between the Profit Announcement (-3 bps) and the Results Presentation (-2 bps). The Profit Announcement is adopted as primary.",
-    "The 'Liquids' driver in the Profit Announcement is -3 bps, while the Results Presentation 'Liquids & repos' is -4 bps. The Profit Announcement is adopted as primary."
+    "The primary driver table is derived exclusively from the 12-month comparison walk in the results presentation (ev-14).",
+    "The profit announcement (ev-1) presents a different set of drivers for the half-on-half period; these are not used for the 1H25-to-1H26 attribution.",
+    "Funding costs narrative relies on the 12-month walk annotation; specific sub-components for the 1H25-to-1H26 period are not explicitly broken out in the same detail as asset pricing.",
+    "Failed check: walk_extraction_error p28: chat() failed for qwen/qwen3.7-flash after 5 attempts: [Errno 8] nodename nor servname provided, or not known"
   ],
   "evidence_records": [
     {
       "id": "ev-1",
-      "doc_id": "CBA/1H26/profit_announcement",
-      "pdf_page": 28,
-      "printed_page": 12,
-      "kind": "walk_vision",
-      "quote": "[walk chart] NIM movement since December 2024: Dec 24 Half 208 -> Dec 25 Half 204",
-      "numbers": [
-        {
-          "label": "Liquids",
-          "value": -3.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Asset pricing",
-          "value": -2.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Funding costs",
-          "value": -3.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Portfolio mix",
-          "value": 1.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Basis risk",
-          "value": 0.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Capital, Replicating & Other",
-          "value": 6.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "Treasury & Markets",
-          "value": -3.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-2",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -281,7 +227,7 @@
       "provenance": null
     },
     {
-      "id": "ev-3",
+      "id": "ev-2",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 27,
       "printed_page": 27,
@@ -328,7 +274,7 @@
       "provenance": null
     },
     {
-      "id": "ev-4",
+      "id": "ev-3",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 27,
       "printed_page": 27,
@@ -338,7 +284,7 @@
       "provenance": null
     },
     {
-      "id": "ev-5",
+      "id": "ev-4",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 27,
       "printed_page": 27,
@@ -355,16 +301,33 @@
       "provenance": null
     },
     {
+      "id": "ev-5",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Liquids & repos: Increase in liquid assets¹ (2) -2",
+      "numbers": [
+        {
+          "label": "Liquids & repos Increase in liquid assets¹ (2)",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
       "id": "ev-6",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 27,
       "printed_page": 27,
       "kind": "walk_annotation",
-      "quote": "[chart annotation] Liquids & repos: Increase in liquid assets¹ -2",
+      "quote": "[chart annotation] Liquids & repos: Increase in institutional repos¹ (1) -1",
       "numbers": [
         {
-          "label": "Liquids & repos Increase in liquid assets¹",
-          "value": -2.0,
+          "label": "Liquids & repos Increase in institutional repos¹ (1)",
+          "value": -1.0,
           "unit": "bps",
           "basis": null
         }
@@ -377,11 +340,11 @@
       "pdf_page": 27,
       "printed_page": 27,
       "kind": "walk_annotation",
-      "quote": "[chart annotation] Liquids & repos: Increase in institutional repos¹ -1",
+      "quote": "[chart annotation] Asset pricing: (2) -2",
       "numbers": [
         {
-          "label": "Liquids & repos Increase in institutional repos¹",
-          "value": -1.0,
+          "label": "Asset pricing (2)",
+          "value": -2.0,
           "unit": "bps",
           "basis": null
         }
@@ -404,11 +367,11 @@
       "pdf_page": 27,
       "printed_page": 27,
       "kind": "walk_annotation",
-      "quote": "[chart annotation] Asset pricing: (2) -2",
+      "quote": "[chart annotation] Funding costs: - +0",
       "numbers": [
         {
-          "label": "Asset pricing (2)",
-          "value": -2.0,
+          "label": "Funding costs -",
+          "value": 0.0,
           "unit": "bps",
           "basis": null
         }
@@ -421,11 +384,11 @@
       "pdf_page": 27,
       "printed_page": 27,
       "kind": "walk_annotation",
-      "quote": "[chart annotation] Funding costs: - +0",
+      "quote": "[chart annotation] Portfolio mix: 1 +1",
       "numbers": [
         {
-          "label": "Funding costs -",
-          "value": 0.0,
+          "label": "Portfolio mix 1",
+          "value": 1.0,
           "unit": "bps",
           "basis": null
         }
@@ -448,23 +411,6 @@
       "pdf_page": 27,
       "printed_page": 27,
       "kind": "walk_annotation",
-      "quote": "[chart annotation] Portfolio mix: 1 +1",
-      "numbers": [
-        {
-          "label": "Portfolio mix 1",
-          "value": 1.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-13",
-      "doc_id": "CBA/1H26/results_presentation",
-      "pdf_page": 27,
-      "printed_page": 27,
-      "kind": "walk_annotation",
       "quote": "[chart annotation] Replicating portfolio: 1 +1",
       "numbers": [
         {
@@ -477,7 +423,7 @@
       "provenance": null
     },
     {
-      "id": "ev-14",
+      "id": "ev-13",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 27,
       "printed_page": 27,
@@ -494,7 +440,7 @@
       "provenance": null
     },
     {
-      "id": "ev-15",
+      "id": "ev-14",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -541,7 +487,7 @@
       "provenance": null
     },
     {
-      "id": "ev-16",
+      "id": "ev-15",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -558,7 +504,7 @@
       "provenance": null
     },
     {
-      "id": "ev-17",
+      "id": "ev-16",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -575,7 +521,7 @@
       "provenance": null
     },
     {
-      "id": "ev-18",
+      "id": "ev-17",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -592,7 +538,7 @@
       "provenance": null
     },
     {
-      "id": "ev-19",
+      "id": "ev-18",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -609,7 +555,7 @@
       "provenance": null
     },
     {
-      "id": "ev-20",
+      "id": "ev-19",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -626,7 +572,7 @@
       "provenance": null
     },
     {
-      "id": "ev-21",
+      "id": "ev-20",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -643,7 +589,7 @@
       "provenance": null
     },
     {
-      "id": "ev-22",
+      "id": "ev-21",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -660,7 +606,7 @@
       "provenance": null
     },
     {
-      "id": "ev-23",
+      "id": "ev-22",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -683,7 +629,7 @@
       "provenance": null
     },
     {
-      "id": "ev-24",
+      "id": "ev-23",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 9,
       "printed_page": null,
@@ -693,7 +639,7 @@
       "provenance": null
     },
     {
-      "id": "ev-25",
+      "id": "ev-24",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 20,
       "printed_page": 5,
@@ -722,7 +668,7 @@
       "provenance": null
     },
     {
-      "id": "ev-26",
+      "id": "ev-25",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 20,
       "printed_page": 5,
@@ -751,7 +697,7 @@
       "provenance": null
     },
     {
-      "id": "ev-27",
+      "id": "ev-26",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 20,
       "printed_page": 5,
@@ -780,7 +726,7 @@
       "provenance": null
     },
     {
-      "id": "ev-28",
+      "id": "ev-27",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 20,
       "printed_page": 5,
@@ -791,25 +737,25 @@
           "label": "NIM ASB 31 Dec 25",
           "value": 2.35,
           "unit": "%",
-          "basis": null
+          "basis": "null"
         },
         {
           "label": "NIM ASB 30 Jun 25",
           "value": 2.24,
           "unit": "%",
-          "basis": null
+          "basis": "null"
         },
         {
           "label": "NIM ASB 31 Dec 24",
           "value": 2.29,
           "unit": "%",
-          "basis": null
+          "basis": "null"
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-29",
+      "id": "ev-28",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 63,
       "printed_page": null,
@@ -838,7 +784,7 @@
       "provenance": null
     },
     {
-      "id": "ev-30",
+      "id": "ev-29",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 63,
       "printed_page": null,
@@ -848,7 +794,7 @@
       "provenance": null
     },
     {
-      "id": "ev-31",
+      "id": "ev-30",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 69,
       "printed_page": null,
@@ -865,7 +811,7 @@
       "provenance": null
     },
     {
-      "id": "ev-32",
+      "id": "ev-31",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 64,
       "printed_page": 64,
@@ -888,7 +834,7 @@
       "provenance": null
     },
     {
-      "id": "ev-33",
+      "id": "ev-32",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 64,
       "printed_page": 64,
@@ -905,7 +851,7 @@
       "provenance": null
     },
     {
-      "id": "ev-34",
+      "id": "ev-33",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 25,
       "printed_page": 25,
@@ -914,21 +860,27 @@
       "numbers": [
         {
           "label": "Margin excl. liquids & repos 31 Dec 25",
-          "value": 14097.0,
-          "unit": "bps",
+          "value": 2.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Margin excl. liquids & repos 30 Jun 25",
+          "value": 2.67,
+          "unit": "%",
           "basis": null
         },
         {
           "label": "Margin excl. liquids & repos 31 Dec 24",
-          "value": 15021.0,
-          "unit": "bps",
+          "value": 2.5,
+          "unit": "%",
           "basis": null
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-35",
+      "id": "ev-34",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 62,
       "printed_page": 62,
@@ -938,7 +890,7 @@
       "provenance": null
     },
     {
-      "id": "ev-36",
+      "id": "ev-35",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 62,
       "printed_page": 62,
@@ -967,7 +919,7 @@
       "provenance": null
     },
     {
-      "id": "ev-37",
+      "id": "ev-36",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 62,
       "printed_page": 62,
@@ -996,7 +948,7 @@
       "provenance": null
     },
     {
-      "id": "ev-38",
+      "id": "ev-37",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 62,
       "printed_page": 62,
@@ -1025,7 +977,7 @@
       "provenance": null
     },
     {
-      "id": "ev-39",
+      "id": "ev-38",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 62,
       "printed_page": 62,
@@ -1054,7 +1006,7 @@
       "provenance": null
     },
     {
-      "id": "ev-40",
+      "id": "ev-39",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 28,
       "printed_page": 12,
@@ -1083,7 +1035,7 @@
       "provenance": null
     },
     {
-      "id": "ev-41",
+      "id": "ev-40",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 28,
       "printed_page": 12,
@@ -1106,7 +1058,7 @@
       "provenance": null
     },
     {
-      "id": "ev-42",
+      "id": "ev-41",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 28,
       "printed_page": 12,
@@ -1123,7 +1075,7 @@
       "provenance": null
     },
     {
-      "id": "ev-43",
+      "id": "ev-42",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 28,
       "printed_page": 12,
@@ -1158,7 +1110,7 @@
       "provenance": null
     },
     {
-      "id": "ev-44",
+      "id": "ev-43",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 28,
       "printed_page": 12,
@@ -1175,7 +1127,7 @@
       "provenance": null
     },
     {
-      "id": "ev-45",
+      "id": "ev-44",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 28,
       "printed_page": 12,
@@ -1192,7 +1144,7 @@
       "provenance": null
     },
     {
-      "id": "ev-46",
+      "id": "ev-45",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 28,
       "printed_page": 12,
@@ -1202,7 +1154,7 @@
       "provenance": null
     },
     {
-      "id": "ev-47",
+      "id": "ev-46",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 28,
       "printed_page": 12,
@@ -1231,7 +1183,7 @@
       "provenance": null
     },
     {
-      "id": "ev-48",
+      "id": "ev-47",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -1248,7 +1200,7 @@
       "provenance": null
     },
     {
-      "id": "ev-49",
+      "id": "ev-48",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -1265,7 +1217,7 @@
       "provenance": null
     },
     {
-      "id": "ev-50",
+      "id": "ev-49",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -1282,7 +1234,7 @@
       "provenance": null
     },
     {
-      "id": "ev-51",
+      "id": "ev-50",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -1292,7 +1244,7 @@
       "provenance": null
     },
     {
-      "id": "ev-52",
+      "id": "ev-51",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -1309,7 +1261,7 @@
       "provenance": null
     },
     {
-      "id": "ev-53",
+      "id": "ev-52",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -1319,7 +1271,7 @@
       "provenance": null
     },
     {
-      "id": "ev-54",
+      "id": "ev-53",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -1336,7 +1288,7 @@
       "provenance": null
     },
     {
-      "id": "ev-55",
+      "id": "ev-54",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -1353,7 +1305,7 @@
       "provenance": null
     },
     {
-      "id": "ev-56",
+      "id": "ev-55",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -1370,7 +1322,7 @@
       "provenance": null
     },
     {
-      "id": "ev-57",
+      "id": "ev-56",
       "doc_id": "CBA/1H26/profit_announcement",
       "pdf_page": 29,
       "printed_page": null,
@@ -1387,7 +1339,40 @@
       "provenance": null
     },
     {
+      "id": "ev-57",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "table",
+      "quote": "Group margin",
+      "numbers": [
+        {
+          "label": "Group margin 1H26",
+          "value": 208.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Group margin 1H25",
+          "value": 204.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
       "id": "ev-58",
+      "doc_id": "CBA/1H26/results_presentation",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "text",
+      "quote": "Lower margin largely due to growth in liquids and repos",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-59",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -1397,7 +1382,7 @@
       "provenance": null
     },
     {
-      "id": "ev-59",
+      "id": "ev-60",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -1407,7 +1392,7 @@
       "provenance": null
     },
     {
-      "id": "ev-60",
+      "id": "ev-61",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -1424,7 +1409,7 @@
       "provenance": null
     },
     {
-      "id": "ev-61",
+      "id": "ev-62",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -1441,7 +1426,7 @@
       "provenance": null
     },
     {
-      "id": "ev-62",
+      "id": "ev-63",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -1458,7 +1443,7 @@
       "provenance": null
     },
     {
-      "id": "ev-63",
+      "id": "ev-64",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -1475,7 +1460,7 @@
       "provenance": null
     },
     {
-      "id": "ev-64",
+      "id": "ev-65",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -1492,7 +1477,7 @@
       "provenance": null
     },
     {
-      "id": "ev-65",
+      "id": "ev-66",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -1509,7 +1494,7 @@
       "provenance": null
     },
     {
-      "id": "ev-66",
+      "id": "ev-67",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -1526,7 +1511,7 @@
       "provenance": null
     },
     {
-      "id": "ev-67",
+      "id": "ev-68",
       "doc_id": "CBA/1H26/results_presentation",
       "pdf_page": 59,
       "printed_page": 59,
@@ -1541,10 +1526,10 @@
     "combo": "cheap",
     "models": "extract=qwen/qwen3.7-flash, vision=qwen/qwen3.7-flash, author=qwen/qwen3.7-flash",
     "documents": "CBA/1H26/profit_announcement (2bb45d7c2fa6), CBA/1H26/results_presentation (c294f1e23bf6)",
-    "generated": "2026-08-30T18:38:21+00:00",
-    "seconds": 202.3,
-    "cost_usd": 0.0033,
-    "tokens": "72294 in / 8923 out",
+    "generated": "2026-08-30T23:11:49+00:00",
+    "seconds": 3760.0,
+    "cost_usd": 0.0032,
+    "tokens": "66965 in / 8802 out",
     "orchestration": "pipeline",
     "pages_extracted": 19,
     "reference_follow": [
