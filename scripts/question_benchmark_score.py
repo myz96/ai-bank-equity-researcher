@@ -24,15 +24,18 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from bank_equity_researcher.config import COMBOS  # noqa: E402
-from bank_equity_researcher.corpus import doc_alias_index  # noqa: E402
+from bank_equity_researcher.corpus import doc_alias_index, resolve_doc_name  # noqa: E402
 from bank_equity_researcher.evals import load_question_gold, score_crossref  # noqa: E402
 from bank_equity_researcher.llm import LLM  # noqa: E402
 
 JUDGES = COMBOS["cheap"].judges
 
 
-def adapt(answer_json: dict) -> dict:
-    """Benchmark shape -> the ask_output shape score_crossref reads."""
+def adapt(answer_json: dict, index: dict[str, str]) -> dict:
+    """Benchmark shape -> the ask_output shape score_crossref reads.
+
+    Benchmark agents cite FILE names; the corpus and the gold speak doc_ids.
+    Resolving here keeps coverage measuring pages, never spelling."""
     records, facts = [], []
     counter = 0
     for fact in answer_json.get("key_facts", []):
@@ -40,9 +43,10 @@ def adapt(answer_json: dict) -> dict:
         for cite in fact.get("citations", []):
             counter += 1
             rid = f"bm-{counter}"
+            raw_doc = str(cite.get("document", ""))
             records.append({
                 "id": rid,
-                "doc_id": str(cite.get("document", "")),
+                "doc_id": resolve_doc_name(raw_doc, index) or raw_doc,
                 "pdf_page": cite.get("pdf_page"),
                 "quote": str(cite.get("quote", "")),
             })
@@ -75,7 +79,7 @@ def main() -> None:
                 rows[slug] = {"status": "missing"}
                 print(f"[{tier}] {slug}: MISSING", flush=True)
                 continue
-            output = adapt(json.loads(path.read_text()))
+            output = adapt(json.loads(path.read_text()), index)
             row = score_crossref(case, output, llm, JUDGES, index, max_quotes=48)
             row["confidence"] = output.get("confidence")
             rows[slug] = row
