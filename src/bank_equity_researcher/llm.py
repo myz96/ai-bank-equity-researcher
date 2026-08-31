@@ -107,6 +107,28 @@ class Usage:
         m["calls"] += 1
 
 
+# A connection-level failure means the NETWORK is gone, not that the request
+# is bad - the answer is to wait, not to fail. On mobile hotspots (2026-08-31,
+# the sealed-exam run) gaps last minutes, and five quick retries (~31s) die
+# inside every gap, so a 20-minute case restarts from scratch each time. The
+# grace ladder waits out gaps: up to NETWORK_GRACE tries at
+# NETWORK_GRACE_SLEEP seconds each (~9 minutes) that do NOT consume normal
+# attempts. Genuine request errors keep failing fast. Infra-only: no prompt,
+# scoring or answer-content change (post-freeze disclosure in the report).
+NETWORK_GRACE = 12
+NETWORK_GRACE_SLEEP = 45
+_NETWORK_ERROR_MARKS = (
+    "nodename", "errno 8", "temporary failure in name resolution",
+    "connection refused", "connection reset", "no route to host",
+    "network is unreachable",
+)
+
+
+def _network_error(exc: Exception) -> bool:
+    text = str(exc).lower()
+    return any(mark in text for mark in _NETWORK_ERROR_MARKS)
+
+
 class LLM:
     def __init__(self) -> None:
         self.usage = Usage()
@@ -170,14 +192,17 @@ class LLM:
 
         deadline_s = max(DEADLINE_FLOOR_S, max_tokens * DEADLINE_SECONDS_PER_TOKEN)
         last_error: Exception | None = None
-        for attempt in range(retries):
+        attempt = 0
+        grace = 0
+        while attempt < retries:
             try:
                 status, body = self._post(payload, deadline_s)
                 if status == 400 and "reasoning" in payload:
                     payload.pop("reasoning")
                     continue
                 if status == 429:
-                    time.sleep(15 * (attempt + 1))
+                    attempt += 1
+                    time.sleep(15 * attempt)
                     last_error = RuntimeError("429 Too Many Requests")
                     continue
                 if status >= 400:
@@ -193,6 +218,12 @@ class LLM:
                 return text
             except Exception as exc:  # noqa: BLE001
                 last_error = exc
+                if _network_error(exc) and grace < NETWORK_GRACE:
+                    # A dead network is waited out, never charged as an attempt.
+                    grace += 1
+                    time.sleep(NETWORK_GRACE_SLEEP)
+                    continue
+                attempt += 1
                 time.sleep(2**attempt)
         raise RuntimeError(f"chat() failed for {model} after {retries} attempts: {last_error}")
 
@@ -226,14 +257,17 @@ class LLM:
 
         deadline_s = max(DEADLINE_FLOOR_S, max_tokens * DEADLINE_SECONDS_PER_TOKEN)
         last_error: Exception | None = None
-        for attempt in range(retries):
+        attempt = 0
+        grace = 0
+        while attempt < retries:
             try:
                 status, body = self._post(payload, deadline_s)
                 if status == 400 and "reasoning" in payload:
                     payload.pop("reasoning")
                     continue
                 if status == 429:
-                    time.sleep(15 * (attempt + 1))
+                    attempt += 1
+                    time.sleep(15 * attempt)
                     last_error = RuntimeError("429 Too Many Requests")
                     continue
                 if status >= 400:
@@ -254,6 +288,12 @@ class LLM:
                 return message
             except Exception as exc:  # noqa: BLE001
                 last_error = exc
+                if _network_error(exc) and grace < NETWORK_GRACE:
+                    # A dead network is waited out, never charged as an attempt.
+                    grace += 1
+                    time.sleep(NETWORK_GRACE_SLEEP)
+                    continue
+                attempt += 1
                 time.sleep(2**attempt)
         raise RuntimeError(
             f"chat_tools() failed for {model} after {retries} attempts: {last_error}"

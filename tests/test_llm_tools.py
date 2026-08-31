@@ -52,3 +52,36 @@ def test_usage_falls_back_to_the_table_when_no_price_is_reported():
     usage = Usage()
     usage.add("anthropic/claude-opus-5", 1_000_000, 1_000_000)
     assert usage.cost_usd == 30.0
+
+
+def test_network_gaps_are_waited_out_not_charged(monkeypatch):
+    """A dead network (DNS gone on a hotspot) is waited out through the grace
+    ladder without consuming attempts; a genuine error still fails fast."""
+    from bank_equity_researcher import llm as L
+
+    monkeypatch.setattr(L, "NETWORK_GRACE_SLEEP", 0)
+    client = L.LLM()
+    calls = {"n": 0}
+
+    def flaky_post(payload, deadline):
+        calls["n"] += 1
+        if calls["n"] <= 8:  # more failures than the 5 normal attempts
+            raise OSError(8, "nodename nor servname provided, or not known")
+        return 200, '{"choices":[{"message":{"content":"OK"}}],"usage":{}}'
+
+    monkeypatch.setattr(client, "_post", flaky_post)
+    assert client.chat("m", "p") == "OK"
+
+    calls["n"] = 0
+
+    def broken_post(payload, deadline):
+        calls["n"] += 1
+        raise RuntimeError("HTTP 500: server exploded")
+
+    monkeypatch.setattr(client, "_post", broken_post)
+    monkeypatch.setattr(L.time, "sleep", lambda s: None)
+    try:
+        client.chat("m", "p")
+        raise AssertionError("should have failed")
+    except RuntimeError:
+        assert calls["n"] == 5  # normal attempts only, no grace for real errors

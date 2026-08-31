@@ -1,0 +1,790 @@
+{
+  "bank": "CBA",
+  "metric": "roe",
+  "period": "FY21",
+  "comparator": "FY20",
+  "basis": "cash",
+  "movement": {
+    "from_value": 10.2,
+    "to_value": 11.5,
+    "delta": 1.3,
+    "unit": "ppt"
+  },
+  "movement_source": "row 'Return on equity – cash basis (%)', column 30 Jun 20 -> column 30 Jun 21",
+  "headline": "CBA's return on equity (cash basis, continuing operations) rose 130 basis points, from 10.2% in FY20 (restated) to 11.5% in FY21. The bank attributes the move to the impact of higher profit (approximately 200 basis points), partly offset by an increase in capital levels (approximately 70 basis points). Derived per the constant-equity identity: earnings_effect = 10.2% x 19.8% cash NPAT growth = +2.02ppt; equity_effect = 1.3 - 2.02 = -0.72ppt, as average equity rose 6.1% to $75,187m. The profit lift came from loan impairment expense down $1,964m to $554m (-78%) on improved economic conditions and outlook, operating income +1.7% (NII +1.2% on 3.6%/$32bn average interest earning asset growth, NIM -4bps) and expenses +3.3%. Equity grew because ~29% of the $8,653m cash profit was retained at an unchanged 71% payout and CET1 rose 150bps to 13.1%; the $6.0bn off-market buy-back was announced with FY21 results and executed after year-end. Statutory-basis ROE rose 140bps (11.8% vs 10.4%); including discontinued operations, +120bps (11.7% vs 10.5%).",
+  "headline_evidence": [
+    "ev-26",
+    "ev-3",
+    "ev-1",
+    "ev-9",
+    "ev-2",
+    "ev-4",
+    "ev-18",
+    "ev-19",
+    "ev-7",
+    "ev-17",
+    "ev-21",
+    "ev-24",
+    "ev-16",
+    "ev-22",
+    "ev-23",
+    "ev-25"
+  ],
+  "drivers": [
+    {
+      "canonical": "earnings_effect",
+      "bank_label": null,
+      "contribution": {
+        "value": 2.02,
+        "unit": "ppt"
+      },
+      "columns": "30 Jun 21 vs 30 Jun 20",
+      "narrative": "Derived, not disclosed: 10.2% x 19.8% cash NPAT growth (+$1,428m to $8,653m) = +2.02ppt at constant equity; the bank states higher profit added 'approximately 200 basis points'. Profit rose on loan impairment expense down $1,964m to $554m (-78%) on improved economic conditions and outlook, operating income +1.7% (NII +1.2%, NIM -4bps) and expenses +3.3%.",
+      "confidence": 88,
+      "evidence": [
+        "ev-26",
+        "ev-1",
+        "ev-3",
+        "ev-2",
+        "ev-4",
+        "ev-28",
+        "ev-18",
+        "ev-19",
+        "ev-27"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "equity_effect",
+      "bank_label": null,
+      "contribution": {
+        "value": -0.72,
+        "unit": "ppt"
+      },
+      "columns": "30 Jun 21 vs 30 Jun 20",
+      "narrative": "Derived, not disclosed: +1.3ppt total minus +2.02ppt earnings effect = -0.72ppt, as average equity rose 6.1% to $75,187m. Retaining ~29% of $8,653m cash profit at an unchanged 71% payout and CET1 +150bps to 13.1% lifted equity; the $6.0bn off-market buy-back was announced with FY21 results and executed after year-end, and the interim DRP was satisfied by on-market purchases.",
+      "confidence": 78,
+      "evidence": [
+        "ev-26",
+        "ev-9",
+        "ev-7",
+        "ev-17",
+        "ev-21",
+        "ev-5",
+        "ev-3"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "other_unmapped",
+      "bank_label": null,
+      "contribution": {
+        "value": 0.0,
+        "unit": "ppt"
+      },
+      "columns": "30 Jun 21 vs 30 Jun 20",
+      "narrative": "Interaction residual: zero by construction - the prescribed identity folds the earnings x equity interaction into the equity effect, so the derived contributions sum exactly to the bank's disclosed 130bpts movement (10.2% to 11.5%).",
+      "confidence": 80,
+      "evidence": [
+        "ev-3",
+        "ev-26"
+      ],
+      "checks_passed": [
+        "computed_delta_cap_80"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "ppt"
+  },
+  "notable_items": [
+    "FY20 comparatives restated in the FY21 document: ROE (cash, continuing) 10.3% to 10.2%, cash NPAT $7,296m to $7,225m ('Comparative information has been restated to conform to presentation in the current period')",
+    "$6.0bn off-market share buy-back announced with FY21 results; executed after 30 June 2021, so it does not reduce FY21 average equity",
+    "Interim dividend DRP satisfied in full by on-market purchase of shares (-59bps CET1 impact)"
+  ],
+  "disagreements": [
+    {
+      "topic": "FY20 ROE (cash, continuing operations) level",
+      "values": [
+        "10.3% (FY20 profit announcement, as originally reported)",
+        "10.2% (FY21 profit announcement, restated comparative)"
+      ],
+      "preferred": "10.2% (restated)",
+      "reason": "restatement",
+      "explanation": "The FY21 document restates FY20 comparatives to current-period presentation; the newer document wins per source hierarchy. The 130bpts movement is read off the restated pair."
+    },
+    {
+      "topic": "Cash vs statutory ROE movement FY21 vs FY20",
+      "values": [
+        "+130bpts cash basis (11.5% vs 10.2%)",
+        "+140bpts statutory basis (11.8% vs 10.4%)"
+      ],
+      "preferred": "+130bpts cash basis",
+      "reason": "definitional",
+      "explanation": "The task metric is the bank's headline 'Return on equity (cash basis)'; statutory ROE is a named variant shown as context. Same direction, 10bpts apart."
+    },
+    {
+      "topic": "ROE including discontinued operations",
+      "values": [
+        "+120bpts (11.7% vs 10.5%)"
+      ],
+      "preferred": "+130bpts continuing operations",
+      "reason": "definitional",
+      "explanation": "Variant including discontinued operations (CFS, CommInsure Life, CFSGAM, PT Commonwealth Life); context only, never supplies the movement."
+    }
+  ],
+  "attribution_confidence": 40,
+  "limitations": [
+    "The earnings/equity split is derived from the prescribed identity, not disclosed by the bank; the bank discloses only approximate contributions ('approximately 200 basis points' / 'approximately 70 basis points').",
+    "No primary ROE waterfall chart exists in the corpus (bank_language lists no ROE walk labels); the decomposition rests on the narrative sentence on page 30 of the FY21 profit announcement plus arithmetic.",
+    "The results presentation's Cash NPAT walk (p9) failed its automated sum check; its bars were used only to corroborate text-disclosed components (its LIE bar of $1,964m matches the stated figure exactly; endpoints 7,225 to 8,653 match the KPI table).",
+    "FY20 comparatives were restated between documents (ROE 10.3 to 10.2; cash NPAT $7,296m to $7,225m); the restated pair from the FY21 document is used, per source hierarchy.",
+    "The equity effect is not separately disclosed; its direction is supported by the unchanged 71% payout ratio, CET1 +150bps, and the post-balance-date timing of the $6.0bn buy-back, but the bank does not quantify the equity drag.",
+    "Derived contributions are stated to two decimals from rounded inputs (ROE endpoints to 0.1ppt, growth 19.8%); the bank's own approximation (~200/~70bps) is consistent within ~2bps.",
+    "Capped at 80: other_unmapped +0 ppt. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it.",
+    "Failed check: walk_sum (start 7225 + bars +2110.0 = 9335.0 != end 8653, tol 1.0 $m) [CBA/FY21/results_presentation PDF p9 (ev-12)]"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-26",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 16,
+      "printed_page": 11,
+      "kind": "table",
+      "quote": "Return on equity – \"cash basis\" (%) 11.5 10.2 130 bpts 12.6 10.5 210 bpts",
+      "numbers": [
+        {
+          "label": "ROE cash basis, FY21",
+          "value": 11.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "ROE cash basis, FY20",
+          "value": 10.2,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "movement FY21 vs FY20",
+          "value": 130.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "ROE cash basis, 1H21",
+          "value": 12.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "ROE cash basis, 1H20",
+          "value": 10.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "movement 1H21 vs 1H20",
+          "value": 210.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Return on equity (“cash basis”) increased 130 basis points to 11.5% due to the impact of higher profit (approximately 200 basis points), partly offset by an increase in capital levels (approximately 70 basis points).",
+      "numbers": [
+        {
+          "label": "ROE cash basis movement FY21 vs FY20",
+          "value": 130.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "ROE cash basis FY21",
+          "value": 11.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "higher profit contribution",
+          "value": 200.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "higher capital levels offset",
+          "value": 70.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Cash net profit after tax (“cash NPAT” or “cash profit”) from continuing operations increased $1,428 million or 19.8% on the prior year to $8,653 million.",
+      "numbers": [
+        {
+          "label": "Cash NPAT from continuing operations, FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "increase on prior year",
+          "value": 1428.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "growth on prior year",
+          "value": 19.8,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The result was driven by a 1.7% increase in operating income, a 3.3% increase in operating expenses and a $1,964 million decrease in loan impairment expense.",
+      "numbers": [
+        {
+          "label": "operating income growth FY21",
+          "value": 1.7,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "operating expenses growth FY21",
+          "value": 3.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "loan impairment expense decrease FY21",
+          "value": 1964.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense (LIE) decreased $1,964 million, primarily driven by lower collective provision charges reflecting an improvement in economic conditions and outlook.",
+      "numbers": [
+        {
+          "label": "loan impairment expense decrease FY21",
+          "value": 1964.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-28",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 16,
+      "printed_page": 11,
+      "kind": "table",
+      "quote": "Loan impairment expense (554) (2,518) (78) 328 (882) large",
+      "numbers": [
+        {
+          "label": "loan impairment expense, FY21",
+          "value": -554.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "loan impairment expense, FY20",
+          "value": -2518.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "movement FY21 vs FY20",
+          "value": -78.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Net interest income increased 1.2% primarily driven by a 3.6% or $32 billion increase in average interest earning assets",
+      "numbers": [
+        {
+          "label": "net interest income growth FY21",
+          "value": 1.2,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "average interest earning assets growth FY21",
+          "value": 3.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "average interest earning assets increase FY21",
+          "value": 32000.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Net interest margin (NIM) decreased 4 basis points due to higher liquid assets",
+      "numbers": [
+        {
+          "label": "NIM movement FY21",
+          "value": -4.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "operating expenses increased 2.4%, due to higher investment",
+      "numbers": [
+        {
+          "label": "operating expenses growth FY21 excluding remediation",
+          "value": 2.4,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 155,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Net average equity 75,187 70,833 76,814 73,424",
+      "numbers": [
+        {
+          "label": "net average equity, FY21",
+          "value": 75187.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "net average equity, FY20",
+          "value": 70833.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 155,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Return on Equity - “cash basis” Average net assets 75,192 70,842 76,819 73,429",
+      "numbers": [
+        {
+          "label": "average net assets, FY21",
+          "value": 75192.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "average net assets, FY20",
+          "value": 70842.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 155,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Net profit after tax - “cash basis” 8,653 7,225 4,785 3,868",
+      "numbers": [
+        {
+          "label": "cash NPAT, FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "cash NPAT, FY20",
+          "value": 7225.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 23,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Cash basis 71 71 – 73 67 large",
+      "numbers": [
+        {
+          "label": "dividend payout ratio cash basis, FY21",
+          "value": 71.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "dividend payout ratio cash basis, FY20",
+          "value": 71.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 8,
+      "printed_page": 8,
+      "kind": "table",
+      "quote": "Cash NPAT ($m) 8,653 19.8% CET1 (%, Level 2) 13.1% 150bpts",
+      "numbers": [
+        {
+          "label": "Cash NPAT, FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Cash NPAT growth FY21 vs FY20",
+          "value": 19.8,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 Level 2, FY21",
+          "value": 13.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 movement FY21 vs FY20",
+          "value": 150.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Capital return $6.0bn Off-market share buy-back",
+      "numbers": [
+        {
+          "label": "off-market share buy-back capital return, announced with FY21 results",
+          "value": 6000.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "partly offset by the 2021 interim dividend (-59bps) in which the DRP was satisfied in full by the on-market purchase of shares",
+      "numbers": [
+        {
+          "label": "2021 interim dividend impact on CET1",
+          "value": -59.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 23,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Statutory basis 11. 8 10. 4 140 bpts 13. 3 10. 2 310 bpts",
+      "numbers": [
+        {
+          "label": "movement FY21 vs FY20",
+          "value": 140.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 23,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Cash basis 11. 7 10. 5 120 bpts 12. 7 10. 7 200 bpts",
+      "numbers": [
+        {
+          "label": "movement FY21 vs FY20",
+          "value": 120.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "CBA/FY20/profit_announcement",
+      "pdf_page": 23,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Cash basis 10. 3 12. 1 (180)bpts 8. 3 12. 3 (400)bpts",
+      "numbers": [
+        {
+          "label": "ROE cash basis continuing operations, FY19",
+          "value": 12.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "movement FY20 vs FY19",
+          "value": -180.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "CBA/FY20/profit_announcement",
+      "pdf_page": 22,
+      "printed_page": 4,
+      "kind": "table",
+      "quote": "Cash net profit after tax ($M) 7,296 8,221 (11) 2,940 4,356 (33)",
+      "numbers": [
+        {
+          "label": "cash NPAT continuing operations, FY20 as originally reported",
+          "value": 7296.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "cash NPAT continuing operations, FY19",
+          "value": 8221.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "movement FY20 vs FY19",
+          "value": -11.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 23,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Comparative information has been restated to conform to presentation in the current period.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Cash NPAT: FY20 7225 -> FY21 8653",
+      "numbers": [
+        {
+          "label": "Operating Income",
+          "value": 395.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating Expenses",
+          "value": -249.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Loan Impairment Expense",
+          "value": 1964.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-27",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 16,
+      "printed_page": 11,
+      "kind": "table",
+      "quote": "NPAT from continuing operations 8,653 7,225 20 4,785 3,868 24",
+      "numbers": [
+        {
+          "label": "cash NPAT continuing operations, FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "cash NPAT continuing operations, FY20",
+          "value": 7225.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "growth FY21 vs FY20",
+          "value": 20.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 23,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Cash basis 11. 5 10. 2 130 bpts 12. 6 10. 5 210 bpts",
+      "numbers": [
+        {
+          "label": "movement FY21 vs FY20",
+          "value": 130.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "movement 1H21 vs 1H20",
+          "value": 210.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 155,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "ROE - “cash basis” (%) 11. 5 10. 2 12. 6 10. 5",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 23,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Common Equity Tier 1 (APRA) (%) 13. 1 11. 6 150 bpts 13. 1 12. 6 50 bpts",
+      "numbers": [
+        {
+          "label": "CET1 APRA, FY21",
+          "value": 13.1,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "movement FY21 vs FY20",
+          "value": 150.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "agentic",
+    "models": "agent=z-ai/glm-5.3-flash, vision=qwen/qwen3.7-flash",
+    "documents": "CBA/FY21/profit_announcement (ffdff75173e7), CBA/FY21/results_presentation (b1bbbd626803), CBA/FY20/profit_announcement (2c2179a200a3)",
+    "generated": "2026-08-31T10:50:18+00:00",
+    "seconds": 1502.7,
+    "cost_usd": 0.0186,
+    "tokens": "234957 in / 50288 out",
+    "orchestration": "agent",
+    "tool_calls": 30,
+    "pages_read": 11,
+    "charts_read": 1,
+    "budget_exhausted": "no"
+  }
+}
