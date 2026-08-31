@@ -28,7 +28,7 @@ from bank_equity_researcher.corpus import doc_alias_index, resolve_doc_name  # n
 from bank_equity_researcher.evals import load_question_gold, score_crossref  # noqa: E402
 from bank_equity_researcher.llm import LLM  # noqa: E402
 
-JUDGES = COMBOS["cheap"].judges
+JUDGES = COMBOS["agentic"].judges
 
 
 def adapt(answer_json: dict, index: dict[str, str]) -> dict:
