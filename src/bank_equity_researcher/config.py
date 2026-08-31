@@ -63,49 +63,17 @@ class Combo:
 
 
 COMBOS: dict[str, Combo] = {
-    # The closed-loop research agent (ADR-0005). The default combo runs the
-    # strongest reliably tool-calling model in the OpenRouter catalogue:
-    # anthropic/claude-opus-5 is the newest and the top of the Opus line
-    # (published 2026-07-24, above claude-sonnet-5 and claude-fable-5), and a
-    # live probe confirmed it emits a well-formed tool call, reads the result
-    # and calls the next tool.
+    # THE product combo (user decision, 2026-08-31, iteration close): one
+    # model everywhere - z-ai/glm-5.3-flash in the closed loop. Evidence:
+    # metric anchors 4/4 with the project's best brier (0.011) at ~$0.03 a
+    # case; researcher questions 11/15 coverage (tied with opus) and 7/20
+    # fully-grounded facts (best of every arm tested, frontier included);
+    # finds the audited Note 2.2 on p118 unaided. Trade accepted: 10-30
+    # minutes a case. Opus/deepseek/qwen comparisons live in
+    # evals/results/ and the design doc; their combos were retired with
+    # the collapse (git history has them).
     "agentic": Combo(
         name="agentic",
-        # The agent reads charts through the same vision tool the pipeline
-        # uses; extract/author stay filled so the combo answers every caller.
-        extract="anthropic/claude-opus-5",
-        vision="anthropic/claude-opus-5",
-        author="anthropic/claude-opus-5",
-        author_max_tokens=16000,
-        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
-        orchestration="agent",
-        agent="anthropic/claude-opus-5",
-        agent_max_tokens=8000,
-        # The densest anchor case cost $1.57; a $2 ceiling was close enough to
-        # shape behaviour. $5 is a pure runaway-catch.
-        cost_ceiling_usd=5.0,
-    ),
-    # Mid-tier reasoner in the closed loop (user candidate 2026-08-31): a
-    # reasoning model at 1/70th the opus price. If it holds the agentic
-    # quality bar it becomes the default's price point.
-    # Speed candidate for iteration loops (user, 2026-08-31): deepseek's
-    # flash tier is priced near qwen but reasons less per token than
-    # glm-5.3-flash, so a case should finish in minutes, not tens of minutes.
-    # Probe first; it earns a place only if it holds the p118 bar.
-    "agentic-ds": Combo(
-        name="agentic-ds",
-        extract="qwen/qwen3.7-flash",
-        vision="qwen/qwen3.7-flash",
-        author="deepseek/deepseek-v4-flash-0731",
-        author_max_tokens=16000,
-        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
-        orchestration="agent",
-        agent="deepseek/deepseek-v4-flash-0731",
-        agent_max_tokens=16000,
-        cost_ceiling_usd=1.0,
-    ),
-    "agentic-glm": Combo(
-        name="agentic-glm",
         extract="qwen/qwen3.7-flash",
         vision="qwen/qwen3.7-flash",
         author="z-ai/glm-5.3-flash",
@@ -115,22 +83,6 @@ COMBOS: dict[str, Combo] = {
         agent="z-ai/glm-5.3-flash",
         agent_max_tokens=16000,
         cost_ceiling_usd=1.0,
-    ),
-    # A comparison arm, never the product (ADR-0005 point 4): it measures what
-    # the model tier buys INSIDE a closed loop. qwen3.7-flash is the cheapest
-    # model in the catalogue that tool-called reliably on the live probe;
-    # z-ai/glm-5.3 is the documented fallback if it stops doing so.
-    "agentic-cheap": Combo(
-        name="agentic-cheap",
-        extract="qwen/qwen3.7-flash",
-        vision="qwen/qwen3.7-flash",
-        author="qwen/qwen3.7-flash",
-        author_max_tokens=8000,
-        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
-        orchestration="agent",
-        agent="qwen/qwen3.7-flash",
-        agent_max_tokens=8000,
-        cost_ceiling_usd=0.50,
     ),
 }
 

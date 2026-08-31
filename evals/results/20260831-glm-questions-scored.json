@@ -1,0 +1,1206 @@
+{
+ "arm": "agentic-glm",
+ "rows": {
+  "nab-business-growth-quality": {
+   "case": "nab-business-growth-quality",
+   "location_coverage": "3/3",
+   "coverage_fraction": 1.0,
+   "locations": [
+    {
+     "doc": "NAB/FY25/investor-presentation",
+     "pdf_page": 49,
+     "holds": "B&PB cash earnings, revenue, lending/deposit balances, NIM and impairment-charge trends.",
+     "hit": true,
+     "cited_by": [
+      "ev-59",
+      "ev-60"
+     ]
+    },
+    {
+     "doc": "NAB/FY25/investor-presentation",
+     "pdf_page": 50,
+     "holds": "Sector growth, B&PB and small-business growth rates, market shares and the broad-based-growth statement.",
+     "hit": true,
+     "cited_by": [
+      "ev-48",
+      "ev-49",
+      "ev-50"
+     ]
+    },
+    {
+     "doc": "NAB/FY25/investor-presentation",
+     "pdf_page": 27,
+     "holds": "Headline and underlying B&PB NPL trends, including the two large Agri customers.",
+     "hit": true,
+     "cited_by": [
+      "ev-25",
+      "ev-26",
+      "ev-28",
+      "ev-29"
+     ]
+    }
+   ],
+   "cited_evidence_ids": [
+    "ev-10",
+    "ev-11",
+    "ev-12",
+    "ev-13",
+    "ev-14",
+    "ev-15",
+    "ev-16",
+    "ev-17",
+    "ev-18",
+    "ev-19",
+    "ev-2",
+    "ev-20",
+    "ev-21",
+    "ev-23",
+    "ev-24",
+    "ev-25",
+    "ev-26",
+    "ev-28",
+    "ev-29",
+    "ev-3",
+    "ev-31",
+    "ev-32",
+    "ev-33",
+    "ev-34",
+    "ev-38",
+    "ev-39",
+    "ev-4",
+    "ev-40",
+    "ev-41",
+    "ev-42",
+    "ev-43",
+    "ev-48",
+    "ev-49",
+    "ev-5",
+    "ev-50",
+    "ev-53",
+    "ev-59",
+    "ev-6",
+    "ev-60",
+    "ev-61",
+    "ev-7",
+    "ev-8",
+    "ev-9"
+   ],
+   "confidence": 88,
+   "limitations": 6,
+   "fact_check": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 4,
+    "passed": 1,
+    "failed": 2,
+    "flagged": 1,
+    "flagged_split": 1,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 0,
+    "not_stated": 2,
+    "fact_accuracy": "1/4",
+    "accuracy_fraction": 0.25,
+    "answer_truncated": false,
+    "quotes_used": 43,
+    "quotes_truncated": false,
+    "facts": [
+     {
+      "fact": "The printed 'Business and housing lending GLAs and deposits' chart shows business lending of $155.0bn at Sep-24 and $166.3bn at Sep-25, labelled 6.7% growth; the same page prints 'Revenue' of $8,358m in FY24 and $8,531m in FY25, up 2.1%, and 'Cash earnings' of $3,277m and $3,330m, up 1.6% (NAB/FY25/investor-presentation, PDF page 49).",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note says business lending +7.3% to $166.3bn, not 6.7%; revenue and cash earnings figures match.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quote 5 shows 7.3% growth, not 6.7%; quotes lack the printed chart label and PDF page 49 context.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states revenue and cash earnings figures but omits the specific business lending growth percentage of 6.7%.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes do not state business lending growth is 6.7%; they show 7.3%.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The printed 'Net interest margin' bars are 3.11% in 1H24, 3.07% in 2H24, 3.01% in 1H25 and 3.02% in 2H25; 'Credit impairment charge and as a % of GLAs' prints $237m/0.18% in 1H25 and $292m/0.21% in 2H25 (NAB/FY25/investor-presentation, PDF page 49).",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states 1H25 NIM 3.01% and 2H25 charge/GLAs 0.21%, but omits 1H24, 2H24, 2H25 NIM and 1H25 charge figures.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack 3.11% and 3.07% NIM values; only 3.01% and 3.02% appear.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note omits 1H24/2H24 NIM and 1H25 impairment figures; only matches 2H25 data.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack Net interest margin data for 1H24 and 2H24.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The printed 'Diversified Australian business lending growth (YoY)' chart shows Agri 3.5%, Health 5.9%, CRE 7.4%, Other 10.4%, NAB B&PB 7.3% and NAB Small business 9.2%, alongside the statement 'Broad based growth across most sectors including Trade, Manufacturing, Construction, Transport' (NAB/FY25/investor-presentation, PDF page 50).",
+      "verdict": "flagged_for_human",
+      "stated": null,
+      "entailed": "entailed",
+      "reason": "judges disagree \u2014 stated: judges answered ['partial', 'stated']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note lists sector growth figures but omits NAB B&PB 7.3% and Small business 9.2% chart values.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 34 and 35 contain all fact figures and the broad-based growth statement.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note lists all specific sector growth percentages and the broad-based growth statement.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 34 and 35 contain all specific percentages and the exact statement cited in the fact.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The printed NPL chart rises from 2.66% at Sep-24 to 3.22% at Sep-25 and flags 'Includes 21bps relating to 2 large Agri customers'; the page also states, 'Excluding two large well secured Agri customers, underlying NPL ratio down 3bps to 3.01%' and 'Stable to improving NPL outcomes in 2H25 for most sectors' (NAB/FY25/investor-presentation, PDF page 27).",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note includes the 3.22% NPL ratio, 21bps Agri impact, 3.01% excluding them, and stable-to-improving 2H25 outcomes.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 24, 25, 22, and 23 provide the exact NPL figures, the 21bps Agri note, underlying 3.01%, and stable-to-improving statement.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note confirms the NPL rise, the 21bps Agri impact, and the 3.01% underlying ratio.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 22, 23, 24, and 25 explicitly state all numbers and claims in the fact.",
+        "error": ""
+       }
+      ]
+     }
+    ]
+   },
+   "fact_accuracy": "1/4",
+   "cost_usd": 0.0293,
+   "seconds": 546.2,
+   "passes": false
+  },
+  "wbc-fy26-productivity-versus-investment": {
+   "case": "wbc-fy26-productivity-versus-investment",
+   "location_coverage": "3/3",
+   "coverage_fraction": 1.0,
+   "locations": [
+    {
+     "doc": "WBC/FY25/presentation-and-IDP",
+     "pdf_page": 27,
+     "holds": "FY25 expense bridge and FY26 wage, banker, UNITE and >$500m productivity considerations.",
+     "hit": true,
+     "cited_by": [
+      "ev-1",
+      "ev-2",
+      "ev-4",
+      "ev-18",
+      "ev-19",
+      "ev-25"
+     ]
+    },
+    {
+     "doc": "WBC/FY25/presentation-and-IDP",
+     "pdf_page": 26,
+     "holds": "Investment spend, expensed share, amortisation and FY26 investment outlook.",
+     "hit": true,
+     "cited_by": [
+      "ev-21",
+      "ev-26",
+      "ev-28"
+     ]
+    },
+    {
+     "doc": "WBC/FY25/presentation-and-IDP",
+     "pdf_page": 14,
+     "holds": "UNITE's FY26 spend, expensing profile and program duration through FY29.",
+     "hit": true,
+     "cited_by": [
+      "ev-22",
+      "ev-29",
+      "ev-30",
+      "ev-31",
+      "ev-32",
+      "ev-34"
+     ]
+    }
+   ],
+   "cited_evidence_ids": [
+    "ev-1",
+    "ev-10",
+    "ev-11",
+    "ev-12",
+    "ev-14",
+    "ev-15",
+    "ev-16",
+    "ev-17",
+    "ev-18",
+    "ev-19",
+    "ev-2",
+    "ev-21",
+    "ev-22",
+    "ev-24",
+    "ev-25",
+    "ev-26",
+    "ev-28",
+    "ev-29",
+    "ev-30",
+    "ev-31",
+    "ev-32",
+    "ev-33",
+    "ev-34",
+    "ev-4",
+    "ev-5",
+    "ev-8",
+    "ev-9"
+   ],
+   "confidence": 80,
+   "limitations": 6,
+   "fact_check": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 5,
+    "passed": 3,
+    "failed": 0,
+    "flagged": 2,
+    "flagged_split": 2,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 0,
+    "not_stated": 0,
+    "fact_accuracy": "3/5",
+    "accuracy_fraction": 0.6,
+    "answer_truncated": false,
+    "quotes_used": 27,
+    "quotes_truncated": false,
+    "facts": [
+     {
+      "fact": "The printed 'FY25 expenses ($m)' bridge moves from $10,944m in FY24 to $11,916m in FY25, a 9% increase, with Staff costs +$397m, Technology +$146m, Volume and other +$199m, Productivity ($402m), Investments +$359m and Restructuring charge +$273m; it labels the increase 6% excluding restructuring (WBC/FY25/presentation-and-IDP, PDF page 27).",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note lists the same FY24 to FY25 bridge figures, 9% increase, 6% ex restructuring, and all component amounts.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 14 lists all bridge components and values; quotes 6-7 give 9% and 6% ex restructuring.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note explicitly lists the FY25 expense bridge components, totals, and percentage increases matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 1, 6, 7, 14, and 15 confirm all figures, percentages, and components.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "Under 'Key considerations for FY26' the page prints 'EBA increase 3% to 4% and investment in bankers', 'Increase in UNITE spend' and 'Fit for Growth benefits to contribute to targeted productivity of >$500m in FY26' (WBC/FY25/presentation-and-IDP, PDF page 27).",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note lists EBA 3-4%, banker investment, UNITE spend increase, and Fit for Growth contributing to >$500m FY26 productivity.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 15 contains all three bullet points and the >$500m productivity figure verbatim.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note explicitly lists all three specific FY26 considerations mentioned in the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 15 explicitly lists all three specified key considerations for FY26.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The printed 'Investment spend' chart rises from $1,756m in FY24 to $1,918m in FY25, up 9%; the table shows 'Total expensed' rising from 56% to 60% and 'Amortisation expense ($m)' from $889m to $995m (WBC/FY25/presentation-and-IDP, PDF page 26).",
+      "verdict": "flagged_for_human",
+      "stated": "stated",
+      "entailed": null,
+      "reason": "judges disagree \u2014 entailed: judges answered ['entailed', 'not-entailed']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note states the FY25 investment spend, expensed share, and amortisation figures exactly matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack the FY24 $1,756m investment spend figure and the printed chart's 9% rise; only FY25 $1,918m appears.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note confirms the $1,756m to $1,918m rise, 9% increase, and expense/amortisation figures.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 10, 20, and 21 explicitly state all specific figures in the fact.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The FY26 considerations print 'Investment spend ~$2bn' and 'Increase in UNITE spend to $850m - $950m, ~75% expensed' (WBC/FY25/presentation-and-IDP, PDF page 26).",
+      "verdict": "flagged_for_human",
+      "stated": "stated",
+      "entailed": null,
+      "reason": "judges disagree \u2014 entailed: judges answered ['entailed', 'not-entailed']",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note says FY26 investment spend ~$2bn and UNITE $850\u2013950m at ~75% expensed, matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 16 states both FY26 investment spend ~$2bn and UNITE spend $850m-$950m, ~75% expensed.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note explicitly states FY26 investment spend is ~$2bn and UNITE spend is $850-950m at ~75% expensed.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack the specific FY26 UNITE spend range ($850m-$950m) and expensing percentage (~75%).",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The UNITE page states 'Plan extends into FY29', 'Expect to invest $850 - $950 million in FY26', 'c.40% of total investment spend FY27 - FY28', 'Lower spend in FY29' and 'c.75% of spend to be expensed' (WBC/FY25/presentation-and-IDP, PDF page 14).",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note lists all five UNITE page facts with matching figures, percentages, and FY29 timing.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 17, 23, 24, 27, and 25 directly state each element of the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note confirms all five specific facts regarding UNITE plan duration, spend, and expensing.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "All specific claims in the fact are explicitly stated in quotes 16, 17, 23-25, and 27.",
+        "error": ""
+       }
+      ]
+     }
+    ]
+   },
+   "fact_accuracy": "3/5",
+   "cost_usd": 0.0161,
+   "seconds": 1096.8,
+   "passes": false
+  },
+  "fy25-cross-bank-earnings-conversion": {
+   "case": "fy25-cross-bank-earnings-conversion",
+   "location_coverage": "3/3",
+   "coverage_fraction": 1.0,
+   "locations": [
+    {
+     "doc": "CBA/FY25/profit-announcement",
+     "pdf_page": 16,
+     "holds": "CBA cash-basis income, expenses, operating performance, impairment and cash NPAT.",
+     "hit": true,
+     "cited_by": [
+      "ev-1",
+      "ev-6",
+      "ev-7",
+      "ev-8",
+      "ev-9",
+      "ev-10"
+     ]
+    },
+    {
+     "doc": "NAB/FY25/investor-presentation",
+     "pdf_page": 5,
+     "holds": "NAB underlying profit, cash earnings and statutory profit.",
+     "hit": true,
+     "cited_by": [
+      "ev-28"
+     ]
+    },
+    {
+     "doc": "WBC/FY25/presentation-and-IDP",
+     "pdf_page": 20,
+     "holds": "Westpac profit excluding Notable Items, revenue, expenses, pre-provision profit and impairment rate.",
+     "hit": true,
+     "cited_by": [
+      "ev-27"
+     ]
+    }
+   ],
+   "cited_evidence_ids": [
+    "ev-1",
+    "ev-10",
+    "ev-11",
+    "ev-12",
+    "ev-13",
+    "ev-15",
+    "ev-16",
+    "ev-17",
+    "ev-18",
+    "ev-2",
+    "ev-20",
+    "ev-21",
+    "ev-22",
+    "ev-24",
+    "ev-26",
+    "ev-27",
+    "ev-28",
+    "ev-3",
+    "ev-5",
+    "ev-6",
+    "ev-7",
+    "ev-8",
+    "ev-9"
+   ],
+   "confidence": 90,
+   "limitations": 6,
+   "fact_check": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 3,
+    "passed": 2,
+    "failed": 1,
+    "flagged": 0,
+    "flagged_split": 0,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 1,
+    "not_stated": 0,
+    "fact_accuracy": "2/3",
+    "accuracy_fraction": 0.667,
+    "answer_truncated": false,
+    "quotes_used": 23,
+    "quotes_truncated": false,
+    "facts": [
+     {
+      "fact": "CBA's printed cash-basis 'Group Performance Summary' shows total operating income of $28,465m versus $27,174m, up 5%; operating expenses of $12,996m versus $12,218m, up 6%; operating performance of $15,469m versus $14,956m, up 3%; loan impairment expense of $726m versus $802m, down 9%; and continuing-operations cash NPAT of $10,252m versus $9,836m, up 4% (CBA/FY25/profit-announcement, PDF page 16).",
+      "verdict": "fail",
+      "stated": "stated",
+      "entailed": "not-entailed",
+      "reason": "stated=stated; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note includes all key figures, directions, and FY25 period from the fact.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack the exact $28,465m total operating income figure; quote 5 shows $28,290m and $28,465m but not the required comparison.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note confirms all specific figures, directions, and percentages for CBA's FY25 cash-basis metrics.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes 10-23 refer to NAB and Westpac, not CBA. The specific CBA fact is unsupported.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "NAB's printed 'Financial results' charts show underlying profit of $10,965m versus $10,823m, up 1.3%; cash earnings of $7,091m versus $7,102m, down 0.2%; and statutory profit of $6,759m versus $6,960m, down 2.9% (NAB/FY25/investor-presentation, PDF page 5).",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note includes NAB's underlying profit, cash earnings, statutory profit figures and percentage changes matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 23 contains all three profit figures and percentage changes matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note confirms NAB's underlying profit, cash earnings, and statutory profit figures and changes.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 23 explicitly lists all specified profit figures and percentages matching the fact.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "Westpac's printed 'FY25 financial performance' table shows net profit excluding Notable Items of $6,972m versus $7,113m, down 2%; revenue of $22.5bn versus $21.8bn, up 3%; expenses of $11.9bn versus $10.9bn, up 9%; expenses excluding restructuring of $11.6bn versus $10.9bn, up 6%; pre-provision profit of $10.5bn versus $10.8bn, down 3%; and impairment charges to average loans of 5bps versus 7bps (WBC/FY25/presentation-and-IDP, PDF page 20).",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note lists Westpac's revenue, expenses, pre-provision profit, net profit ex Notable Items, and impairment bps, matching the fact's figures and directions.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quote 22 contains all load-bearing figures matching the fact: net profit, revenue, expenses, pre-provision profit, and impairment bps.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note confirms all specific figures, directions, and periods for Westpac's FY25 metrics.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 18, 19, and 22 contain all specific figures and percentages cited in the fact.",
+        "error": ""
+       }
+      ]
+     }
+    ]
+   },
+   "fact_accuracy": "2/3",
+   "cost_usd": 0.0144,
+   "seconds": 755.1,
+   "passes": false
+  },
+  "cba-fy25-fy26-earnings-engine-rotation": {
+   "case": "cba-fy25-fy26-earnings-engine-rotation",
+   "location_coverage": "2/3",
+   "coverage_fraction": 0.667,
+   "locations": [
+    {
+     "doc": "CBA/FY25/profit-announcement",
+     "pdf_page": 26,
+     "holds": "FY25 cash NPAT growth and its operating-income, expense, impairment, NII, NIM and AIEA drivers.",
+     "hit": true,
+     "cited_by": [
+      "ev-30",
+      "ev-31",
+      "ev-32",
+      "ev-74",
+      "ev-75",
+      "ev-78"
+     ]
+    },
+    {
+     "doc": "CBA/FY26/results-presentation",
+     "pdf_page": 54,
+     "holds": "FY26 cash NPAT, income, expenses, cost-to-income, NIM and loan-loss rate.",
+     "hit": false,
+     "cited_by": []
+    },
+    {
+     "doc": "CBA/FY26/results-presentation",
+     "pdf_page": 60,
+     "holds": "FY26 reported NIM bridge and the offset between liquid/repo and competitive pressure versus mix and hedge earnings.",
+     "hit": true,
+     "cited_by": [
+      "ev-50",
+      "ev-51",
+      "ev-6",
+      "ev-8",
+      "ev-9",
+      "ev-10",
+      "ev-11",
+      "ev-12",
+      "ev-13",
+      "ev-14",
+      "ev-15"
+     ]
+    }
+   ],
+   "cited_evidence_ids": [
+    "ev-1",
+    "ev-10",
+    "ev-11",
+    "ev-12",
+    "ev-13",
+    "ev-14",
+    "ev-15",
+    "ev-16",
+    "ev-17",
+    "ev-18",
+    "ev-19",
+    "ev-20",
+    "ev-21",
+    "ev-22",
+    "ev-23",
+    "ev-24",
+    "ev-25",
+    "ev-26",
+    "ev-27",
+    "ev-28",
+    "ev-29",
+    "ev-3",
+    "ev-30",
+    "ev-31",
+    "ev-32",
+    "ev-33",
+    "ev-34",
+    "ev-35",
+    "ev-36",
+    "ev-39",
+    "ev-4",
+    "ev-41",
+    "ev-42",
+    "ev-43",
+    "ev-44",
+    "ev-45",
+    "ev-46",
+    "ev-47",
+    "ev-48",
+    "ev-49",
+    "ev-5",
+    "ev-50",
+    "ev-51",
+    "ev-54",
+    "ev-55",
+    "ev-56",
+    "ev-57",
+    "ev-58",
+    "ev-59",
+    "ev-6",
+    "ev-60",
+    "ev-61",
+    "ev-62",
+    "ev-63",
+    "ev-64",
+    "ev-65",
+    "ev-66",
+    "ev-67",
+    "ev-68",
+    "ev-69",
+    "ev-70",
+    "ev-71",
+    "ev-72",
+    "ev-73",
+    "ev-74",
+    "ev-75",
+    "ev-76",
+    "ev-77",
+    "ev-78",
+    "ev-8",
+    "ev-83",
+    "ev-84",
+    "ev-85",
+    "ev-9"
+   ],
+   "confidence": 88,
+   "limitations": 7,
+   "fact_check": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 4,
+    "passed": 1,
+    "failed": 3,
+    "flagged": 0,
+    "flagged_split": 0,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 1,
+    "not_stated": 2,
+    "fact_accuracy": "1/4",
+    "accuracy_fraction": 0.25,
+    "answer_truncated": false,
+    "quotes_used": 48,
+    "quotes_truncated": false,
+    "facts": [
+     {
+      "fact": "The FY25 review states, 'Cash net profit after tax (cash NPAT or cash profit) from continuing operations increased $416 million or 4% on the prior year to $10,252 million. The result was driven by a 3% increase in operating performance with a 5% increase in operating income and a 6% increase in operating expenses, as well as a $76 million decrease in loan impairment expense' (CBA/FY25/profit-announcement, PDF page 26).",
+      "verdict": "pass",
+      "stated": "stated",
+      "entailed": "entailed",
+      "reason": "the answer states the fact and the cited quotes entail it",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note states FY25 cash NPAT increased $416m or 4% to $10,252m, matching the fact's numbers and direction.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 15 and 16 contain all load-bearing numbers and wording from the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note confirms FY25 cash NPAT $10,252m (+4%), driven by 3% operating perf, 5% income, 6% opex, and $76m LIE decrease.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "entailed",
+        "why": "Quotes 15 and 16 verbatim match the fact's specific figures and narrative.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The FY25 review also states, 'Net Interest Income (NII) increased 5%, primarily driven by a 9 basis point increase in Net Interest Margin (NIM) and a $9 billion increase in Average Interest Earning Assets (AIEA).' It adds that excluding liquid assets and institutional pooled facilities, growth was driven by a 5% increase in AIEA and a 2 basis point increase in NIM (CBA/FY25/profit-announcement, PDF page 26).",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note says FY25 NII rose 5% on 9bps NIM gain and 1% AIEA growth, but omits the $9bn AIEA increase.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quote 17 supports the first sentence, but no quote states the second sentence about excluding liquid assets and institutional pooled facilities.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note cites 1% AIEA growth, contradicting fact's $9bn increase.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes show NII up 7% and NIM down, contradicting the fact's claim of 5% increase and 9bp rise.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The printed FY26 key outcomes show Cash NPAT of $10,982m, up 7.1%; operating income of $30,224m, up 6.2%; operating expenses of $13,755m, up 5.8%; cost to income of 45.5%, down 20bps; NIM of 2.05%, down 3bps; and LIE to GLAA of 8bps, up 1bp (CBA/FY26/results-presentation, PDF page 54).",
+      "verdict": "fail",
+      "stated": "stated",
+      "entailed": "not-entailed",
+      "reason": "stated=stated; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note lists FY26 cash NPAT $10,982m up 7.1%, income $30,224m up 6.2%, opex $13,755m, cost-to-income 45.5%, NIM 2.05% down 3bps, LIE/GLAA 8bps.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Cost to income 45.5% and LIE to GLAA 8bps are not explicitly stated in the quotes.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note confirms all specific FY26 figures and directions cited in the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes do not support cost to income of 45.5% or LIE to GLAA up 1bp.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The printed FY26 'Group margin - 12 months' bridge moves from 208bps in FY25 to 205bps in FY26 and is captioned 'Lower margin largely due to growth in liquids and repos - competition offset by hedge earnings'; the bridge prints Liquids & repos (4bps), Asset pricing (5bps), Funding costs nil, Portfolio mix +2bps, Interest rate risk hedging +5bps and Treasury & Markets (1bp) (CBA/FY26/results-presentation, PDF page 60).",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note gives FY26 bridge but uses -3bps liquids, -2bps T&M, not the fact's -4bps liquids & repos and -1bp T&M.",
+        "error": ""
+       },
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack the caption text and the FY26 bridge title; only the numeric bridge appears.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note cites -3bps for liquids, conflicting with fact's -4bps Liquids & repos.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "entailed",
+        "answer": "not-entailed",
+        "why": "Quotes lack specific bridge values for Asset pricing, Portfolio mix, and Treasury & Markets.",
+        "error": ""
+       }
+      ]
+     }
+    ]
+   },
+   "fact_accuracy": "1/4",
+   "cost_usd": 0.0782,
+   "seconds": 1885.0,
+   "passes": false
+  },
+  "wbc-low-impairment-versus-provision-caution": {
+   "case": "wbc-low-impairment-versus-provision-caution",
+   "location_coverage": "0/3",
+   "coverage_fraction": 0.0,
+   "locations": [
+    {
+     "doc": "WBC/FY25/presentation-and-IDP",
+     "pdf_page": 20,
+     "holds": "Full-year impairment-charge rate versus FY24.",
+     "hit": false,
+     "cited_by": []
+    },
+    {
+     "doc": "WBC/FY25/presentation-and-IDP",
+     "pdf_page": 29,
+     "holds": "Period impairment rate, CAP/IAP movements, overlays and downside scenario weighting.",
+     "hit": false,
+     "cited_by": []
+    },
+    {
+     "doc": "WBC/FY25/presentation-and-IDP",
+     "pdf_page": 54,
+     "holds": "Provision-stock composition and probability-weighted, base-case and downside ECL amounts.",
+     "hit": false,
+     "cited_by": []
+    }
+   ],
+   "cited_evidence_ids": [],
+   "confidence": 20,
+   "limitations": 1,
+   "fact_check": {
+    "status": "judged",
+    "judges": [
+     "deepseek/deepseek-v4-pro-0813",
+     "qwen/qwen3.7-flash"
+    ],
+    "total": 4,
+    "passed": 0,
+    "failed": 4,
+    "flagged": 0,
+    "flagged_split": 0,
+    "flagged_unreadable": 0,
+    "stated_not_entailed": 2,
+    "not_stated": 2,
+    "fact_accuracy": "0/4",
+    "accuracy_fraction": 0.0,
+    "answer_truncated": false,
+    "quotes_used": 0,
+    "quotes_truncated": false,
+    "facts": [
+     {
+      "fact": "The printed FY25 financial-performance table shows 'Impairment charges to average loans annualised' of 5bps in FY25 versus 7bps in FY24 (WBC/FY25/presentation-and-IDP, PDF page 20).",
+      "verdict": "fail",
+      "stated": "stated",
+      "entailed": "not-entailed",
+      "reason": "stated=stated; entailed=not-entailed (no quote was cited to entail it)",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note says FY25 impairment charge was 5bps versus FY24 7bps, matching the fact.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly states FY25 impairment charge was 5bps and FY24 was 7bps.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The impairment-provisions page states 'Impairment charges remain low, 4bps of average loans', 'CAP to credit RWA of 1.25%, down 1bps', 'Overlays increased $108m', '2.5ppt increase in downside scenario weight' and 'IAP decreased $72m due to a single name write-off' (WBC/FY25/presentation-and-IDP, PDF page 29).",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed (no quote was cited to entail it)",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states CAP/credit RWA 1.25% and IAP fell $72m, but omits 4bps charge, overlays +$108m, and 2.5ppt downside weight increase.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note states 5bps, not 4bps; and $108m increase in 2H, not total.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The printed provision stack totals $5,096m at Sep-24, $5,072m at Mar-25 and $4,987m at Sep-25; the Sep-25 components are Overlays $238m, Stage 1 CAP $933m, Stage 2 CAP $2,087m, Stage 3 CAP $1,190m and Stage 3 IAP $539m (WBC/FY25/presentation-and-IDP, PDF page 54).",
+      "verdict": "fail",
+      "stated": "partial",
+      "entailed": "not-entailed",
+      "reason": "stated=partial; entailed=not-entailed (no quote was cited to entail it)",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "partial",
+        "why": "The note lists Sep-25 components but omits Stage 1 CAP $933m and mislabels Stage 3 CAP as $933m.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "partial",
+        "why": "Note lists Sep-25 components but omits Stage 1 CAP and total provision stack.",
+        "error": ""
+       }
+      ]
+     },
+     {
+      "fact": "The printed 'Expected credit loss (ECL) ($m)' chart shows reported probability-weighted ECL of $4,987m, 100% base case ECL of $3,040m and 100% downside ECL of $7,152m, with the statement '$1.9bn in provisions above the base case ECL' (WBC/FY25/presentation-and-IDP, PDF page 54).",
+      "verdict": "fail",
+      "stated": "stated",
+      "entailed": "not-entailed",
+      "reason": "stated=stated; entailed=not-entailed (no quote was cited to entail it)",
+      "replies": [
+       {
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "question": "stated",
+        "answer": "stated",
+        "why": "The note includes the same ECL figures and the $1.9bn above base-case ECL statement.",
+        "error": ""
+       },
+       {
+        "model": "qwen/qwen3.7-flash",
+        "question": "stated",
+        "answer": "stated",
+        "why": "Note explicitly lists all three ECL figures and the $1.9bn provision statement.",
+        "error": ""
+       }
+      ]
+     }
+    ]
+   },
+   "fact_accuracy": "0/4",
+   "cost_usd": 0.0352,
+   "seconds": 2129.4,
+   "passes": false
+  }
+ },
+ "judge_cost": 0.070787108
+}

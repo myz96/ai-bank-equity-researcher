@@ -935,7 +935,9 @@ def test_the_combo_chooses_the_orchestration_shell(monkeypatch, tmp_path, capsys
         return run
 
     monkeypatch.setattr(research_agent, "run_agent_case", _fake("agent"))
-    for combo in ("agentic", "agentic-glm", "agentic-cheap"):
+    # The collapse (user, 2026-08-31) left ONE live combo. Retired names below
+    # must refuse, never route.
+    for combo in ("agentic",):
         monkeypatch.setattr(
             sys, "argv",
             ["x", "analyse", "--bank", "CBA", "--metric", "nim", "--period", "FY26",
