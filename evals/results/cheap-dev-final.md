@@ -1,4 +1,4 @@
-# Rescore — suite dev, combo cheap, saved artifacts, 20260831-0056
+# Rescore — suite dev, combo cheap, saved artifacts, 20260831-0225
 
 | Case | Movement | Driver recall | Precision | Extraction | Scored claims | Unscored | Failed checks | Conf | Cost |
 |---|---|---|---|---|---|---|---|---|---|
@@ -25,7 +25,7 @@
 | WBC-cash_earnings-FY25 | OK | 3/5 | 3/5 | — | 5/6 | 1 | 1 | 40 | $0.0049 |
 | WBC-roe-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 75 | $0.0014 |
 | WBC-cti-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 0 | 80 | $0.0012 |
-| WBC-cet1-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/7 | 7 | 1 | 40 | $0.0031 |
+| WBC-cet1-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/7 | 7 | 1 | 40 | $0.003 |
 | WBC-impairment-FY25 | OK | n/a (no verified numeric gold) | n/a (no verified numeric gold) | — | 0/2 | 2 | 1 | 40 | $0.002 |
 
 ## Calibration (scored quantified driver claims only)
