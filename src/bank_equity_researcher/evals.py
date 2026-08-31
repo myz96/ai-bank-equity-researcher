@@ -1184,6 +1184,16 @@ def scorecard_lines(title: str, rows: list[dict]) -> list[str]:
             f"| {row['failed_checks']} | {row['attribution_confidence']} | ${row.get('cost_usd', 0)} |"
         )
     lines += ["", "## Calibration (scored quantified driver claims only)", ""]
+    lines += [
+        (
+            "Disclosure: confidently_wrong counts wrong claims at confidence 85+. "
+            "The validation caps write 80 — one notch below that line — so a claim "
+            "a cap touches is excluded from the metric by construction. The caps-off "
+            "ablation (evals/results/audits/capsoff-*) measured the raw self-report "
+            "rates; read this number alongside it, never alone."
+        ),
+        "",
+    ]
     for key, value in cal.items():
         if key == "reliability":
             lines += [f"- {item}" for item in value]

@@ -11,6 +11,15 @@ number, an artifact, a scorecard - never a hunch. The default lean is to
 trust the self-report and let the evals catch failures; an override without
 traceable evidence is a cleanup-round deletion candidate (ticket 33 audits
 every one against this rule).
+
+STANDING EVIDENCE for the confidence-cap ladder: the caps-off ablation
+(2026-08-31, evals/results/audits/capsoff-*-dev-rescore.md). Raw
+self-reports rank claims WELL (uncapped Brier beats capped on a fixed claim
+set) but put a few genuinely wrong claims at 90; the kept caps exist for
+that tail alone, at a measured Brier cost of ~0.003-0.007, and they write
+80 - one notch below the 85 confident threshold, which any reader of the
+confidently-wrong rate must know. The single_source override was deleted by
+the same run.
 """
 
 from __future__ import annotations
@@ -516,10 +525,16 @@ def corroborate(attribution, cross_source: dict[str, list[dict]]) -> None:
             if max(values) - min(values) <= CORROBORATION_TOL:
                 driver.checks_passed.append(f"corroborated_{len(walk_docs)}_sources")
         elif n_sources <= 1:
-            # Corroboration dimension (user, 2026-08-26): a quantified claim
-            # seen in only one document cannot claim near-certainty.
+            # The single-source TAG stays: a reader deserves to know a number
+            # was seen in one document. The confidence override that used to
+            # sit here (min 85) was DELETED after the caps-off ablation
+            # (2026-08-31, evals/results/audits/capsoff-*): it fired 70x on a
+            # 25-case suite, demoted overwhelmingly-correct claims, capped
+            # exactly ON the 85 confident threshold rather than below it, and
+            # still left a wrong claim inside the confident band. The ladder's
+            # remaining caps catch the wrong-claim tail; this one only bought
+            # Brier damage.
             driver.checks_passed.append("single_source")
-            driver.confidence = min(driver.confidence, 85)
 
 
 def check_comparison_leak(
