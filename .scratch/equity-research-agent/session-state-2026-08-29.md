@@ -140,3 +140,11 @@ Everything below in "In-flight" COMPLETED. Current state:
   done for NIM), 32 (in progress).
 - Latest commit before snapshot: a89086c + judge/subset-filter commits (0230948, aea965f);
   uncommitted: dev-fix agent's working tree.
+
+## ITERATION END (user, 2026-08-31 ~17:15)
+
+The deepseek-v4-flash probe is the LAST iteration experiment. After it:
+pick the default combo (glm-flash for quality; deepseek-flash for speed if
+it holds the p118 bar), freeze, run the holdout tonight. Everything after
+is polish only: cleanup passes, report writing, submission. No new model
+tests, no new checks, no new features.
