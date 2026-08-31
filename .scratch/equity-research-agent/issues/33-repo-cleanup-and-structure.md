@@ -36,6 +36,19 @@ say what they are — agent, tools, validation, judging, evals.
    (keep the frozen baseline, the bake-off files, and the latest cards at the
    top level); prune `tmp/`; check `prototypes/` is labelled as history.
 
+## Input 2: the unpreconditioned necessity audit (2026-08-31)
+
+`docs/reviews/necessity-audit-20260831.md` — fresh-eyes, barred from every
+prior finding list, quantified against all 90 saved artifacts. Its 15
+findings and its hardcoded-override register (evidence-backed-and-firing /
+evidence-backed-never-fires / unevidenced / unnecessary) are this ticket's
+SECOND backlog, alongside the Codex critique. Its five named ablations gate
+the deletions: never-firing checks, the caps-off experiment (running
+2026-08-31), reference-following re-ablation, citation-parser upstream
+instrumentation, and pipeline-freeze-at-tag. Also fix before submission:
+README metric drift (finding 12) and the judge MAX_QUOTES=24 window that
+binds on 25/90 metric artifacts while the questions suite got 48.
+
 ## Input: the Codex architecture critique (2026-08-30)
 
 The user commissioned an independent Codex critique in a parallel session;
