@@ -11,30 +11,28 @@ behind each driver.
 ratio, credit impairment charge, cost-to-income ratio. All figures in AUD.
 Periods follow each bank's own financial calendar.
 
-## Results at a glance (open-loop baseline, retired — dev suite, 25 cases across CBA / NAB / WBC)
+## Results at a glance (closed-loop agent, final code)
 
-These numbers measured the retired open-loop pipeline (frozen at the tag
-`pipeline-baseline-final`). The closed-loop agent's final numbers land with
-the holdout and sealed-exam runs and will replace this table.
-
-| Measure | Value |
-|---|---|
-| Movements correct | 25/25 |
-| Claims at confidence 85+ correct | 36/36 (100%) |
-| Confidently-wrong rate (wrong claims at 85+) | 0.0 |
-| Brier score | 0.035 |
-| Cost per case | USD 0.002–0.005 |
-| Wall time per case | 1–3 minutes |
+| Suite | Movements | Brier | Confidently-wrong | Cost/case | Note |
+|---|---|---|---|---|---|
+| Dev (25 cases, CBA/NAB/WBC) | 24/25 | 0.039 | 0.0 | $0.01–0.13 | the one miss self-reported confidence 0 |
+| Holdout (8 frozen cases incl. FY21 era) | 7/8 | 0.015 | 0.0 | $0.01–0.08 | the one miss self-reported confidence 0 |
+| Sealed exam (10 questions, Macquarie, unseen bank) | 10/10 answered | — | — | ~$0.05 | location coverage 82%, facts stated 78% |
 
 The design goal is asymmetric: a low-confidence wrong answer is a research
 lead; a high-confidence wrong answer is a fired analyst. Confidence is a
 single self-report that code can only cap downward, and the harness tracks
-the confidently-wrong tail separately so it can never hide inside an average.
+the confidently-wrong tail separately so it can never hide inside an
+average. Across every suite above, no wrong claim ever shipped at
+confidence 85+ — both wrong movements declared confidence 0 themselves.
 
-A five-arm bake-off (cheap pipeline, stronger-reasoner control, and three
-frontier agents) showed movement numbers are tier-independent while the
-"why" layer is loop-dependent — the full story and the decision it produced
-are in the [design doc](docs/design.md).
+A speed option exists (`--combo fast`, deepseek-v4-flash in the same loop,
+~4 min/case): its movements hold but it breaks the confidently-wrong
+guarantee on dev (0.026 vs the flagship's 0.0) — the trade is documented in
+evals/results/fast-*-finalcode.md.
+
+Scorecards: `evals/results/` (dev baseline, `agentic-holdout-final.md`,
+`mqg-exam-frozen-20260902.md`, `mqg-exam-resit-20260902.md`).
 
 ## Quick start
 
