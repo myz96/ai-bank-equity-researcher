@@ -183,9 +183,6 @@ def _hard_stop_s(combo) -> float:
     return HARD_STOP_FACTOR * combo.wall_clock_s
 
 
-# Both research tasks — a metric movement and a free-form question — drive the
-# SAME loop over the SAME tools, so a change to a tool changes one paragraph,
-# not two.
 HOW_TO_RESEARCH = """HOW TO RESEARCH
 - search_pages finds candidate pages by keyword and by meaning. Search with
   the words the BANK would print, not the words of the question.
@@ -367,8 +364,7 @@ decomposition of it, and the reason behind each driver."""
 #
 # A question has no movement, no taxonomy and no single comparison, so its
 # submission is smaller: the note, the facts it rests on, a confidence and the
-# gaps. Everything else is shared - the tools, the loop, the budgets, and the
-# citation gate that checks every quote against its page.
+# gaps.
 # --------------------------------------------------------------------------
 
 
@@ -443,8 +439,8 @@ declared unanswerable."""
 
 
 # --------------------------------------------------------------------------
-# The tool surface. Each tool is a thin adapter over a function the pipeline
-# already calls; none of them adds a capability the estate did not have.
+# The tool surface. Each tool is a thin adapter over a function the estate
+# already calls.
 # --------------------------------------------------------------------------
 
 _NUMBER_SCHEMA = {
@@ -1430,9 +1426,6 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
         driver["evidence"] = remap(driver.get("evidence"))
         driver["narrative"] = str(driver.get("narrative") or "")
         prepared.append(driver)
-    # A contribution is a share of THIS movement, so it is stated in the
-    # movement's own unit. The rule lives in validate.py, beside the checks
-    # that read its output.
     dropped: list[str] = drop_off_unit_contributions(prepared, metric_cfg["unit"])
     drivers = _keep_valid(prepared, DriverClaim, dropped, "driver")
     disagreements = _keep_valid(
@@ -1570,16 +1563,11 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
         peripheral = []
     peripheral += honest_partial
     validation["failed"] += output_failed
-    # A claim-specific cap, so it runs whether or not the walk failure was
-    # graded load-bearing for the answer as a whole.
     cap_drivers_on_failed_walks(attribution, walks)
     if fatal or peripheral:
         attribution.limitations.extend(f"Failed check: {f}" for f in fatal + peripheral)
     if fatal:
         attribution.attribution_confidence = min(attribution.attribution_confidence, 40)
-        # The cap reaches the DRIVERS, not the attribution alone: the
-        # calibration metrics read per-driver confidence, so a failed check that
-        # stopped at the header was invisible to them (validate.py).
         cap_unreconciled_drivers(attribution, fatal)
     elif metric_cfg["method"] == "walk_extraction" and classified and not primary_walks:
         attribution.limitations.append(
@@ -1838,8 +1826,8 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
                                        deadline_monotonic=deadline)
 
     if payload is None:
-        # The loop ended without a submission. An artifact still ships: it
-        # carries what was read and says plainly that nothing was concluded.
+        # An artifact still ships: it carries what was read and says plainly
+        # that nothing was concluded.
         payload = {
             "evidence": [{"id": record.id} for record in research.records],
             "headline": "",
@@ -2009,8 +1997,8 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = LIVE_C
         deadline_monotonic=deadline,
     )
     if payload is None:
-        # The loop ended without a submission. An artifact still ships: it
-        # carries what was read and says plainly that nothing was concluded.
+        # An artifact still ships: it carries what was read and says plainly
+        # that nothing was concluded.
         payload = {
             "evidence": [{"id": record.id} for record in research.records],
             "answer": "",

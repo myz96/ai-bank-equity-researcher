@@ -143,10 +143,8 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
 
 
 # A free-form answer carries key facts instead of driver claims, so the same
-# structural rule needs a second shape to act on. Both shells that answer a
-# question — the open-loop author and the closed-loop research agent — call
-# this one function, so a question is gated exactly once however it was
-# answered.
+# structural rule needs a second shape to act on. Every shell that answers a
+# question calls this one function, so a question is gated exactly once.
 ANSWER_GATE_CONFIDENCE_CAP = 20
 
 

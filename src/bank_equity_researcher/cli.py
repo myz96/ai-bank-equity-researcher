@@ -63,8 +63,7 @@ def main() -> int:
 
             card = run_crossref_suite(args.combo, args.bank)
         elif args.action == "judge":
-            # Citation-grounding judge over SAVED out/*/ artifacts: it grades
-            # each case's narrative checklist and runs no research.
+            # The judge grades SAVED out/*/ artifacts and runs no research.
             from .evals import run_judge_suite
 
             card = run_judge_suite(args.suite, args.combo, args.bank)
@@ -74,8 +73,6 @@ def main() -> int:
             card = rescore(args.suite, args.combo, args.bank, args.since, args.until,
                            args.baseline, args.label)
         elif args.suite == "questions":
-            # The answer suite: scored on location coverage and on judged fact
-            # accuracy.
             from .evals import run_question_suite
 
             card = run_question_suite(args.combo, args.bank, only=args.only)
@@ -87,7 +84,6 @@ def main() -> int:
         return 0
 
     if args.command == "ask":
-        # One shell answers a question, reached through the same seam analyse uses.
         from .config import question_runner_for
 
         run_question = question_runner_for(args.combo)
