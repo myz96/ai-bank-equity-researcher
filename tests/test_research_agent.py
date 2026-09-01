@@ -2068,7 +2068,7 @@ def test_a_movement_with_no_evidence_records_cannot_claim_certainty(docs, case):
     attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
     assert attribution.evidence_records == []
     assert attribution.attribution_confidence <= 20
-    assert any("cites no evidence records" in item for item in attribution.limitations)
+    assert any("No resolved citation grounds the movement" in item for item in attribution.limitations)
 
 
 def test_a_cut_off_submission_is_retried_not_accepted_empty(wired, monkeypatch):
@@ -2140,3 +2140,17 @@ def test_the_split_parameter_stays_gone():
     from bank_equity_researcher.evals.harness import run_question_suite
 
     assert "split" not in inspect.signature(run_question_suite).parameters
+
+
+def test_an_unrelated_record_does_not_ground_the_movement(docs, case):
+    """The cap keys on RESOLVED CITATIONS, not on the evidence pool being
+    non-empty: an unrelated dividend record beside an uncited movement left
+    the answer at 95."""
+    research = _research(_LLM([]), docs, case)
+    research.cite("CBA/FY26/profit_announcement", 12,
+                  [{"quote": "Net interest margin    2.05%    2.08%"}])
+    payload = _submission(evidence=[], headline_evidence=[], drivers=[])
+    payload["attribution_confidence"] = 95
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.evidence_records != [] or attribution.attribution_confidence <= 20
+    assert attribution.attribution_confidence <= 20

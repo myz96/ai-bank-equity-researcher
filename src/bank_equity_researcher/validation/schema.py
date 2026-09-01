@@ -161,13 +161,15 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
                 f"{driver.contribution.value}{driver.contribution.unit} had no evidence reference."
             )
             driver.contribution = None
-    # A movement asserted with ZERO evidence records is a guess wearing a
-    # number. The driver gate above cannot reach it (there is no contribution
-    # to strip), so without this cap it shipped at 95 with only a peripheral
-    # failed check (reproduced: a CTI submission, empty
-    # evidence, confidence 95). The cap matches the question shell's
-    # nothing-survived cap.
-    if (attribution.movement is not None and not attribution.evidence_records
+    # A movement with NO RESOLVED CITATION anywhere is a guess wearing a
+    # number: the headline cites nothing and no driver cites anything, so no
+    # record grounds it — an unrelated record in the evidence pool changes
+    # nothing (reproduced twice: an empty pool at 95, then an unrelated
+    # dividend record beside a CTI movement at 95). The cap matches the
+    # question shell's nothing-survived cap.
+    if (attribution.movement is not None
+            and not attribution.headline_evidence
+            and not any(driver.evidence for driver in attribution.drivers)
             and attribution.attribution_confidence > ANSWER_GATE_CONFIDENCE_CAP):
         attribution.attribution_confidence = ANSWER_GATE_CONFIDENCE_CAP
         # The drivers rest on the same absent evidence, so a narrative driver
@@ -175,8 +177,8 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
         for driver in attribution.drivers:
             driver.confidence = min(driver.confidence, ANSWER_GATE_CONFIDENCE_CAP)
         attribution.limitations.append(
-            "The movement cites no evidence records at all, so confidence is "
-            f"capped at {ANSWER_GATE_CONFIDENCE_CAP}."
+            "No resolved citation grounds the movement (the headline and every "
+            f"driver cite nothing), so confidence is capped at {ANSWER_GATE_CONFIDENCE_CAP}."
         )
     return attribution
 
@@ -192,12 +194,18 @@ ANSWER_GATE_CONFIDENCE_CAP = 20
 # alone let it ship uncited at full confidence. A number word counts only beside a quantity noun, so a period
 # name ("the first half") never trips it.
 _NUMBER_WORDS = (
-    "one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
+    "zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
     "thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|"
     "thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred"
 )
 _QUANTITY_RE = re.compile(
-    rf"\d|\b(?:{_NUMBER_WORDS})\s+(?:basis[-\s]+points?|bps|per\s?cent|percent(?:age)?\s+points?|"
+    # A digit is a quantity when it looks like one: a decimal or thousands
+    # separator, three or more digits, or a unit/currency beside it. A bare
+    # one- or two-digit token can be a LABEL INDEX ("Tier 1 capital", "Stage
+    # 3"), and stripping the qualitative sentence it sits in punishes prose
+    # that claims no number. The trade accepted: "rose by 5" alone escapes.
+    rf"\d+[.,]\d|\d{{3,}}|\$\s*\d|\d+\s*(?:%|bps|bp\b|ppt|per\s?cent|percent|basis|million|billion|bn\b|m\b)|"
+    rf"\b(?:{_NUMBER_WORDS})\s+(?:basis[-\s]+points?|bps|per\s?cent|percent(?:age)?\s+points?|"
     rf"percent|ppt|points?|million|billion|dollars?)\b",
     re.IGNORECASE,
 )
@@ -241,6 +249,9 @@ def enforce_answer_gate(
             "numbers: " + "; ".join(f'"{s}"' for s in stripped)
             + ". Treat any number above that carries no citation as unsupported."
         )
-    if not kept:
+    if not any(fact["evidence"] for fact in kept):
+        # Kept facts with no resolved citation are prose the gate cannot call
+        # quantified; an answer whose every fact is ungrounded is still an
+        # answer with nothing supported ("Outlook remained resilient" at 95).
         confidence = min(int(confidence or 0), ANSWER_GATE_CONFIDENCE_CAP)
     return kept, limitations, int(confidence or 0)

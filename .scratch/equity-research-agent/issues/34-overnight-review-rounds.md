@@ -1126,3 +1126,21 @@ the layering walker now reads `from bank_equity_researcher import x` and
 plain `import` spellings; the split removal and direct float('inf')
 rejection are pinned. Residual coercion, empty-unit semantics, the stem
 guard mutation test, and every noqa reason verified as holding.
+
+## Sol review round 2 applied (2026-09-01)
+
+Round-1 fixes verified by re-running the probes; four new MUSTs, all fixed
+with pins (suite 412):
+- The zero-evidence movement cap now keys on RESOLVED CITATIONS (headline +
+  drivers), not on the evidence pool being non-empty — an unrelated dividend
+  record no longer launders a 95.
+- _states adopts the _converted_prints doctrine across unit conversions: the
+  TIGHTER of the two units' slack, so a 10 bps fact stops certifying a 0.02
+  ppt claim.
+- _QUANTITY_RE: "zero" joins the number words; a bare one-or-two-digit token
+  is no longer a quantity (label indexes like "Tier 1" stripped qualitative
+  prose), digits count with a decimal/thousands mark, three digits, or a
+  unit/currency beside them. Trade accepted and documented: bare "rose by 5"
+  escapes.
+- The answer-confidence cap counts GROUNDED kept facts: an answer of only
+  ungrounded prose ("Outlook remained resilient") no longer carries 95.

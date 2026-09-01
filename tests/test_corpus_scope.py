@@ -340,3 +340,25 @@ def test_a_double_space_does_not_hide_a_spelt_quantity():
     facts = [{"fact": "NIM fell three basis  points.", "citations": []}]
     kept, _, _ = enforce_answer_gate(facts, [], 85, set())
     assert kept == []
+
+
+def test_zero_spelt_out_is_a_quantity():
+    facts = [{"fact": "NIM moved zero basis points.", "citations": []}]
+    kept, _, _ = enforce_answer_gate(facts, [], 95, set())
+    assert kept == []
+
+
+def test_a_label_index_is_not_a_quantity():
+    """"Tier 1 capital remained resilient" claims no number; stripping the
+    qualitative sentence punished prose over a label index."""
+    facts = [{"fact": "Tier 1 capital remained resilient.", "citations": []}]
+    kept, _, _ = enforce_answer_gate(facts, [], 60, set())
+    assert [f["fact"] for f in kept] == ["Tier 1 capital remained resilient."]
+
+
+def test_an_answer_of_only_ungrounded_prose_is_capped():
+    """Kept-but-uncited qualitative facts are not support: "Outlook remained
+    resilient" alone must not carry 95."""
+    facts = [{"fact": "Outlook remained resilient.", "citations": []}]
+    kept, _, confidence = enforce_answer_gate(facts, [], 95, set())
+    assert kept and confidence <= 20

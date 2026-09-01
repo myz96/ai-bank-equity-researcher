@@ -281,3 +281,19 @@ def test_an_unquantified_driver_is_untouched():
     attribution.drivers.append(DriverClaim(canonical="narrative", confidence=90, evidence=["ev-1"]))
     assert cap_weakly_cited_claims(attribution) == []
     assert attribution.drivers[0].confidence == 90
+
+
+def test_a_converted_fact_keeps_the_tighter_units_slack():
+    """A 10 bps fact converts to 0.1 ppt, and the claim-unit slack alone (0.1
+    ppt) certified a 0.02 ppt claim — the whole of ten basis points inside
+    the tolerance. Across a conversion the tighter unit's slack rules."""
+    from bank_equity_researcher.validation.validate import (
+        CITATION_TOL,
+        CITATION_TOL_DEFAULT,
+        _states,
+        _tolerance_for,
+    )
+
+    ppt_tol = _tolerance_for(CITATION_TOL, "ppt", CITATION_TOL_DEFAULT)
+    assert _states(10.0, "bps", 0.02, "ppt", ppt_tol) is False
+    assert _states(10.0, "bps", 0.10, "ppt", ppt_tol) is True

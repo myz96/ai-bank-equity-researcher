@@ -1498,9 +1498,20 @@ def _states(
     `-5.0 bps` fact grounded a `-5.0 $m` claim at 95. A fact whose unit cannot
     be read in the claim's unit is not evidence for the claim, whatever its
     magnitude; a fact carrying NO unit is not evidence either way.
+
+    Across a conversion the slack is the TIGHTER of the two units' own slack,
+    read in the claim's unit — the _converted_prints doctrine. The claim-unit
+    tolerance alone certified a 0.02 ppt claim from a 10 bps fact: 0.1 ppt of
+    slack is the whole of ten basis points.
     """
     converted = convert_unit(abs(number), number_unit, unit)
-    return converted is not None and abs(converted - abs(value)) <= tolerance
+    if converted is None:
+        return False
+    fact_tol = convert_unit(
+        _tolerance_for(CITATION_TOL, number_unit, CITATION_TOL_DEFAULT), number_unit, unit
+    )
+    effective = tolerance if fact_tol is None else min(tolerance, fact_tol)
+    return abs(converted - abs(value)) <= effective
 
 
 def _cap_drivers(attribution, tag: str, reason: str, applies=None) -> list[str]:
