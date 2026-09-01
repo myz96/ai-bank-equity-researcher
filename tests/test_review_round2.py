@@ -44,7 +44,6 @@ from bank_equity_researcher.validate import (
     quote_states,
     reconcile_tolerance,
     settle_ratio_scale,
-    sign_flip_hint,
 )
 
 
@@ -293,57 +292,6 @@ def test_the_ratio_corrector_stays_silent_without_percent_evidence():
     )
     assert settle_ratio_scale(attribution, "ppt") is None
     assert attribution.movement.from_value == 11.6
-
-
-# ---------------------------------------------------------------------------
-# 5. The sign hint (a hint, never a correction)
-# ---------------------------------------------------------------------------
-
-
-def test_the_gap_that_is_twice_one_contribution_names_it():
-    """CBA 1H26: the charge fell $1m, which ADDS $1m to earnings.
-
-    761 + 163 - 348 - 170 - 1 - 94 = 311 against a delta of 313. The gap is
-    +2.00, exactly -2 x the offending contribution.
-    """
-    attribution = _attribution(
-        drivers=[
-            ("nii", 761.0, 85, ["ev-1"], None),
-            ("other_operating_income", 163.0, 85, ["ev-1"], None),
-            ("operating_expenses", -348.0, 85, ["ev-1"], None),
-            ("notable_items", -170.0, 85, ["ev-1"], None),
-            ("credit_impairment_charge", -1.0, 85, ["ev-1"], None),
-            ("tax_and_other", -94.0, 85, ["ev-1"], None),
-        ]
-    )
-    hint = sign_flip_hint(attribution)
-    assert hint is not None
-    assert "credit_impairment_charge" in hint
-    # A hint, not a correction: it names no value to reach and changes nothing.
-    assert "+1" not in hint
-    assert attribution.drivers[4].contribution.value == -1.0
-
-
-def test_two_candidates_are_reported_as_a_question():
-    """The shipped CBA FY26 cost-to-income artifact, values and all.
-
-    Two contributions fit the gap inside the ppt tolerance, so the hint asks a
-    question about both instead of pointing at one.
-    """
-    attribution = _attribution(
-        unit="ppt", movement=(45.7, 45.5, -0.2), metric="cti", residual=-0.11,
-        drivers=[("income_growth", -0.17, 85, ["ev-1"], None),
-                 ("expense_growth", 0.15, 85, ["ev-1"], None),
-                 ("notable_items", 0.13, 85, ["ev-1"], None)],
-    )
-    hint = sign_flip_hint(attribution)
-    assert hint is not None and "one of these" in hint
-    assert "expense_growth" in hint and "notable_items" in hint
-
-
-def test_a_bridge_that_closes_gets_no_hint():
-    attribution = _attribution(drivers=[("nii", 313.0, 85, ["ev-1"], None)])
-    assert sign_flip_hint(attribution) is None
 
 
 # ---------------------------------------------------------------------------

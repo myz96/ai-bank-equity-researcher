@@ -431,29 +431,11 @@ def follow_references(
     return followed
 
 
-def extraction_hint(followed: FollowedPage) -> str:
-    """The line added to the extractor's task for a followed page.
-
-    A followed page is reached because another page points at it, so it holds
-    the detail behind a line in the main tables: the component rows and the
-    bank's own reason for a movement. The extractor is told that much and
-    nothing else — it still extracts only what the page prints.
-    """
-    return (
-        f"- This page was reached by following a reference from PDF page "
-        f"{followed.source_page} of the same document to {followed.target}. It carries the "
-        "detail behind a line in the main tables, so extract EVERY component row of its "
-        "tables with all period columns, and every sentence that gives the bank's own "
-        "reason for a movement."
-    )
-
-
 __all__ = [
     "MAX_FOLLOWED_PAGES",
     "FollowedPage",
     "Note",
     "Reference",
-    "extraction_hint",
     "follow_references",
     "notes_index",
     "printed_page_map",

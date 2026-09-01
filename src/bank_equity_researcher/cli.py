@@ -16,7 +16,7 @@ def main() -> int:
     analyse.add_argument("--period", required=True, help="e.g. FY26, 1H26")
     analyse.add_argument("--comparator", default=None, help="defaults: FY->prior FY, half->PCP")
     analyse.add_argument("--combo", default="agentic",
-                         help="model combo: agentic | agentic-glm | agentic-cheap")
+                         help="model combo: agentic (the only live combo)")
 
     ask = sub.add_parser("ask", help="answer a free-form question from the corpus")
     ask.add_argument("--bank", default=None,
@@ -25,7 +25,7 @@ def main() -> int:
                      help="comma-separated, e.g. FY26,FY25; omit when the question names them")
     ask.add_argument("--question", required=True, help="the question to answer")
     ask.add_argument("--combo", default="agentic",
-                     help="model combo: agentic | agentic-glm | agentic-cheap")
+                     help="model combo: agentic (the only live combo)")
 
     discover_cmd = sub.add_parser("discover", help="agentically build a manifest for a bank")
     discover_cmd.add_argument("--bank", required=True)
@@ -37,7 +37,9 @@ def main() -> int:
     evals_cmd.add_argument("--suite", default="dev",
                            help="dev | holdout | questions (free-form researcher questions)")
     evals_cmd.add_argument("--combo", default="agentic",
-                           help="agentic | agentic-glm | agentic-cheap. rescore also accepts a\n                                retired combo name (cheap, normal): it reads saved artifacts by\n                                slug and runs no shell.")
+                           help="agentic (the only live combo). rescore and judge also accept a "
+                                "retired combo name: they read saved artifacts by slug and run "
+                                "no shell.")
     evals_cmd.add_argument("--only", default=None,
                            help="run: subset filter for fast loops, comma-separated matches "
                                 "against BANK-metric-PERIOD (e.g. 'cash_earnings' or 'nim-1H26')")

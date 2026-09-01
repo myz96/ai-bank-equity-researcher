@@ -120,15 +120,18 @@ def question_runner_for(combo_name: str):
 def _require_agent(combo_name: str) -> None:
     """A combo that is not an agent combo has no shell to run since wave 3.
 
-    Saved artifacts from the deleted arm stay readable and `evals rescore`
-    still scores them by slug, so this refuses only a fresh RUN.
+    Saved artifacts from a retired arm stay readable, and `evals rescore` and
+    `evals judge` still read them by slug, so this refuses only a fresh RUN.
     """
     combo = COMBOS.get(combo_name)
     if combo is None:
         raise KeyError(
             f"unknown combo: {combo_name} (known: {', '.join(sorted(COMBOS))}). "
-            "The open-loop combos 'cheap' and 'normal' were frozen at the git tag "
-            "pipeline-baseline-final and removed from main."
+            "Every other combo is retired and lives in git history: the open-loop "
+            "'cheap' and 'normal' at the tag pipeline-baseline-final, and the "
+            "closed-loop arms retired with the collapse. Their saved artifacts stay "
+            "readable — `evals rescore` and `evals judge` take a retired name as a "
+            "slug and run no shell."
         )
     if combo.orchestration != "agent":
         raise ValueError(f"combo {combo_name} names no orchestration shell")

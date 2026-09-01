@@ -45,7 +45,7 @@ class _LLM:
         self.reply = reply
         self.calls = 0
 
-    def chat_json(self, model, prompt, image_png=None, max_tokens=None):
+    def chat_json(self, model, prompt, image_png=None, max_tokens=None, deadline_monotonic=None):
         self.calls += 1
         if isinstance(self.reply, Exception):
             raise self.reply

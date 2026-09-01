@@ -810,9 +810,13 @@ class Research:
     """
 
     def __init__(self, llm: LLM, combo, docs: list[Document], case: dict, metric_cfg: dict,
-                 registry: dict, registries: dict[str, dict] | None = None) -> None:
+                 registry: dict, registries: dict[str, dict] | None = None,
+                 deadline_monotonic: float | None = None) -> None:
         self.llm = llm
         self.combo = combo
+        # The case's absolute deadline on time.monotonic(). Every model call a
+        # tool makes carries it, so no retry ladder can outlive the case.
+        self.deadline_monotonic = deadline_monotonic
         self.docs = docs
         self.doc_by_id: dict[str, Document] = {d.doc_id: d for d in docs}
         self.case = case
@@ -915,7 +919,8 @@ class Research:
         case_desc = self.case["description"]
         try:
             walk, record = extract_walk(
-                self.llm, self.combo.vision, doc, page, case_desc, self.next_id, unit=unit
+                self.llm, self.combo.vision, doc, page, case_desc, self.next_id, unit=unit,
+                deadline_monotonic=self.deadline_monotonic,
             )
         except Exception as exc:  # noqa: BLE001 - an unreadable chart is a gap, not a crash
             self.validation["failed"].append(f"walk_extraction_error p{page}: {exc}")
@@ -984,6 +989,7 @@ class Research:
         callouts = extract_walk_annotations(
             self.llm, self.combo.vision, doc, page, case_desc, self.next_id,
             unit=unit, bar_labels=bar_labels,
+            deadline_monotonic=self.deadline_monotonic,
         )
         self.records.extend(callouts)
         return [
@@ -1272,6 +1278,34 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     """
     records, rejections, id_map = research.build_records(payload.get("evidence"))
     reply = dict(payload)
+
+    def remap(ids) -> list[str]:
+        return [id_map.get(str(e), str(e)) for e in ids or [] if isinstance(e, (str, int))]
+
+    # A citation to a record a tool already verified is a citation, whether or
+    # not the submission repeated it in the evidence list. The record is
+    # carried in rather than stripped: it was minted from the page's own words,
+    # so dropping the claim that rests on it would punish bookkeeping, not a
+    # guess. An id no tool minted still resolves to nothing and still falls to
+    # the evidence gate.
+    #
+    # This runs BEFORE every normaliser that reads the evidence. It used to run
+    # after, and `_percent_evidenced` then decided the percent-to-bps lift
+    # against a record list the recovery had not filled yet: a NIM movement
+    # whose only evidence arrived through `headline_evidence` kept its percent
+    # scale and shipped as "2.08 -> 2.05, -0.03 bps" (Codex round-5 repro).
+    minted_by_id = {record.id: record for record in research.records}
+    present = {record.id for record in records}
+    for cited in [
+        *(reply.get("headline_evidence") or []),
+        *(e for driver in reply.get("drivers") or []
+          if isinstance(driver, dict) for e in driver.get("evidence") or []),
+    ]:
+        key = str(cited)
+        if key in minted_by_id and key not in present and key not in id_map:
+            records.append(minted_by_id[key])
+            present.add(key)
+
     movement = reply.get("movement")
     if isinstance(movement, dict) and any(
         movement.get(k) is None for k in ("from_value", "to_value", "delta")
@@ -1301,8 +1335,7 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     if isinstance(movement, dict):
         movement = settle_charge_sign(movement, metric_cfg, reply)
     if isinstance(movement, dict):
-        # The threshold is check_movement's own, indexed by the movement's unit
-        # (author.py carries the same repair and the same reason).
+        # The threshold is check_movement's own, indexed by the movement's unit.
         implied = round(movement["to_value"] - movement["from_value"], 2)
         if (
             abs(movement["delta"] - implied)
@@ -1314,27 +1347,6 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
                 "(unit slip against the endpoints)."
             )
             movement["delta"] = implied
-
-    def remap(ids) -> list[str]:
-        return [id_map.get(str(e), str(e)) for e in ids or [] if isinstance(e, (str, int))]
-
-    # A citation to a record a tool already verified is a citation, whether or
-    # not the submission repeated it in the evidence list. The record is
-    # carried in rather than stripped: it was minted from the page's own words,
-    # so dropping the claim that rests on it would punish bookkeeping, not a
-    # guess. An id no tool minted still resolves to nothing and still falls to
-    # the evidence gate.
-    minted_by_id = {record.id: record for record in research.records}
-    present = {record.id for record in records}
-    for cited in [
-        *(reply.get("headline_evidence") or []),
-        *(e for driver in reply.get("drivers") or []
-          if isinstance(driver, dict) for e in driver.get("evidence") or []),
-    ]:
-        key = str(cited)
-        if key in minted_by_id and key not in present and key not in id_map:
-            records.append(minted_by_id[key])
-            present.add(key)
 
     prepared = []
     for driver in reply.get("drivers") or []:
@@ -1350,7 +1362,8 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
         driver["narrative"] = str(driver.get("narrative") or "")
         prepared.append(driver)
     # A contribution is a share of THIS movement, so it is stated in the
-    # movement's own unit. One function serves both shells (author.py).
+    # movement's own unit. The rule lives in validate.py, beside the checks
+    # that read its output.
     dropped: list[str] = drop_off_unit_contributions(prepared, metric_cfg["unit"])
     drivers = _keep_valid(prepared, DriverClaim, dropped, "driver")
     disagreements = _keep_valid(
@@ -1550,7 +1563,8 @@ def _tool_result(call_id: str, payload: dict) -> dict:
 
 
 def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
-                  submit_spec: dict, started: float) -> tuple[dict | None, str | None]:
+                  submit_spec: dict, started: float,
+                  deadline_monotonic: float | None = None) -> tuple[dict | None, str | None]:
     """Drive the closed loop until it submits, or until a budget ends it.
 
     Returns (the submitted payload or None, the budget that ran out or None).
@@ -1558,6 +1572,12 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
     to the toolbox and results back, and it runs the citation gate over any
     submission before it accepts one. That is why a movement and a free-form
     question share it - only the submit schema and the prompts differ.
+
+    `deadline_monotonic` is the same hard stop this loop reads between turns,
+    handed to every model call so ONE call cannot sit past it. The loop reads
+    its wall clock between calls only, so a turn holding a retry ladder used to
+    add minutes the loop could not see. The submit turns carry it too: a
+    submission asked for after the budget ran out is still inside the case.
     """
     tools = [*TOOL_SPECS, submit_spec]
     payload: dict | None = None
@@ -1610,7 +1630,8 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                 )
         turn_tools = [submit_spec] if exhausted else tools
         message = llm.chat_tools(
-            combo.agent, messages, turn_tools, max_tokens=combo.agent_max_tokens
+            combo.agent, messages, turn_tools, max_tokens=combo.agent_max_tokens,
+            deadline_monotonic=deadline_monotonic,
         )
         messages.append(_assistant_turn(message))
         calls = message.get("tool_calls") or []
@@ -1715,6 +1736,10 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
     combo = COMBOS[combo_name]
     if not combo.agent:
         raise ValueError(f"combo {combo_name} declares no agent model")
+    # The loop's own hard stop, stated once as an absolute monotonic instant so
+    # every model call can be held to it. time.time() drives the loop's budget
+    # messages; a retry ladder needs a clock that never steps backwards.
+    deadline = time.monotonic() + HARD_STOP_FACTOR * combo.wall_clock_s
     llm = LLM()
     metric_key = METRIC_ALIASES[metric.lower()]
     metric_cfg = TAXONOMY[metric_key]
@@ -1737,7 +1762,8 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
     docs = documents_for_period(bank, period, comparator)
     if not docs:
         raise RuntimeError(f"no documents in corpus for {bank} {period}/{comparator}")
-    research = Research(llm, combo, docs, case, metric_cfg, registry)
+    research = Research(llm, combo, docs, case, metric_cfg, registry,
+                        deadline_monotonic=deadline)
 
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
@@ -1764,7 +1790,8 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
         },
     ]
 
-    payload, exhausted = research_loop(llm, combo, research, messages, SUBMIT_SPEC, started)
+    payload, exhausted = research_loop(llm, combo, research, messages, SUBMIT_SPEC, started,
+                                       deadline_monotonic=deadline)
 
     if payload is None:
         # The loop ended without a submission. An artifact still ships: it
@@ -1919,6 +1946,8 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = "agent
     combo = COMBOS[combo_name]
     if not combo.agent:
         raise ValueError(f"combo {combo_name} declares no agent model")
+    # The same absolute hard stop the movement shell sets; see run_agent_case.
+    deadline = time.monotonic() + HARD_STOP_FACTOR * combo.wall_clock_s
     llm = LLM()
 
     scope_notes: list[str] = []
@@ -1932,6 +1961,7 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = "agent
     research = Research(
         llm, combo, docs, case, metric_cfg,
         next(iter(registries.values()), {}), registries,
+        deadline_monotonic=deadline,
     )
 
     messages = [
@@ -1959,7 +1989,8 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = "agent
         },
     ]
     payload, exhausted = research_loop(
-        llm, combo, research, messages, QUESTION_SUBMIT_SPEC, started
+        llm, combo, research, messages, QUESTION_SUBMIT_SPEC, started,
+        deadline_monotonic=deadline,
     )
     if payload is None:
         # The loop ended without a submission. An artifact still ships: it

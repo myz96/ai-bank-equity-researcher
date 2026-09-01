@@ -15,7 +15,6 @@ TAXONOMY: dict[str, dict] = {
             "net interest income average interest earning assets margin",
             "group margin walk deposits funding liquids replicating portfolio",
         ],
-        "walk_markers": ["NIM Movement since", "Group margin", "Net interest margin movement", "margin movement", "Net interest margin -", "Net interest margin –"],
         "method_hint": (
             "Take the movement from the GROUP net interest margin row of the results book's "
             "KPI or performance-summary table, reading each task period's own column. A "
@@ -62,32 +61,6 @@ TAXONOMY: dict[str, dict] = {
             "loan impairment expense retail banking business banking new zealand movement",
             "income tax expense effective tax rate",
         ],
-        # The bridge components live in P&L tables whose rows a literal-minded
-        # extractor drops as background ("cash earnings" names none of them).
-        "extract_focus": (
-            "also extract every P&L line of the group performance and section tables for "
-            "EVERY period column - net interest income, other operating income, total "
-            "operating income, operating expenses (underlying, notable items and total), "
-            "loan impairment expense, tax expense and profit - these are the bridge "
-            "components"
-        ),
-        # Canonical component -> normalised label words that identify it in
-        # extracted evidence. Drives the completeness nudge in the author
-        # retry: a component these words find quantified in evidence must not
-        # stay unclaimed. Words, never values.
-        "component_labels": {
-            "nii": ("netinterestincome",),
-            "other_operating_income": ("otheroperatingincome",),
-            "operating_expenses": ("operatingexpenses",),
-            "credit_impairment_charge": ("loanimpairmentexpense", "creditimpairment"),
-        },
-        # "Statutory vs cash NPAT" was removed as a walk marker (ticket 25):
-        # it marks a two-column LEVELS reconciliation table, not a movement
-        # bridge. The vision walk reader turned its comparator column into
-        # "bars", and the inevitable walk_sum failure fatally capped
-        # confidence. The reconciliation still reaches the author as
-        # text/table evidence via the first retrieval query.
-        "walk_markers": ["cash earnings bridge", "cash earnings walk"],
         "method_hint": (
             "Build the bridge from component MOVEMENTS in $m: net interest income, other "
             "operating income, UNDERLYING operating expenses (state notable/restructuring "
@@ -144,11 +117,6 @@ TAXONOMY: dict[str, dict] = {
             # The level-1 derivation needs the earnings movement itself.
             "net profit after tax cash basis increase prior year",
         ],
-        "extract_focus": (
-            "also extract the cash profit levels for both periods and the profit growth "
-            "rate, plus any average equity figures — the ROE numerator and denominator"
-        ),
-        "walk_markers": [],
         "method_hint": (
             "Quantify the movement from the KPI table, reading the row for the bank's headline "
             "ROE measure and the column of each task period (in ppt). Level 1 is an "
@@ -186,7 +154,6 @@ TAXONOMY: dict[str, dict] = {
             "capital adequacy ratios common equity tier 1",
             "risk weighted assets movement credit market operational IRRBB",
         ],
-        "walk_markers": ["Movements in bpts", "capital ratio movement", "CET1 ratio movement"],
         "method_hint": (
             "Take the movement from the capital or KPI table, reading the APRA Level 2 (Group) "
             "CET1 ratio row and the column of each task period. The Level 1 ratio, the "
@@ -225,12 +192,11 @@ TAXONOMY: dict[str, dict] = {
             "credit impairment charge forward looking adjustments overlays",
             "provisions for impairment asset quality",
         ],
-        "walk_markers": [],
         # A charge is stated as a POSITIVE number, whatever sign the table
         # prints. Banks put the impairment line inside the P&L, where every
         # expense is bracketed: Westpac prints "Impairment (charges)/benefits
         # (424) | (537)" and CBA's FY21 group summary prints "(554) | (2,518)".
-        # Both are charges. author.py reads this flag.
+        # Both are charges. validate.settle_charge_sign reads this flag.
         "sign_convention": "positive_charge",
         "method_hint": (
             "SIGN: state the charge as a POSITIVE number in both endpoints, so a FALLING "
@@ -291,11 +257,6 @@ TAXONOMY: dict[str, dict] = {
             "operating expenses staff technology investment productivity",
             "total operating income growth expense growth jaws",
         ],
-        "walk_markers": [],
-        "extract_focus": (
-            "also extract the total operating income and total operating expense levels for "
-            "every period column — the ratio's numerator and denominator"
-        ),
         "method_hint": (
             "Take the ratio endpoints from the GROUP KPI table of the results book, from the "
             "row for the bank's HEADLINE cost-to-income measure named in the bank vocabulary, "

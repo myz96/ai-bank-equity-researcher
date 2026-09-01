@@ -47,11 +47,11 @@ uv run python scripts/fetch_corpus.py
 
 # 4. Run a case
 uv run bank-equity-researcher analyse --bank CBA --metric nim --period FY26
-# -> out/cba-nim-fy26-vs-fy25-cheap/{report.md, attribution.json}
+# -> out/cba-nim-fy26-vs-fy25-agentic/{report.md, attribution.json}
 
 # 5. Run the eval harness
-uv run bank-equity-researcher evals run --suite dev --combo cheap
-# -> evals/results/<stamp>-cheap-dev.md (scorecard) and .jsonl (detail)
+uv run bank-equity-researcher evals run --suite dev --combo agentic
+# -> evals/results/<stamp>-agentic-dev.md (scorecard) and .jsonl (detail)
 ```
 
 `analyse` picks the comparator automatically (FY → prior FY, half → prior

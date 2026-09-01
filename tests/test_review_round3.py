@@ -51,7 +51,6 @@ from bank_equity_researcher.validate import (
     quote_prints,
     quote_states,
     settle_ratio_scale,
-    sign_flip_hint,
 )
 
 
@@ -300,23 +299,6 @@ def test_a_residual_with_no_unit_still_closes_the_bridge():
         drivers=[("net_interest_income", 310.0, 85, [], None)], residual=(3.0, "")
     )
     assert "drivers_reconcile" in check_drivers_reconcile(attribution)[0]
-
-
-def test_the_sign_hint_does_not_let_an_off_unit_residual_hide_the_gap():
-    """`sign_flip_hint` repeated the same unit-blind arithmetic, so an off-unit
-    residual closed the gap it was built to measure and the hint stayed
-    silent."""
-    attribution = _attribution(
-        movement=(5132.0, 5445.0, 313.0),
-        drivers=[
-            ("net_interest_income", 312.0, 85, [], None),
-            ("credit_impairment_charge", -1.0, 85, [], None),
-        ],
-        residual=(2.0, "bps"),
-    )
-    hint = sign_flip_hint(attribution)
-    assert hint is not None
-    assert "credit_impairment_charge" in hint
 
 
 # ---------------------------------------------------------------------------

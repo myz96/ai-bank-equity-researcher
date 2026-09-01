@@ -19,7 +19,6 @@ from __future__ import annotations
 
 import pytest
 
-from bank_equity_researcher.extract import _numbers_the_quote_prints
 from bank_equity_researcher.schema import (
     Attribution,
     Contribution,
@@ -98,11 +97,14 @@ def test_a_percent_row_does_not_mint_a_dollar_fact():
 
 
 def test_the_invented_dollar_fact_no_longer_survives_its_own_mint():
-    """The whole chain the reviewer executed: mint, bind, cap."""
+    """The whole chain the reviewer executed: mint, bind, cap.
+
+    The mint is `research_agent._mint_record`, which drops a fact its quote
+    does not print. The staged extractor that used to mint the same fact went
+    with the open-loop shell (round 5), so the gate is asked here directly.
+    """
     quote = "Net interest margin (%) 2.05 2.08"
-    assert _numbers_the_quote_prints(
-        quote, [{"label": "invented money", "value": 2.05, "unit": "$m"}]
-    ) == []
+    assert quote_prints(quote, 2.05, "$m") is False
     record = _record("ev-1", quote)
     attribution = _attribution(
         drivers=[("net_interest_income", 2.05, 95, ["ev-1"], "$m")], records=[record]
@@ -256,12 +258,6 @@ def test_a_label_index_is_not_a_printed_number():
     quote = ("Level 2 common equity Tier 1 capital ratio: - Australian Prudential "
              "Regulation Authority (APRA)")
     assert printed_numbers(quote, 12.53, "%") == []
-    facts = _numbers_the_quote_prints(
-        quote,
-        [{"label": "CET1 APRA FY25", "value": 12.53, "unit": "%"},
-         {"label": "CET1 APRA FY24", "value": 12.49, "unit": "%"}],
-    )
-    assert [fact.value for fact in facts] == [12.53, 12.49]
 
 
 def test_the_same_row_with_its_figures_still_gates_on_them():
@@ -271,12 +267,8 @@ def test_the_same_row_with_its_figures_still_gates_on_them():
     quote = ("Level 2 common equity Tier 1 capital ratio: - Australian Prudential "
              "Regulation Authority (APRA) 12.53% 12.49% 4 bps")
     assert printed_numbers(quote, 12.53, "%") == [(12.53, "%"), (12.49, "%"), (4.0, "bps")]
-    facts = _numbers_the_quote_prints(
-        quote,
-        [{"label": "CET1 APRA FY25", "value": 12.53, "unit": "%"},
-         {"label": "invented", "value": 999.0, "unit": "%"}],
-    )
-    assert [fact.value for fact in facts] == [12.53]
+    assert quote_prints(quote, 12.53, "%") is True
+    assert quote_prints(quote, 999.0, "%") is False
 
 
 @pytest.mark.parametrize(
@@ -291,9 +283,7 @@ def test_the_same_row_with_its_figures_still_gates_on_them():
 )
 def test_the_round_three_drop_still_holds(quote, value, unit):
     assert printed_numbers(quote, value, unit) != []
-    assert _numbers_the_quote_prints(
-        quote, [{"label": "computed", "value": value, "unit": unit}]
-    ) == []
+    assert quote_prints(quote, value, unit) is False
 
 
 @pytest.mark.parametrize(

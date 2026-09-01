@@ -550,11 +550,13 @@ def check_comparison_leak(
     a leak whether or not the bank published a walk for the task — where it did
     not, the other comparison's numbers belong in the driver narrative.
 
-    The check REPORTS; it no longer caps. Ticket 33 replayed the estate: the
-    `comparison_leak_cap_80` override fired on 0 of the 90 saved artifacts, so
-    it carried no evidence under the hardcoded-override policy above and the
-    wave-1 cleanup deleted it. The named failure still reaches the fatal
-    grading both shells apply to a failed check.
+    The check no longer caps the offender BY NAME. Ticket 33 replayed the
+    estate: the `comparison_leak_cap_80` override fired on 0 of the 90 saved
+    artifacts, so it carried no evidence under the hardcoded-override policy
+    above and the wave-1 cleanup deleted it. `comparison_leak` is a
+    `WHOLE_TABLE_FAILURE` instead (round 5), so a leak takes every quantified
+    claim to `CLAIM_CITATION_CAP`, and the named failure still reaches the
+    fatal grading the shell applies to a failed check.
     """
     passed, failed = [], []
     for driver in attribution.drivers:
@@ -764,10 +766,13 @@ def check_component_columns(
     reported, so a claim that is right for a reason this code cannot see still
     passes.
 
-    The check REPORTS; it no longer caps, on the same ground as
+    The check no longer caps the offender BY NAME, on the same ground as
     `check_comparison_leak`: ticket 33 replayed the estate and the
     `component_column_cap_80` override fired on 0 of the 90 saved artifacts,
     so the wave-1 cleanup deleted it under the hardcoded-override policy.
+    `component_from_prior_half` is a `WHOLE_TABLE_FAILURE` instead (round 5),
+    so a component read from the prior half's column takes every quantified
+    claim to `CLAIM_CITATION_CAP`.
     """
     passed, failed = [], []
     if attribution.movement is None:
@@ -811,31 +816,6 @@ def check_component_columns(
     if not failed:
         passed.append("components_from_comparator_column")
     return passed, failed
-
-
-def unclaimed_components(attribution, component_labels: dict[str, tuple[str, ...]]) -> list[str]:
-    """Bridge components the evidence quantifies and the author left unclaimed.
-
-    Feeds the author retry as a completeness nudge (ticket 27). Across three
-    runs the CBA FY26 cash-earnings case claimed four, four and then three of
-    its disclosed components, so the recall of a disclosed component was a
-    matter of luck. The list names the canonical id and one evidence id, never
-    a target value.
-    """
-    quantified = {d.canonical for d in attribution.drivers if d.contribution is not None}
-    missing = []
-    for canonical, keywords in component_labels.items():
-        if canonical in quantified:
-            continue
-        seen = [
-            record.id
-            for record in attribution.evidence_records
-            for number in record.numbers
-            if any(word in _normalize_label(number.label) for word in keywords)
-        ]
-        if seen:
-            missing.append(f"{canonical} (quantified in evidence {', '.join(sorted(set(seen))[:3])})")
-    return missing
 
 
 # A ratio the bank prints under one of these words is a NAMED VARIANT, not the
@@ -951,20 +931,6 @@ def check_movement_basis(
         return passed, failed
     passed.append("movement_on_primary_basis")
     return passed, failed
-
-
-def implied_residual(attribution) -> float | None:
-    """Movement delta minus the quantified contributions the author claimed.
-
-    Fed back into the author retry (ticket 27) so the model corrects its
-    arithmetic against a computed number instead of guessing a second time.
-    """
-    if attribution.movement is None:
-        return None
-    quantified = [d.contribution.value for d in attribution.drivers if d.contribution]
-    if not quantified:
-        return None
-    return round(attribution.movement.delta - sum(quantified), 2)
 
 
 def reconcile_tolerance(attribution) -> float:
@@ -1815,10 +1781,18 @@ def settle_ratio_scale(attribution, metric_unit: str | None, records=None) -> st
 # "closed" was never closed, and code cannot say which of the remaining shares
 # is carrying the gap.
 #
-# Two fatal names are deliberately ABSENT, because each one names its own
-# offender and caps it in place: `comparison_leak` (below) and
-# `component_from_prior_half` (check_component_columns). Capping the whole
-# table for those would punish drivers the check itself clears.
+# `comparison_leak` and `component_from_prior_half` are HERE since round 5, and
+# the reason they used to be absent is exactly why they belong. Each one named
+# its own offender and capped it in place, so the whole-table cap would have
+# punished drivers the check itself clears. Ticket 33 wave 1 then deleted both
+# named caps — `comparison_leak_cap_80` and `component_column_cap_80` fired on
+# 0 of the 90 saved artifacts, so neither carried evidence under the
+# hardcoded-override policy — and this list was not revisited. Nothing capped
+# the offender afterwards: a driver the check proves wrong shipped at 95 and
+# entered the confidently-wrong population (Codex round-5 repro). The whole
+# table pays because the failure indicts the COLUMN the table was read from —
+# a walk for another comparison, or the prior half's column — and one driver
+# reading the wrong column is evidence its neighbours were read the same way.
 #
 # `walk_sum` and `walk_extraction_error` are absent for a different reason.
 # They indict the CHART READ, not the driver table: the bars extracted off a
@@ -1833,6 +1807,8 @@ WHOLE_TABLE_FAILURES = (
     "drivers_unit_mismatch",
     "movement_arithmetic",
     "movement_level_not_ratio_sized",
+    "comparison_leak",
+    "component_from_prior_half",
 )
 
 
@@ -1861,8 +1837,10 @@ def cap_unreconciled_drivers(attribution, failures: list[str]) -> list[str]:
         attribution.limitations.append(
             f"Capped at {CLAIM_CITATION_CAP}: " + ", ".join(capped) + ". "
             + hits[0].split(" (")[0]
-            + " failed, so the parts and the whole disagree. That proves one of these claims "
-            "is wrong without saying which, so none of them may claim near-certainty."
+            + " failed. That check condemns the whole quantified table: it proves one of "
+            "these claims is wrong, or that the table was read from the wrong column, "
+            "without saying which claim carries the fault. None of them may claim "
+            "near-certainty."
         )
     return capped
 
@@ -1912,70 +1890,3 @@ def cap_drivers_on_failed_walks(attribution, walks) -> list[str]:
             "rests on disagrees with itself."
         )
     return capped
-
-
-def sign_flip_hint(attribution) -> str | None:
-    """A retry hint when the reconciliation gap is exactly twice one claim.
-
-    Nothing converts a COST component's own movement into its effect on
-    earnings. CBA's 1H26 loan impairment expense fell from 320 to 319, which
-    ADDS $1m to cash earnings, and the author copied the change in the charge
-    (-1) into the contribution field. The bridge then missed by +2, which is
-    exactly -2 x the offending contribution.
-
-    This is a HINT and never a correction: it names the driver whose sign to
-    re-read, and it never states a value the author should reach. Where two
-    contributions fit the gap it says so, so an ambiguous case gets a question
-    rather than an answer.
-    """
-    movement = attribution.movement
-    if movement is None:
-        return None
-    quantified = [
-        d for d in attribution.drivers
-        if d.contribution is not None
-        and normalize_unit(d.contribution.unit) == normalize_unit(movement.unit)
-    ]
-    if not quantified:
-        return None
-    # The residual joins the gap on the same terms the reconciliation sum sets:
-    # in the movement's unit, or with no unit at all. Unit-blind here, a `+2
-    # bps` residual closed the gap on a `$m` bridge and the hint fell silent on
-    # the very sign error it exists to name.
-    residual_fact = attribution.residual
-    residual = (
-        residual_fact.value
-        if residual_fact is not None
-        and normalize_unit(residual_fact.unit) in ("", normalize_unit(movement.unit))
-        else 0.0
-    )
-    gap = movement.delta - (sum(d.contribution.value for d in quantified) + residual)
-    tolerance = reconcile_tolerance(attribution)
-    if abs(gap) <= tolerance:
-        return None
-    candidates = [
-        d for d in quantified
-        if d.contribution.value != 0 and abs(gap + 2 * d.contribution.value) <= tolerance
-    ]
-    if not candidates:
-        return None
-    names = ", ".join(
-        f"'{d.canonical}' ({d.contribution.value:+g} {d.contribution.unit})" for d in candidates
-    )
-    if len(candidates) == 1:
-        return (
-            f"The gap between your contributions and the movement delta is exactly TWICE your "
-            f"{names} contribution, with the opposite sign. That is the signature of a sign "
-            "error: check that contribution's direction against the movement's. A line the "
-            "bank prints as a cost or a charge moves the total the OTHER way — a charge that "
-            "falls adds to earnings — so the contribution is not always the change in the row "
-            "as printed. Correct the sign only if the evidence supports it; otherwise declare "
-            "the residual."
-        )
-    return (
-        f"The gap between your contributions and the movement delta is exactly TWICE one of "
-        f"these contributions, with the opposite sign: {names}. One of them may carry the "
-        "wrong direction: a line the bank prints as a cost or a charge moves the total the "
-        "OTHER way, so a charge that falls adds to earnings. Check each against the evidence, "
-        "and declare the residual if the evidence does not settle it."
-    )

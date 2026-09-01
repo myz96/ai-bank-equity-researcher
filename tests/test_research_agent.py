@@ -10,6 +10,7 @@ same artifact the pipeline emits.
 from __future__ import annotations
 
 import json
+import time
 from dataclasses import dataclass
 
 import pytest
@@ -89,13 +90,13 @@ class _LLM:
         self.usage = _Usage()
         self.turns: list[list[dict]] = []
 
-    def chat_tools(self, model, messages, tools, max_tokens=None):
+    def chat_tools(self, model, messages, tools, max_tokens=None, deadline_monotonic=None):
         self.turns.append([t["function"]["name"] for t in tools])
         if not self.script:
             return {"role": "assistant", "content": "I have no more moves."}
         return self.script.pop(0)
 
-    def chat_json(self, model, prompt, image_png=None, max_tokens=None):
+    def chat_json(self, model, prompt, image_png=None, max_tokens=None, deadline_monotonic=None):
         if self.walk_reply is None:
             raise RuntimeError("no chart on this page")
         return self.walk_reply
@@ -564,6 +565,38 @@ def test_a_driver_may_cite_a_verified_record_the_evidence_list_forgot(docs, case
     assert attribution.drivers[0].contribution.value == -3
 
 
+def test_a_carried_in_record_evidences_the_percent_to_bps_lift(docs, case):
+    """Round-5 finding 1, as the reviewer executed it.
+
+    The recovery of a minted record cited outside the `evidence` list ran AFTER
+    `_percent_evidenced`, so a movement whose only evidence arrived through
+    `headline_evidence` had no record to test against. The lift stayed silent
+    and `2.08 -> 2.05` shipped as a movement of `-0.03 bps`. The recovery now
+    runs before every evidence-dependent normaliser.
+    """
+    research = _research(_LLM([]), docs, case)
+    research.cite("CBA/FY26/profit_announcement", 12, [{
+        "quote": "Net interest margin    2.05%    2.08%",
+        "numbers": [
+            {"label": "NIM FY26", "value": 2.05, "unit": "%"},
+            {"label": "NIM FY25", "value": 2.08, "unit": "%"},
+        ],
+    }])
+    payload = _submission(
+        evidence=[],
+        headline_evidence=["ev-1"],
+        movement={"from_value": 2.08, "to_value": 2.05, "delta": -0.03, "unit": "bps"},
+        drivers=[],
+    )
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    # The lift multiplies by 100, so the endpoints carry binary-float dust that
+    # the report's own "%g" hides. The scale is what this test is about.
+    assert round(attribution.movement.from_value, 6) == 208
+    assert round(attribution.movement.to_value, 6) == 205
+    assert attribution.movement.delta == -3
+    assert [r.id for r in attribution.evidence_records] == ["ev-1"]
+
+
 def test_an_id_no_tool_minted_still_loses_its_claim(docs, case):
     research = _research(_LLM([]), docs, case)
     payload = _submission(
@@ -814,6 +847,45 @@ def test_a_model_that_ignores_the_submit_request_is_stopped(wired, monkeypatch):
     assert (out / "report.md").exists()
 
 
+def test_the_case_deadline_reaches_every_model_call(wired, monkeypatch):
+    """Round-5 finding 4: the loop reads its wall clock only BETWEEN calls.
+
+    One `chat_tools` call could hold twelve 45-second grace waits, and a
+    `read_chart` two more ladders, so a case could run minutes past its own
+    hard stop. Every call now carries the case's absolute deadline: the tool
+    turns, the submit turn, and BOTH vision calls inside read_chart.
+    """
+    seen: list[float | None] = []
+
+    class _Recording(_LLM):
+        def chat_tools(self, model, messages, tools, max_tokens=None, deadline_monotonic=None):
+            seen.append(deadline_monotonic)
+            return super().chat_tools(model, messages, tools, max_tokens)
+
+        def chat_json(self, model, prompt, image_png=None, max_tokens=None,
+                      deadline_monotonic=None):
+            seen.append(deadline_monotonic)
+            return super().chat_json(model, prompt, image_png, max_tokens)
+
+    llm = _Recording(
+        [
+            _assistant(_tool_call("c1", "read_chart",
+                                  {"doc_id": "CBA/FY26/profit_announcement", "pdf_page": 14})),
+            _assistant(_tool_call("c2", "submit", _submission())),
+        ],
+        walk_reply={"title": "NIM movement", "start_label": "Jun 25 Full Year", "start_bps": 208,
+                    "bars": [{"label": "Deposits", "bps": -3}],
+                    "end_label": "Jun 26 Full Year", "end_bps": 205},
+    )
+    combo = _Combo(wall_clock_s=600.0)
+    before = time.monotonic() + RA.HARD_STOP_FACTOR * combo.wall_clock_s
+    _run(llm, monkeypatch, combo)
+    after = time.monotonic() + RA.HARD_STOP_FACTOR * combo.wall_clock_s
+    # Two tool turns and read_chart's two vision calls (bars, then callouts).
+    assert len(seen) == 4
+    assert all(deadline is not None and before <= deadline <= after for deadline in seen)
+
+
 def test_an_artifact_still_ships_when_the_agent_never_submits(wired, monkeypatch):
     """A model that will not call submit costs the case its answer, not a crash."""
     llm = _LLM([{"role": "assistant", "content": "Here is my analysis in prose."}] * 6)
@@ -846,7 +918,7 @@ def test_a_rejected_submit_still_answers_the_other_calls_in_its_turn(wired, monk
     captured: list[list[dict]] = []
 
     class _Recording(_LLM):
-        def chat_tools(self, model, messages, tools, max_tokens=None):
+        def chat_tools(self, model, messages, tools, max_tokens=None, deadline_monotonic=None):
             captured.append(list(messages))
             return super().chat_tools(model, messages, tools, max_tokens)
 
@@ -1234,7 +1306,7 @@ def test_every_call_in_the_turn_is_still_answered_after_a_submit(wired, monkeypa
     captured: list[list[dict]] = []
 
     class _Recording(_LLM):
-        def chat_tools(self, model, messages, tools, max_tokens=None):
+        def chat_tools(self, model, messages, tools, max_tokens=None, deadline_monotonic=None):
             captured.append(list(messages))
             return super().chat_tools(model, messages, tools, max_tokens)
 
@@ -1428,7 +1500,7 @@ def test_the_agent_reads_the_chart_annotation_layer(docs, case):
             "end_bps": 205.0}
 
     class _AnnotatingLLM(_LLM):
-        def chat_json(self, model, prompt, image_png=None, max_tokens=None):
+        def chat_json(self, model, prompt, image_png=None, max_tokens=None, deadline_monotonic=None):
             if "ANNOTATION LAYER" in prompt:
                 return {
                     "annotations": [{"bar": "Deposits", "label": "Savings", "value": -2.0}]
@@ -1562,7 +1634,7 @@ def test_the_callout_layer_is_read_even_when_the_bars_are_not(docs, case):
     exactly where a page is hardest to read."""
 
     class _AnnotationsOnlyLLM(_LLM):
-        def chat_json(self, model, prompt, image_png=None, max_tokens=None):
+        def chat_json(self, model, prompt, image_png=None, max_tokens=None, deadline_monotonic=None):
             if "ANNOTATION LAYER" in prompt:
                 return {"annotations": [{"bar": "", "label": "Savings", "value": -2.0}]}
             raise RuntimeError("the chart is unreadable")
@@ -1625,7 +1697,7 @@ def test_the_scope_note_reaches_the_question_prompt(wired, monkeypatch, docs):
     seen: list[str] = []
 
     class _RecordingLLM(_LLM):
-        def chat_tools(self, model, messages, tools, max_tokens=None):
+        def chat_tools(self, model, messages, tools, max_tokens=None, deadline_monotonic=None):
             seen.extend(m["content"] for m in messages if m["role"] == "user")
             return super().chat_tools(model, messages, tools, max_tokens=max_tokens)
 

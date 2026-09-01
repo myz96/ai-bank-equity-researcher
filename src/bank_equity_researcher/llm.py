@@ -117,16 +117,88 @@ class Usage:
 # scoring or answer-content change (post-freeze disclosure in the report).
 NETWORK_GRACE = 12
 NETWORK_GRACE_SLEEP = 45
+
+# A CONNECT-phase failure is the dead network, whatever English it carries.
+# Classifying on the message alone missed the shape the ladder exists for: on a
+# hotspot gap the router usually stays up and DROPS packets, so httpx raises
+# `ConnectTimeout("timed out")` or the OS raises ETIMEDOUT
+# ("[Errno 60] Operation timed out"), and neither string matches a mark below.
+# The 2026-08-31 review executed all six shapes: only the three where the
+# router ANSWERS (DNS failure, refusal, reset) were getting grace.
+#
+# READ-phase timeouts are deliberately absent. A stall part-way through a
+# response body is one stuck provider route, not a gap in the network, and
+# retrying on another route clears it faster than waiting does.
+_NETWORK_ERROR_TYPES = (httpx.ConnectError, httpx.ConnectTimeout)
+# Kept as the fallback for a failure that never reaches httpx's own types: the
+# OSError a socket layer hands up unwrapped.
 _NETWORK_ERROR_MARKS = (
     "nodename", "errno 8", "temporary failure in name resolution",
     "connection refused", "connection reset", "no route to host",
     "network is unreachable",
 )
+# How far back a wrapped error is followed. A client that re-raises a transport
+# error inside another exception is reporting the same dead network.
+_CAUSE_DEPTH = 5
 
 
-def _network_error(exc: Exception) -> bool:
-    text = str(exc).lower()
-    return any(mark in text for mark in _NETWORK_ERROR_MARKS)
+def _network_error(exc: BaseException) -> bool:
+    """True when the NETWORK is gone, so the answer is to wait, not to retry."""
+    link: BaseException | None = exc
+    for _ in range(_CAUSE_DEPTH):
+        if link is None:
+            break
+        if isinstance(link, _NETWORK_ERROR_TYPES):
+            return True
+        text = str(link).lower()
+        if any(mark in text for mark in _NETWORK_ERROR_MARKS):
+            return True
+        link = link.__cause__ or link.__context__
+    return False
+
+
+def _time_left(deadline_monotonic: float | None) -> float | None:
+    """Seconds the caller's case has left, or None when it set no deadline."""
+    if deadline_monotonic is None:
+        return None
+    return deadline_monotonic - time.monotonic()
+
+
+def _sleep_within(seconds: float, deadline_monotonic: float | None) -> bool:
+    """Wait, unless the wait would outlive the case. True when a retry may follow.
+
+    A grace wait is nine minutes of patience for a network gap, and patience
+    spent after the case's own budget is gone is not patience — it is a call
+    made late. So the wait happens only when the case still has room for the
+    wait AND for the attempt that follows it.
+    """
+    left = _time_left(deadline_monotonic)
+    if left is not None and left <= seconds:
+        return False
+    time.sleep(seconds)
+    return True
+
+
+def _request_budget(deadline_s: float, deadline_monotonic: float | None) -> float:
+    """One request's wall-clock budget, never longer than the case has left."""
+    left = _time_left(deadline_monotonic)
+    return deadline_s if left is None else min(deadline_s, max(left, 0.0))
+
+
+def _give_up(what: str, model: str, attempt: int, retries: int, out_of_time: bool,
+             last_error: Exception | None) -> RuntimeError:
+    """The error a call raises when it has no attempt left, or no time left.
+
+    The two are named apart on purpose. "Five attempts failed" and "the case
+    ended while this call was still waiting" ask for different repairs, and a
+    run that dies inside a network gap must say so.
+    """
+    if out_of_time:
+        return RuntimeError(
+            f"{what}() stopped for {model} after {attempt} of {retries} attempts: the case "
+            f"deadline left no time to try again. Last error: {last_error}"
+        )
+    return RuntimeError(f"{what}() failed for {model} after {retries} attempts: {last_error}")
 
 
 class LLM:
@@ -171,7 +243,12 @@ class LLM:
         image_png: bytes | None = None,
         max_tokens: int = 4000,
         retries: int = 5,
+        deadline_monotonic: float | None = None,
     ) -> str:
+        """One completion, retried. `deadline_monotonic` is the CASE's own
+        absolute deadline on `time.monotonic()`: no request, and no wait
+        between requests, may run past it. A caller that passes none keeps the
+        full ladder."""
         content: list | str
         if image_png is not None:
             b64 = base64.b64encode(image_png).decode()
@@ -194,16 +271,27 @@ class LLM:
         last_error: Exception | None = None
         attempt = 0
         grace = 0
+        out_of_time = False
         while attempt < retries:
+            left = _time_left(deadline_monotonic)
+            if left is not None and left <= 0:
+                out_of_time = True
+                break
             try:
-                status, body = self._post(payload, deadline_s)
+                status, body = self._post(payload, _request_budget(deadline_s, deadline_monotonic))
                 if status == 400 and "reasoning" in payload:
                     payload.pop("reasoning")
                     continue
                 if status == 429:
                     attempt += 1
-                    time.sleep(15 * attempt)
                     last_error = RuntimeError("429 Too Many Requests")
+                    # The sleep belongs to the NEXT attempt, so the last 429
+                    # used to buy a 75-second wait for a retry that never came.
+                    if attempt >= retries:
+                        break
+                    if not _sleep_within(15 * attempt, deadline_monotonic):
+                        out_of_time = True
+                        break
                     continue
                 if status >= 400:
                     raise RuntimeError(f"HTTP {status}: {body[:300]!r}")
@@ -221,11 +309,21 @@ class LLM:
                 if _network_error(exc) and grace < NETWORK_GRACE:
                     # A dead network is waited out, never charged as an attempt.
                     grace += 1
-                    time.sleep(NETWORK_GRACE_SLEEP)
-                    continue
+                    if _sleep_within(NETWORK_GRACE_SLEEP, deadline_monotonic):
+                        continue
+                    out_of_time = True
+                    break
                 attempt += 1
-                time.sleep(2**attempt)
-        raise RuntimeError(f"chat() failed for {model} after {retries} attempts: {last_error}")
+                # The ladder is 1, 2, 4, 8, 16 seconds and it belongs to the
+                # attempt that FOLLOWS. The while-loop conversion slept
+                # 2**attempt after incrementing, which doubled every rung and
+                # added a 32-second wait after the last attempt was gone.
+                if attempt >= retries:
+                    break
+                if not _sleep_within(2 ** (attempt - 1), deadline_monotonic):
+                    out_of_time = True
+                    break
+        raise _give_up("chat", model, attempt, retries, out_of_time, last_error)
 
     def chat_tools(
         self,
@@ -235,6 +333,7 @@ class LLM:
         *,
         max_tokens: int = 4000,
         retries: int = 5,
+        deadline_monotonic: float | None = None,
     ) -> dict:
         """One tool-calling turn, under chat()'s deadline and retry discipline.
 
@@ -242,6 +341,11 @@ class LLM:
         request that also carries `tools`. The return value is the assistant
         MESSAGE, because the caller needs both halves of it: the prose and the
         tool calls it asked for. A reply is empty only when it carries neither.
+
+        `deadline_monotonic` is the CASE's absolute deadline, and this is the
+        call that most needs it: the research loop reads its wall clock only
+        BETWEEN turns, so one turn holding twelve grace waits could add nine
+        minutes after the budget was already spent.
         """
         payload: dict = {
             "model": model,
@@ -259,16 +363,25 @@ class LLM:
         last_error: Exception | None = None
         attempt = 0
         grace = 0
+        out_of_time = False
         while attempt < retries:
+            left = _time_left(deadline_monotonic)
+            if left is not None and left <= 0:
+                out_of_time = True
+                break
             try:
-                status, body = self._post(payload, deadline_s)
+                status, body = self._post(payload, _request_budget(deadline_s, deadline_monotonic))
                 if status == 400 and "reasoning" in payload:
                     payload.pop("reasoning")
                     continue
                 if status == 429:
                     attempt += 1
-                    time.sleep(15 * attempt)
                     last_error = RuntimeError("429 Too Many Requests")
+                    if attempt >= retries:
+                        break
+                    if not _sleep_within(15 * attempt, deadline_monotonic):
+                        out_of_time = True
+                        break
                     continue
                 if status >= 400:
                     raise RuntimeError(f"HTTP {status}: {body[:300]!r}")
@@ -291,13 +404,17 @@ class LLM:
                 if _network_error(exc) and grace < NETWORK_GRACE:
                     # A dead network is waited out, never charged as an attempt.
                     grace += 1
-                    time.sleep(NETWORK_GRACE_SLEEP)
-                    continue
+                    if _sleep_within(NETWORK_GRACE_SLEEP, deadline_monotonic):
+                        continue
+                    out_of_time = True
+                    break
                 attempt += 1
-                time.sleep(2**attempt)
-        raise RuntimeError(
-            f"chat_tools() failed for {model} after {retries} attempts: {last_error}"
-        )
+                if attempt >= retries:
+                    break
+                if not _sleep_within(2 ** (attempt - 1), deadline_monotonic):
+                    out_of_time = True
+                    break
+        raise _give_up("chat_tools", model, attempt, retries, out_of_time, last_error)
 
     def chat_json(self, model: str, prompt: str, *, json_retries: int = 2, **kwargs):
         """chat() plus a parse-failure retry, so every JSON caller inherits it.

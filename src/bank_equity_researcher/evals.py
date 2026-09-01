@@ -1051,11 +1051,24 @@ def judge_case_checklist(llm, gold: dict, combo: str, judges: tuple[str, ...]) -
     return {**row, **graded}
 
 
-def run_judge_suite(suite: str = "dev", combo: str = "cheap", bank: str | None = None) -> Path:
-    """Judge every case's narrative checklist and write a coverage scorecard."""
+JUDGE_COMBO = "agentic"
+
+
+def run_judge_suite(suite: str = "dev", combo: str = "agentic", bank: str | None = None) -> Path:
+    """Judge every case's narrative checklist and write a coverage scorecard.
+
+    `combo` is a SLUG SELECTOR, exactly as `rescore` treats it: it names which
+    saved `out/<slug>/` artifacts to grade and never which shell to run,
+    because this action runs no shell. It therefore accepts a retired combo
+    name, and the frozen `-cheap` baseline stays gradable. Reading
+    `COMBOS[combo].judges` here made a retired name raise a bare `KeyError`,
+    and the default was itself a retired name, so the call crashed on its own
+    defaults. The judges come from the one live combo instead: they grade the
+    artifact, so they have nothing to do with the arm that produced it.
+    """
     from .llm import LLM
 
-    judges = COMBOS[combo].judges
+    judges = COMBOS[JUDGE_COMBO].judges
     llm = LLM()
     rows = []
     for gold in load_gold(suite, bank):
@@ -1232,7 +1245,7 @@ def delta_table_lines(old_rows: list[dict], new_rows: list[dict]) -> list[str]:
 
 def rescore(
     suite: str = "dev",
-    combo: str = "cheap",
+    combo: str = "agentic",
     bank: str | None = None,
     since: str | None = None,
     until: str | None = None,

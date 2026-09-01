@@ -350,12 +350,3 @@ def test_provenance_names_the_source_page_and_the_target():
     assert followed[0].provenance == (
         "reference_follow:XYZ/FY26/book p5 -> Note 2.2 Provisions for Impairment and Asset Quality"
     )
-
-
-def test_extraction_hint_names_the_reference_and_asks_for_component_rows():
-    doc = _book()
-    followed = refs.follow_references({doc.doc_id: doc}, [(doc.doc_id, 5)], ["loan impairment provisions"])
-    hint = refs.extraction_hint(followed[0])
-    assert "PDF page 5" in hint
-    assert "Note 2.2" in hint
-    assert "EVERY component row" in hint

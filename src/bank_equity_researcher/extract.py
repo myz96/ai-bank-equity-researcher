@@ -1,5 +1,10 @@
-"""Evidence extraction: cheap model over retrieved pages; vision over walk
-charts (ADR-0002). Provenance is stamped by code, never by the model."""
+"""Vision reads of a walk chart: its bars, and its callout layer (ADR-0002).
+Provenance is stamped by code, never by the model.
+
+The page-text extractor that used to sit here went with the open-loop shell:
+the closed loop reads a page with `read_page` and mints its own records from
+the agent's verbatim quotes (`research_agent._mint_record`). Git history holds
+it at the tag `pipeline-baseline-final`."""
 
 from __future__ import annotations
 
@@ -8,64 +13,7 @@ import re
 from .corpus import Document
 from .llm import LLM
 from .schema import EvidenceRecord, NumberFact
-from .validate import printed_numbers, quote_prints, walk_sum_tolerance
-
-TEXT_PROMPT = """You extract evidence for bank equity research. Today's task: {case}.
-
-Below is the text of one page from {doc_desc}. Extract every fact on this page
-relevant to the task as JSON only:
-
-[{{"quote": "<verbatim quote from the page, 50 words maximum>",
-   "numbers": [{{"label": "<what the number is>", "value": <float>,
-                "unit": "<bps|$m|%|ppt|ratio>",
-                "basis": "<cash|statutory|ex_notables|null>"}}],
-   "kind": "<text|table>"}}]
-
-Rules:
-- Quotes must be VERBATIM from the page text. Never paraphrase inside "quote".
-- TABLES: emit one record per relevant row. quote = the row label with its
-  printed values (e.g. "Net interest income 25,586 24,023 7"). numbers = one
-  entry per period column with the period in the label (e.g. "NII FY26",
-  "NII FY25"). A heading alone is NOT a record.
-- COLUMN ORDER: read the column headers printed above the table (e.g.
-  "31 Dec 25 | 30 Jun 25 | 31 Dec 24"). A row's values follow that order.
-  Emit ONE number per period column - ALL of them, never only the first two -
-  and label each with that column's own printed period ("ROE cash 31 Dec 24").
-  A half-year table's second column is the PRIOR HALF and its third column is
-  the same half one year earlier; never relabel the second column as the prior
-  year. Columns headed like "Dec 25 vs Dec 24 %" are CHANGES, not levels:
-  label them as the change, name both periods, and keep the sign.
-- A performance-summary table (income, expenses, impairment, tax, profit rows)
-  is the highest-value content: cover EVERY line row with both period columns,
-  before anything else on the page.
-- MOVEMENT STATEMENTS: when the text states a change (e.g. "increased $62
-  million or 9% to $788 million"), keep the full statement in the quote and
-  emit BOTH the signed delta (e.g. +62) and the level (788) as numbers.
-- DIVISIONAL DETAIL: rows or bullets that break the task's metric down by
-  division, segment, or product are core evidence, not background — extract
-  each one with both period columns (and any stated change).
-- BASIS: fill "basis" ONLY when the row, its heading or the table title prints
-  the word itself - cash, statutory, underlying, ex-notable. When the page
-  prints no such word beside the number, return null. Never infer a basis from
-  where the table sits or from the fact that the figure is audited: a guessed
-  basis is read downstream as the bank's own label. Use the words the page
-  prints, and never substitute a basis word the page does not print.
-- BASIS BLOCKS: a KPI or summary table is often split into BLOCKS, each opened
-  by its own basis header on a line of its own ("Group performance - statutory
-  basis", then "Group performance - cash earnings basis"; "Shareholder value -
-  statutory basis", then "Shareholder value - excluding Notable Items"). Every
-  row under a block header takes THAT block's basis, and the SAME row label
-  repeats under two blocks with different values. Put the block's basis in the
-  "basis" field AND name it in the number's label, so the two copies of the row
-  can be told apart ("cost to income ratio statutory FY25" against "cost to
-  income ratio cash FY25").
-- Extract only what is on this page. If nothing is relevant, return [].
-- Percentages: keep the unit "%" and the printed value (2.05% -> value 2.05).
-- Negative values in parentheses are negative numbers.
-- At most 10 records for this page; prefer table rows and quantified statements.
-
-PAGE TEXT:
-{page_text}"""
+from .validate import walk_sum_tolerance
 
 WALK_PROMPT = """This bank results page contains a waterfall (walk/bridge) chart relevant to: {case}.
 Extract the walk as JSON only:
@@ -119,19 +67,6 @@ MAX_ANNOTATION_RECORDS = 12
 
 PRESENTATION_DOC_TYPES = ("results_presentation", "investor_presentation", "investor_discussion_pack")
 
-# Added to the task when the page also holds a walk or bridge chart (ticket 22).
-# The bars are read by the vision model; the WHY of each bar is the prose beside
-# the chart, and a table-first extractor spends its record budget on the page's
-# balance table and drops that prose. The commentary is the point of the page.
-WALK_PAGE_HINT = (
-    "- This page carries a movement chart (a walk or bridge) and the commentary that "
-    "explains it. Extract EVERY sentence that names a driver of the movement, one record "
-    "per driver sentence: keep the bank's own label for the driver, its size as printed, "
-    "each sub-part the sentence names with that sub-part's own number, and any statement "
-    "that a movement is neutral, offset, or excluded. Cover the commentary before the "
-    "balance tables on the page."
-)
-
 
 def _label_key(label) -> str:
     """Case- and punctuation-insensitive form of a chart label, for comparing
@@ -154,98 +89,6 @@ def printed_page_of(text: str, pdf_page: int, doc_type: str = "") -> int | None:
             if 0 < pdf_page - printed <= 25:
                 return printed
     return None
-
-
-def extract_text_evidence(
-    llm: LLM,
-    model: str,
-    doc: Document,
-    page_no: int,
-    case: str,
-    next_id,
-    provenance: str | None = None,
-) -> list[EvidenceRecord]:
-    text = doc.page_texts()[page_no - 1]
-    if not text.strip():
-        return []
-    # 3000 tokens truncated a dense performance-summary page mid-string, and a
-    # truncated reply is unparseable, so the whole PAGE was lost and the case
-    # crashed (NAB and WBC FY25 cash earnings, ticket 27). One record per row
-    # per period column is the point of this stage, so the budget has to cover
-    # the densest page, not the average one.
-    raw = llm.chat_json(
-        model,
-        TEXT_PROMPT.format(case=case, doc_desc=doc.doc_id, page_text=text[:8000]),
-        max_tokens=6000,
-    )
-    records = []
-    for item in raw if isinstance(raw, list) else []:
-        quote = str(item.get("quote", ""))[:600]
-        try:
-            records.append(
-                EvidenceRecord(
-                    id=next_id(),
-                    doc_id=doc.doc_id,
-                    pdf_page=page_no,
-                    printed_page=printed_page_of(text, page_no, doc.doc_type),
-                    kind=item.get("kind", "text"),
-                    quote=quote,
-                    numbers=_numbers_the_quote_prints(quote, item.get("numbers", [])),
-                    provenance=provenance,
-                )
-            )
-        except Exception:  # noqa: BLE001 - a malformed record is dropped, not fatal
-            continue
-    return records
-
-
-def _numbers_the_quote_prints(quote: str, raw_numbers) -> list[NumberFact]:
-    """The NumberFacts of one record, minus the ones its own quote contradicts.
-
-    A NumberFact is the model's own account of what the quote states, and this
-    stage took it on trust: an extractor could pair a real verbatim sentence
-    with a figure of its own, and every check that reads record.numbers — the
-    column checks, the percent-evidence tests, the citation cap — would then
-    read a number no page prints. The agent shell verifies the same thing at
-    its own mint point (research_agent._mint_record), from the same function.
-
-    The gate is narrower here than there, and measurement is why. The agent's
-    `cite` verifies the quote against the PAGE first and hands every drop back
-    to the model, which re-quotes. This stage does neither, and its quote is
-    often a row LABEL with the row's figures in `numbers`: applied at full
-    strength the gate dropped 18.6% of the shipped facts, and the WBC FY25 ROE
-    case lost its movement outright because all six of its records quoted a
-    label ("ROTE", "Average ordinary equity ($m)").
-
-    So a quote that prints NO number says nothing about the numbers beside it,
-    and they are kept — absence of evidence is not a conflict. A quote that
-    DOES print numbers is the model quoting the row, and a fact that row does
-    not carry is the model's own arithmetic or another row's column: "Loan
-    impairment expense was $554 million, a decrease of $1,964 million" carried
-    a fact of 2,518, and "Treasury & Markets impact on NIM 0.13% 0.13%"
-    carried a fact of 0 bps. Those are dropped.
-
-    The digits of a LABEL are not numbers the quote prints (round 4). Banks
-    number their capital levels, their tiers and their credit stages, so
-    "Level 2 common equity Tier 1 capital ratio" parses as [2, 1]: the gate
-    switched on over a pure label and dropped the 12.53%/12.49% facts the
-    record was cited for. `printed_numbers` states the rule that separates an
-    index inside a label from a figure in the row.
-    """
-    facts: list[NumberFact] = []
-    for number in raw_numbers if isinstance(raw_numbers, list) else []:
-        if not isinstance(number, dict) or "value" not in number:
-            continue
-        try:
-            facts.append(NumberFact(**number))
-        except Exception:  # noqa: BLE001, S112 - a malformed number is dropped, not fatal
-            continue
-    return [
-        fact
-        for fact in facts
-        if not printed_numbers(quote, fact.value, fact.unit)
-        or quote_prints(quote, fact.value, fact.unit)
-    ]
 
 
 def annotation_records(
@@ -320,6 +163,7 @@ def extract_walk_annotations(
     next_id,
     unit: str = "bps",
     bar_labels: tuple[str, ...] = (),
+    deadline_monotonic: float | None = None,
 ) -> list[EvidenceRecord]:
     """One bounded vision read of a walk page's CALLOUT layer (ticket 27).
 
@@ -333,10 +177,15 @@ def extract_walk_annotations(
     One extra vision call per walk page, and no more. A call that fails, or a
     reply that does not parse, returns NOTHING: the annotation layer is a
     bonus, so its loss must never cost the case its walk or its answer.
+
+    `deadline_monotonic` is the case's own deadline. One read_chart is TWO
+    vision calls, and each of them used to carry its own retry ladder, so a
+    chart read near the end of a case could run long past it.
     """
     prompt = ANNOTATION_PROMPT.format(case=case, unit=unit, max_items=MAX_ANNOTATION_RECORDS)
     try:
-        raw = llm.chat_json(model, prompt, image_png=doc.render_page(page_no), max_tokens=2000)
+        raw = llm.chat_json(model, prompt, image_png=doc.render_page(page_no), max_tokens=2000,
+                            deadline_monotonic=deadline_monotonic)
     except Exception:  # noqa: BLE001 - a lost annotation read is a gap, not a crash
         return []
     try:
@@ -349,20 +198,27 @@ def extract_walk_annotations(
         return []
 
 
-def extract_walk(llm: LLM, model: str, doc: Document, page_no: int, case: str, next_id, unit: str = "bps"):
-    """Vision read of a walk chart page. Returns (walk_dict, EvidenceRecord)."""
+def extract_walk(llm: LLM, model: str, doc: Document, page_no: int, case: str, next_id,
+                 unit: str = "bps", deadline_monotonic: float | None = None):
+    """Vision read of a walk chart page. Returns (walk_dict, EvidenceRecord).
+
+    `deadline_monotonic` is the case's own deadline, carried into every model
+    call so a chart read cannot outlive the case it belongs to.
+    """
     prompt = WALK_PROMPT.format(case=case, unit=unit)
     # The parse-failure retry now lives in LLM.chat_json, so every JSON caller
     # gets it (ticket 27). The budget stays at the retry's old ceiling.
     try:
-        walk = llm.chat_json(model, prompt, image_png=doc.render_page(page_no), max_tokens=4000)
+        walk = llm.chat_json(model, prompt, image_png=doc.render_page(page_no), max_tokens=4000,
+                             deadline_monotonic=deadline_monotonic)
     except ValueError:
         # Last resort for a page that keeps coming back unreadable: send a
         # bigger render. Diagnosis on the CBA FY25 PA p28 NIM chart says the
         # failure is a truncated reply, not a rendering problem, so this only
         # adds a second axis of variation after the retries above are spent.
         walk = llm.chat_json(
-            model, prompt, image_png=doc.render_page(page_no, zoom=3.0), max_tokens=4000
+            model, prompt, image_png=doc.render_page(page_no, zoom=3.0), max_tokens=4000,
+            deadline_monotonic=deadline_monotonic,
         )
     # A null bar value is a partial read, not a crash (defect 23): drop the
     # bar and record the gap on the walk.

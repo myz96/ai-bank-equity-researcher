@@ -1,0 +1,732 @@
+{
+  "bank": "WBC",
+  "metric": "nim",
+  "period": "1H26",
+  "comparator": "1H25",
+  "basis": "ex_notables",
+  "movement": {
+    "from_value": 192.0,
+    "to_value": 189.0,
+    "delta": -3.0,
+    "unit": "bps"
+  },
+  "movement_source": "row 'NIM (Excluding Notable Items, %) Group row', column March 2025 -> column March 2026",
+  "headline": "WBC's Group net interest margin (excluding Notable Items) fell 3bps year-on-year, from 1.92% in 1H25 (half ended Mar 2025) to 1.89% in 1H26 (half ended Mar 2026) — the results book's KPI table prints 1.89% / 1.95% / 1.92% with a \"(3 bps)\" Mar 26 - Mar 25 movement. The bank's own walk (results book, 1H25→1H26, sum check passed) attributes all -3bps to: Loans -2bps, Deposits -1bp, Timing difference -1bp, Liquid assets +5bps, WSF 0bps, Capital & other -3bps, Treasury & Markets -1bp. NIM comprised Core NIM of 1.78%, down 2bps (from 1.80%), and a Treasury & Markets contribution of 11bps, down 1bp due to lower Treasury income. The loan drag reflects tighter Australian spreads on competition, partly offset by higher NZ spreads; deposits narrowed on savings-bonus-rate uptake and term-deposit spreads; capital & other fell on a remediation provision and non-repeat of prior-period items; liquid assets added +5bps as trading assets reduced. Net interest income ex Notable Items still rose 2% to $9,763m on 4% AIEA growth. Context: against the prior half (2H25, 1.95%) NIM fell 6bps — a different comparison. The discussion pack corroborates: \"Core NIM down 2bps, Treasury & Markets NIM down 1bp\" for 1H25→1H26.",
+  "headline_evidence": [
+    "ev-21",
+    "ev-22",
+    "ev-23",
+    "ev-24",
+    "ev-25",
+    "ev-32",
+    "ev-33",
+    "ev-34",
+    "ev-35",
+    "ev-36"
+  ],
+  "drivers": [
+    {
+      "canonical": "asset_pricing",
+      "bank_label": null,
+      "contribution": {
+        "value": -2.0,
+        "unit": "bps"
+      },
+      "columns": "March 2025 → March 2026",
+      "narrative": "Loans bar -2bps. Bank's stated reason: \"Loan interest spread: 2 basis point decrease. Higher spreads in New Zealand were more than offset by tighter spreads in Australia due to competition\" — an Australian mortgage/business pricing drag partly funded by NZ spreads.",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-8",
+        "ev-26"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "funding.deposits",
+      "bank_label": null,
+      "contribution": {
+        "value": -1.0,
+        "unit": "bps"
+      },
+      "columns": "March 2025 → March 2026",
+      "narrative": "Deposits bar -1bp, a net figure the bank qualifies: deposit interest spread down 1bp on \"a higher proportion of customers qualifying for the savings bonus rate and narrower spreads on term deposits\", while \"favourable deposit mix and repricing the base rate of the consumer behavioural product provided a benefit\".",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-9",
+        "ev-27"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "rate_timing",
+      "bank_label": null,
+      "contribution": {
+        "value": -1.0,
+        "unit": "bps"
+      },
+      "columns": "March 2025 → March 2026",
+      "narrative": "Timing difference bar -1bp, \"due to the timing differences of interest rate changes\" — defined by the bank as \"the delay between the change in the RBA cash rate and when customers receive or pay their new interest rate\".",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-10",
+        "ev-28",
+        "ev-31"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "liquids",
+      "bank_label": null,
+      "contribution": {
+        "value": 5.0,
+        "unit": "bps"
+      },
+      "columns": "March 2025 → March 2026",
+      "narrative": "Liquid assets bar +5bps, the only positive driver: \"trading assets reduced, average liquid assets rose by less than average lending assets and spreads narrowed\". Other interest-earning assets (included in this bar) fell 22% on lower trading-security holdings.",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-11",
+        "ev-29"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "funding.wholesale",
+      "bank_label": null,
+      "contribution": {
+        "value": 0.0,
+        "unit": "bps"
+      },
+      "columns": "March 2025 → March 2026",
+      "narrative": "WSF (wholesale funding costs) bar is a published zero: the bank's explicit statement that wholesale funding contributed nothing to the 1H25→1H26 NIM movement.",
+      "confidence": 92,
+      "evidence": [
+        "ev-1"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "capital_replicating",
+      "bank_label": null,
+      "contribution": {
+        "value": -3.0,
+        "unit": "bps"
+      },
+      "columns": "March 2025 → March 2026",
+      "narrative": "Capital & other bar -3bps, the largest single drag: \"due to a remediation provision in the current period and the non repeat of items in the prior corresponding period\" — i.e. one-off items, not ongoing hedge/replicating-portfolio earnings.",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-12",
+        "ev-30"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "markets_treasury",
+      "bank_label": null,
+      "contribution": {
+        "value": -1.0,
+        "unit": "bps"
+      },
+      "columns": "March 2025 → March 2026",
+      "narrative": "T&M bar -1bp: the Treasury & Markets contribution to NIM was 11bps in 1H26 (0.11%), down 1bp from 12bps (0.12%) in 1H25, \"due to lower Treasury income\".",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-13",
+        "ev-25",
+        "ev-32"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "bps"
+  },
+  "notable_items": [
+    "Capital & other includes a current-period remediation provision and the non-repeat of prior corresponding period items (bank-disclosed, not separately quantified within the bar).",
+    "NIM is measured excluding Notable Items; the T&M contribution (11bps) sits outside Core NIM."
+  ],
+  "disagreements": [],
+  "attribution_confidence": 40,
+  "limitations": [
+    "The investor discussion pack's NIM walk (p24) covers 2H25→1H26 (half-on-half), not the task comparison; its bars (Timing -2, Loans -3, Deposits 0, Liquid +2, Capital & Other -1, Wholesale 0, T&M -2) were NOT used as contributions and are context only.",
+    "The Group NIM row is printed under the 'NIM (Excluding Notable Items, %)' block of the KPI table and carries no cash/statutory label; it is reported on WBC's primary ex-Notable-Items basis. No statutory NIM is printed.",
+    "The walk is in whole bps; the seven bars sum exactly to the -3bps headline here, but individual bars are rounded by the bank.",
+    "Bars are net figures: the Deposits bar nets favourable mix and behavioural-product repricing against bonus-rate uptake and narrower term-deposit spreads; the Loans bar nets higher NZ spreads against tighter Australian spreads. The bank's own qualifying words are carried in the narratives.",
+    "The Capital & other bar embeds one-off items (a remediation provision and non-repeat of prior-period items) that the bank does not quantify separately within the bar.",
+    "The discussion pack's forward-looking 'KEY CONSIDERATIONS 2H26' items (replicating portfolio +1bp, bonus rate uptake -1bp) relate to the next half and were excluded from this attribution.",
+    "Failed check: movement_from_variant (the row you read is a 'excluding notable' variant: row 'NIM (Excluding Notable Items, %) Group row', column March 2025 -> column March 2026. Read the headline measure instead, and report the variant as context or as a disagreement)"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Net interest margin movement Excluding Notable Items First Half 2026 – First Half 2025: 1H25 192 -> 1H26 189",
+      "numbers": [
+        {
+          "label": "Loans",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Deposits",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Timing difference assets",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Liquid assets",
+          "value": 5.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "WSF",
+          "value": 0.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Capital & other",
+          "value": -3.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "T&M",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] 1H25: 1.92% (2bps) -2",
+      "numbers": [
+        {
+          "label": "1H25 1.92% (2bps)",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Deposits: (1bp) -1",
+      "numbers": [
+        {
+          "label": "Deposits (1bp)",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Timing difference assets: (1bp) -1",
+      "numbers": [
+        {
+          "label": "Timing difference assets (1bp)",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Liquid assets: 5bps +5",
+      "numbers": [
+        {
+          "label": "Liquid assets 5bps",
+          "value": 5.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Capital & other: (3bps) -3",
+      "numbers": [
+        {
+          "label": "Capital & other (3bps)",
+          "value": -3.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] T&M: (1bp) -1",
+      "numbers": [
+        {
+          "label": "T&M (1bp)",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 12,
+      "printed_page": 6,
+      "kind": "table",
+      "quote": "NIM (Excluding Notable Items, %) NIM 1.89% 1.95% 1.92% (6 bps) (3 bps)",
+      "numbers": [
+        {
+          "label": "NIM half ended Mar 2026",
+          "value": 1.89,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "NIM half ended Sept 2025",
+          "value": 1.95,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "NIM half ended Mar 2025",
+          "value": 1.92,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "NIM movement Mar 26 - Sept 25",
+          "value": -6.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "NIM movement Mar 26 - Mar 25",
+          "value": -3.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 12,
+      "printed_page": 6,
+      "kind": "table",
+      "quote": "Core NIM 1.78% 1.82% 1.80% (4 bps) (2 bps)",
+      "numbers": [
+        {
+          "label": "Core NIM half ended Mar 2026",
+          "value": 1.78,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Core NIM half ended Sept 2025",
+          "value": 1.82,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Core NIM half ended Mar 2025",
+          "value": 1.8,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Core NIM movement Mar 26 - Mar 25",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "NIM decreased by 3 basis points to 1.89%. NIM comprised:",
+      "numbers": [
+        {
+          "label": "Group NIM half ended Mar 2026",
+          "value": 1.89,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "NIM movement 1H26 vs 1H25",
+          "value": -3.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Core NIM of 1.78%, down 2 basis points, with key drivers described below",
+      "numbers": [
+        {
+          "label": "Core NIM half ended Mar 2026",
+          "value": 1.78,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Core NIM movement 1H26 vs 1H25",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Treasury and Markets contribution of 11 basis points, which was down 1 basis point due to lower Treasury income.",
+      "numbers": [
+        {
+          "label": "Treasury and Markets contribution to NIM 1H26",
+          "value": 11.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "T&M contribution movement 1H26 vs 1H25",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-26",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan interest spread: 2 basis point decrease. Higher spreads in New Zealand were more than offset by tighter spreads in Australia due to competition;",
+      "numbers": [
+        {
+          "label": "Loan interest spread movement 1H26 vs 1H25",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-27",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Deposit interest spread: 1 basis point decrease driven by a higher proportion of customers qualifying for the savings bonus rate and narrower spreads on term deposits. Favourable deposit mix and repricing the base rate of the consumer behavioural product provided a benefit;",
+      "numbers": [
+        {
+          "label": "Deposit interest spread movement 1H26 vs 1H25",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-28",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Timing difference1: 1 basis point decrease due to the timing differences of interest rate changes;",
+      "numbers": [
+        {
+          "label": "Timing difference movement 1H26 vs 1H25",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-29",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Liquid assets: 5 basis point increase as trading assets reduced, average liquid assets rose by less than average lending assets and spreads narrowed; and",
+      "numbers": [
+        {
+          "label": "Liquid assets movement 1H26 vs 1H25",
+          "value": 5.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-30",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Capital and other: 3 basis point decrease due to a remediation provision in the current period and the non repeat of items in the prior corresponding period.",
+      "numbers": [
+        {
+          "label": "Capital and other movement 1H26 vs 1H25",
+          "value": -3.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-31",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 13,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The delay between the change in the RBA cash rate and when customers receive or pay their new interest rate.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-32",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 12,
+      "printed_page": 6,
+      "kind": "table",
+      "quote": "Treasury & Markets impact on NIM 0.11% 0.13% 0.12% (2 bps) (1 bps)",
+      "numbers": [
+        {
+          "label": "Treasury & Markets impact on NIM half ended Mar 2026",
+          "value": 0.11,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Treasury & Markets impact on NIM half ended Sept 2025",
+          "value": 0.13,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Treasury & Markets impact on NIM half ended Mar 2025",
+          "value": 0.12,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "T&M impact movement Mar 26 - Mar 25",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-33",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 12,
+      "printed_page": 6,
+      "kind": "table",
+      "quote": "Average interest earning assets 1,035,226 1,008,977 996,701 3 4",
+      "numbers": [
+        {
+          "label": "Average interest earning assets half ended Mar 2026",
+          "value": 1035226.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Average interest earning assets half ended Mar 2025",
+          "value": 996701.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "AIEA movement Mar 26 - Mar 25",
+          "value": 4.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-34",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 12,
+      "printed_page": 6,
+      "kind": "table",
+      "quote": "Net interest income 9,763 9,904 9,569 (1) 2",
+      "numbers": [
+        {
+          "label": "Net interest income ex Notable Items half ended Mar 2026",
+          "value": 9763.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net interest income ex Notable Items half ended Mar 2025",
+          "value": 9569.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NII movement Mar 26 - Mar 25",
+          "value": 2.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-35",
+      "doc_id": "WBC/1H26/results_announcement",
+      "pdf_page": 12,
+      "printed_page": 6,
+      "kind": "text",
+      "quote": "Higher core net interest income with balance sheet growth more than offsetting lower net interest margin; and",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-36",
+      "doc_id": "WBC/1H26/investor_discussion_pack",
+      "pdf_page": 38,
+      "printed_page": 38,
+      "kind": "text",
+      "quote": "AIEA up 4% due to loan growth, Core NIM down 2bps, Treasury & Markets NIM down 1bp",
+      "numbers": [
+        {
+          "label": "AIEA movement 1H26 vs 1H25",
+          "value": 4.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Core NIM movement 1H26 vs 1H25",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Treasury & Markets NIM movement 1H26 vs 1H25",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "agentic",
+    "models": "agent=z-ai/glm-5.3-flash, vision=qwen/qwen3.7-flash",
+    "documents": "WBC/1H26/results_announcement (5d0e7d301d0e), WBC/1H26/investor_discussion_pack (7af34e986c7f)",
+    "generated": "2026-08-31T14:46:34+00:00",
+    "seconds": 851.2,
+    "cost_usd": 0.0134,
+    "tokens": "92216 in / 21028 out",
+    "orchestration": "agent",
+    "tool_calls": 17,
+    "pages_read": 6,
+    "charts_read": 2,
+    "budget_exhausted": "no"
+  }
+}
