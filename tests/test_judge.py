@@ -23,9 +23,9 @@ from __future__ import annotations
 
 import pytest
 
-from bank_equity_researcher import judge as judge_module
-from bank_equity_researcher.evals import crossref_passes, score_crossref
-from bank_equity_researcher.judge import (
+from bank_equity_researcher.evals.harness import crossref_passes, score_crossref
+from bank_equity_researcher.judging import judge as judge_module
+from bank_equity_researcher.judging.judge import (
     ABSENT,
     ENTAILED,
     FAIL,
@@ -412,7 +412,7 @@ def test_headline_evidence_survives_the_report_round_trip():
     judge's "does the note state it" question reads answer_prose, and a pasted
     quote there would answer its own question."""
     from bank_equity_researcher.render import render_report
-    from bank_equity_researcher.schema import Attribution, EvidenceRecord
+    from bank_equity_researcher.validation.schema import Attribution, EvidenceRecord
 
     attribution = Attribution(
         bank="BANK",
@@ -440,7 +440,11 @@ def test_headline_evidence_survives_the_report_round_trip():
 
 def test_headline_evidence_drops_an_id_that_resolves_to_no_record():
     """The never-guess gate is structural: an id citing nothing cites nothing."""
-    from bank_equity_researcher.schema import Attribution, EvidenceRecord, enforce_evidence_gate
+    from bank_equity_researcher.validation.schema import (
+        Attribution,
+        EvidenceRecord,
+        enforce_evidence_gate,
+    )
 
     attribution = enforce_evidence_gate(
         Attribution(
@@ -601,7 +605,10 @@ def test_a_question_case_is_scored_by_the_same_two_populations():
 
 
 def test_the_question_gold_loads_as_its_own_suite():
-    from bank_equity_researcher.evals import load_crossref_gold, load_question_gold
+    from bank_equity_researcher.evals.harness import (
+        load_crossref_gold,
+        load_question_gold,
+    )
 
     questions = load_question_gold("dev")
     assert questions, "the dev researcher-question set must load"
@@ -618,7 +625,7 @@ def test_the_question_gold_loads_as_its_own_suite():
 def test_judge_fact_max_quotes_widens_the_window():
     """The questions suite widens the evidence window; the default stays
     frozen. A wider window must reach the quotes the default drops."""
-    from bank_equity_researcher import judge as J
+    from bank_equity_researcher.judging import judge as J
 
     class FakeLLM:
         def __init__(self):
@@ -648,7 +655,7 @@ def test_quotes_dropped_by_the_character_budget_are_reported():
     behind a verdict the judge reached on 12. An entailment ruling made on
     quotes the judge never read is the failure this number exists to expose.
     """
-    from bank_equity_researcher import judge as J
+    from bank_equity_researcher.judging import judge as J
 
     class FakeLLM:
         def __init__(self):
@@ -674,7 +681,7 @@ def test_quotes_dropped_by_the_character_budget_are_reported():
 
 
 def test_quotes_inside_the_budget_are_not_flagged():
-    from bank_equity_researcher import judge as J
+    from bank_equity_researcher.judging import judge as J
 
     class FakeLLM:
         def chat_json(self, model, prompt, max_tokens=None):

@@ -97,7 +97,7 @@ def runner_for(combo_name: str):
     The import is lazy so config stays free of shell dependencies.
     """
     _require_agent(combo_name)
-    from .research_agent import run_agent_case
+    from .agent.research_agent import run_agent_case
 
     return run_agent_case
 
@@ -108,7 +108,7 @@ def question_runner_for(combo_name: str):
     loop. Both runners take (bank, question, combo, periods) and return
     (output, out_dir), so no caller needs an adapter or a branch of its own."""
     _require_agent(combo_name)
-    from .research_agent import run_agent_question
+    from .agent.research_agent import run_agent_question
 
     return run_agent_question
 

@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import pytest
 
-from bank_equity_researcher.extract import (
+from bank_equity_researcher.tools.extract import (
     ANNOTATION_PROMPT,
     MAX_ANNOTATION_RECORDS,
     annotation_records,
@@ -190,7 +190,7 @@ class _WalkDoc(_Doc):
 def test_a_ratio_walk_reaches_the_endpoint_harmoniser():
     """The endpoints arrive as a fraction and the bars in points. A factor of
     100 closes the walk exactly; the old trigger never looked."""
-    from bank_equity_researcher.extract import extract_walk
+    from bank_equity_researcher.tools.extract import extract_walk
 
     walk, _record = extract_walk(
         _LLM({
@@ -207,7 +207,7 @@ def test_a_ratio_walk_reaches_the_endpoint_harmoniser():
 
 
 def test_a_walk_that_already_sums_is_left_alone():
-    from bank_equity_researcher.extract import extract_walk
+    from bank_equity_researcher.tools.extract import extract_walk
 
     walk, _record = extract_walk(
         _LLM({

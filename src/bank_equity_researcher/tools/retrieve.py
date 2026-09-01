@@ -7,7 +7,7 @@ from functools import lru_cache
 
 import numpy as np
 
-from .config import DATA_DIR
+from ..config import DATA_DIR
 from .corpus import Document
 
 _ENCODER = None

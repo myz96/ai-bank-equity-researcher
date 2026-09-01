@@ -19,18 +19,17 @@ from __future__ import annotations
 
 import pytest
 
-from bank_equity_researcher.schema import (
+from bank_equity_researcher.taxonomy import TAXONOMY
+from bank_equity_researcher.validation.schema import (
     Attribution,
     Contribution,
     DriverClaim,
     EvidenceRecord,
     Movement,
 )
-from bank_equity_researcher.taxonomy import TAXONOMY
-from bank_equity_researcher.validate import (
+from bank_equity_researcher.validation.validate import (
     _settle_basis,
     check_drivers_reconcile,
-    check_movement,
     check_movement_basis,
     check_movement_variant,
     drop_off_unit_contributions,

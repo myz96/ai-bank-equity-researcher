@@ -28,16 +28,16 @@ import httpx
 import pytest
 
 from bank_equity_researcher import cli
-from bank_equity_researcher import evals as E
 from bank_equity_researcher import llm as L
 from bank_equity_researcher.config import COMBOS, runner_for
-from bank_equity_researcher.schema import (
+from bank_equity_researcher.evals import harness as E
+from bank_equity_researcher.validation.schema import (
     Attribution,
     Contribution,
     DriverClaim,
     Movement,
 )
-from bank_equity_researcher.validate import (
+from bank_equity_researcher.validation.validate import (
     CLAIM_CITATION_CAP,
     WHOLE_TABLE_FAILURES,
     cap_unreconciled_drivers,

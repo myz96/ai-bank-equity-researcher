@@ -13,9 +13,9 @@ from urllib.parse import urljoin
 
 import httpx
 
-from .config import MANIFEST_DIR
+from ..config import MANIFEST_DIR
+from ..llm import LLM
 from .corpus import DOC_TYPES
-from .llm import LLM
 
 DISCOVER_MODEL = "deepseek/deepseek-v4-pro-0813"
 MAX_STEPS = 15

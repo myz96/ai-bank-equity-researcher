@@ -10,10 +10,10 @@ from __future__ import annotations
 
 import re
 
+from ..llm import LLM
+from ..validation.schema import EvidenceRecord, NumberFact
+from ..validation.validate import walk_sum_tolerance
 from .corpus import PRESENTATION_DOC_TYPES, Document
-from .llm import LLM
-from .schema import EvidenceRecord, NumberFact
-from .validate import walk_sum_tolerance
 
 WALK_PROMPT = """This bank results page contains a waterfall (walk/bridge) chart relevant to: {case}.
 Extract the walk as JSON only:

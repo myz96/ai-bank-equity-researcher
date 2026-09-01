@@ -27,8 +27,8 @@ from __future__ import annotations
 
 import pytest
 
-from bank_equity_researcher.research_agent import match_quote, strip_markers
-from bank_equity_researcher.schema import (
+from bank_equity_researcher.agent.research_agent import match_quote, strip_markers
+from bank_equity_researcher.validation.schema import (
     Attribution,
     Contribution,
     DriverClaim,
@@ -36,7 +36,7 @@ from bank_equity_researcher.schema import (
     Movement,
     NumberFact,
 )
-from bank_equity_researcher.validate import (
+from bank_equity_researcher.validation.validate import (
     CLAIM_CITATION_CAP,
     WHOLE_TABLE_FAILURES,
     _quote_numbers,
@@ -417,7 +417,7 @@ def test_the_movement_check_still_passes_a_movement_that_adds_up():
 def test_null_confidence_is_low_not_a_crash():
     """Codex round-4 finding 5: an explicit JSON null is the other common
     form of an unstated self-report; both forms mean LOW, never a crash."""
-    from bank_equity_researcher.schema import DriverClaim
+    from bank_equity_researcher.validation.schema import DriverClaim
 
     assert DriverClaim(canonical="x").confidence == 40
     assert DriverClaim(canonical="x", confidence=None).confidence == 40

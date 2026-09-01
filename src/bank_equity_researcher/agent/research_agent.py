@@ -27,16 +27,17 @@ from __future__ import annotations
 import json
 import re
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from .config import COMBOS, LIVE_COMBO, OUT_DIR, REGISTRY_DIR
-from .corpus import Document, documents_for_period, documents_for_question
-from .extract import extract_walk, extract_walk_annotations, printed_page_of
-from .llm import LLM
-from .refs import scan_page
-from .render import case_slug, render_answer, render_report, slugify
-from .retrieve import retrieve
-from .schema import (
+from ..config import COMBOS, LIVE_COMBO, OUT_DIR, REGISTRY_DIR
+from ..llm import LLM
+from ..render import case_slug, render_answer, render_report, slugify
+from ..taxonomy import METRIC_ALIASES, TAXONOMY
+from ..tools.corpus import Document, documents_for_period, documents_for_question
+from ..tools.extract import extract_walk, extract_walk_annotations, printed_page_of
+from ..tools.refs import scan_page
+from ..tools.retrieve import retrieve
+from ..validation.schema import (
     Attribution,
     Disagreement,
     DriverClaim,
@@ -45,8 +46,7 @@ from .schema import (
     enforce_answer_gate,
     enforce_evidence_gate,
 )
-from .taxonomy import METRIC_ALIASES, TAXONOMY
-from .validate import (
+from ..validation.validate import (
     _movement_source,
     _percent_evidenced,
     _settle_basis,
@@ -121,7 +121,7 @@ def _provenance(combo, docs, started: float, llm, research, exhausted) -> dict:
         "combo": combo.name,
         "models": f"agent={combo.agent}, vision={combo.vision}",
         "documents": ", ".join(f"{d.doc_id} ({(d.sha256 or '')[:12]})" for d in docs),
-        "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "generated": datetime.now(UTC).isoformat(timespec="seconds"),
         "seconds": round(time.time() - started, 1),
         "cost_usd": round(llm.usage.cost_usd, 4),
         "tokens": f"{llm.usage.prompt_tokens} in / {llm.usage.completion_tokens} out",
@@ -1323,7 +1323,7 @@ def _snippet(text: str, query: str) -> str:
 
 
 def _relevance_terms(metric_cfg: dict) -> set[str]:
-    from .refs import _words
+    from ..tools.refs import _words
 
     return _words(" ".join([*metric_cfg["retrieval_queries"], metric_cfg["name"]]))
 

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import pytest
 
-from bank_equity_researcher import refs
+from bank_equity_researcher.tools import refs
 
 FOOTER = "  {printed}                    Example Bank - Profit Announcement"
 

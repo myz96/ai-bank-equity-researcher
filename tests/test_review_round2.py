@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import pytest
 
-from bank_equity_researcher.schema import (
+from bank_equity_researcher.validation.schema import (
     Attribution,
     Contribution,
     DriverClaim,
@@ -29,7 +29,7 @@ from bank_equity_researcher.schema import (
     Movement,
     NumberFact,
 )
-from bank_equity_researcher.validate import (
+from bank_equity_researcher.validation.validate import (
     CLAIM_CITATION_CAP,
     RATIO_LEVEL_CEILING,
     _quote_numbers,

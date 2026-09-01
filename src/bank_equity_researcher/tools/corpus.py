@@ -5,12 +5,12 @@ from __future__ import annotations
 
 import json
 import re
-from functools import lru_cache
+from functools import cache, lru_cache
 from pathlib import Path
 
 import pymupdf
 
-from .config import DATA_DIR, MANIFEST_DIR, REGISTRY_DIR
+from ..config import DATA_DIR, MANIFEST_DIR, REGISTRY_DIR
 
 # The manifest doc_type vocabulary. Two consumers dispatch on these strings —
 # printed-page mapping (extract.printed_page_of) and the walk-sum tolerance
@@ -75,7 +75,7 @@ class Document:
         return pdf[page_no - 1].get_pixmap(matrix=pymupdf.Matrix(zoom, zoom)).tobytes("png")
 
 
-@lru_cache(maxsize=None)
+@cache
 def load_documents(bank: str) -> list[Document]:
     manifest_path = MANIFEST_DIR / f"{bank.lower()}.json"
     if not manifest_path.exists():

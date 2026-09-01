@@ -59,25 +59,25 @@ def main() -> int:
 
     if args.command == "evals":
         if args.action == "crossref":
-            from .evals import run_crossref_suite
+            from .evals.harness import run_crossref_suite
 
             card = run_crossref_suite(args.combo, args.bank)
         elif args.action == "judge":
             # The judge grades SAVED out/*/ artifacts and runs no research.
-            from .evals import run_judge_suite
+            from .evals.harness import run_judge_suite
 
             card = run_judge_suite(args.suite, args.combo, args.bank)
         elif args.action == "rescore":
-            from .evals import rescore
+            from .evals.harness import rescore
 
             card = rescore(args.suite, args.combo, args.bank, args.since, args.until,
                            args.baseline, args.label)
         elif args.suite == "questions":
-            from .evals import run_question_suite
+            from .evals.harness import run_question_suite
 
             card = run_question_suite(args.combo, args.bank, only=args.only)
         else:
-            from .evals import run_suite
+            from .evals.harness import run_suite
 
             card = run_suite(args.suite, args.combo, args.bank, args.only)
         print("\n" + card.read_text())
@@ -100,7 +100,7 @@ def main() -> int:
     if args.command == "discover":
         from datetime import date
 
-        from .discover import discover
+        from .tools.discover import discover
 
         manifest = discover(args.bank, args.periods.split(","), args.seed, date.today().isoformat())
         print(json.dumps(manifest, indent=2))

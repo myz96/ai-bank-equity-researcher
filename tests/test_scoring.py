@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import pytest
 
-from bank_equity_researcher.evals import (
+from bank_equity_researcher.evals.harness import (
     CORRECT,
     INCORRECT,
     UNSCORED,
@@ -26,7 +26,7 @@ from bank_equity_researcher.evals import (
     tolerance_for,
     values_match,
 )
-from bank_equity_researcher.schema import (
+from bank_equity_researcher.validation.schema import (
     Attribution,
     Contribution,
     DriverClaim,

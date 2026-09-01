@@ -7,7 +7,7 @@ three period columns — with neutral values.
 
 from __future__ import annotations
 
-from bank_equity_researcher.schema import (
+from bank_equity_researcher.validation.schema import (
     Attribution,
     Contribution,
     DriverClaim,
@@ -15,7 +15,10 @@ from bank_equity_researcher.schema import (
     Movement,
     NumberFact,
 )
-from bank_equity_researcher.validate import check_component_columns, half_label
+from bank_equity_researcher.validation.validate import (
+    check_component_columns,
+    half_label,
+)
 
 CALENDAR = {"fy_end": "30 June", "halves": {"1H": "ends 31 December", "2H": "ends 30 June"}}
 PERIOD_DATE, COMPARATOR_DATE, PRIOR_HALF_DATE = (12, 2025), (12, 2024), (6, 2025)

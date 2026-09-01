@@ -23,10 +23,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from bank_equity_researcher.config import COMBOS  # noqa: E402
-from bank_equity_researcher.corpus import doc_alias_index, resolve_doc_name  # noqa: E402
-from bank_equity_researcher.evals import load_question_gold, score_crossref  # noqa: E402
-from bank_equity_researcher.llm import LLM  # noqa: E402
+from bank_equity_researcher.config import COMBOS
+from bank_equity_researcher.evals.harness import (
+    load_question_gold,
+    score_crossref,
+)
+from bank_equity_researcher.llm import LLM
+from bank_equity_researcher.tools.corpus import (
+    doc_alias_index,
+    resolve_doc_name,
+)
 
 JUDGES = COMBOS["agentic"].judges
 

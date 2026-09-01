@@ -25,13 +25,13 @@ import json
 import re
 import subprocess
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
-from .config import COMBOS, LIVE_COMBO, OUT_DIR, REGISTRY_DIR, REPO_ROOT
-from .judge import answer_prose, cited_quotes, judge_facts
-from .schema import Attribution, DriverClaim
-from .validate import (
+from ..config import COMBOS, LIVE_COMBO, OUT_DIR, REGISTRY_DIR, REPO_ROOT
+from ..judging.judge import answer_prose, cited_quotes, judge_facts
+from ..validation.schema import Attribution, DriverClaim
+from ..validation.validate import (
     MONEY_ABS_TOL_M,
     MONEY_REL_TOL,
     RATIO_TOL_PPT,
@@ -106,7 +106,7 @@ def load_question_gold(split: str = "dev", bank: str | None = None) -> list[dict
     the banks the question names, which is the only sense a bank filter has
     when one case can span three of them.
     """
-    from .corpus import banks_named
+    from ..tools.corpus import banks_named
 
     cases = []
     for path in sorted(GOLD_DIR.glob("*.json")):
@@ -126,7 +126,7 @@ def load_question_gold(split: str = "dev", bank: str | None = None) -> list[dict
 
 def _same_document(gold_doc: str, record_doc_id: str, index: dict[str, str] | None) -> bool:
     """Whether a gold location's document name is the record's document."""
-    from .corpus import resolve_doc_name
+    from ..tools.corpus import resolve_doc_name
 
     resolved = resolve_doc_name(gold_doc, index) if index else None
     if resolved is not None:
@@ -268,9 +268,9 @@ def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
     The shell comes from config.question_runner_for and from nowhere else, so a
     suite can never measure one shell under the other's label.
     """
-    from .config import question_runner_for
-    from .corpus import doc_alias_index
-    from .llm import LLM
+    from ..config import question_runner_for
+    from ..llm import LLM
+    from ..tools.corpus import doc_alias_index
 
     run_question = question_runner_for(combo)
     judges = COMBOS[combo].judges
@@ -921,7 +921,7 @@ def run_suite(suite: str, combo: str, bank: str | None = None, only: str | None 
     metric names and/or bank-metric-period fragments, matched case-insensitively
     against "BANK-metric-PERIOD" (e.g. "cash_earnings", "nim-1H26",
     "NAB,WBC-cti"). Full suites remain the gate at the end of a round."""
-    from .config import runner_for
+    from ..config import runner_for
 
     run_case = runner_for(combo)
 
@@ -982,7 +982,7 @@ def _gold_sha() -> str:
 
 def run_stamp() -> str:
     """One UTC clock reading per run, shared by the file names and the header."""
-    return datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+    return datetime.now(UTC).strftime("%Y%m%d-%H%M")
 
 
 def scorecard_meta(stamp: str, *extra: str) -> list[str]:
@@ -1000,7 +1000,7 @@ def scorecard_meta(stamp: str, *extra: str) -> list[str]:
 
 def artifact_dir(gold: dict, combo: str) -> Path:
     """The saved out/<slug>/ directory for one gold case and one combo."""
-    from .render import case_slug
+    from ..render import case_slug
 
     return OUT_DIR / case_slug(gold["bank"], gold["metric"], gold["period"],
                                gold["comparator"], combo)
@@ -1053,7 +1053,7 @@ def run_judge_suite(suite: str = "dev", combo: str = LIVE_COMBO, bank: str | Non
     they have nothing to do with the arm that produced it, and a retired name
     holds no judges to read.
     """
-    from .llm import LLM
+    from ..llm import LLM
 
     judges = COMBOS[LIVE_COMBO].judges
     llm = LLM()

@@ -32,8 +32,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from bank_equity_researcher import judge as J  # noqa: E402
-from bank_equity_researcher.llm import LLM  # noqa: E402
+from bank_equity_researcher.judging import judge as J
+from bank_equity_researcher.llm import LLM
 
 J.MAX_ANSWER_CHARS = 20000
 

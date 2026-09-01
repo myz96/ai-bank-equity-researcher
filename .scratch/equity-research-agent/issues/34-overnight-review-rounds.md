@@ -899,3 +899,17 @@ text), cache-key invariant, clock semantics. Restored one over-cut: the
 NETWORK_GRACE infra-only/disclosure sentence (frozen-baseline comparability).
 
 Gate: 443 tests, dev rescore identical to baseline, ruff steady at 21.
+
+## Restructure (2026-09-01) — src into informative subpackages
+
+Layout (moves only; one rename to avoid a package/module stutter):
+- agent/research_agent.py — the product shell.
+- tools/{corpus,retrieve,refs,extract,discover}.py — the document layer.
+- validation/{validate,schema}.py — the contract and the checks.
+- judging/judge.py; evals/harness.py (was evals.py).
+- Top level stays cross-cutting: cli, config (REPO_ROOT counts its parents),
+  llm, render, taxonomy.
+Imports rewritten in src/tests/scripts; ruff --fix sorted the shuffled
+blocks and cleared 6 pre-existing I001s (src+tests lint 21 -> 15).
+
+Gate: 443 tests, CLI --help runs, dev rescore identical to baseline.

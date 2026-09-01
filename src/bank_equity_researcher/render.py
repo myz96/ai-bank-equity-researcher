@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import re
 
-from .schema import Attribution
+from .validation.schema import Attribution
 
 
 def _quote_lines(attribution: Attribution, evidence_ids: list[str]) -> list[str]:

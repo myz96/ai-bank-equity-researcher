@@ -15,9 +15,9 @@ from dataclasses import dataclass
 
 import pytest
 
-from bank_equity_researcher import research_agent as RA
-from bank_equity_researcher.schema import Attribution, EvidenceRecord
+from bank_equity_researcher.agent import research_agent as RA
 from bank_equity_researcher.taxonomy import TAXONOMY
+from bank_equity_researcher.validation.schema import Attribution, EvidenceRecord
 
 CALENDAR = {"fy_end": "30 June", "halves": {"1H": "ends 31 December", "2H": "ends 30 June"}}
 REGISTRY = {
@@ -384,7 +384,7 @@ def test_a_cited_record_is_referenced_by_id_alone_at_submit(docs, case):
 
 
 def test_follow_references_resolves_a_note_pointer(docs, case, monkeypatch):
-    from bank_equity_researcher import refs
+    from bank_equity_researcher.tools import refs
 
     refs._notes_cache.clear()
     refs._printed_cache.clear()
@@ -656,7 +656,7 @@ def test_the_delta_harmoniser_repairs_a_ratio_slip_the_check_would_fail(docs, ca
         drivers=[],
     )
     attribution, _ = RA.build_attribution(payload, research, cti, TAXONOMY["cti"], REGISTRY)
-    from bank_equity_researcher.validate import check_movement
+    from bank_equity_researcher.validation.validate import check_movement
 
     assert attribution.movement.delta == 1.0
     assert any("delta normalised" in item for item in attribution.limitations)
@@ -991,7 +991,8 @@ def test_the_combo_chooses_the_orchestration_shell(monkeypatch, tmp_path, capsys
 
     import pytest
 
-    from bank_equity_researcher import cli, research_agent
+    from bank_equity_researcher import cli
+    from bank_equity_researcher.agent import research_agent
     from bank_equity_researcher.config import runner_for
 
     called: list[str] = []
@@ -1199,7 +1200,7 @@ def test_bank_language_answers_for_the_bank_the_question_asks_about(docs):
 
 
 def test_a_question_names_its_own_banks_and_periods():
-    from bank_equity_researcher.corpus import banks_named, periods_named
+    from bank_equity_researcher.tools.corpus import banks_named, periods_named
 
     question = "Across CBA, NAB and Westpac in FY25, which bank converted best?"
     assert banks_named(question) == ["CBA", "NAB", "WBC"]
@@ -1210,7 +1211,7 @@ def test_a_question_names_its_own_banks_and_periods():
 
 
 def test_the_newest_period_sorts_last():
-    from bank_equity_researcher.corpus import period_sort_key
+    from bank_equity_researcher.tools.corpus import period_sort_key
 
     assert sorted(["1H26", "FY25", "FY26", "2H25"], key=period_sort_key) == [
         "FY25", "2H25", "1H26", "FY26"
@@ -1230,7 +1231,7 @@ class _NamedDoc:
 
 def test_a_document_name_resolves_however_a_person_spells_it():
     """Gold names a document by its file; the corpus knows it by its type."""
-    from bank_equity_researcher.corpus import doc_alias_index, resolve_doc_name
+    from bank_equity_researcher.tools.corpus import doc_alias_index, resolve_doc_name
 
     index = doc_alias_index([
         _NamedDoc("NAB", "FY25", "investor_presentation", "NAB-FY25-investor-presentation.pdf"),

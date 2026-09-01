@@ -11,9 +11,8 @@ from __future__ import annotations
 
 import pytest
 
-from bank_equity_researcher import corpus as C
-from bank_equity_researcher.schema import enforce_answer_gate
-
+from bank_equity_researcher.tools import corpus as C
+from bank_equity_researcher.validation.schema import enforce_answer_gate
 
 # ---------------------------------------------------------------------------
 # Item 13: a full name made only of generic words

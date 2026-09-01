@@ -11,8 +11,8 @@ import re
 
 import pytest
 
-from bank_equity_researcher import discover as D
-from bank_equity_researcher.corpus import DOC_TYPES
+from bank_equity_researcher.tools import discover as D
+from bank_equity_researcher.tools.corpus import DOC_TYPES
 
 
 class _ScriptedLLM:
