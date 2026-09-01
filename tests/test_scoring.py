@@ -14,13 +14,14 @@ from __future__ import annotations
 import pytest
 
 from bank_equity_researcher.evals.harness import (
+    calibration,
+    score_case,
+)
+from bank_equity_researcher.evals.scoring import (
     CORRECT,
     INCORRECT,
     UNSCORED,
-    calibration,
     gold_framings,
-    normalize_unit,
-    score_case,
     score_drivers,
     score_extraction,
     tolerance_for,
@@ -34,6 +35,7 @@ from bank_equity_researcher.validation.schema import (
     Movement,
     NumberFact,
 )
+from bank_equity_researcher.validation.validate import normalize_unit
 
 
 def claim(canonical: str, value: float | None, confidence: int = 90, unit: str = "bps") -> DriverClaim:
@@ -570,12 +572,12 @@ def test_the_grader_owns_its_tolerances_by_value():
     it away. Changing any number here is a conscious re-calibration of the
     gold standard, not a refactor.
     """
-    from bank_equity_researcher.evals import harness as H
+    from bank_equity_researcher.evals import scoring as S
 
-    assert H.SCORER_MONEY_ABS_TOL_M == 10.0
-    assert H.SCORER_MONEY_REL_TOL == 0.01
-    assert H.SCORER_RATIO_TOL_PPT == 0.1
-    assert H.SCORER_BPS_TOL == 0.5
+    assert S.SCORER_MONEY_ABS_TOL_M == 10.0
+    assert S.SCORER_MONEY_REL_TOL == 0.01
+    assert S.SCORER_RATIO_TOL_PPT == 0.1
+    assert S.SCORER_BPS_TOL == 0.5
 
 
 

@@ -1286,3 +1286,11 @@ work; every finding fixed with probes and pins (suite 439):
 - crossref_answer_prose exported properly. Arch r5 TASTE deferred with
   reasons: the harness scorer split and the validate comparison-cluster
   split go to the next architecture application round.
+
+## Fable architecture round 5 applied (2026-09-01)
+
+evals/scoring.py: the pure metric-scoring block out of harness (873 + 448
+lines, bodies verbatim by line diff; test_scoring imports each name from its
+real home). The validate comparison-cluster split judged NON-trivial (400
+lines sharing private date helpers with staying code) and deferred to its
+own round with that reason.
