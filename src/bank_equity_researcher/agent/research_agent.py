@@ -523,7 +523,7 @@ class Research:
         if registry is None:
             # A metric case loads one bank's registry. Answering for another
             # bank from it would hand out the case bank's vocabulary stamped
-            # with the wrong name (Fable review cycle 6, finding 2).
+            # with the wrong name.
             return {
                 "bank": wanted,
                 "note": f"no language map is loaded for {wanted} in this case's scope",
@@ -681,7 +681,7 @@ def _numeric(value) -> float | None:
 
 def _clamped_confidence(payload: dict, key: str) -> int:
     """The declared confidence as an int in 0-100; out-of-range is clamped and
-    declared. The case shell clamps the same way (Sol review round 1)."""
+    declared. The case shell clamps the same way."""
     raw = _numeric(payload.get(key))
     confidence = 0 if raw is None else int(raw)
     if not 0 <= confidence <= 100:
@@ -750,7 +750,7 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     if isinstance(movement, dict):
         # The submit schema cannot forbid every malformed shape a model can
         # send, and a ValidationError here would end a 10-30 minute run with
-        # no artifact (Fable review cycle 6, finding 1). Coerce or degrade,
+        # no artifact. Coerce or degrade,
         # never crash: numbers-as-strings are read, anything else drops the
         # movement to None with the reason declared.
         coerced = {k: _numeric(movement.get(k)) for k in ("from_value", "to_value", "delta")}

@@ -11,7 +11,7 @@ pre-cleanup-baseline, no new ruff).
 |---|---|---|---|---|
 | Code review | 6 | 6 | 1 | 6 |
 | Simplifier | 4 | 6 | 3 | 6 |
-| Comment sweep | 5 | 6 | 3 | 6 |
+| Comment sweep | 6 | 6 | 3 | 6 |
 | Test pruning | 4 | 6 | 3 | 6 |
 | Architecture | 2 | 6 | 3 (r2+r3 CONSOLIDATED) | 6 |
 

@@ -248,9 +248,7 @@ def test_two_documents_sharing_a_filename_stem_are_refused(monkeypatch, tmp_path
     """The page-text and embedding caches are keyed by the filename stem.
 
     Two documents with one stem would share both caches, so one bank's pages
-    would be served for another's. The guard runs on EVERY load path;
-    discover.py copies a filename out of a model reply, where a generic
-    basename is exactly what a bank's IR page offers.
+    would be served for another's. The guard runs on EVERY load path.
     """
     _write_manifest(tmp_path, "AAA", "results-announcement.pdf")
     _write_manifest(tmp_path, "BBB", "results-announcement.pdf")
@@ -317,7 +315,7 @@ def test_every_manifest_bank_has_a_registry_file():
 def test_a_bank_name_alone_does_not_resolve():
     """"NAB" sits inside NAB's alias and its bank token agrees, so ONLY the
     period predicate refuses it — the mutation-sensitive pin for that
-    predicate (Codex audit round 2). Without it, a bare bank name resolves
+    predicate. Without it, a bare bank name resolves
     to whichever single document that bank filed."""
     assert C.resolve_doc_name("NAB", INDEX) is None
 

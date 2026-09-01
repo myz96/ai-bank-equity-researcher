@@ -164,7 +164,7 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
     # A movement asserted with ZERO evidence records is a guess wearing a
     # number. The driver gate above cannot reach it (there is no contribution
     # to strip), so without this cap it shipped at 95 with only a peripheral
-    # failed check (Sol review round 1, reproduced: a CTI submission, empty
+    # failed check (reproduced: a CTI submission, empty
     # evidence, confidence 95). The cap matches the question shell's
     # nothing-survived cap.
     if (attribution.movement is not None and not attribution.evidence_records
@@ -185,8 +185,7 @@ ANSWER_GATE_CONFIDENCE_CAP = 20
 
 # A quantity spelt in words is a quantity: "NIM fell three basis points"
 # carries the same never-guess duty as "3 bps", and classifying on digits
-# alone let it ship uncited at full confidence (Sol review round 1,
-# reproduced). A number word counts only beside a quantity noun, so a period
+# alone let it ship uncited at full confidence. A number word counts only beside a quantity noun, so a period
 # name ("the first half") never trips it.
 _NUMBER_WORDS = (
     "one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"

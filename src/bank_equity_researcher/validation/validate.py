@@ -984,7 +984,7 @@ def primary_basis(registry: dict) -> str | None:
     None when the registry carries no measures block: a skeleton registry
     (MQG) or a missing one knows no basis, and a "cash" default there let
     _settle_basis rewrite a declared "statutory" to "cash" and claim the
-    registry named it (review round 10). The default survives only under a
+    registry named it. The default survives only under a
     measures block whose core_profit names no basis word, where every committed
     registry is an Australian major reporting cash earnings.
     """
@@ -1085,7 +1085,7 @@ def _settle_basis(basis: str, registry: dict, records: list[EvidenceRecord], rep
     basis stands in when it knows one, and "as reported" says plainly that
     nothing was declared or known. Never "cash" without a registry behind it: a
     hardcoded "cash" shipped an invented basis for MQG, which reports statutory
-    NPAT under a skeleton registry that knows no basis (review round 11).
+    NPAT under a skeleton registry that knows no basis.
     """
     declared = str(basis or "").strip().lower()
     primary = primary_basis(registry)
@@ -1739,7 +1739,7 @@ def settle_ratio_scale(attribution, metric_unit: str | None, records=None) -> st
 # hardcoded-override policy. Without these two names nothing caps the offender
 # at all — a driver the check proves wrong shipped at 95 and entered the
 # confidently-wrong population. EVIDENCE: the repro is synthetic —
-# tests/test_confidence_caps.py (Codex round-5 finding 2) builds the failing
+# tests/test_confidence_caps.py builds the failing
 # driver and asserts the cap; no saved artifact fires either check, and with
 # both names present evals/results/round6-check.jsonl is byte-identical to
 # evals/results/pre-cleanup-baseline.jsonl (the .md pair differs only in the

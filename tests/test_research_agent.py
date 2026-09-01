@@ -1176,7 +1176,7 @@ def test_the_judge_action_still_grades_a_retired_slug(tmp_path, monkeypatch):
 def test_the_tool_surface_is_the_documented_one():
     """The schemas the model reads and the methods that answer them agree.
 
-    Drift between the two surfaces only as a runtime TypeError, in the middle
+    Drift between the two surfaces shows up only as a runtime TypeError, in the middle
     of a paid run.
     """
     names = [spec["function"]["name"] for spec in RA.TOOL_SPECS]
@@ -1255,8 +1255,6 @@ def test_a_question_submission_becomes_an_answer_artifact(wired, monkeypatch):
     # The fact keeps its citation, remapped onto the record code minted.
     ids = {r["id"] for r in output["evidence_records"]}
     assert output["key_facts"][0]["evidence"][0] in ids
-    # The slug carries the caller-fixed scope: the same wording asked of two
-    # banks or two periods must not overwrite one artifact with the other.
     assert out.name == f"ask-{RA.slugify(QUESTION)}-cba-fy26-fy25-agentic"
     assert out.parent.name == "out"
     saved = json.loads((out / "answer.json").read_text())
