@@ -27,7 +27,7 @@ from __future__ import annotations
 import re
 
 from .gates import NOTHING_SUPPORTED_CAP
-from .quantities import BARE_INDEX_RE, worded_quantities
+from .quantities import strip_bare_indexes, worded_quantities
 from .schema import PRESENTATION_DOC_TYPES, EvidenceRecord
 
 # PA walk bars are exact, so their sum should reconcile within rounding of the
@@ -1518,19 +1518,27 @@ def cap_ungrounded_movement(attribution) -> bool:
     for record in attribution.evidence_records:
         if record.id not in cited_ids:
             continue
-        quantity_text = BARE_INDEX_RE.sub(" ", record.quote or "")
+        quantity_text = strip_bare_indexes(record.quote)
         worded = worded_quantities(record.quote or "")
-        for value in (movement.from_value, movement.to_value, movement.delta):
+        for value, is_delta in ((movement.from_value, False),
+                                (movement.to_value, False),
+                                (movement.delta, True)):
             # quote_prints over the bare-index-stripped text: decimals,
             # thousands runs and unit-adjacent digits ground; "Note 1" does
-            # not. A worded statement grounds only the VALUE it states —
-            # "rose ten basis points" is not a three-point fall. A NumberFact
-            # whose value survives only as a bare index is the mint gate's
-            # blind spot, so it is held to the same stripped-text standard.
+            # not. A NumberFact whose value survives only as a bare index is
+            # the mint gate's blind spot, so it is held to the same
+            # stripped-text standard.
             if quote_prints(quantity_text, value, movement.unit):
                 return False
-            if any(_converted_prints(word_value, word_unit, abs(value), movement.unit)
-                   for word_value, word_unit in worded):
+            # A worded phrase with a direction verb states a SIGNED delta:
+            # "rose three basis points" is not a three-point fall. Signless
+            # phrases ground on magnitude; endpoints are levels, so the sign
+            # test applies only against the delta.
+            if any(
+                _converted_prints(word_value, word_unit, abs(value), movement.unit)
+                and (sign == 0 or not is_delta or sign * movement.delta > 0)
+                for word_value, word_unit, sign in worded
+            ):
                 return False
             if any(
                 _converted_prints(abs(number.value), number.unit, abs(value), movement.unit)

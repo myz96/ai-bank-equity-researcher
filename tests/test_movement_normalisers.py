@@ -755,3 +755,42 @@ def test_grounding_runs_after_the_scale_repair():
     src = inspect.getsource(RA.finalise)
     assert src.index("settle_ratio_scale(") < src.index("cap_ungrounded_movement(")
     assert src.index("settle_identity_scale(") < src.index("cap_ungrounded_movement(")
+
+
+def test_worded_grounding_is_signed_and_compound_aware():
+    """"rose three basis points" is not a three-point fall, and "twenty five
+    basis points" is 25, never a bare 5 (Sol review round 6, reproduced)."""
+    from bank_equity_researcher.validation.quantities import worded_quantities
+    from bank_equity_researcher.validation.schema import (
+        Attribution,
+        EvidenceRecord,
+        Movement,
+    )
+    from bank_equity_researcher.validation.validate import cap_ungrounded_movement
+
+    assert worded_quantities("fell twenty five basis points") == [(25.0, "bps", -1)]
+    assert worded_quantities("fees rose two dollars per account") == []
+
+    def capped(quote, delta, frm, to):
+        a = Attribution(bank="B", metric="nim", period="FY26", comparator="FY25",
+                        basis="cash",
+                        movement=Movement(from_value=frm, to_value=to, delta=delta,
+                                          unit="bps"),
+                        headline_evidence=["e1"], attribution_confidence=95,
+                        evidence_records=[EvidenceRecord(id="e1", doc_id="d",
+                                                         pdf_page=1, quote=quote)])
+        return cap_ungrounded_movement(a)
+
+    assert capped("the margin rose three basis points", -3.0, 208.0, 205.0) is True
+    assert capped("fell twenty five basis points", -5.0, 100.0, 95.0) is True
+    assert capped("fell twenty five basis points", -25.0, 100.0, 75.0) is False
+
+
+def test_bare_digit_runs_need_a_unit_header():
+    """A numeric neighbour proves nothing ("Stage 2 4,504" laundered a +2);
+    only a unit-declaration header makes a bare-digit run a table row."""
+    from bank_equity_researcher.validation.quantities import strip_bare_indexes
+
+    assert "13 14" in strip_bare_indexes("Return on equity (%) 13 14")
+    assert "1" not in strip_bare_indexes("See Notes 1 2")
+    assert "2 " not in strip_bare_indexes("Stage 2 4,504")

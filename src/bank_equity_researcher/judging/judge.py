@@ -344,6 +344,12 @@ def _combine(
         # regardless — truncation cannot explain absence from the note.
         return build(FLAGGED, stated, entailed,
                      f"entailment failed under a truncated quote window{detail}")
+    if truncated and stated in (PARTIAL, ABSENT):
+        # The ANSWER window was cut, so the fact may be stated past the cut:
+        # 35 of 150 saved artifacts carry judged prose over the window
+        # (executed repro: a fact after character 6,000 failed as absent).
+        return build(FLAGGED, stated, entailed,
+                     f"stated-check ran on a truncated answer window{detail}")
     return build(FAIL, stated, entailed, f"stated={stated}; entailed={entailed}{detail}")
 
 
@@ -371,7 +377,7 @@ def judge_facts(
     # the fact; an unreadable or unreachable judge needs the run repeating.
     # One count for both hides which.
     flagged_split = sum(1 for v in flagged if v.reason.startswith("judges disagree"))
-    flagged_truncated = sum(1 for v in flagged if "truncated quote window" in v.reason)
+    flagged_truncated = sum(1 for v in flagged if "truncated" in v.reason)
     flagged_unreadable = len(flagged) - flagged_split - flagged_truncated
     flagged = len(flagged)
     stated_not_entailed = sum(

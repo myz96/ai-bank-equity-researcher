@@ -798,3 +798,23 @@ def test_a_multiline_quote_cannot_leak_into_judged_prose():
                         quote="[chart annotation] Volume costs:\n• Frontline bankers\n• Lenders")])
     prose = answer_prose(render_report(a))
     assert "Frontline bankers" not in prose
+
+
+def test_an_absent_fact_under_a_cut_answer_is_flagged():
+    """35 of 150 saved artifacts carry judged prose past the answer window;
+    a fact stated beyond the cut must not fail as absent."""
+    from bank_equity_researcher.judging import judge as J
+
+    class FakeLLM:
+        def chat_json(self, model, prompt, max_tokens=None):
+            if "does the NOTE state" in prompt or '"stated"' in prompt:
+                return {"stated": "absent", "why": ""}
+            return {"entailed": "entailed", "why": ""}
+
+    verdict = J.judge_fact(FakeLLM(), "late fact", "x" * 6100 + " late fact",
+                           ["late fact"], ("j1",))
+    assert verdict.verdict == "flagged_for_human"
+    assert "truncated answer window" in verdict.reason
+
+    short = J.judge_fact(FakeLLM(), "a fact", "short note", ["a quote"], ("j1",))
+    assert short.verdict == "fail"

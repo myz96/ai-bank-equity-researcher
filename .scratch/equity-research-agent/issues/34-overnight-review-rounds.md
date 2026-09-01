@@ -1294,3 +1294,22 @@ lines, bodies verbatim by line diff; test_scoring imports each name from its
 real home). The validate comparison-cluster split judged NON-trivial (400
 lines sharing private date helpers with staying code) and deferred to its
 own round with that reason.
+
+## Sol review r6 + Sol arch r6 applied (2026-09-01)
+
+Arch r6: CONSOLIDATED (27 modules, 53 edges, zero cycles; quantities.py a
+sound leaf) — the Sol architecture floor closes.
+Review r6 verified every round-5 closure and found four last edges, all
+fixed with probes and pins (suite 442):
+- An absent/partial fact judged against a CUT answer window flags for a
+  human (35/150 saved artifacts exceed the window; a fact past character
+  6,000 failed as absent — reproduced).
+- worded_quantities parses compounds ("twenty five" = 25, never a bare 5)
+  and direction verbs; a signed phrase that disagrees with the delta's sign
+  does not ground it ("rose three" is not a three-point fall).
+- strip_bare_indexes: a bare-digit run is a table row ONLY under a
+  unit-declaration header; a numeric neighbour proves nothing ("Stage 2
+  4,504" and "See Notes 1 2" no longer launder).
+- Bare "dollars" no longer maps to $m.
+Replay: 119 movements, 6 firings, zero live-arm (the sixth is another
+retired-arm artifact under the stricter run rule).
