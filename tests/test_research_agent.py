@@ -872,7 +872,7 @@ def test_the_combo_chooses_the_orchestration_shell(monkeypatch, tmp_path, capsys
 
     from bank_equity_researcher import cli
     from bank_equity_researcher.agent import research_agent
-    from bank_equity_researcher.config import runner_for
+    from bank_equity_researcher.agent.routing import runner_for
 
     called: list[str] = []
 

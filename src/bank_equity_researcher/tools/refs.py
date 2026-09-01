@@ -111,6 +111,13 @@ class Reference:
     relevance: int = 0
 
 
+def relevance_terms(text: str) -> set[str]:
+    """The token set scan_page matches reference targets against: the public
+    form of _words, so no caller reaches into a private helper to agree with
+    it on tokenisation."""
+    return _words(text)
+
+
 def _words(text: str) -> set[str]:
     return {w for w in re.findall(r"[a-z]{3,}", text.lower())} - _STOPWORDS
 

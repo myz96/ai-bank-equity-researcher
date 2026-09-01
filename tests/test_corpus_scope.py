@@ -12,6 +12,7 @@ from __future__ import annotations
 import pytest
 
 from bank_equity_researcher.tools import corpus as C
+from bank_equity_researcher.validation import schema as S
 from bank_equity_researcher.validation.schema import enforce_answer_gate
 
 # ---------------------------------------------------------------------------
@@ -218,7 +219,7 @@ def test_the_real_corpus_holds_the_invariant():
 
 
 def test_every_manifest_doc_type_is_in_the_vocabulary():
-    """A doc_type outside corpus.DOC_TYPES degrades handling in silence.
+    """A doc_type outside schema.DOC_TYPES degrades handling in silence.
 
     printed_page_of and walk_sum_tolerance both dispatch on the doc_type
     string. The hand-built MQG manifest shipped "mda"/"presentation", so its
@@ -228,14 +229,14 @@ def test_every_manifest_doc_type_is_in_the_vocabulary():
     bypasses the prompt; this test does not.
     """
     for doc in C.all_documents():
-        assert doc.doc_type in C.DOC_TYPES, (
-            f"{doc.doc_id}: doc_type {doc.doc_type!r} is not in corpus.DOC_TYPES; "
+        assert doc.doc_type in S.DOC_TYPES, (
+            f"{doc.doc_id}: doc_type {doc.doc_type!r} is not in schema.DOC_TYPES; "
             "either use an existing term or add it there WITH its consumers checked"
         )
 
 
 def test_presentation_doc_types_are_vocabulary_terms():
-    assert set(C.PRESENTATION_DOC_TYPES) <= C.DOC_TYPES
+    assert set(S.PRESENTATION_DOC_TYPES) <= S.DOC_TYPES
 
 
 def test_every_manifest_bank_has_a_registry_file():

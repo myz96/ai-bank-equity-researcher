@@ -4,6 +4,29 @@ evidence references does not survive validation.
 
 from __future__ import annotations
 
+# The manifest doc_type vocabulary. Two consumers dispatch on these strings —
+# printed-page mapping (extract.printed_page_of) and the walk-sum tolerance
+# (validate.walk_sum_tolerance) — so a manifest value outside this set
+# silently degrades both. That happened: the hand-built MQG manifest shipped
+# "mda"/"presentation" and lost slide-page handling and the presentation walk
+# tolerance. tests/test_corpus_scope.py holds every manifest to this set.
+DOC_TYPES = frozenset({
+    "asx_announcement",
+    "investor_discussion_pack",
+    "investor_presentation",
+    "key_financial_information_xlsx",
+    "pre_results_note",
+    "profit_announcement",
+    "results_announcement",
+    "results_book",
+    "results_presentation",
+})
+
+# The doc types whose pages are numbered by slide, and whose published walks
+# earn the endpoint-rounding tolerance lift (WALK_SUM_TOL_PRESENTATION).
+PRESENTATION_DOC_TYPES = ("results_presentation", "investor_presentation", "investor_discussion_pack")
+
+
 import re
 from enum import Enum
 

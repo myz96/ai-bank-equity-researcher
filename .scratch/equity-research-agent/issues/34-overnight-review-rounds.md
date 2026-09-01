@@ -945,3 +945,25 @@ pre-cleanup-baseline at every commit, lint 29 -> 15 with zero new hits.
 
 Open (not cleanup): the user-invoked architecture skill (blocked on
 their keystroke); exam + holdout runs; Wednesday report.
+
+## Codex round 1 applied (2026-09-01)
+
+Architecture (2 MUST + 1 TASTE applied, 1 TASTE deferred):
+- The doc-type contracts (DOC_TYPES, PRESENTATION_DOC_TYPES) moved from
+  tools/corpus.py to validation/schema.py — validation no longer imports the
+  pymupdf-backed corpus module; the package graph's only cycle is gone.
+- The routing seams (runner_for, question_runner_for, _require_agent) moved
+  from config.py to agent/routing.py — config is data only; the config<->agent
+  lazy-import cycle is gone. Callers (cli, harness, tests) updated.
+- refs.relevance_terms() is the public form of _words; the agent no longer
+  imports a private tokenizer to agree with scan_page.
+- DEFERRED with reasons: splitting the 2,040-line research_agent.py into
+  prompts/toolbox/assembly (Codex itself grades it maintainability, not a
+  defect; deadline-week churn risk on the product shell outweighs it).
+
+Cleanup audit round 1: simplifier, comment sweeps, and dead deletions HOLD
+under adversarial git-history comparison. Test pruning had overcut: Codex
+named 8 lost pins; pruning round 2 independently restored 4 of them plus 8
+more of its own; the 5 neither caught alone are restored (commit e0a982b).
+
+Gate: 362 tests, dev rescore identical, ruff 15.

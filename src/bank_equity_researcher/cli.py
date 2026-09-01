@@ -87,7 +87,7 @@ def main() -> int:
         return 0
 
     if args.command == "ask":
-        from .config import question_runner_for
+        from .agent.routing import question_runner_for
 
         run_question = question_runner_for(args.combo)
         _, out_dir = run_question(
@@ -109,8 +109,8 @@ def main() -> int:
         print(json.dumps(manifest, indent=2))
         return 0
 
-    # Every case runner is reached through config.runner_for (ADR-0005).
-    from .config import runner_for
+    # Every case runner is reached through agent.routing.runner_for (ADR-0005).
+    from .agent.routing import runner_for
 
     run_case = runner_for(args.combo)
     attribution, out_dir = run_case(args.bank.upper(), args.metric, args.period, args.comparator, args.combo)

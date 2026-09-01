@@ -1,6 +1,6 @@
 """Discovery writes manifests other code trusts (review round 10).
 
-The round-9 gate refuses a doc_type outside corpus.DOC_TYPES before the
+The round-9 gate refuses a doc_type outside schema.DOC_TYPES before the
 manifest is written; until this file, no test imported the module and the
 gate shipped unexecuted.
 """
@@ -12,7 +12,7 @@ import re
 import pytest
 
 from bank_equity_researcher.tools import discover as D
-from bank_equity_researcher.tools.corpus import DOC_TYPES
+from bank_equity_researcher.validation.schema import DOC_TYPES
 
 
 class _ScriptedLLM:
@@ -44,7 +44,7 @@ def test_a_doc_type_outside_the_vocabulary_is_refused_before_the_write(monkeypat
     turns that into a loud failure with the manifest unwritten."""
     monkeypatch.setattr(D, "LLM", lambda: _ScriptedLLM([_doc("mda")]))
     monkeypatch.setattr(D, "MANIFEST_DIR", tmp_path)
-    with pytest.raises(RuntimeError, match="not in corpus.DOC_TYPES"):
+    with pytest.raises(RuntimeError, match="not in schema.DOC_TYPES"):
         D.discover("ZZT", ["FY26"], "https://example.com", "2026-09-01")
     assert not (tmp_path / "zzt.json").exists()
 
@@ -58,7 +58,7 @@ def test_a_vocabulary_doc_type_is_written(monkeypatch, tmp_path):
 
 
 def test_the_prompt_enumerates_only_vocabulary_terms():
-    """A rename in corpus.DOC_TYPES must not strand the prompt's own list:
+    """A rename in schema.DOC_TYPES must not strand the prompt's own list:
     every term the prompt offers the model has to pass the round-9 gate."""
     enumerated = re.search(r'"doc_type":\s*\n?\s*"([a-z_|]+)"', D.PROMPT)
     assert enumerated, "the prompt no longer enumerates doc_type terms"

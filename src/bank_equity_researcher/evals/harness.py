@@ -265,10 +265,10 @@ def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
 
     One runner serves both answer suites — the crossref holdout and the
     researcher questions — because they differ only in which gold they load.
-    The shell comes from config.question_runner_for and from nowhere else, so a
+    The shell comes from agent.routing.question_runner_for and from nowhere else, so a
     suite can never measure one shell under the other's label.
     """
-    from ..config import question_runner_for
+    from ..agent.routing import question_runner_for
     from ..llm import LLM
     from ..tools.corpus import doc_alias_index
 
@@ -920,7 +920,7 @@ def run_suite(suite: str, combo: str, bank: str | None = None, only: str | None 
     metric names and/or bank-metric-period fragments, matched case-insensitively
     against "BANK-metric-PERIOD" (e.g. "cash_earnings", "nim-1H26",
     "NAB,WBC-cti"). Full suites remain the gate at the end of a round."""
-    from ..config import runner_for
+    from ..agent.routing import runner_for
 
     run_case = runner_for(combo)
 

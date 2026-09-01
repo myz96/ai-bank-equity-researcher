@@ -1315,9 +1315,9 @@ def _snippet(text: str, query: str) -> str:
 
 
 def _relevance_terms(metric_cfg: dict) -> set[str]:
-    from ..tools.refs import _words
+    from ..tools.refs import relevance_terms
 
-    return _words(" ".join([*metric_cfg["retrieval_queries"], metric_cfg["name"]]))
+    return relevance_terms(" ".join([*metric_cfg["retrieval_queries"], metric_cfg["name"]]))
 
 
 # --------------------------------------------------------------------------
