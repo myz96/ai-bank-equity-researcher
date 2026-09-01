@@ -82,3 +82,15 @@ REMAINING (in order):
   runner's 5 passes — relaunch the script.
 - Monitor task polls every 10 min; its "exam running" signal can go stale —
   trust pgrep + log tails, not the monitor line.
+
+## Addendum (~12:45)
+
+- User-ratified: exam re-sit on cleaned code (chained, auto-starts when the
+  frozen run ends); fast combo added for evaluators; minimum-3 rounds rule.
+- Rounds done: sweep waves 1-4 (all four productive); pruning r1-r2 + Codex
+  cross-check (362 tests, 17 pins restored); Codex arch+audit r1 applied
+  (both dependency cycles gone); r2 in flight; pruning r3 in flight.
+- NEW detached run: scratchpad/run-fast-suites.sh — the fast combo over the
+  FULL dev suite then the holdout suite (log fast-suites.log, marker
+  DONE-fastsuites). Purpose: the fast-vs-flagship comparison table for the
+  report. ETA ~1.5-2h from 12:45.
