@@ -155,6 +155,7 @@ def _recover_minted(cited_ids, minted_by_id, present, id_map, records) -> None:
     """A cited id the tools minted but the reply dropped from its records list
     is restored from the tool's own record — never from the model's text. Both
     shells recover the same way, or one would ground facts the other drops."""
+    cited_ids = [cited_ids] if isinstance(cited_ids, str) else cited_ids
     for cited in cited_ids:
         key = str(cited)
         if key in minted_by_id and key not in present and key not in id_map:
@@ -714,6 +715,7 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     reply = dict(payload)
 
     def remap(ids) -> list[str]:
+        ids = [ids] if isinstance(ids, str) else ids
         return [id_map.get(str(e), str(e)) for e in ids or [] if isinstance(e, (str, int))]
 
     # A citation to a record a tool already verified is a citation, whether or
@@ -728,13 +730,17 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     # list, so a recovery running after it leaves a NIM movement whose only
     # evidence arrived through `headline_evidence` on its percent scale
     # ("2.08 -> 2.05, -0.03 bps").
+    def _ids(value) -> list:
+        # A bare string is ONE id; spreading it would split it into characters.
+        return [value] if isinstance(value, str) else list(value or [])
+
     minted_by_id = {record.id: record for record in research.records}
     present = {record.id for record in records}
     _recover_minted(
         [
-            *(reply.get("headline_evidence") or []),
+            *_ids(reply.get("headline_evidence")),
             *(e for driver in reply.get("drivers") or []
-              if isinstance(driver, dict) for e in driver.get("evidence") or []),
+              if isinstance(driver, dict) for e in _ids(driver.get("evidence"))),
         ],
         minted_by_id, present, id_map, records,
     )
@@ -996,16 +1002,20 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
 # --------------------------------------------------------------------------
 
 
-def _arguments(call: dict) -> dict:
-    """The arguments of one tool call, whichever way the provider encoded them."""
+def _arguments(call: dict) -> dict | None:
+    """The arguments of one tool call, whichever way the provider encoded them.
+
+    None means the JSON did not parse. The distinction is load-bearing for
+    submit: a submission cut off by the reply length limit must be retried,
+    not accepted as an empty answer at confidence zero."""
     raw = (call.get("function") or {}).get("arguments")
     if isinstance(raw, dict):
         return raw
     try:
         parsed = json.loads(raw or "{}")
     except (TypeError, ValueError):
-        return {}
-    return parsed if isinstance(parsed, dict) else {}
+        return None
+    return parsed if isinstance(parsed, dict) else None
 
 
 def _assistant_turn(message: dict) -> dict:
@@ -1144,9 +1154,22 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                     )
                     continue
                 research.tool_calls += 1
-                messages.append(_tool_result(call_id, research.dispatch(name, arguments)))
+                messages.append(_tool_result(call_id, research.dispatch(name, arguments or {})))
                 continue
             submit_attempts += 1
+            if arguments is None:
+                # A cut-off submission is a rejection, never an empty accept;
+                # if the retries run out, the no-submit path ships the declared
+                # artifact instead of a silent zero.
+                messages.append(_tool_result(call_id, {
+                    "accepted": False,
+                    "instruction": (
+                        "The submission's JSON did not parse - it was likely cut off "
+                        "by the reply length limit. Submit again, shortening the "
+                        "narratives if needed."
+                    ),
+                }))
+                continue
             rejections = research.check_citations(arguments.get("evidence"))
             if rejections and submit_attempts < MAX_SUBMIT_ATTEMPTS:
                 research.tool_calls += 1

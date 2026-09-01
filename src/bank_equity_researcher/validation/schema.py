@@ -170,6 +170,10 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
     if (attribution.movement is not None and not attribution.evidence_records
             and attribution.attribution_confidence > ANSWER_GATE_CONFIDENCE_CAP):
         attribution.attribution_confidence = ANSWER_GATE_CONFIDENCE_CAP
+        # The drivers rest on the same absent evidence, so a narrative driver
+        # must not keep rendering "confidence 95/100" under a capped answer.
+        for driver in attribution.drivers:
+            driver.confidence = min(driver.confidence, ANSWER_GATE_CONFIDENCE_CAP)
         attribution.limitations.append(
             "The movement cites no evidence records at all, so confidence is "
             f"capped at {ANSWER_GATE_CONFIDENCE_CAP}."
@@ -193,7 +197,7 @@ _NUMBER_WORDS = (
     "thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred"
 )
 _QUANTITY_RE = re.compile(
-    rf"\d|\b(?:{_NUMBER_WORDS})\s+(?:basis[- ]?points?|bps|per\s?cent|percent(?:age)?\s+points?|"
+    rf"\d|\b(?:{_NUMBER_WORDS})\s+(?:basis[-\s]+points?|bps|per\s?cent|percent(?:age)?\s+points?|"
     rf"percent|ppt|points?|million|billion|dollars?)\b",
     re.IGNORECASE,
 )

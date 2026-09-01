@@ -14,6 +14,13 @@ _PUNCTUATION = str.maketrans(
     {
         "‘": "'", "’": "'", "‚": "'", "“": '"', "”": '"',
         "–": "-", "—": "-", "−": "-", " ": " ", " ": " ",
+        # The non-breaking hyphen and the zero-width characters banks' PDF
+        # text layers interleave (measured on data/cache/pages: 30 pages hold
+        # U+200B and 14 hold U+2011, across 15 of 36 documents). A reader
+        # cannot see them, so a quote faithful to what the page SHOWS must
+        # not be rejected over them.
+        "‑": "-", "\u200b": None, "‌": None, "‍": None,
+        "﻿": None,
     }
 )
 

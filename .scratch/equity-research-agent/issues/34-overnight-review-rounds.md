@@ -1094,3 +1094,24 @@ residual semantics restored, run_question_suite's split truly removed.
 
 Fable pruning r4: 19 pins incl. the first tests on two hardcoded overrides;
 absolute-import forms now caught by the layering walker; suite 399, ruff 0.
+
+## Fable review cycle 7 applied (2026-09-01)
+
+Three executed MUSTs and three NOTEs, all fixed with pins (suite 404):
+- A submission whose JSON was cut off by the reply limit was ACCEPTED as an
+  empty zero-confidence answer. _arguments now returns None on a parse
+  failure, and a None submit is rejected back to the model through the
+  existing retry machinery; exhausted retries fall to the declared
+  no-submission artifact, never a silent zero.
+- A bare-string citation ("ev-1") was iterated into characters at three
+  sites (remap, _recover_minted, and the recovery call-site spread); one id
+  is now one id everywhere.
+- The verbatim gate rejected page-faithful quotes over characters a reader
+  cannot see: zero-width spaces and non-breaking hyphens, measured on 15 of
+  36 corpus documents. The punctuation table now normalises U+2011 and drops
+  U+200B/200C/200D/FEFF on both sides of the comparison.
+- The zero-evidence cap now reaches driver confidences (a narrative driver
+  rendered 95/100 under a capped answer); "basis  points" with doubled
+  whitespace no longer slips the spelt-quantity gate.
+
+Gate: 404 tests, ruff clean, dev rescore identical.

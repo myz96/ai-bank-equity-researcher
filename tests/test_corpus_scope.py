@@ -334,3 +334,9 @@ def test_a_period_word_is_not_a_quantity():
     facts = [{"fact": "Margins recovered in the first half.", "citations": []}]
     kept, _, _ = enforce_answer_gate(facts, [], 85, set())
     assert [f["fact"] for f in kept] == ["Margins recovered in the first half."]
+
+
+def test_a_double_space_does_not_hide_a_spelt_quantity():
+    facts = [{"fact": "NIM fell three basis  points.", "citations": []}]
+    kept, _, _ = enforce_answer_gate(facts, [], 85, set())
+    assert kept == []

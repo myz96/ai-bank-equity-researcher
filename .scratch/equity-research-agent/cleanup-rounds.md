@@ -9,7 +9,7 @@ pre-cleanup-baseline, no new ruff).
 
 | Axis | FABLE done | FABLE target | SOL done | SOL target |
 |---|---|---|---|---|
-| Code review | 6 | 6 | 1 | 6 |
+| Code review | 7 | 6 | 1 | 6 |
 | Simplifier | 4 | 6 | 3 | 6 |
 | Comment sweep | 6 | 6 | 3 | 6 |
 | Test pruning | 4 | 6 | 3 | 6 |

@@ -2069,3 +2069,49 @@ def test_a_movement_with_no_evidence_records_cannot_claim_certainty(docs, case):
     assert attribution.evidence_records == []
     assert attribution.attribution_confidence <= 20
     assert any("cites no evidence records" in item for item in attribution.limitations)
+
+
+def test_a_cut_off_submission_is_retried_not_accepted_empty(wired, monkeypatch):
+    """A submit whose JSON was truncated by the reply limit must be rejected
+    back to the model, never accepted as a zero-confidence empty answer."""
+    truncated = {"role": "assistant", "content": None, "tool_calls": [{
+        "id": "c1", "type": "function",
+        "function": {"name": "submit", "arguments": '{"movement": {"from_value": 2.08'},
+    }]}
+    llm = _LLM([truncated, _assistant(_tool_call("c2", "submit", _submission()))])
+    attribution, _out = _run(llm, monkeypatch)
+    assert attribution.movement.delta == -3
+    assert attribution.attribution_confidence > 0
+
+
+def test_a_string_citation_is_one_id_not_characters(docs, case):
+    """remap over a bare string used to iterate its characters, so "ev-1"
+    became five broken ids and the gate stripped the claim."""
+    research = _research(_LLM([]), docs, case)
+    research.cite("CBA/FY26/profit_announcement", 12,
+                  [{"quote": "Net interest margin    2.05%    2.08%"}])
+    payload = _submission(evidence=[], headline_evidence="ev-1", drivers=[])
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.headline_evidence == ["ev-1"]
+
+
+def test_invisible_page_characters_do_not_reject_a_faithful_quote():
+    """Banks' PDF text layers interleave zero-width spaces and non-breaking
+    hyphens a reader cannot see (measured: 15 of 36 corpus documents). The
+    reader's plain-hyphen form must match strictly, with no relaxation."""
+    page = "long‑term wholesale\u200b debt funding"
+    assert Q.match_quote("long-term wholesale debt funding", page) == (True, "")
+
+
+def test_zero_evidence_cap_reaches_the_drivers(docs, case):
+    """A narrative driver must not render 95/100 under an answer capped for
+    citing nothing."""
+    research = _research(_LLM([]), docs, case)
+    payload = _submission(evidence=[], headline_evidence=[], drivers=[{
+        "canonical": "funding.deposits", "narrative": "Deposit pricing.",
+        "confidence": 95, "evidence": [],
+    }])
+    payload["attribution_confidence"] = 95
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.attribution_confidence <= 20
+    assert all(d.confidence <= 20 for d in attribution.drivers)
