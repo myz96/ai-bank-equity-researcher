@@ -94,3 +94,22 @@ REMAINING (in order):
   FULL dev suite then the holdout suite (log fast-suites.log, marker
   DONE-fastsuites). Purpose: the fast-vs-flagship comparison table for the
   report. ETA ~1.5-2h from 12:45.
+
+## Addendum (~17:40) — the floor is closed
+
+- The 6+6 review matrix CLOSED at commit a2c76d9: 63 rounds, both families'
+  final architecture rounds CONSOLIDATED. Full trail in issues/34 and
+  cleanup-rounds.md.
+- The two-shells escalation is RESOLVED by user ruling (documented, not
+  built): hard checks where the shape is known, loose where it is not.
+  Commit 2321387.
+- Suite 443 tests, ruff clean, dev rescore byte-identical throughout.
+- Fast-arm results are in (fast-dev-final.md / fast-holdout-final.md): the
+  speed option breaks the confidently-wrong guarantee (0.036 on dev — a
+  tax_and_other claim at 90 vs gold +34) while agentic holds 0.0. That row
+  is the report's speed-vs-trust argument.
+- Report TODO added: rerun the full fast dev suite on final code to fill 4
+  infra-gap cases so the comparison table is one code version.
+- Still running: frozen exam (6/10 + retries), re-sit chained behind it on
+  a2c76d9-era code (worktree /Users/michaelzhao/swe/mqg-exam-cleaned),
+  agentic holdout refill, crossref.
