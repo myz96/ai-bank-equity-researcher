@@ -13,7 +13,7 @@ pre-cleanup-baseline, no new ruff).
 | Simplifier | 6 | 6 | 6 | 6 |
 | Comment sweep | 6 | 6 | 6 | 6 |
 | Test pruning | 6 | 6 | 6 | 6 |
-| Architecture | 5 | 6 | 6 (r6 CONSOLIDATED) | 6 |
+| Architecture | 6 (r6 CONSOLIDATED) | 6 | 6 (r6 CONSOLIDATED) | 6 |
 
 Counting rules: a round counts when its report lands AND its accepted
 findings are applied and committed (or it says CONVERGED/CONSOLIDATED).
@@ -21,3 +21,7 @@ Past-6 rounds stop early only if the last two consecutive rounds on that
 axis found nothing.
 
 Update this table as rounds land; each round's verdict goes to issues/34.
+
+FLOOR CLOSED 2026-09-01 ~17:30: every axis at or past 6 rounds in BOTH
+families; both families' final architecture rounds CONSOLIDATED, both
+final correctness rounds' findings applied and pinned.

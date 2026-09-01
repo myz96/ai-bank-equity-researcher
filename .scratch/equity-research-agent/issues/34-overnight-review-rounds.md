@@ -1313,3 +1313,21 @@ fixed with probes and pins (suite 442):
 - Bare "dollars" no longer maps to $m.
 Replay: 119 movements, 6 firings, zero live-arm (the sixth is another
 retired-arm artifact under the stricter run rule).
+
+## Fable architecture round 6 (2026-09-01) — CONSOLIDATED; THE FLOOR CLOSES
+
+The closer verified the scoring split clean, ruled quantities.py one concept
+(three surfaces of one question: does text state a number, what number in
+words, which digits are not numbers — the strip policy is vocabulary), and
+swept 28 nodes / 55 edges / zero cycles, layering strictly downward. Its
+MUST is applied: the general acyclicity pin (full-graph DFS with the cycle
+path in the failure) so the floor guards itself; its TASTE too
+(scoring._gold_number — gold values must BE numbers; the agent-side
+_numeric parses strings; opposite contracts, different names).
+
+THE 6+6 MATRIX IS CLOSED: review F7/S6, simplifier F6/S6, sweep F6/S6,
+pruning F6/S6, architecture F6/S6 — 63 rounds landed across two model
+families, every applied finding pinned, every commit gated (suite green,
+dev rescore byte-identical to pre-cleanup-baseline, ruff clean), every
+behaviour-bearing gate change replayed over the saved-artifact estate with
+receipts.

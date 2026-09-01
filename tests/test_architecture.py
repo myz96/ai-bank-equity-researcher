@@ -80,3 +80,47 @@ def test_the_walker_reads_every_import_spelling(tmp_path):
         found = list(_imported_subpackages(f))
         assert any(m == "tools" or m.startswith("tools") for m in found), (src, found)
 
+
+
+def test_the_package_graph_is_acyclic():
+    """The general pin the named-edge tests cannot give: six review rounds
+    verified zero cycles by hand, and nothing held it. Every module's
+    project-internal imports resolve to full dotted names; a cycle anywhere
+    fails here with its path."""
+    graph: dict[str, set[str]] = {}
+    for path in SRC.rglob("*.py"):
+        module = ".".join(path.relative_to(SRC).with_suffix("").parts)
+        if module.endswith("__init__"):
+            module = module[: -len(".__init__")] or module
+        imports = set()
+        for name in _imported_subpackages(path):
+            imports.add(name)
+        graph[module] = imports
+
+    def resolve(name: str) -> set[str]:
+        # An import may name a subpackage ("tools") or a module
+        # ("tools.corpus"); either way every graph key underneath it counts.
+        return {m for m in graph if m == name or m.startswith(name + ".")}
+
+    WHITE, GREY, BLACK = 0, 1, 2
+    state = dict.fromkeys(graph, WHITE)
+    stack: list[str] = []
+
+    def visit(module: str):
+        state[module] = GREY
+        stack.append(module)
+        for name in graph[module]:
+            for target in resolve(name):
+                if target == module:
+                    continue
+                if state[target] == GREY:
+                    raise AssertionError("import cycle: " + " -> ".join(
+                        stack[stack.index(target):] + [target]))
+                if state[target] == WHITE:
+                    visit(target)
+        state[module] = BLACK
+        stack.pop()
+
+    for module in graph:
+        if state[module] == WHITE:
+            visit(module)

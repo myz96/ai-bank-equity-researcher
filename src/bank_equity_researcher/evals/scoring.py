@@ -105,7 +105,10 @@ class Framing:
     exhaustive: bool = False
 
 
-def _numeric(value) -> float | None:
+def _gold_number(value) -> float | None:
+    """A gold value must BE a number — a string in gold is an authoring
+    error, never coerced (the agent-side _numeric parses strings; this one
+    deliberately does not: opposite contracts, different names)."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
     return float(value)
@@ -118,8 +121,8 @@ def _verified_value(entry) -> float | None:
     if isinstance(entry, dict):
         if "UNVERIFIED" in str(entry.get("provenance", "")).upper():
             return None
-        return _numeric(entry.get("value"))
-    return _numeric(entry)
+        return _gold_number(entry.get("value"))
+    return _gold_number(entry)
 
 
 def gold_framings(gold: dict) -> list[Framing]:
