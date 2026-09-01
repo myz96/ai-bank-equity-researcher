@@ -30,7 +30,12 @@ from pathlib import Path
 
 from ..agent.routing import question_runner_for, runner_for
 from ..config import COMBOS, LIVE_COMBO, OUT_DIR, REGISTRY_DIR, REPO_ROOT
-from ..judging.judge import answer_prose, cited_quotes, judge_facts
+from ..judging.judge import (
+    answer_prose,
+    cited_quotes,
+    crossref_answer_prose,
+    judge_facts,
+)
 from ..llm import LLM
 from ..render import case_slug
 from ..tools.corpus import banks_named, doc_alias_index, resolve_doc_name
@@ -137,16 +142,6 @@ def _same_document(gold_doc: str, record_doc_id: str, index: dict[str, str] | No
     if resolved is not None:
         return record_doc_id == resolved
     return str(gold_doc) in str(record_doc_id)
-
-
-def crossref_answer_prose(ask_output: dict) -> str:
-    """The answer's own words: the prose plus its key-fact sentences.
-
-    The evidence quotes are deliberately left out. A note that pastes a quote
-    saying the fact has not stated the fact itself (judge.answer_prose).
-    """
-    facts = "\n".join(f"- {f.get('fact', '')}" for f in ask_output.get("key_facts", []))
-    return f"{ask_output.get('answer', '')}\n\nKey facts:\n{facts}".strip()
 
 
 def score_crossref(
@@ -379,7 +374,7 @@ def run_question_suite(combo: str, bank: str | None = None, split: str = "dev",
     `only` filters case ids for fast loops, exactly as it does for the metric
     suite: a comma-separated list of fragments matched against the case id.
     """
-    cases = load_question_gold(split, bank)
+    cases = load_question_gold("dev", bank)
     if only:
         wanted = [w.strip().lower() for w in only.split(",") if w.strip()]
         cases = [c for c in cases if any(w in c["id"].lower() for w in wanted)]

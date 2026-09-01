@@ -9,6 +9,16 @@ import re
 from .validation.schema import Attribution
 
 
+def _quote_line(ev_id: str, doc_id: str, pdf_page, printed_page, quote: str, indent: str = "") -> str:
+    """One block-quote citation line. The "> " prefix is load-bearing:
+    judge.answer_prose drops every line that starts with ">" before asking
+    whether the note STATES a fact, so a pasted quote can never be mistaken
+    for the note's own words. `indent` stays a parameter because that judge
+    rule strips on lstrip() while render_answer nests quotes two spaces in."""
+    page = f"printed p{printed_page}" if printed_page else f"PDF p{pdf_page}"
+    return f'{indent}> [{ev_id}] {doc_id}, {page}: "{quote}"'
+
+
 def _quote_lines(attribution: Attribution, evidence_ids: list[str]) -> list[str]:
     """One block-quote line per cited record, in the order the answer cites it.
 
@@ -21,8 +31,8 @@ def _quote_lines(attribution: Attribution, evidence_ids: list[str]) -> list[str]
         record = next((r for r in attribution.evidence_records if r.id == ev_id), None)
         if record is None:
             continue
-        page = f"printed p{record.printed_page}" if record.printed_page else f"PDF p{record.pdf_page}"
-        lines.append(f"> [{ev_id}] {record.doc_id}, {page}: \"{record.quote}\"")
+        lines.append(_quote_line(ev_id, record.doc_id, record.pdf_page,
+                                 record.printed_page, record.quote))
     return lines
 
 
@@ -143,9 +153,9 @@ def render_answer(output: dict) -> str:
             for ev_id in fact["evidence"]:
                 record = records.get(ev_id)
                 if record:
-                    page = (f"printed p{record['printed_page']}" if record.get("printed_page")
-                            else f"PDF p{record['pdf_page']}")
-                    lines.append(f"  > [{ev_id}] {record['doc_id']}, {page}: \"{record['quote']}\"")
+                    lines.append(_quote_line(ev_id, record["doc_id"], record["pdf_page"],
+                                             record.get("printed_page"), record["quote"],
+                                             indent="  "))
         lines.append("")
     if output["limitations"]:
         lines += ["## Limitations"] + [f"- {item}" for item in output["limitations"]] + [""]

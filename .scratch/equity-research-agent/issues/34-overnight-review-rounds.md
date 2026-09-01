@@ -989,3 +989,18 @@ Findings (import graph verified acyclic by AST walk) and dispositions:
   has resolvability-stripping but no stated-number cap). Whether question
   facts should get the weak-citation cap is a product decision.
 - NOTED: question_scope's synthetic case/metric_cfg shape (product shape).
+
+## Fable simplifier round 3 applied (2026-09-01)
+
+Six proposals applied: Combo.extract/author/author_max_tokens deleted (zero
+readers; open-loop residue); render._quote_line builds the citation line once
+(indent stays a parameter — judge.answer_prose strips on lstrip); validate
+_reconcile_tol shares the sum-check slack body between walk_sum_tolerance and
+reconcile_tolerance; crossref_answer_prose moved beside its sibling adapters
+in judging/judge.py; llm RETRIES/JSON_RETRIES are module policy, not knobs;
+run_question_suite's unvaried split parameter dropped. DECLINED: merging the
+three gold loaders (the proposer itself graded it RISKY — the filters and
+stitched fields genuinely differ). Retired PRICES entries stay: rescoring
+saved artifacts reads them.
+
+Gate: 366 tests, dev rescore identical, ruff 15.

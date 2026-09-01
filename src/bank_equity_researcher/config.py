@@ -35,12 +35,7 @@ class Combo:
     """A model-role assignment. The eval matrix iterates these."""
 
     name: str
-    extract: str
     vision: str
-    author: str
-    # The author needs room to reason; glm-5.3 ignores the reasoning-off flag
-    # (ticket 14), so its budget must cover reasoning + answer.
-    author_max_tokens: int
     judges: tuple[str, str]
     # Which orchestration shell answers a case. "agent", the closed-loop
     # tool-use research agent (ADR-0005), is the only one left; the open-loop
@@ -71,10 +66,7 @@ COMBOS: dict[str, Combo] = {
     # comparisons live in evals/results/ and the design doc.
     "agentic": Combo(
         name="agentic",
-        extract="qwen/qwen3.7-flash",
         vision="qwen/qwen3.7-flash",
-        author="z-ai/glm-5.3-flash",
-        author_max_tokens=16000,
         judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
         orchestration="agent",
         agent="z-ai/glm-5.3-flash",
@@ -92,10 +84,7 @@ COMBOS: dict[str, Combo] = {
     # to see the machine work quickly; use agentic for the answers that count.
     "fast": Combo(
         name="fast",
-        extract="qwen/qwen3.7-flash",
         vision="qwen/qwen3.7-flash",
-        author="deepseek/deepseek-v4-flash-0731",
-        author_max_tokens=8000,
         judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
         orchestration="agent",
         agent="deepseek/deepseek-v4-flash-0731",

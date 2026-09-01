@@ -382,17 +382,19 @@ def walks_for_view(walks: list[dict]) -> tuple[list[dict], str]:
     )
 
 
-def walk_sum_tolerance(doc_type: str, unit: str = "bps") -> float:
-    """Slack for "these bars sum to that endpoint gap", in the walk's own unit.
-
-    The presentation lift is a bps quantity, so a ppt or $m walk keeps the
-    ratio or money tolerance however the walk was published. Before the unit
-    entered here a ppt walk was measured against 1.0 or 10.0, and no such walk
-    could fail its own sum check.
-    """
-    if normalize_unit(unit) in PRESENTATION_LIFT_UNITS and doc_type in PRESENTATION_DOC_TYPES:
+def _reconcile_tol(unit: str | None, presentation: bool) -> float:
+    """One slack for both sum checks: the unit picks the base, and the
+    presentation lift applies only where it is denominated — it is a bps
+    quantity, so a ppt or $m sum never earns it."""
+    canonical = normalize_unit(unit)
+    if canonical in PRESENTATION_LIFT_UNITS and presentation:
         return WALK_SUM_TOL_PRESENTATION
-    return _tolerance_for(RECONCILE_TOL, unit, RECONCILE_TOL_DEFAULT)
+    return _tolerance_for(RECONCILE_TOL, canonical, RECONCILE_TOL_DEFAULT)
+
+
+def walk_sum_tolerance(doc_type: str, unit: str = "bps") -> float:
+    """Slack for "these bars sum to that endpoint gap", in the walk's own unit."""
+    return _reconcile_tol(unit, doc_type in PRESENTATION_DOC_TYPES)
 
 
 def check_walk(walk: dict, doc_type: str, unit: str = "bps") -> tuple[list[str], list[str]]:
@@ -931,15 +933,12 @@ def reconcile_tolerance(attribution) -> float:
     slide case), but only where that slack is denominated: it is a quantity in
     basis points, so a ppt or $m answer never earns it.
     """
-    unit = normalize_unit(attribution.movement.unit if attribution.movement is not None else None)
-    base = _tolerance_for(RECONCILE_TOL, unit, RECONCILE_TOL_DEFAULT)
-    if unit not in PRESENTATION_LIFT_UNITS:
-        return base
     presentation_walk = any(
         r.kind == "walk_vision" and ("presentation" in r.doc_id or "discussion" in r.doc_id)
         for r in attribution.evidence_records
     )
-    return WALK_SUM_TOL_PRESENTATION if presentation_walk else base
+    unit = attribution.movement.unit if attribution.movement is not None else None
+    return _reconcile_tol(unit, presentation_walk)
 
 
 # A ratio identity is stated in the RATIO's own unit. ROE is profit divided by

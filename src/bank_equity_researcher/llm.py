@@ -116,6 +116,10 @@ class Usage:
 # infra-only change — no prompt, scoring or answer-content change — which is
 # what keeps frozen-baseline results comparable; the report discloses it.
 NETWORK_GRACE = 12
+# Ordinary attempts per request, and full-request retries on unparseable JSON.
+# No caller varies them; they are policy, not knobs.
+RETRIES = 5
+JSON_RETRIES = 2
 NETWORK_GRACE_SLEEP = 45
 
 # A CONNECT-phase failure is the dead network, whatever English it carries.
@@ -238,7 +242,6 @@ class LLM:
         *,
         image_png: bytes | None = None,
         max_tokens: int = 4000,
-        retries: int = 5,
         deadline_monotonic: float | None = None,
     ) -> str:
         """One completion, retried. `deadline_monotonic` is the CASE's own
@@ -269,7 +272,7 @@ class LLM:
             return text
 
         return self._completion("chat", payload, max_tokens=max_tokens,
-                                retries=retries, deadline_monotonic=deadline_monotonic,
+                                deadline_monotonic=deadline_monotonic,
                                 parse=parse)
 
     def chat_tools(
@@ -279,7 +282,6 @@ class LLM:
         tools: list[dict],
         *,
         max_tokens: int = 4000,
-        retries: int = 5,
         deadline_monotonic: float | None = None,
     ) -> dict:
         """One tool-calling turn, under chat()'s deadline and retry discipline.
@@ -317,10 +319,10 @@ class LLM:
             return message
 
         return self._completion("chat_tools", payload, max_tokens=max_tokens,
-                                retries=retries, deadline_monotonic=deadline_monotonic,
+                                deadline_monotonic=deadline_monotonic,
                                 parse=parse)
 
-    def _completion(self, what: str, payload: dict, *, max_tokens: int, retries: int,
+    def _completion(self, what: str, payload: dict, *, max_tokens: int,
                     deadline_monotonic: float | None, parse):
         """The one retry ladder every request climbs.
 
@@ -329,6 +331,7 @@ class LLM:
         """
         if payload["model"] not in ALWAYS_REASONS:
             payload["reasoning"] = {"enabled": False}
+        retries = RETRIES
         deadline_s = max(DEADLINE_FLOOR_S, max_tokens * DEADLINE_SECONDS_PER_TOKEN)
         last_error: Exception | None = None
         attempt = 0
@@ -380,7 +383,7 @@ class LLM:
                     break
         raise _give_up(what, payload["model"], attempt, retries, out_of_time, last_error)
 
-    def chat_json(self, model: str, prompt: str, *, json_retries: int = 2, **kwargs):
+    def chat_json(self, model: str, prompt: str, **kwargs):
         """chat() plus a parse-failure retry, so every JSON caller inherits it.
 
         The cheap models occasionally return a TRUNCATED reply with
@@ -392,7 +395,7 @@ class LLM:
         """
         hint = "\n\nReply with COMPLETE terminated JSON only - no prose, no trailing text."
         error: Exception | None = None
-        for attempt in range(json_retries + 1):
+        for attempt in range(JSON_RETRIES + 1):
             text = self.chat(model, prompt if attempt == 0 else prompt + hint, **kwargs)
             try:
                 return parse_json_block(text)

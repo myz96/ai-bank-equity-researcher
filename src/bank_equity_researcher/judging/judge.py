@@ -400,6 +400,16 @@ def _verdict_dict(verdict: Verdict) -> dict:
 # ---------------------------------------------------------------------------
 
 
+def crossref_answer_prose(ask_output: dict) -> str:
+    """The answer's own words: the prose plus its key-fact sentences.
+
+    The evidence quotes are deliberately left out. A note that pastes a quote
+    saying the fact has not stated the fact itself (judge.answer_prose).
+    """
+    facts = "\n".join(f"- {f.get('fact', '')}" for f in ask_output.get("key_facts", []))
+    return f"{ask_output.get('answer', '')}\n\nKey facts:\n{facts}".strip()
+
+
 def answer_prose(report_md: str) -> str:
     """The note's own words: report.md without its quote lines or provenance.
 
