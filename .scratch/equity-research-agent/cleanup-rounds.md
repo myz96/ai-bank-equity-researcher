@@ -10,9 +10,9 @@ pre-cleanup-baseline, no new ruff).
 | Axis | FABLE done | FABLE target | SOL done | SOL target |
 |---|---|---|---|---|
 | Code review | 7 | 6 | 1 | 6 |
-| Simplifier | 4 | 6 | 3 | 6 |
-| Comment sweep | 6 | 6 | 3 | 6 |
-| Test pruning | 4 | 6 | 3 | 6 |
+| Simplifier | 4 | 6 | 4 | 6 |
+| Comment sweep | 6 | 6 | 4 | 6 |
+| Test pruning | 4 | 6 | 4 | 6 |
 | Architecture | 2 | 6 | 3 (r2+r3 CONSOLIDATED) | 6 |
 
 Counting rules: a round counts when its report lands AND its accepted

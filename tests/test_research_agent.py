@@ -2115,3 +2115,28 @@ def test_zero_evidence_cap_reaches_the_drivers(docs, case):
     attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
     assert attribution.attribution_confidence <= 20
     assert all(d.confidence <= 20 for d in attribution.drivers)
+
+
+def test_the_question_clamp_disclosure_survives(wired, monkeypatch):
+    """The clamp writes its note into the payload's limitations, so it must
+    run before build_answer reads them out — the note was silently lost."""
+    llm = _LLM([_assistant(_tool_call("c1", "submit", _answer_submission(confidence=105)))])
+    output, _out = _run_question(llm, monkeypatch)
+    assert output["confidence"] <= 100
+    assert any("clamped" in item for item in output["limitations"])
+
+
+def test_direct_infinity_is_rejected():
+    """JSON 1e400 decodes to float('inf') directly, not as a string."""
+    assert RA._numeric(float("inf")) is None
+    assert RA._numeric(1e400) is None
+
+
+def test_the_split_parameter_stays_gone():
+    """run_question_suite once took a silently-ignored split parameter; its
+    removal is pinned so it cannot drift back half-alive."""
+    import inspect
+
+    from bank_equity_researcher.evals.harness import run_question_suite
+
+    assert "split" not in inspect.signature(run_question_suite).parameters

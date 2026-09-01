@@ -99,11 +99,11 @@ def main() -> int:
         return 0
 
     if args.command == "discover":
-        from datetime import UTC, datetime
+        from datetime import datetime
 
         from .tools.discover import discover
 
-        manifest = discover(args.bank, args.periods.split(","), args.seed, datetime.now(UTC).date().isoformat())
+        manifest = discover(args.bank, args.periods.split(","), args.seed, datetime.now().astimezone().date().isoformat())
         print(json.dumps(manifest, indent=2))
         return 0
 

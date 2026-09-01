@@ -1341,6 +1341,9 @@ def build_answer(payload: dict, research: Research, question: str, docs: list[Do
             "citations": [id_map.get(str(e), str(e)) for e in cited],
         }
 
+    # The clamp writes its disclosure into payload["limitations"], so it runs
+    # BEFORE the limitations are read out, or the disclosure is lost.
+    clamped = _clamped_confidence(payload, "confidence")
     raw_limitations = payload.get("limitations") or []
     if isinstance(raw_limitations, str):
         raw_limitations = [raw_limitations]
@@ -1352,7 +1355,7 @@ def build_answer(payload: dict, research: Research, question: str, docs: list[Do
     key_facts, limitations, confidence = enforce_answer_gate(
         [remap(f) for f in payload.get("key_facts") or [] if isinstance(f, dict)],
         limitations,
-        _clamped_confidence(payload, "confidence"),
+        clamped,
         {record.id for record in records},
     )
     return {

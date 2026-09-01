@@ -1115,3 +1115,14 @@ Three executed MUSTs and three NOTEs, all fixed with pins (suite 404):
   whitespace no longer slips the spelt-quantity gate.
 
 Gate: 404 tests, ruff clean, dev rescore identical.
+
+## Sol audit round 4 applied (2026-09-01)
+
+Five MUST-FIXes, all applied with pins (suite 407): the question-confidence
+clamp disclosure was read out of the payload BEFORE the clamp wrote it (the
+note vanished; ordering fixed); discovery's calendar date reverted from UTC
+to the aware LOCAL date (the lint fix moved Hong Kong's midnight boundary);
+the layering walker now reads `from bank_equity_researcher import x` and
+plain `import` spellings; the split removal and direct float('inf')
+rejection are pinned. Residual coercion, empty-unit semantics, the stem
+guard mutation test, and every noqa reason verified as holding.
