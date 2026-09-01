@@ -7,7 +7,10 @@ import json
 
 from .config import LIVE_COMBO
 
-_COMBO_HELP = f"model combo: {LIVE_COMBO} (the only live combo)"
+_COMBO_HELP = (
+    f"model combo: {LIVE_COMBO} (default, the accurate one) | fast "
+    "(same loop, ~4 min a case, thinner insight)"
+)
 
 
 def main() -> int:

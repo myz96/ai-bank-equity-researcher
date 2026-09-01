@@ -52,6 +52,12 @@ uv run python scripts/fetch_corpus.py
 # 4. Run a case
 uv run bank-equity-researcher analyse --bank CBA --metric nim --period FY26
 # -> out/cba-nim-fy26-vs-fy25-agentic/{report.md, attribution.json}
+# The default combo (glm-5.3-flash) takes 6-30 minutes a case; that is the
+# accuracy flagship. In a hurry, add `--combo fast` (deepseek-v4-flash in the
+# same loop): ~4 minutes and ~$0.01 a case. Movement numbers hold across both;
+# the insight layer is the difference — on the hard-question probe the fast
+# arm found 0/3 required pages where the default covered 11/15 across the
+# suite (evals/results/20260831-0916-agentic-ds-questions.md).
 
 # 5. Run the eval harness
 uv run bank-equity-researcher evals run --suite dev --combo agentic

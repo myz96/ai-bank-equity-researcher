@@ -81,9 +81,30 @@ COMBOS: dict[str, Combo] = {
         agent_max_tokens=16000,
         cost_ceiling_usd=1.0,
     ),
+    # The evaluator speed option (user decision, 2026-09-01): the same closed
+    # loop with deepseek-v4-flash driving it. Measured on the probe pair
+    # (out/cba-impairment-fy26-vs-fy25-agentic-ds, out/ask-assess-whether-nab-*-agentic-ds):
+    # 3.7-3.9 minutes and ~$0.01 a case, against agentic's 6-30 minutes.
+    # The trade: movement numbers hold (they are tier-independent across the
+    # bake-off), but the insight layer thins - the hard NAB question probe
+    # scored 0/3 location coverage (evals/results/20260831-0916-agentic-ds-questions.md)
+    # where glm-flash covered 11/15 across the question suite. Use this combo
+    # to see the machine work quickly; use agentic for the answers that count.
+    "fast": Combo(
+        name="fast",
+        extract="qwen/qwen3.7-flash",
+        vision="qwen/qwen3.7-flash",
+        author="deepseek/deepseek-v4-flash-0731",
+        author_max_tokens=8000,
+        judges=("deepseek/deepseek-v4-pro-0813", "qwen/qwen3.7-flash"),
+        orchestration="agent",
+        agent="deepseek/deepseek-v4-flash-0731",
+        agent_max_tokens=8000,
+        cost_ceiling_usd=1.0,
+    ),
 }
 
-# The one live combo, named once: every CLI default and eval default reads it.
+# The default combo, named once: every CLI default and eval default reads it.
 LIVE_COMBO = "agentic"
 
 
