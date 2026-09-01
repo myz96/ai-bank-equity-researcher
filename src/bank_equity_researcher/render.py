@@ -125,6 +125,13 @@ def slugify(text: str, max_words: int = 8) -> str:
     return "-".join(words)[:64] or "question"
 
 
+def case_slug(bank: str, metric: str, period: str, comparator: str, combo: str) -> str:
+    """The out/<slug>/ name for a metric case. The WRITER (run_agent_case) and
+    the READERS (evals rescore/judge via artifact_dir) must build the same
+    name, or a rescore silently finds no artifact — so it is built here, once."""
+    return f"{bank}-{metric}-{period}-vs-{comparator}-{combo}".lower()
+
+
 def render_answer(output: dict) -> str:
     lines = [f"# Q: {output['question']}", ""]
     lines += [

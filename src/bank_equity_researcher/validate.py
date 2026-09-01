@@ -864,8 +864,8 @@ def check_movement_variant(attribution, headline_label: str | None) -> tuple[lis
 
 
 # The words a movement_source uses to name the basis it was read on. Same
-# vocabulary as author._BASIS_WORDS, kept here because the check reads the
-# author's citation, not the author's basis field.
+# vocabulary as _BASIS_WORDS below, kept separate because this check reads the
+# citation text, not the declared basis field.
 BASIS_SOURCE_WORDS = {
     "statutory": ("statutory",),
     "ex_notables": ("ex notable", "excluding notable"),
@@ -1427,60 +1427,6 @@ def _declaration_refuses(
     return normalize_unit(unit) in ("$m", "$bn")
 
 
-# A one- or two-digit index inside a label ("Level 2 common equity Tier 1
-# capital ratio", "Stage 3 provisions"). Banks number their capital levels,
-# their credit stages and their tiers, and a row LABEL is what the extractor
-# most often quotes.
-_LABEL_INDEX_CEILING = 99
-_ENDS_IN_A_WORD = re.compile(r"[A-Za-z][ \t]*$")
-_STARTS_A_WORD = re.compile(r"[ \t]*[A-Za-z]")
-
-
-def printed_numbers(quote: str | None, value: float, unit: str | None) -> list[tuple[float, str]]:
-    """The numbers a quote prints as QUANTITIES, for a claim of `value` `unit`.
-
-    `_quote_numbers` minus the digits that belong to a label. The difference
-    matters to one caller: the gate that asks whether a quote prints any number
-    at all, and keeps every fact beside a quote that prints none (absence of
-    evidence is not a conflict). "Level 2 common equity Tier 1 capital ratio"
-    parses as [2, 1], so the gate switched on over a pure label and dropped the
-    12.53%/12.49% facts the record was cited for — visible in the saved WBC
-    FY25 CET1 artifact as a record with an empty `numbers` list.
-
-    A number is a label index when ALL of these hold, and the conjunction is
-    what keeps a real figure out:
-      1. it carries no glued unit — a bank never writes "Level 2bps";
-      2. it is one or two digits with no decimal point and no separator;
-      3. a WORD ends immediately before it and a WORD starts immediately after
-         it, so it sits inside the label rather than in the row's run of
-         figures ("Stage 2 4,504" is a figure with an index in front of it, and
-         the figure keeps the gate on);
-      4. it is unlike the fact being checked. A digit the fact itself claims is
-         not an absence of evidence about that fact — the row may yet declare a
-         unit the fact conflicts with — so the exemption is not handed out on
-         it.
-    """
-    kept: list[tuple[float, str]] = []
-    text = quote or ""
-    tolerance = _tolerance_for(CITATION_TOL, unit, CITATION_TOL_DEFAULT)
-    for quoted, quoted_unit, match in _scan_numbers(text):
-        token = match.group(1)
-        label_index = (
-            not quoted_unit
-            and "." not in token
-            and "," not in token
-            and len(token.lstrip("-")) <= 2
-            and quoted <= _LABEL_INDEX_CEILING
-            and bool(_ENDS_IN_A_WORD.search(text[: match.start(1)]))
-            and bool(_STARTS_A_WORD.match(text[match.end() :]))
-            and abs(quoted - abs(value)) > tolerance
-        )
-        if label_index:
-            continue
-        kept.append((quoted, quoted_unit))
-    return kept
-
-
 def _converted_prints(quoted: float, quoted_unit: str, value: float, unit: str | None) -> bool:
     """Does a number the quote printed in ONE unit state this claim in another?
 
@@ -1588,6 +1534,30 @@ def _states(
     return converted is not None and abs(converted - abs(value)) <= tolerance
 
 
+def _cap_drivers(attribution, tag: str, reason: str, applies=None) -> list[str]:
+    """Cap every quantified driver above CLAIM_CITATION_CAP that `applies`
+    selects (all of them when None), stamp `tag`, and record one limitation
+    with `reason`. Mutates; returns what it capped. The cap never raises a
+    confidence and never strips a claim. All three cap rules share this body,
+    so a capped claim always reads the same in the artifact."""
+    capped: list[str] = []
+    for driver in attribution.drivers:
+        if driver.contribution is None or driver.confidence <= CLAIM_CITATION_CAP:
+            continue
+        if applies is not None and not applies(driver):
+            continue
+        driver.confidence = CLAIM_CITATION_CAP
+        driver.checks_passed.append(tag)
+        capped.append(
+            f"{driver.canonical} {driver.contribution.value:+g} {driver.contribution.unit}"
+        )
+    if capped:
+        attribution.limitations.append(
+            f"Capped at {CLAIM_CITATION_CAP}: " + ", ".join(capped) + ". " + reason
+        )
+    return capped
+
+
 def cap_weakly_cited_claims(attribution) -> list[str]:
     """Cap a quantified claim whose own citations do not state its number.
 
@@ -1610,34 +1580,28 @@ def cap_weakly_cited_claims(attribution) -> list[str]:
     delta is still an answer, it is just not a reading. Returns the claims it
     capped; mutates the attribution.
     """
-    capped: list[str] = []
     by_id = {record.id: record for record in attribution.evidence_records}
-    for driver in attribution.drivers:
-        if driver.contribution is None or driver.confidence <= CLAIM_CITATION_CAP:
-            continue
+
+    def unread(driver) -> bool:
         value = abs(driver.contribution.value)
         unit = driver.contribution.unit
         tolerance = _tolerance_for(CITATION_TOL, unit, CITATION_TOL_DEFAULT)
         cited = [by_id[e] for e in driver.evidence if e in by_id]
-        stated = any(
-            _states(number.value, number.unit, value, unit, tolerance)
-            for record in cited
-            for number in record.numbers
-        ) or any(quote_states(record.quote, value, unit) for record in cited)
-        if stated:
-            continue
-        driver.confidence = CLAIM_CITATION_CAP
-        driver.checks_passed.append("computed_delta_cap_80")
-        capped.append(
-            f"{driver.canonical} {driver.contribution.value:+g} {driver.contribution.unit}"
+        return not (
+            any(
+                _states(number.value, number.unit, value, unit, tolerance)
+                for record in cited
+                for number in record.numbers
+            )
+            or any(quote_states(record.quote, value, unit) for record in cited)
         )
-    if capped:
-        attribution.limitations.append(
-            f"Capped at {CLAIM_CITATION_CAP}: " + ", ".join(capped) + ". The records these "
-            "claims cite do not state those numbers, so each one is arithmetic over the "
-            "evidence rather than a figure read from it."
-        )
-    return capped
+
+    return _cap_drivers(
+        attribution, "computed_delta_cap_80",
+        "The records these claims cite do not state those numbers, so each one is "
+        "arithmetic over the evidence rather than a figure read from it.",
+        applies=unread,
+    )
 
 
 def check_drivers_reconcile(attribution) -> tuple[list[str], list[str]]:
@@ -1853,23 +1817,14 @@ def cap_unreconciled_drivers(attribution, failures: list[str]) -> list[str]:
     hits = [f for f in failures if any(f.startswith(name) for name in WHOLE_TABLE_FAILURES)]
     if not hits:
         return []
-    capped = []
-    for driver in attribution.drivers:
-        if driver.contribution is None or driver.confidence <= CLAIM_CITATION_CAP:
-            continue
-        driver.confidence = CLAIM_CITATION_CAP
-        driver.checks_passed.append("unreconciled_bridge_cap_80")
-        capped.append(f"{driver.canonical} {driver.contribution.value:+g} {driver.contribution.unit}")
-    if capped:
-        attribution.limitations.append(
-            f"Capped at {CLAIM_CITATION_CAP}: " + ", ".join(capped) + ". "
-            + hits[0].split(" (")[0]
-            + " failed. That check condemns the whole quantified table: it proves one of "
-            "these claims is wrong, or that the table was read from the wrong column, "
-            "without saying which claim carries the fault. None of them may claim "
-            "near-certainty."
-        )
-    return capped
+    return _cap_drivers(
+        attribution, "unreconciled_bridge_cap_80",
+        hits[0].split(" (")[0]
+        + " failed. That check condemns the whole quantified table: it proves one of "
+        "these claims is wrong, or that the table was read from the wrong column, "
+        "without saying which claim carries the fault. None of them may claim "
+        "near-certainty.",
+    )
 
 
 def cap_drivers_on_failed_walks(attribution, walks) -> list[str]:
@@ -1899,21 +1854,9 @@ def cap_drivers_on_failed_walks(attribution, walks) -> list[str]:
     }
     if not broken:
         return []
-    capped = []
-    for driver in attribution.drivers:
-        if driver.contribution is None or driver.confidence <= CLAIM_CITATION_CAP:
-            continue
-        if not broken.intersection(driver.evidence or []):
-            continue
-        driver.confidence = CLAIM_CITATION_CAP
-        driver.checks_passed.append("failed_walk_cap_80")
-        capped.append(
-            f"{driver.canonical} {driver.contribution.value:+g} {driver.contribution.unit}"
-        )
-    if capped:
-        attribution.limitations.append(
-            f"Capped at {CLAIM_CITATION_CAP}: " + ", ".join(capped) + ". Each of these claims "
-            "cites a walk whose own bars do not sum to that chart's endpoints, so the read it "
-            "rests on disagrees with itself."
-        )
-    return capped
+    return _cap_drivers(
+        attribution, "failed_walk_cap_80",
+        "Each of these claims cites a walk whose own bars do not sum to that chart's "
+        "endpoints, so the read it rests on disagrees with itself.",
+        applies=lambda driver: bool(broken.intersection(driver.evidence or [])),
+    )

@@ -854,3 +854,34 @@ Gate: 453 tests, dev rescore identical to baseline, ruff steady at 26, CLI
 Still queued: review-round test file naming (folds into the test pruning
 pass); 26 pre-existing ruff pedantic hits; validate.py's indirect pymupdf
 dependency via corpus (accepted shape).
+
+## Simplifier round 2 (2026-09-01) — fresh-eyes pass, verified and applied
+
+Dead code deleted (with the tests that were its only callers):
+- refs.follow_references + FollowedPage + MAX_FOLLOWED_PAGES + _MIN_RELEVANCE
+  (the open-loop budget expander; the agent's follow_references tool builds on
+  scan_page directly). test_refs.py keeps its 15 live-behaviour tests.
+- validate.printed_numbers + its two regexes + _LABEL_INDEX_CEILING (fed a
+  gate deleted in round 6). test_review_round4 keeps its quote_prints pins.
+- judge._format_quotes (zero callers); evals.Tolerance.unit (written, never
+  read). Lint fell 26 -> 21, all deletions.
+
+Extractions (drift-prevention and duplication):
+- render.case_slug: the artifact writer and the rescore/judge readers build
+  the out/<slug>/ name in one place.
+- research_agent: _start_run (shared shell head), _provenance (byte-identical
+  audit block), _stopped_early_note, _budget_hit (the twice-written budget
+  ladder, soft wall clock at turn top / hard stop per call), _recover_minted
+  (both shells restore tool-minted citations identically).
+- validate._cap_drivers: all three cap rules share one body, so a capped
+  claim always reads the same in the artifact.
+- llm: the reasoning-off flag moved into _completion; LIVE_COMBO now also
+  covers research_agent's two entry-point defaults.
+
+Declined, with reasons: evals' "unreachable" failed-fallback reads persisted
+crossref JSON that may predate the key (kept); the twin one-line label
+helpers (a cross-module private import is worse); the three RISKY proposals
+(confidence-cap subsumption claim needs a replay; quote_states merge touches
+the grounding gate; the unreachable combo.agent guard is a rail).
+
+Gate: 443 tests, dev rescore identical to baseline, ruff 21 (down 5).

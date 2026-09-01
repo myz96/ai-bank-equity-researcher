@@ -264,9 +264,6 @@ class LLM:
             "max_tokens": max_tokens,
             "temperature": 0,
         }
-        if model not in ALWAYS_REASONS:
-            payload["reasoning"] = {"enabled": False}
-
         def parse(data: dict) -> str:
             usage = data.get("usage", {})
             self.usage.add(model, usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0))
@@ -310,9 +307,6 @@ class LLM:
             # Ask the provider to price the call itself; see Usage.add.
             "usage": {"include": True},
         }
-        if model not in ALWAYS_REASONS:
-            payload["reasoning"] = {"enabled": False}
-
         def parse(data: dict) -> dict:
             usage = data.get("usage", {})
             self.usage.add(
@@ -339,6 +333,8 @@ class LLM:
         A parse that raises (truncated or empty reply) is charged as a normal
         attempt, exactly as when the check lived inline.
         """
+        if payload["model"] not in ALWAYS_REASONS:
+            payload["reasoning"] = {"enabled": False}
         deadline_s = max(DEADLINE_FLOOR_S, max_tokens * DEADLINE_SECONDS_PER_TOKEN)
         last_error: Exception | None = None
         attempt = 0

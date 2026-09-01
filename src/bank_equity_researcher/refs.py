@@ -33,10 +33,6 @@ from dataclasses import dataclass
 
 from .corpus import Document
 
-# Cap on NEW pages added per case. Pages the budget already holds are tagged
-# without spending the cap: the tag records how the page is reachable, and
-# re-adding a page the extractor already reads would buy nothing.
-MAX_FOLLOWED_PAGES = 4
 # A note that runs longer than this is a chapter, not a note; reading all of it
 # would spend the whole cap on one reference.
 MAX_PAGES_PER_NOTE = 4
@@ -55,10 +51,6 @@ _MAX_PRINTED_OFFSET = 40
 _TARGET_PROBE_LINES = 20
 # A target must share at least this many content words with the case. One word
 # is too weak: "Integrated Risk Management" shares "risk" with a CET1 case and
-# "Share Capital" shares "capital", and both would spend the cap on pages that
-# answer a different question.
-_MIN_RELEVANCE = 2
-
 # Note ids run 1.1 to 12.99. A wider pattern swallows ratios ("17.73"), share
 # counts and percentages printed alone on a line.
 _NOTE_ID = r"(?:[1-9]|1[0-2])\.\d{1,2}"
@@ -97,12 +89,10 @@ _FOOTER_START = re.compile(r"^\s{0,4}(\d{1,3})(?:\s{2,}|\s*$)")
 _FOOTER_END = re.compile(r"\s{2,}(\d{1,3})\s*$")
 
 _STOPWORDS = frozenset(
-    "a an and or the of for to in on at by with from as is are was were be been "
-    "its it this that these those group total net other movement movement's "
-    "analysis basis points per cent".split()
+    ["a", "an", "and", "or", "the", "of", "for", "to", "in", "on", "at", "by", "with", "from", "as", "is", "are", "was", "were", "be", "been", "its", "it", "this", "that", "these", "those", "group", "total", "net", "other", "movement", "movement's", "analysis", "basis", "points", "per", "cent"]
 )
 
-_notes_cache: dict[str, dict[str, "Note"]] = {}
+_notes_cache: dict[str, dict[str, Note]] = {}
 _printed_cache: dict[str, dict[int, int]] = {}
 
 
@@ -125,21 +115,6 @@ class Reference:
     target: str  # human-readable name of what was followed
     pages: tuple[int, ...]
     relevance: int = 0
-
-
-@dataclass(frozen=True)
-class FollowedPage:
-    """One target page, with the provenance stamped onto its evidence."""
-
-    doc_id: str
-    page: int
-    source_page: int
-    target: str
-    tier: int
-
-    @property
-    def provenance(self) -> str:
-        return f"reference_follow:{self.doc_id} p{self.source_page} -> {self.target}"
 
 
 def _words(text: str) -> set[str]:
@@ -373,70 +348,9 @@ def scan_page(
     return found
 
 
-def follow_references(
-    doc_by_id: dict[str, Document],
-    selected: list[tuple[str, int]],
-    relevance_terms: list[str],
-    cap: int = MAX_FOLLOWED_PAGES,
-) -> list[FollowedPage]:
-    """Expand a chosen page budget by following the references it contains.
-
-    `selected` is the (doc_id, PDF page) budget already picked. The return value
-    covers every resolved target page, ordered, INCLUDING pages that are already
-    in the budget — those carry the provenance tag but do not spend the cap,
-    which limits how many NEW pages a case may add.
-    """
-    terms = _words(" ".join(relevance_terms))
-    already = set(selected)
-    references: list[Reference] = []
-    for doc_id, page_no in selected:
-        doc = doc_by_id.get(doc_id)
-        if doc is None:
-            continue
-        try:
-            references.extend(scan_page(doc, page_no, terms))
-        except Exception:  # noqa: BLE001 - an unreadable page follows nothing
-            continue
-    # Relevance floor. A document points at many things; a reference whose
-    # target shares no word with the case is a pointer to another question
-    # (share capital, risk management, the ASX appendix). Following it would
-    # spend the cap and dilute the evidence pool.
-    references = [r for r in references if r.relevance >= _MIN_RELEVANCE]
-    # Rank by marker kind first (note > page > footnote), then by how much the
-    # target's own heading answers the case, then by document order so the
-    # result never depends on dictionary ordering.
-    references.sort(key=lambda r: (r.tier, -r.relevance, r.doc_id, r.source_page, r.pages[0]))
-    followed: list[FollowedPage] = []
-    claimed: set[tuple[str, int]] = set()
-    spent = 0
-    for reference in references:
-        for page in reference.pages:
-            key = (reference.doc_id, page)
-            if key in claimed:
-                continue
-            is_new = key not in already
-            if is_new and spent >= cap:
-                continue
-            claimed.add(key)
-            spent += 1 if is_new else 0
-            followed.append(
-                FollowedPage(
-                    doc_id=reference.doc_id,
-                    page=page,
-                    source_page=reference.source_page,
-                    target=reference.target,
-                    tier=reference.tier,
-                )
-            )
-    return followed
-
-
 __all__ = [
-    "MAX_FOLLOWED_PAGES",
-    "FollowedPage",
     "Note",
     "Reference",
-    "follow_references",
     "notes_index",
     "printed_page_map",
     "scan_page",

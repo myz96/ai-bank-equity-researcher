@@ -32,7 +32,6 @@ from bank_equity_researcher.validate import (
     cap_weakly_cited_claims,
     check_drivers_reconcile,
     check_ratio_level,
-    printed_numbers,
     quote_prints,
     quote_states,
     settle_ratio_scale,
@@ -247,26 +246,11 @@ def test_the_corrected_movement_passes_every_check_in_its_own_unit():
 # ---------------------------------------------------------------------------
 
 
-def test_a_label_index_is_not_a_printed_number():
-    """Reviewer finding 4, verbatim, and a LIVE regression.
-
-    "Level 2 common equity Tier 1 capital ratio" parses as [2, 1], so the
-    quote looked like one that prints numbers, the gate switched on, and the
-    12.53%/12.49% facts the record was cited for were dropped. The saved WBC
-    FY25 CET1 artifact carries the record with an empty `numbers` list.
-    """
-    quote = ("Level 2 common equity Tier 1 capital ratio: - Australian Prudential "
-             "Regulation Authority (APRA)")
-    assert printed_numbers(quote, 12.53, "%") == []
-
-
-def test_the_same_row_with_its_figures_still_gates_on_them():
-    """The row the reviewer's second artifact quotes IN FULL. Its figures are
-    printed, so the gate stays on and a fact the row does not carry is
-    dropped."""
+def test_a_full_row_grounds_its_own_figures_and_no_others():
+    """The row the round-4 reviewer's artifact quotes IN FULL: its printed
+    figures ground the fact they state and refuse the one they do not."""
     quote = ("Level 2 common equity Tier 1 capital ratio: - Australian Prudential "
              "Regulation Authority (APRA) 12.53% 12.49% 4 bps")
-    assert printed_numbers(quote, 12.53, "%") == [(12.53, "%"), (12.49, "%"), (4.0, "bps")]
     assert quote_prints(quote, 12.53, "%") is True
     assert quote_prints(quote, 999.0, "%") is False
 
@@ -275,28 +259,11 @@ def test_the_same_row_with_its_figures_still_gates_on_them():
     "quote,value,unit",
     [
         # Round 3's protection: a quote that prints real numbers still drops
-        # the fact it does not carry. None of these digits is a label index.
+        # the fact it does not carry.
         ("Loan impairment expense was $554 million, a decrease of $1,964 million",
          2518.0, "$m"),
         ("Treasury & Markets impact on NIM 0.13% 0.13%", 0.0, "bps"),
     ],
 )
 def test_the_round_three_drop_still_holds(quote, value, unit):
-    assert printed_numbers(quote, value, unit) != []
     assert quote_prints(quote, value, unit) is False
-
-
-@pytest.mark.parametrize(
-    "quote,value,unit",
-    [
-        # A digit that is not embedded in words is a figure, whatever its size.
-        ("Stage 2 4,504 4,102", 4504.0, "$m"),
-        ("Net interest margin (%) 2.05 2.08", 2.05, "%"),
-        # A label index the FACT itself claims is not "unlike" the fact, so the
-        # exemption is not handed out on it: the row declares $bn and the fact
-        # says $m, which is a conflict, not an absence of evidence.
-        ("Segment 3 income ($bn) by division", 3.0, "$m"),
-    ],
-)
-def test_a_real_figure_is_never_read_as_a_label_index(quote, value, unit):
-    assert printed_numbers(quote, value, unit) != []

@@ -29,12 +29,12 @@ import re
 import time
 from datetime import datetime, timezone
 
-from .config import COMBOS, OUT_DIR, REGISTRY_DIR
+from .config import COMBOS, LIVE_COMBO, OUT_DIR, REGISTRY_DIR
 from .corpus import Document, documents_for_period, documents_for_question
 from .extract import extract_walk, extract_walk_annotations, printed_page_of
 from .llm import LLM
 from .refs import scan_page
-from .render import render_answer, render_report, slugify
+from .render import case_slug, render_answer, render_report, slugify
 from .retrieve import retrieve
 from .schema import (
     Attribution,
@@ -99,6 +99,81 @@ MAX_PROSE_TURNS = 3
 # the first one to run out latches. These two bounds end the loop regardless.
 MAX_TURNS_AFTER_BUDGET = 10
 HARD_STOP_FACTOR = 1.5
+
+
+def _start_run(combo_name: str):
+    """The shared head of both shells: clocks, combo, model client.
+
+    time.time() drives the loop's budget messages; the retry ladders hold to
+    an absolute time.monotonic() deadline, a clock that never steps backwards.
+    """
+    started = time.time()
+    combo = COMBOS[combo_name]
+    if not combo.agent:
+        raise ValueError(f"combo {combo_name} declares no agent model")
+    deadline = time.monotonic() + _hard_stop_s(combo)
+    return started, combo, deadline, LLM()
+
+
+def _provenance(combo, docs, started: float, llm, research, exhausted) -> dict:
+    """The audit block both shells stamp: any claim is checkable months later
+    without rerunning anything (models, document hashes, cost, budgets)."""
+    return {
+        "combo": combo.name,
+        "models": f"agent={combo.agent}, vision={combo.vision}",
+        "documents": ", ".join(f"{d.doc_id} ({(d.sha256 or '')[:12]})" for d in docs),
+        "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "seconds": round(time.time() - started, 1),
+        "cost_usd": round(llm.usage.cost_usd, 4),
+        "tokens": f"{llm.usage.prompt_tokens} in / {llm.usage.completion_tokens} out",
+        "orchestration": "agent",
+        "tool_calls": research.tool_calls,
+        "pages_read": len(research.pages_read),
+        "charts_read": len(research.walks),
+        "budget_exhausted": exhausted or "no",
+    }
+
+
+def _stopped_early_note(exhausted: str) -> str:
+    return (
+        f"Research stopped early: {exhausted} was reached, so the evidence behind this "
+        "answer is less complete than a full run's."
+    )
+
+
+def _recover_minted(cited_ids, minted_by_id, present, id_map, records) -> None:
+    """A cited id the tools minted but the reply dropped from its records list
+    is restored from the tool's own record — never from the model's text. Both
+    shells recover the same way, or one would ground facts the other drops."""
+    for cited in cited_ids:
+        key = str(cited)
+        if key in minted_by_id and key not in present and key not in id_map:
+            records.append(minted_by_id[key])
+            present.add(key)
+
+
+_REJECTED_CITATIONS_NOTE = (
+    "These citations were dropped because the quote was not found on the page "
+    "given: "
+)
+
+
+def _budget_hit(research, llm, combo, spent_s: float, wall_limit_s: float) -> str | None:
+    """The first budget that binds, or None; the same words wherever it stops.
+
+    The turn-top check measures the soft wall clock and the per-call check the
+    hard stop: a turn already under way may finish its calls, but must not
+    start new work past the hard stop. Budgets bind per CALL, not per turn —
+    read once at the top of a turn, a turn that began one call inside the
+    budget dispatched every call it carried (measured at 25 calls against a
+    budget of 2)."""
+    if research.tool_calls >= combo.max_tool_calls:
+        return f"the tool-call budget ({combo.max_tool_calls} calls)"
+    if llm.usage.cost_usd >= combo.cost_ceiling_usd:
+        return f"the cost ceiling (${combo.cost_ceiling_usd:.2f})"
+    if spent_s >= wall_limit_s:
+        return f"the wall-clock budget ({combo.wall_clock_s:.0f}s)"
+    return None
 
 
 def _hard_stop_s(combo) -> float:
@@ -1304,15 +1379,14 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     # scale and shipped as "2.08 -> 2.05, -0.03 bps" (Codex round-5 repro).
     minted_by_id = {record.id: record for record in research.records}
     present = {record.id for record in records}
-    for cited in [
-        *(reply.get("headline_evidence") or []),
-        *(e for driver in reply.get("drivers") or []
-          if isinstance(driver, dict) for e in driver.get("evidence") or []),
-    ]:
-        key = str(cited)
-        if key in minted_by_id and key not in present and key not in id_map:
-            records.append(minted_by_id[key])
-            present.add(key)
+    _recover_minted(
+        [
+            *(reply.get("headline_evidence") or []),
+            *(e for driver in reply.get("drivers") or []
+              if isinstance(driver, dict) for e in driver.get("evidence") or []),
+        ],
+        minted_by_id, present, id_map, records,
+    )
 
     movement = reply.get("movement")
     if isinstance(movement, dict) and any(
@@ -1384,8 +1458,7 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     limitations = [str(item) for item in reply.get("limitations") or []] + dropped
     if rejections:
         limitations.append(
-            "These citations were dropped because the quote was not found on the page "
-            "given: " + "; ".join(rejections)
+            _REJECTED_CITATIONS_NOTE + "; ".join(rejections)
         )
     attribution = Attribution(
         bank=case["bank"],
@@ -1617,12 +1690,7 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
             exhausted = exhausted or f"the wall-clock budget ({combo.wall_clock_s:.0f}s)"
             break
         if exhausted is None:
-            if research.tool_calls >= combo.max_tool_calls:
-                exhausted = f"the tool-call budget ({combo.max_tool_calls} calls)"
-            elif llm.usage.cost_usd >= combo.cost_ceiling_usd:
-                exhausted = f"the cost ceiling (${combo.cost_ceiling_usd:.2f})"
-            elif spent >= combo.wall_clock_s:
-                exhausted = f"the wall-clock budget ({combo.wall_clock_s:.0f}s)"
+            exhausted = _budget_hit(research, llm, combo, spent, combo.wall_clock_s)
             if exhausted:
                 messages.append(
                     {
@@ -1686,18 +1754,13 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                 # the top of a turn, so a turn that began one call inside the
                 # budget dispatched every call it carried — measured at 25
                 # calls against a budget of 2.
-                stop = None
-                if research.tool_calls >= combo.max_tool_calls:
-                    stop = f"the tool-call budget ({combo.max_tool_calls} calls)"
-                elif llm.usage.cost_usd >= combo.cost_ceiling_usd:
-                    # Cost binds per CALL as well. It was read once a turn, and
-                    # one read_chart now costs TWO vision calls (the bars and
-                    # the annotation layer) while counting as one tool call, so
-                    # a single turn carrying five chart reads issued ten vision
-                    # calls with no cost check between them.
-                    stop = f"the cost ceiling (${combo.cost_ceiling_usd:.2f})"
-                elif time.time() - started >= _hard_stop_s(combo):
-                    stop = f"the wall-clock budget ({combo.wall_clock_s:.0f}s)"
+                # Cost binds per CALL as well. It was read once a turn, and
+                # one read_chart now costs TWO vision calls (the bars and
+                # the annotation layer) while counting as one tool call, so
+                # a single turn carrying five chart reads issued ten vision
+                # calls with no cost check between them.
+                stop = _budget_hit(research, llm, combo,
+                                   time.time() - started, _hard_stop_s(combo))
                 if stop is not None:
                     exhausted = exhausted or stop
                     messages.append(
@@ -1738,17 +1801,9 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
 
 
 def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
-                   combo_name: str = "agentic"):
+                   combo_name: str = LIVE_COMBO):
     """Research one case in a closed loop, then write the case artifacts."""
-    started = time.time()
-    combo = COMBOS[combo_name]
-    if not combo.agent:
-        raise ValueError(f"combo {combo_name} declares no agent model")
-    # The loop's own hard stop, stated once as an absolute monotonic instant so
-    # every model call can be held to it. time.time() drives the loop's budget
-    # messages; a retry ladder needs a clock that never steps backwards.
-    deadline = time.monotonic() + _hard_stop_s(combo)
-    llm = LLM()
+    started, combo, deadline, llm = _start_run(combo_name)
     metric_key = METRIC_ALIASES[metric.lower()]
     metric_cfg = TAXONOMY[metric_key]
     comparator = comparator or default_comparator(period)
@@ -1816,29 +1871,12 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
         }
     attribution, _rejections = build_attribution(payload, research, case, metric_cfg, registry)
     if exhausted:
-        attribution.limitations.append(
-            f"Research stopped early: {exhausted} was reached, so the evidence behind this "
-            "answer is less complete than a full run's."
-        )
+        attribution.limitations.append(_stopped_early_note(exhausted))
     attribution = finalise(attribution, research, case, metric_cfg, registry, headline_label)
 
-    attribution.provenance = {
-        "combo": combo.name,
-        "models": f"agent={combo.agent}, vision={combo.vision}",
-        "documents": ", ".join(f"{d.doc_id} ({(d.sha256 or '')[:12]})" for d in docs),
-        "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "seconds": round(time.time() - started, 1),
-        "cost_usd": round(llm.usage.cost_usd, 4),
-        "tokens": f"{llm.usage.prompt_tokens} in / {llm.usage.completion_tokens} out",
-        "orchestration": "agent",
-        "tool_calls": research.tool_calls,
-        "pages_read": len(research.pages_read),
-        "charts_read": len(research.walks),
-        "budget_exhausted": exhausted or "no",
-    }
+    attribution.provenance = _provenance(combo, docs, started, llm, research, exhausted)
 
-    slug = f"{bank}-{metric_key}-{period}-vs-{comparator}-{combo.name}".lower()
-    out = OUT_DIR / slug
+    out = OUT_DIR / case_slug(bank, metric_key, period, comparator, combo.name)
     out.mkdir(parents=True, exist_ok=True)
     (out / "attribution.json").write_text(attribution.model_dump_json(indent=2))
     (out / "report.md").write_text(render_report(attribution))
@@ -1888,8 +1926,8 @@ def build_answer(payload: dict, research: Research, question: str, docs: list[Do
 
     Every record is re-checked against its page here, exactly as a movement's
     records are: the loop's own check is a dry run that mints nothing. The
-    output is the shape ask.py emits, so the renderer, the scorers and the
-    judge read one artifact whichever shell produced it.
+    output is one answer shape, so the renderer, the scorers and the judge
+    read one artifact for every question, whichever entry point asked it.
     """
     records, rejections, id_map = research.build_records(payload.get("evidence"))
     # A record a tool minted and the note cites, but the evidence list forgot,
@@ -1900,11 +1938,8 @@ def build_answer(payload: dict, research: Research, question: str, docs: list[Do
     for fact in payload.get("key_facts") or []:
         if not isinstance(fact, dict):
             continue
-        for cited in fact.get("citations", fact.get("evidence")) or []:
-            key = str(cited)
-            if key in minted_by_id and key not in present and key not in id_map:
-                records.append(minted_by_id[key])
-                present.add(key)
+        _recover_minted(fact.get("citations", fact.get("evidence")) or [],
+                        minted_by_id, present, id_map, records)
 
     def remap(fact: dict) -> dict:
         cited = fact.get("citations", fact.get("evidence")) or []
@@ -1920,8 +1955,7 @@ def build_answer(payload: dict, research: Research, question: str, docs: list[Do
     limitations = [str(item) for item in raw_limitations]
     if rejections:
         limitations.append(
-            "These citations were dropped because the quote was not found on the page "
-            "given: " + "; ".join(rejections)
+            _REJECTED_CITATIONS_NOTE + "; ".join(rejections)
         )
     key_facts, limitations, confidence = enforce_answer_gate(
         [remap(f) for f in payload.get("key_facts") or [] if isinstance(f, dict)],
@@ -1941,7 +1975,7 @@ def build_answer(payload: dict, research: Research, question: str, docs: list[Do
     }
 
 
-def run_agent_question(bank: str | None, question: str, combo_name: str = "agentic",
+def run_agent_question(bank: str | None, question: str, combo_name: str = LIVE_COMBO,
                        periods: list[str] | None = None):
     """Answer one free-form question in the closed loop. Returns (output, out_dir).
 
@@ -1950,13 +1984,7 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = "agent
     that already knows them; a question that names its own banks and periods
     needs neither.
     """
-    started = time.time()
-    combo = COMBOS[combo_name]
-    if not combo.agent:
-        raise ValueError(f"combo {combo_name} declares no agent model")
-    # The same absolute hard stop the movement shell sets; see run_agent_case.
-    deadline = time.monotonic() + _hard_stop_s(combo)
-    llm = LLM()
+    started, combo, deadline, llm = _start_run(combo_name)
 
     scope_notes: list[str] = []
     docs = documents_for_question(question, bank, periods, notes=scope_notes)
@@ -2018,24 +2046,8 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = "agent
     # the note travels with the answer that rests on it.
     output["limitations"] = scope_notes + list(output["limitations"])
     if exhausted:
-        output["limitations"].append(
-            f"Research stopped early: {exhausted} was reached, so the evidence behind this "
-            "answer is less complete than a full run's."
-        )
-    output["provenance"] = {
-        "combo": combo.name,
-        "models": f"agent={combo.agent}, vision={combo.vision}",
-        "documents": ", ".join(f"{d.doc_id} ({(d.sha256 or '')[:12]})" for d in docs),
-        "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "seconds": round(time.time() - started, 1),
-        "cost_usd": round(llm.usage.cost_usd, 4),
-        "tokens": f"{llm.usage.prompt_tokens} in / {llm.usage.completion_tokens} out",
-        "orchestration": "agent",
-        "tool_calls": research.tool_calls,
-        "pages_read": len(research.pages_read),
-        "charts_read": len(research.walks),
-        "budget_exhausted": exhausted or "no",
-    }
+        output["limitations"].append(_stopped_early_note(exhausted))
+    output["provenance"] = _provenance(combo, docs, started, llm, research, exhausted)
 
     out = OUT_DIR / f"ask-{slugify(question)}-{combo.name}"
     out.mkdir(parents=True, exist_ok=True)

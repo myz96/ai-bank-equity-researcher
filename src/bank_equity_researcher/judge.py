@@ -162,10 +162,6 @@ def _truncate(text: str, limit: int) -> tuple[str, bool]:
     return text[:limit] + _TRUNCATION_MARK, True
 
 
-def _format_quotes(quotes: list[str]) -> str:
-    return "\n".join(f'{i}. "{quote}"' for i, quote in enumerate(quotes, start=1))
-
-
 def _fit_quotes(quotes: list[str], char_limit: int) -> tuple[str, int, bool]:
     """The quote block, how many quotes it holds, and whether any were dropped.
 

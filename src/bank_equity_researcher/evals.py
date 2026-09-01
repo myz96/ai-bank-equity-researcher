@@ -397,9 +397,8 @@ def run_question_suite(combo: str, bank: str | None = None, split: str = "dev",
 
 @dataclass(frozen=True)
 class Tolerance:
-    """A unit-typed match tolerance: max(absolute, relative x |target|)."""
+    """A match tolerance: max(absolute, relative x |target|)."""
 
-    unit: str
     absolute: float
     relative: float = 0.0
 
@@ -412,12 +411,12 @@ def tolerance_for(unit: str | None) -> Tolerance:
     if canonical == "$m":
         # Banks round to $m; 1% or $10m (whichever is larger) absorbs
         # re-presented comparatives without letting real errors through.
-        return Tolerance("$m", MONEY_ABS_TOL_M, MONEY_REL_TOL)
+        return Tolerance(MONEY_ABS_TOL_M, MONEY_REL_TOL)
     if canonical in ("ppt", "%"):
-        return Tolerance(canonical, RATIO_TOL_PPT)
+        return Tolerance(RATIO_TOL_PPT)
     if canonical == "bps":
-        return Tolerance("bps", WALK_BAR_TOL_PA)
-    return Tolerance(canonical, WALK_BAR_TOL_PA)
+        return Tolerance(WALK_BAR_TOL_PA)
+    return Tolerance(WALK_BAR_TOL_PA)
 
 
 def values_match(value: float, target: float, unit: str | None) -> bool:
@@ -1011,8 +1010,10 @@ def scorecard_meta(stamp: str, *extra: str) -> list[str]:
 
 def artifact_dir(gold: dict, combo: str) -> Path:
     """The saved out/<slug>/ directory for one gold case and one combo."""
-    slug = f"{gold['bank']}-{gold['metric']}-{gold['period']}-vs-{gold['comparator']}-{combo}".lower()
-    return OUT_DIR / slug
+    from .render import case_slug
+
+    return OUT_DIR / case_slug(gold["bank"], gold["metric"], gold["period"],
+                               gold["comparator"], combo)
 
 
 # ---------------------------------------------------------------------------
