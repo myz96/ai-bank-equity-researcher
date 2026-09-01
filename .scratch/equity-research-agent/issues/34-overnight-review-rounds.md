@@ -1076,3 +1076,21 @@ question_scope's synthetic metric shape (third noting — bundled into the
 escalation list for the user).
 
 Gate: 374 tests, dev rescore identical, ruff 13.
+
+## Sol review round 1 + Sol audit round 3 + Fable pruning round 4 (2026-09-01)
+
+Sol review r1 (relaunched after the outage killed the first run): three
+MUSTs, all offline-reproduced, all fixed with pins — the zero-evidence
+movement cap at 20 (a CTI submission with empty evidence shipped at 95),
+spelled-out quantities now face the question gate (number word + quantity
+noun; a period name never trips it), question confidence clamps like the
+case shell. NOTEs applied: scoped ask slugs (collision on shared first
+words), failed-walk pages count as read. Deferred: socket-stall deadline
+precision (overshoot <=65s, absorbed by the hard-stop factor).
+
+Sol audit r3: caught my own round-6 fixes being incomplete — _numeric now
+rejects nan/inf, the coerced residual is stored, the deliberate empty-unit
+residual semantics restored, run_question_suite's split truly removed.
+
+Fable pruning r4: 19 pins incl. the first tests on two hardcoded overrides;
+absolute-import forms now caught by the layering walker; suite 399, ruff 0.
