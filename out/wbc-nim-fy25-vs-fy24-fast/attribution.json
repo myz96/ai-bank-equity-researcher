@@ -1,0 +1,416 @@
+{
+  "bank": "WBC",
+  "metric": "nim",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "ex_notables",
+  "movement": {
+    "from_value": 195.0,
+    "to_value": 194.0,
+    "delta": -1.0,
+    "unit": "bps"
+  },
+  "movement_source": "row 'NIM (Excluding Notable Items, %)', column Full Year Sept 2024 -> column Full Year Sept 2025",
+  "headline": "Westpac's Group net interest margin (NIM, Excluding Notable Items) fell 1 basis point in FY25 to 1.94%, from 1.95% in FY24. The movement comprised a 1bp contraction in Core NIM to 1.81% (from 1.82%) while the Treasury & Markets contribution was stable at 13 basis points. The results book's walk attributes the 1bp decline to: Loans -1bp, Deposits -2bps, Liquid assets +2bps, Wholesale funding -1bp, Capital & other +1bp, and Treasury & Markets 0. The investor discussion pack corroborates the levels (NIM 1.95% to 1.94%, Core NIM 1.82% to 1.81%, T&M 0.13% to 0.13%).",
+  "headline_evidence": [
+    "ev-1",
+    "ev-2",
+    "ev-3",
+    "ev-9",
+    "ev-10"
+  ],
+  "drivers": [
+    {
+      "canonical": "asset_pricing",
+      "bank_label": "Loans",
+      "contribution": {
+        "value": -1.0,
+        "unit": "bps"
+      },
+      "columns": "Full Year Sept 2025 - Full Year Sept 2024",
+      "narrative": "Loan interest spread 1bp narrower. Higher spreads in New Zealand mortgages driven by fixed rate repricing was more than offset by tighter spreads in Australia due to competition and the sale of the auto finance portfolio.",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-4"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "funding.deposits",
+      "bank_label": "Deposits",
+      "contribution": {
+        "value": -2.0,
+        "unit": "bps"
+      },
+      "columns": "Full Year Sept 2025 - Full Year Sept 2024",
+      "narrative": "Deposit interest spread 2bps decrease with a mix shift towards lower spread savings products, margin compression in term deposits and the impact from lower interest rates. Earnings on hedged deposits were higher.",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-5"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "liquids",
+      "bank_label": "Liquid assets",
+      "contribution": {
+        "value": 2.0,
+        "unit": "bps"
+      },
+      "columns": "Full Year Sept 2025 - Full Year Sept 2024",
+      "narrative": "Liquid Assets 2bps increase as average liquid assets rose by less than average lending assets.",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-6"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "funding.wholesale",
+      "bank_label": "WSF (Wholesale funding)",
+      "contribution": {
+        "value": -1.0,
+        "unit": "bps"
+      },
+      "columns": "Full Year Sept 2025 - Full Year Sept 2024",
+      "narrative": "Wholesale funding 1bp decrease from the impact of higher funding costs, with the final Term Funding Facility (TFF) draw downs maturing in the prior year.",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-7"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "capital_replicating",
+      "bank_label": "Capital & other",
+      "contribution": {
+        "value": 1.0,
+        "unit": "bps"
+      },
+      "columns": "Full Year Sept 2025 - Full Year Sept 2024",
+      "narrative": "Capital and Other 1bp increase primarily from higher earnings on hedged capital balances.",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-8"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "markets_treasury",
+      "bank_label": "T&M (Treasury & Markets)",
+      "contribution": {
+        "value": 0.0,
+        "unit": "bps"
+      },
+      "columns": "Full Year Sept 2025 - Full Year Sept 2024",
+      "narrative": "Treasury & Markets contribution of 13 basis points, which was stable (no change to NIM).",
+      "confidence": 92,
+      "evidence": [
+        "ev-1",
+        "ev-9"
+      ],
+      "checks_passed": [
+        "single_source"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "bps"
+  },
+  "notable_items": [],
+  "disagreements": [],
+  "attribution_confidence": 40,
+  "limitations": [
+    "The investor discussion pack's NIM walk (page 24) covers the half-on-half comparison (Mar 2025 to Sep 2025), not the FY24-to-FY25 task comparison, so its bars were not used as driver contributions; the results announcement page 12 walk is the primary framing and passed its sum check.",
+    "The pack page 24 walk is context only; its sub-driver annotations (e.g. NZ mortgages 1bp, auto finance -1bp, consumer savings reprice 3bps) belong to the half-on-half period and were not used.",
+    "Basis normalised from 'cash' to 'ex_notables': no page in evidence prints 'cash' beside the movement, and the registry names ex_notables as the bank's headline basis.",
+    "Failed check: movement_from_variant (the row you read is a 'excluding notable' variant: row 'NIM (Excluding Notable Items, %)', column Full Year Sept 2024 -> column Full Year Sept 2025. Read the headline measure instead, and report the variant as context or as a disagreement)"
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 12,
+      "printed_page": null,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Net interest margin movement - Full Year 2025 - Full Year 2024: FY24 195 -> FY25 194",
+      "numbers": [
+        {
+          "label": "Loans",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Deposits",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Liquid assets",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "WSF",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Capital & other",
+          "value": 1.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "T&M",
+          "value": 0.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 11,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "NIM (Excluding Notable Items, %) NIM 1.94% 1.95% (1 bps) 1.95% 1.92% 3 bps Core NIM 1.81% 1.82% (1 bps) 1.82% 1.80% 2 bps",
+      "numbers": [
+        {
+          "label": "NIM FY25",
+          "value": 194.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "NIM FY24",
+          "value": 195.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Core NIM FY25",
+          "value": 181.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Core NIM FY24",
+          "value": 182.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 12,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "NIM decreased 1 basis point to 1.94%.",
+      "numbers": [
+        {
+          "label": "NIM FY25",
+          "value": 194.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 12,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan interest spread: 1 basis point narrower.",
+      "numbers": [
+        {
+          "label": "Loan interest spread movement",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 12,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Deposit interest spread: 2 basis points decrease with a mix shift towards lower spread savings products, margin compression in term deposits and the impact from lower interest rates.",
+      "numbers": [
+        {
+          "label": "Deposit interest spread movement",
+          "value": -2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 12,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Liquid Assets: 2 basis points increase as average liquid assets rose by less than average lending assets;",
+      "numbers": [
+        {
+          "label": "Liquid Assets movement",
+          "value": 2.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 12,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Wholesale funding: 1 basis point decrease from the impact of higher funding costs, with the final Term Funding Facility (TFF) draw downs maturing in the prior year;",
+      "numbers": [
+        {
+          "label": "Wholesale funding movement",
+          "value": -1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 12,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Capital and Other: 1 basis point increase primarily from higher earnings on hedged capital balances.",
+      "numbers": [
+        {
+          "label": "Capital and Other movement",
+          "value": 1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 12,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Treasury and Markets contribution of 13 basis points, which was stable.",
+      "numbers": [
+        {
+          "label": "T&M contribution",
+          "value": 13.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 46,
+      "printed_page": 46,
+      "kind": "table",
+      "quote": "Composition of NIM (%) FY24 FY25 1H25 2H25 Core NIM 1.82 1.81 1.80 1.82 Treasury & Markets 0.13 0.13 0.12 0.13 NIM 1.95 1.94 1.92 1.95",
+      "numbers": [
+        {
+          "label": "Core NIM FY24",
+          "value": 182.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Core NIM FY25",
+          "value": 181.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "T&M FY24",
+          "value": 13.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "T&M FY25",
+          "value": 13.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "NIM FY24",
+          "value": 195.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "NIM FY25",
+          "value": 194.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "fast",
+    "models": "agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash",
+    "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
+    "generated": "2026-09-01T08:00:28+00:00",
+    "seconds": 923.9,
+    "cost_usd": 0.0078,
+    "tokens": "141452 in / 7576 out",
+    "orchestration": "agent",
+    "tool_calls": 16,
+    "pages_read": 4,
+    "charts_read": 2,
+    "budget_exhausted": "no"
+  }
+}

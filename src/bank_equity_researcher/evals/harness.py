@@ -38,6 +38,7 @@ from ..judging.judge import (
 )
 from ..llm import LLM
 from ..render import case_slug
+from ..taxonomy import TAXONOMY
 from ..tools.corpus import banks_named, doc_alias_index, resolve_doc_name
 from ..validation.schema import Attribution, DriverClaim
 from ..validation.validate import cross_source_view, normalize_unit
@@ -525,7 +526,8 @@ def _slot_ancestor(canonical: str, slots: dict[str, float]) -> str | None:
 # ---------------------------------------------------------------------------
 
 
-def _score_one_framing(framing: Framing, claims: list[DriverClaim], unit: str) -> dict:
+def _score_one_framing(framing: Framing, claims: list[DriverClaim], unit: str,
+                       known_canonicals: frozenset | None = None) -> dict:
     entries: list[dict] = []
     first_seen: set[str] = set()
     deferred: dict[str, list[int]] = {}
@@ -597,7 +599,12 @@ def _score_one_framing(framing: Framing, claims: list[DriverClaim], unit: str) -
             continue
 
         if parent:
-            deferred.setdefault(parent, []).append(index)
+            if known_canonicals is not None and canonical not in known_canonicals:
+                label(entry, UNSCORED,
+                      f"{canonical} is not a taxonomy driver; an invented child "
+                      "cannot fill a parent slot")
+            else:
+                deferred.setdefault(parent, []).append(index)
             continue
         if canonical in framing.unscored_slots:
             label(entry, UNSCORED, "gold names this driver but verifies no value")
@@ -658,18 +665,27 @@ def _score_one_framing(framing: Framing, claims: list[DriverClaim], unit: str) -
     }
 
 
-def score_drivers(framings: list[Framing], claims: list[DriverClaim], unit: str) -> dict:
+def score_drivers(framings: list[Framing], claims: list[DriverClaim], unit: str,
+                  known_canonicals: frozenset | None = None) -> dict:
     """Score the quantified claims one-to-one against ONE eligible framing.
 
     An alternate framing is taken as a whole or not at all: precision and recall
     always come from the same framing, so a mixture of decompositions cannot
     collect credit no published source supports.
+
+    `known_canonicals` is the metric's taxonomy vocabulary: a dotted child
+    OUTSIDE it cannot fill a parent slot (two invented rwa.* children summing
+    to the parent scored 2/2 at confidence 99, executed repro).
     """
     quantified = [c for c in claims if c.contribution is not None]
-    scored = [_score_one_framing(f, quantified, unit) for f in framings]
+    scored = [_score_one_framing(f, quantified, unit, known_canonicals) for f in framings]
     ranked = sorted(
         enumerate(scored),
         key=lambda pair: (
+            # The FRACTION ranks first: a complete alternate (2/2) must beat
+            # a fuller-but-incomplete primary (2/3); the raw matched count
+            # alone handed the primary the tie (executed repro).
+            pair[1]["recall_matched"] / max(1, pair[1]["recall_total"]),
             pair[1]["recall_matched"],
             pair[1]["correct"],
             -pair[1]["incorrect"],
@@ -846,7 +862,10 @@ def score_case(gold: dict, attribution: Attribution, label_map: dict[str, str] |
         coverage = {"correct": 0, "incorrect": 0, "unscored": len(quantified),
                     "duplicate_canonicals": 0, "unscored_gold_slots": 0}
     else:
-        scored = score_drivers(gold_framings(gold), attribution.drivers, unit)
+        scored = score_drivers(
+            gold_framings(gold), attribution.drivers, unit,
+            known_canonicals=frozenset(TAXONOMY[gold["metric"]]["drivers"]),
+        )
         result["driver_recall"] = scored["recall"]
         result["driver_precision"] = scored["precision"]
         result["framing"] = scored["framing"]

@@ -1,0 +1,1246 @@
+{
+  "bank": "CBA",
+  "metric": "impairment",
+  "period": "FY21",
+  "comparator": "FY20",
+  "basis": "cash",
+  "movement": {
+    "from_value": 2518.0,
+    "to_value": 554.0,
+    "delta": -1964.0,
+    "unit": "$m"
+  },
+  "movement_source": "row 'Loan impairment expense - \"cash basis\"', column 30 Jun 20 (FY20 column) -> column 30 Jun 21 (FY21 column)",
+  "headline": "CBA's loan impairment expense (LIE) fell from $2,518m in FY20 to $554m in FY21, a decrease of $1,964m or 78%. The loan loss rate reduced to 7 basis points from 33 basis points, as a percentage of average gross loans and acceptances (GLAAs). The bank attributes the decrease to an improvement in economic conditions and outlook, noting it \"provisioned for uncertainty.\" The provision-type bridge (net collective provision funding, net new and increased individual provisioning, write-backs) sums exactly to the movement, as does the divisional bridge (Retail, Business, Institutional, New Zealand, Corporate Centre).",
+  "headline_evidence": [
+    "ev-2",
+    "ev-1",
+    "ev-9",
+    "ev-10",
+    "ev-12",
+    "ev-13",
+    "ev-14",
+    "ev-8",
+    "ev-26",
+    "ev-27"
+  ],
+  "drivers": [
+    {
+      "canonical": "collective.asset_quality",
+      "bank_label": "Net collective provision funding",
+      "contribution": {
+        "value": -1756.0,
+        "unit": "$m"
+      },
+      "columns": "30 Jun 21 vs 30 Jun 20",
+      "narrative": "Lower collective provision charges reflecting an improvement in economic conditions and outlook. Where it arose: Retail -900 (134 vs 1,034), Business -551 (233 vs 784), Institutional -257 (96 vs 353), New Zealand -297 (benefit of 5 vs 292), partly offset by Corporate Centre +41 (96 vs 55) due to higher collective provision charges in PTBC reflecting deterioration in credit quality and economic outlook in Indonesia due to COVID-19.",
+      "confidence": 80,
+      "evidence": [
+        "ev-9",
+        "ev-3",
+        "ev-4",
+        "ev-5",
+        "ev-6",
+        "ev-7",
+        "ev-15",
+        "ev-17",
+        "ev-19",
+        "ev-21"
+      ],
+      "checks_passed": [
+        "single_source",
+        "computed_delta_cap_80"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "individual_provisions",
+      "bank_label": "Net new and increased individual provisioning",
+      "contribution": {
+        "value": -162.0,
+        "unit": "$m"
+      },
+      "columns": "30 Jun 21 vs 30 Jun 20",
+      "narrative": "Lower individual provisions in the current year, in Institutional and New Zealand, reflecting an improvement in economic conditions and outlook.",
+      "confidence": 80,
+      "evidence": [
+        "ev-9",
+        "ev-5",
+        "ev-6",
+        "ev-19"
+      ],
+      "checks_passed": [
+        "single_source",
+        "computed_delta_cap_80"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "write_backs_recoveries",
+      "bank_label": "Write-back of individually assessed provisions",
+      "contribution": {
+        "value": -46.0,
+        "unit": "$m"
+      },
+      "columns": "30 Jun 21 vs 30 Jun 20",
+      "narrative": "Increased write-backs of individually assessed provisions, reducing the charge.",
+      "confidence": 80,
+      "evidence": [
+        "ev-9"
+      ],
+      "checks_passed": [
+        "single_source",
+        "computed_delta_cap_80"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": 0.0,
+    "unit": "$m"
+  },
+  "notable_items": [
+    "Total impairment provisions decreased to $6,211m from $6,363m in FY20 (provision balance context, not the charge bridge).",
+    "The bank notes it 'provisioned for uncertainty' reflecting ongoing COVID-19 economic uncertainty."
+  ],
+  "disagreements": [
+    {
+      "topic": "Retail FY20 LIE level",
+      "values": [
+        "1,010 (FY20 profit announcement)",
+        "1,034 (FY21 profit announcement restated FY20)"
+      ],
+      "preferred": "1,034",
+      "reason": "restatement",
+      "explanation": "The FY21 document restated FY20 comparatives to conform to current presentation (e.g. scope changes including Mortgage Broking and General Insurance). The FY21 document's restated comparatives are authoritative."
+    }
+  ],
+  "attribution_confidence": 90,
+  "limitations": [
+    "The provision-type bridge (page 126) and divisional bridge (page 39) both sum exactly to the movement, so the residual is zero.",
+    "The divisional movements for Institutional and New Zealand are not split between collective and individual provision types in the bank's disclosure; the bank states both divisions had lower collective provision charges and lower individual provisions.",
+    "The loss rate is quoted in bps with the denominator named as average gross loans and acceptances (GLAAs).",
+    "The FY20 document's Retail LIE of $1,010 differs from the FY21 document's restated FY20 of $1,034; the restated figure is used.",
+    "Capped at 80: collective.asset_quality -1756 $m, individual_provisions -162 $m, write_backs_recoveries -46 $m. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-1",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Retail Banking Services 134 1,034 (87) (174) 308 large Business Banking 233 784 (70) (53) 286 large Institutional Banking and Markets 96 353 (73) (81) 177 large New Zealand (5) 292 large (32) 27 large Corporate Centre and Other 96 55 75 12 84 (86) Loan impairment expense - \"cash basis\" 554 2,518 (78) (328) 882 large",
+      "numbers": [
+        {
+          "label": "Retail Banking Services LIE FY21",
+          "value": 134.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Retail Banking Services LIE FY20",
+          "value": 1034.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Business Banking LIE FY21",
+          "value": 233.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Business Banking LIE FY20",
+          "value": 784.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Institutional Banking and Markets LIE FY21",
+          "value": 96.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Institutional Banking and Markets LIE FY20",
+          "value": 353.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "New Zealand LIE FY21",
+          "value": -5.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "New Zealand LIE FY20",
+          "value": 292.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Corporate Centre and Other LIE FY21",
+          "value": 96.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Corporate Centre and Other LIE FY20",
+          "value": 55.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total LIE FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total LIE FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-2",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense was $554 million, a decrease of $1,964 million or 78% on the prior year.",
+      "numbers": [
+        {
+          "label": "LIE FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "LIE decrease FY21 vs FY20",
+          "value": 1964.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-3",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "A decrease in Retail Banking Services of $900 million or 87% to $134 million, driven by lower collective provision charges reflecting an improvement in economic conditions and outlook, and reduced consumer finance balances in the current year;",
+      "numbers": [
+        {
+          "label": "Retail LIE decrease FY21 vs FY20",
+          "value": 900.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-4",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "A decrease in Business Banking of $551 million or 70% to $233 million, driven by lower collective provision charges reflecting an improvement in economic conditions and outlook;",
+      "numbers": [
+        {
+          "label": "Business LIE decrease FY21 vs FY20",
+          "value": 551.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-5",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "A decrease in New Zealand of $297 million to a benefit of $5 million, driven by lower collective provision charges reflecting an improvement in economic conditions and outlook, and lower individual provisions in the current year;",
+      "numbers": [
+        {
+          "label": "New Zealand LIE decrease FY21 vs FY20",
+          "value": 297.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "A decrease in Institutional Banking and Markets of $257 million or 73% to $96 million, driven by lower collective provision charges reflecting an improvement in economic conditions and outlook, and lower individual provisions in the current year; partly offset by",
+      "numbers": [
+        {
+          "label": "Institutional LIE decrease FY21 vs FY20",
+          "value": 257.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "An increase in Corporate Centre and Other of $41 million or 75% to $96 million, driven by higher collective provision charges in PTBC, mainly reflecting a deterioration in credit quality and the economic outlook in Indonesia due to COVID-19.",
+      "numbers": [
+        {
+          "label": "Corporate Centre LIE increase FY21 vs FY20",
+          "value": 41.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense as a percentage of average gross loans and acceptances (GLAAs) decreased 26 basis points to 7 basis points.",
+      "numbers": [
+        {
+          "label": "LIE as % of GLAAs FY21",
+          "value": 7.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "LIE as % of GLAAs decrease FY21 vs FY20",
+          "value": 26.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 126,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Loan impairment expense Net collective provision funding 287 2,043 (481) 768 Net new and increased individual provisioning 496 658 260 236 Write-back of individually assessed provisions (229) (183) (107) (122) Total loan impairment expense 554 2,518 (328) 882",
+      "numbers": [
+        {
+          "label": "Net collective provision funding FY21",
+          "value": 287.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net collective provision funding FY20",
+          "value": 2043.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net new and increased individual provisioning FY21",
+          "value": 496.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net new and increased individual provisioning FY20",
+          "value": 658.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Write-back of individually assessed provisions FY21",
+          "value": -229.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Write-back of individually assessed provisions FY20",
+          "value": -183.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total loan impairment expense FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total loan impairment expense FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense and provisions $554m 1.63% ▼78% on FY20 Provision coverage ratio2",
+      "numbers": [
+        {
+          "label": "LIE FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "LIE decrease FY21 vs FY20",
+          "value": 78.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Net profit after tax (NPAT) increased due to improved economic conditions and outlook resulting in a lower loan impairment expense and a strong operational performance.",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 12,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense decreased as a result of an improvement in economic conditions and outlook. The loan loss rate reduced to 7 basis points, down from 33 basis points in FY20.",
+      "numbers": [
+        {
+          "label": "Loan loss rate FY21",
+          "value": 7.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Loan loss rate FY20",
+          "value": 33.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 12,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense $554m FY20 $2,518m",
+      "numbers": [
+        {
+          "label": "LIE FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "LIE FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "text",
+      "quote": "Loan Impairment Expense 2,518 554 FY20 FY21  Improved economic outlook  Provisioned for uncertainty",
+      "numbers": [
+        {
+          "label": "LIE FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "LIE FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 71,
+      "printed_page": 47,
+      "kind": "text",
+      "quote": "Loan impairment expense was $134 million, a decrease of $900 million or 87% on the prior year. This was driven by lower collective provision charges reflecting an improvement in economic conditions and outlook, and reduced consumer finance balances in the current year.",
+      "numbers": [
+        {
+          "label": "Retail LIE FY21",
+          "value": 134.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Retail LIE decrease FY21 vs FY20",
+          "value": 900.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 71,
+      "printed_page": 47,
+      "kind": "text",
+      "quote": "Loan impairment expense as a percentage of average gross loans and acceptances decreased 23 basis points on the prior year to 0.03%.",
+      "numbers": [
+        {
+          "label": "Retail LIE as % of GLAAs FY21",
+          "value": 0.03,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 75,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense was $233 million, a decrease of $551 million or 70% on the prior year. This was driven by lower collective provision charges reflecting an improvement in the economic conditions and outlook.",
+      "numbers": [
+        {
+          "label": "Business LIE FY21",
+          "value": 233.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Business LIE decrease FY21 vs FY20",
+          "value": 551.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 75,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense as a percentage of average gross loans and acceptances decreased 31 basis points to 0.13%.",
+      "numbers": [
+        {
+          "label": "Business LIE as % of GLAAs FY21",
+          "value": 0.13,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 79,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense was $96 million, a decrease of $257 million or 73% on the prior year. This was driven by lower collective provision charges reflecting an improvement in economic conditions and outlook, and lower individual provisions in the current year, partly offset by increased forward looking adjustments to sectors of stress, including aviation and student accommodation due to ongoing uncertainty as a result of COVID-19.",
+      "numbers": [
+        {
+          "label": "Institutional LIE FY21",
+          "value": 96.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Institutional LIE decrease FY21 vs FY20",
+          "value": 257.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 79,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense as a percentage of average gross loans and acceptances decreased 25 basis points on the prior year to 0.11%.",
+      "numbers": [
+        {
+          "label": "Institutional LIE as % of GLAAs FY21",
+          "value": 0.11,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 88,
+      "printed_page": 64,
+      "kind": "text",
+      "quote": "Loan impairment expense increased $41 million on the prior year to $96 million. This was due to higher collective provision charges in PTBC, reflecting deterioration in credit quality and economic outlook in Indonesia due to COVID-19.",
+      "numbers": [
+        {
+          "label": "Corporate Centre LIE FY21",
+          "value": 96.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Corporate Centre LIE increase FY21 vs FY20",
+          "value": 41.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "CBA/FY20/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Loan impairment expense - \"cash basis\" 2,518 1,201 large 1,869 649 large",
+      "numbers": [
+        {
+          "label": "Total LIE FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-23",
+      "doc_id": "CBA/FY20/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense was $2,518 million, an increase of $1,317 million on the prior year.",
+      "numbers": [
+        {
+          "label": "Total LIE FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-24",
+      "doc_id": "CBA/FY20/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense as a percentage of average gross loans and acceptances (GLAAs) increased 17 basis points to 33 basis points.",
+      "numbers": [
+        {
+          "label": "LIE as % of GLAAs FY20",
+          "value": 33.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-25",
+      "doc_id": "CBA/FY20/profit_announcement",
+      "pdf_page": 130,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Loan impairment expense Net collective provision funding 2,043 724 1,597 446 Net new and increased individual provisioning 658 619 371 287 Write-back of individually assessed provisions (183) (142) (99) (84) Total loan impairment expense 2,518 1,201 1,869 649",
+      "numbers": [
+        {
+          "label": "Net collective provision funding FY20",
+          "value": 2043.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net new and increased individual provisioning FY20",
+          "value": 658.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Write-back of individually assessed provisions FY20",
+          "value": -183.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total loan impairment expense FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-26",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "table",
+      "quote": "Loan Impairment Expense 554 (78.0%) (Large)",
+      "numbers": [
+        {
+          "label": "LIE FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "LIE decrease FY21 vs FY20",
+          "value": 78.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-27",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 31,
+      "printed_page": 31,
+      "kind": "text",
+      "quote": "2,518 554 FY20 FY21 Credit risk Leading indicators reflect improved economic conditions, though uncertainty remains",
+      "numbers": [
+        {
+          "label": "LIE FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "LIE FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-28",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 31,
+      "printed_page": 31,
+      "kind": "table",
+      "quote": "Total 33 7",
+      "numbers": [
+        {
+          "label": "Total loan loss rate FY20",
+          "value": 33.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Total loan loss rate FY21",
+          "value": 7.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-29",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 31,
+      "printed_page": 31,
+      "kind": "table",
+      "quote": "Consumer 26 4 Corporate 50 16 Total 33 7",
+      "numbers": [
+        {
+          "label": "Consumer loan loss rate FY20",
+          "value": 26.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Consumer loan loss rate FY21",
+          "value": 4.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Corporate loan loss rate FY20",
+          "value": 50.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Corporate loan loss rate FY21",
+          "value": 16.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Total loan loss rate FY20",
+          "value": 33.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Total loan loss rate FY21",
+          "value": 7.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-30",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 31,
+      "printed_page": 31,
+      "kind": "table",
+      "quote": "Consumer 26 4 Corporate 50 16 Total 33 7",
+      "numbers": [
+        {
+          "label": "Consumer loan loss rate FY20",
+          "value": 26.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Consumer loan loss rate FY21",
+          "value": 4.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Corporate loan loss rate FY20",
+          "value": 50.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Corporate loan loss rate FY21",
+          "value": 16.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Total loan loss rate FY20",
+          "value": 33.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "Total loan loss rate FY21",
+          "value": 7.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-31",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 73,
+      "printed_page": 73,
+      "kind": "table",
+      "quote": "Impairment (134) (87%)",
+      "numbers": [
+        {
+          "label": "Retail LIE FY21",
+          "value": 134.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Retail LIE decrease FY21 vs FY20",
+          "value": 87.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-32",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 75,
+      "printed_page": 75,
+      "kind": "table",
+      "quote": "Impairment (96) (73%)",
+      "numbers": [
+        {
+          "label": "Institutional LIE FY21",
+          "value": 96.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Institutional LIE decrease FY21 vs FY20",
+          "value": 73.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-33",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 74,
+      "printed_page": 74,
+      "kind": "table",
+      "quote": "Impairment (233) (70%)",
+      "numbers": [
+        {
+          "label": "Business LIE FY21",
+          "value": 233.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Business LIE decrease FY21 vs FY20",
+          "value": 70.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-34",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 76,
+      "printed_page": 76,
+      "kind": "table",
+      "quote": "Impairment 5 large",
+      "numbers": [
+        {
+          "label": "ASB LIE FY21",
+          "value": 5.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-35",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 58,
+      "printed_page": 58,
+      "kind": "text",
+      "quote": "Impairment (87%)",
+      "numbers": [
+        {
+          "label": "RBS impairment decrease FY21 vs FY20",
+          "value": 87.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-36",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 58,
+      "printed_page": 58,
+      "kind": "text",
+      "quote": "Impairment ($311m)",
+      "numbers": [
+        {
+          "label": "NZ impairment decrease FY21 vs FY20",
+          "value": 311.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-37",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 58,
+      "printed_page": 58,
+      "kind": "text",
+      "quote": "Impairment ($257m)",
+      "numbers": [
+        {
+          "label": "IB&M impairment decrease FY21 vs FY20",
+          "value": 257.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-38",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 58,
+      "printed_page": 58,
+      "kind": "text",
+      "quote": "Impairment (70%)",
+      "numbers": [
+        {
+          "label": "BB impairment decrease FY21 vs FY20",
+          "value": 70.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-39",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 66,
+      "printed_page": 42,
+      "kind": "table",
+      "quote": "Loan impairment expense (134) (233) (96) 5 (96) (554)",
+      "numbers": [
+        {
+          "label": "Retail LIE FY21",
+          "value": 134.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Business LIE FY21",
+          "value": 233.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Institutional LIE FY21",
+          "value": 96.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "New Zealand LIE FY21",
+          "value": 5.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Corporate Centre LIE FY21",
+          "value": 96.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total LIE FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-40",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 66,
+      "printed_page": 42,
+      "kind": "table",
+      "quote": "Loan impairment expense (87) (70) (73) large 75 (78)",
+      "numbers": [
+        {
+          "label": "Retail LIE decrease FY21 vs FY20",
+          "value": 87.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Business LIE decrease FY21 vs FY20",
+          "value": 70.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Institutional LIE decrease FY21 vs FY20",
+          "value": 73.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Corporate Centre LIE increase FY21 vs FY20",
+          "value": 75.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Total LIE decrease FY21 vs FY20",
+          "value": 78.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-41",
+      "doc_id": "CBA/FY20/profit_announcement",
+      "pdf_page": 66,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Loan impairment expense (1,010) (814) (347) (292) (55) (2,518)",
+      "numbers": [
+        {
+          "label": "Retail LIE FY20",
+          "value": 1010.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Business and Private LIE FY20",
+          "value": 814.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Institutional LIE FY20",
+          "value": 347.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "New Zealand LIE FY20",
+          "value": 292.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "IFS and Corporate Centre LIE FY20",
+          "value": 55.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total LIE FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-42",
+      "doc_id": "CBA/FY20/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Retail Banking Services 1,010 672 50 746 264 large Business and Private Banking 814 384 large 575 239 large Institutional Banking and Markets 347 17 large 282 65 large New Zealand 292 102 large 271 21 large IFS and other 55 26 large (5) 60 large Loan impairment expense - \"cash basis\" 2,518 1,201 large 1,869 649 large",
+      "numbers": [
+        {
+          "label": "Retail LIE FY20",
+          "value": 1010.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Business and Private LIE FY20",
+          "value": 814.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Institutional LIE FY20",
+          "value": 347.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "New Zealand LIE FY20",
+          "value": 292.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "IFS and other LIE FY20",
+          "value": 55.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total LIE FY20",
+          "value": 2518.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "fast",
+    "models": "agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash",
+    "documents": "CBA/FY21/profit_announcement (ffdff75173e7), CBA/FY21/results_presentation (b1bbbd626803), CBA/FY20/profit_announcement (2c2179a200a3)",
+    "generated": "2026-09-01T07:16:41+00:00",
+    "seconds": 487.0,
+    "cost_usd": 0.0362,
+    "tokens": "1376532 in / 27605 out",
+    "orchestration": "agent",
+    "tool_calls": 77,
+    "pages_read": 25,
+    "charts_read": 0,
+    "budget_exhausted": "no"
+  }
+}

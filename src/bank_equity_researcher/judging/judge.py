@@ -237,8 +237,12 @@ def judge_fact(
     limit = MAX_QUOTES if max_quotes is None else max_quotes
     char_limit = MAX_QUOTE_CHARS * max(1, (limit + MAX_QUOTES - 1) // MAX_QUOTES)
     answer, truncated = _truncate(answer_text, MAX_ANSWER_CHARS)
-    quotes = [q for q in (cited_quotes or []) if str(q).strip()][:limit]
+    stripped_quotes = [q for q in (cited_quotes or []) if str(q).strip()]
+    quotes = stripped_quotes[:limit]
     quote_block, quotes_used, quotes_truncated = _fit_quotes(quotes, char_limit)
+    # The count cap is a truncation too: a fail with the supporting quote
+    # dropped by EITHER budget is an evaluator shortfall, not an answer error.
+    quotes_truncated = quotes_truncated or len(stripped_quotes) > limit
 
     replies: list[JudgeReply] = []
     for model in judges:
@@ -327,6 +331,12 @@ def _combine(
     if stated == STATED and entailed == ENTAILED:
         return build(PASS, stated, entailed,
                      f"the answer states the fact and the cited quotes entail it{detail}")
+    if quotes_truncated and entailed != ENTAILED and has_quotes:
+        # The quote window was cut, so the supporting quote may be among the
+        # dropped: an entailment fail under truncation is indeterminate and
+        # goes to a human, never into the failed population.
+        return build(FLAGGED, stated, entailed,
+                     f"entailment failed under a truncated quote window{detail}")
     return build(FAIL, stated, entailed, f"stated={stated}; entailed={entailed}{detail}")
 
 
