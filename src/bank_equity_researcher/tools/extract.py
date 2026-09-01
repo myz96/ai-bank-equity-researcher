@@ -146,7 +146,7 @@ def annotation_records(
                     numbers=numbers,
                 )
             )
-        except Exception:  # noqa: BLE001 - a malformed record is dropped, not fatal
+        except Exception:  # noqa: BLE001, S112 - a malformed record is dropped, not fatal
             continue
     return records
 

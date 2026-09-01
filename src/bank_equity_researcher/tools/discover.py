@@ -78,7 +78,7 @@ def fetch_page(url: str) -> dict:
     parser = _LinkParser()
     try:
         parser.feed(html)
-    except Exception:  # noqa: BLE001
+    except Exception:  # noqa: BLE001, S110 - a page that will not parse still yields its raw text below
         pass
     links = []
     seen = set()

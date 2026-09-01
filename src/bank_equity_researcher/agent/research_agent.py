@@ -320,6 +320,9 @@ class Research:
             )
         except Exception as exc:  # noqa: BLE001 - an unreadable chart is a gap, not a crash
             self.validation["failed"].append(f"walk_extraction_error p{page}: {exc}")
+            # The annotation read below can still mint evidence from this page,
+            # so provenance must count it read.
+            self.pages_read.add((doc.doc_id, page))
             # The ANNOTATION layer is a separate read of the same page, so it is
             # attempted whether or not the walk read succeeded: returning here
             # would cost the agent its callout evidence exactly where a page is
@@ -478,7 +481,7 @@ class Research:
                     **{k: v for k, v in number.items()
                        if k in ("label", "value", "unit", "basis")}
                 )
-            except Exception:  # noqa: BLE001 - a malformed number is dropped, not fatal
+            except Exception:  # noqa: BLE001, S112 - a malformed number is dropped, not fatal
                 continue
             if not quote_prints(quote, fact.value, fact.unit):
                 dropped.append(
@@ -663,14 +666,30 @@ def _numeric(value) -> float | None:
     A model sends "2.05" or "30,153" often enough that refusing strings would
     drop real movements; anything that does not parse is None, never a raise.
     """
+    import math
+
     if isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
-        return float(value)
+        return float(value) if math.isfinite(value) else None
     try:
-        return float(str(value).replace(",", "").strip())
+        parsed = float(str(value).replace(",", "").strip())
     except (TypeError, ValueError):
         return None
+    return parsed if math.isfinite(parsed) else None
+
+
+def _clamped_confidence(payload: dict, key: str) -> int:
+    """The declared confidence as an int in 0-100; out-of-range is clamped and
+    declared. The case shell clamps the same way (Sol review round 1)."""
+    raw = _numeric(payload.get(key))
+    confidence = 0 if raw is None else int(raw)
+    if not 0 <= confidence <= 100:
+        payload.setdefault("limitations", []).append(
+            f"{key} clamped from {confidence} into 0-100."
+        )
+        confidence = min(100, max(0, confidence))
+    return confidence
 
 
 def _relevance_terms(metric_cfg: dict) -> set[str]:
@@ -798,14 +817,19 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     )
 
     residual = reply.get("residual") if isinstance(reply.get("residual"), dict) else None
-    if residual is not None and (
-        _numeric(residual.get("value")) is None or not str(residual.get("unit") or "").strip()
-    ):
-        residual = None
-        reply.setdefault("limitations", []).append(
-            "The submitted residual was malformed (non-numeric value or a missing unit), "
-            "so no residual is stated."
-        )
+    if residual is not None:
+        residual_value = _numeric(residual.get("value"))
+        if residual_value is None:
+            residual = None
+            reply.setdefault("limitations", []).append(
+                "The submitted residual was malformed (non-numeric value), so no "
+                "residual is stated."
+            )
+        else:
+            # An empty unit is valid: check_drivers_reconcile reads it in the
+            # movement's own unit.
+            residual = {**residual, "value": residual_value,
+                        "unit": str(residual.get("unit") or "").strip()}
 
     raw_confidence = _numeric(reply.get("attribution_confidence"))
     confidence = 0 if raw_confidence is None else int(raw_confidence)
@@ -1209,8 +1233,10 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
             "drivers": [],
             "attribution_confidence": 0,
             "limitations": [
-                "The research loop ended without a submitted attribution "
-                f"({exhausted or 'the model stopped calling tools'})."
+                (
+                    "The research loop ended without a submitted attribution "
+                    f"({exhausted or 'the model stopped calling tools'})."
+                )
             ],
         }
     attribution, _rejections = build_attribution(payload, research, case, metric_cfg, registry)
@@ -1303,7 +1329,7 @@ def build_answer(payload: dict, research: Research, question: str, docs: list[Do
     key_facts, limitations, confidence = enforce_answer_gate(
         [remap(f) for f in payload.get("key_facts") or [] if isinstance(f, dict)],
         limitations,
-        int(_numeric(payload.get("confidence")) or 0),
+        _clamped_confidence(payload, "confidence"),
         {record.id for record in records},
     )
     return {
@@ -1376,8 +1402,10 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = LIVE_C
             "key_facts": [],
             "confidence": 0,
             "limitations": [
-                "The research loop ended without a submitted answer "
-                f"({exhausted or 'the model stopped calling tools'})."
+                (
+                    "The research loop ended without a submitted answer "
+                    f"({exhausted or 'the model stopped calling tools'})."
+                )
             ],
         }
     output = build_answer(payload, research, question, docs)
@@ -1388,7 +1416,11 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = LIVE_C
         output["limitations"].append(_stopped_early_note(exhausted))
     output["provenance"] = _provenance(combo, docs, started, llm, research, exhausted)
 
-    out = OUT_DIR / f"ask-{slugify(question)}-{combo.name}"
+    # The slug alone collides when two runs share the question's first words
+    # (the same wording asked of two banks, or two periods). The scope the
+    # caller fixed keeps the artifacts apart.
+    scope = "-".join(filter(None, [(bank or "").lower(), *(p.lower() for p in periods or [])]))
+    out = OUT_DIR / f"ask-{slugify(question)}{'-' + scope if scope else ''}-{combo.name}"
     out.mkdir(parents=True, exist_ok=True)
     (out / "answer.json").write_text(json.dumps(output, indent=2))
     (out / "answer.md").write_text(render_answer(output))

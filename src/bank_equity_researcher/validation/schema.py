@@ -161,6 +161,19 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
                 f"{driver.contribution.value}{driver.contribution.unit} had no evidence reference."
             )
             driver.contribution = None
+    # A movement asserted with ZERO evidence records is a guess wearing a
+    # number. The driver gate above cannot reach it (there is no contribution
+    # to strip), so without this cap it shipped at 95 with only a peripheral
+    # failed check (Sol review round 1, reproduced: a CTI submission, empty
+    # evidence, confidence 95). The cap matches the question shell's
+    # nothing-survived cap.
+    if (attribution.movement is not None and not attribution.evidence_records
+            and attribution.attribution_confidence > ANSWER_GATE_CONFIDENCE_CAP):
+        attribution.attribution_confidence = ANSWER_GATE_CONFIDENCE_CAP
+        attribution.limitations.append(
+            "The movement cites no evidence records at all, so confidence is "
+            f"capped at {ANSWER_GATE_CONFIDENCE_CAP}."
+        )
     return attribution
 
 
@@ -168,6 +181,23 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
 # structural rule needs a second shape to act on. Every shell that answers a
 # question calls this one function, so a question is gated exactly once.
 ANSWER_GATE_CONFIDENCE_CAP = 20
+
+
+# A quantity spelt in words is a quantity: "NIM fell three basis points"
+# carries the same never-guess duty as "3 bps", and classifying on digits
+# alone let it ship uncited at full confidence (Sol review round 1,
+# reproduced). A number word counts only beside a quantity noun, so a period
+# name ("the first half") never trips it.
+_NUMBER_WORDS = (
+    "one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
+    "thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|"
+    "thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred"
+)
+_QUANTITY_RE = re.compile(
+    rf"\d|\b(?:{_NUMBER_WORDS})\s+(?:basis[- ]?points?|bps|per\s?cent|percent(?:age)?\s+points?|"
+    rf"percent|ppt|points?|million|billion|dollars?)\b",
+    re.IGNORECASE,
+)
 
 
 def enforce_answer_gate(
@@ -192,7 +222,7 @@ def enforce_answer_gate(
         cited = [cited] if isinstance(cited, str) else list(cited)
         resolved = [str(e) for e in cited if str(e) in known_ids]
         fact = str(item.get("fact", ""))
-        if re.search(r"\d", fact) and not resolved:
+        if _QUANTITY_RE.search(fact) and not resolved:
             stripped.append(fact[:80])
             limitations.append(f'Stripped unsupported quantified fact: "{fact[:80]}"')
             continue

@@ -99,11 +99,11 @@ def main() -> int:
         return 0
 
     if args.command == "discover":
-        from datetime import date
+        from datetime import UTC, datetime
 
         from .tools.discover import discover
 
-        manifest = discover(args.bank, args.periods.split(","), args.seed, date.today().isoformat())
+        manifest = discover(args.bank, args.periods.split(","), args.seed, datetime.now(UTC).date().isoformat())
         print(json.dumps(manifest, indent=2))
         return 0
 
@@ -111,7 +111,7 @@ def main() -> int:
     from .agent.routing import runner_for
 
     run_case = runner_for(args.combo)
-    attribution, out_dir = run_case(args.bank.upper(), args.metric, args.period, args.comparator, args.combo)
+    _attribution, out_dir = run_case(args.bank.upper(), args.metric, args.period, args.comparator, args.combo)
     print((out_dir / "report.md").read_text())
     print(f"\n[saved to {out_dir}]")
     return 0

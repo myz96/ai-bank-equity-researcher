@@ -252,8 +252,10 @@ TAXONOMY: dict[str, dict] = {
             # division's 34.0% for the Group's 47.3%. Naming the section title
             # as well as both label forms puts the KPI page first for CBA, NAB
             # and WBC alike.
-            "key performance indicators group performance cost to income ratio "
-            "operating expenses to total operating income",
+            (
+                "key performance indicators group performance cost to income ratio "
+                "operating expenses to total operating income"
+            ),
             "operating expenses staff technology investment productivity",
             "total operating income growth expense growth jaws",
         ],

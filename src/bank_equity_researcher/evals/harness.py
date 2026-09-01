@@ -366,7 +366,7 @@ def run_crossref_suite(combo: str, bank: str | None = None) -> Path:
     return run_answer_suite("crossref", load_crossref_gold(bank), combo)
 
 
-def run_question_suite(combo: str, bank: str | None = None, split: str = "dev",
+def run_question_suite(combo: str, bank: str | None = None,
                        only: str | None = None) -> Path:
     """Run the free-form researcher questions, scored like the crossref cases.
 

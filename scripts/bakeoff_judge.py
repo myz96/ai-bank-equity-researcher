@@ -142,7 +142,7 @@ def main() -> None:
     anchors = [a for a in ANCHORS if args.cases is None or a[0] in args.cases]
 
     llm = LLM()
-    stamp = args.stamp or dt.datetime.now().strftime("%Y%m%d-%H%M")
+    stamp = args.stamp or dt.datetime.now(dt.UTC).strftime("%Y%m%d-%H%M")
     results: dict = {"stamp": stamp, "judges": list(JUDGES), "max_answer_chars": J.MAX_ANSWER_CHARS, "arms": {}}
 
     for arm in args.arms:

@@ -74,7 +74,7 @@ def main() -> None:
     gold = {c["id"]: c for c in load_question_gold("dev")}
     llm = LLM()
     index = doc_alias_index()
-    stamp = dt.datetime.now().strftime("%Y%m%d-%H%M")
+    stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%d-%H%M")
     results: dict = {"stamp": stamp, "judges": list(JUDGES), "tiers": {}}
 
     for tier in args.tiers:
