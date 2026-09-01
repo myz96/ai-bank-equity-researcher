@@ -508,7 +508,18 @@ class Research:
     def bank_language(self, bank: str | None = None) -> dict:
         """The registry entry, labels only. The registry holds no figures."""
         wanted = str(bank or self.case.get("bank") or "").upper()
-        registry = self.registries.get(wanted, self.registry)
+        case_bank = str(self.case.get("bank") or "").upper()
+        registry = self.registries.get(wanted)
+        if registry is None and wanted == case_bank:
+            registry = self.registry
+        if registry is None:
+            # A metric case loads one bank's registry. Answering for another
+            # bank from it would hand out the case bank's vocabulary stamped
+            # with the wrong name (Fable review cycle 6, finding 2).
+            return {
+                "bank": wanted,
+                "note": f"no language map is loaded for {wanted} in this case's scope",
+            }
         language = {
             "bank": wanted or self.case.get("bank"),
             "measures": registry.get("measures", {}),
@@ -641,6 +652,22 @@ def _snippet(text: str, query: str) -> str:
     return re.sub(r"\s+", " ", text[start:start + SNIPPET_CHARS]).strip()
 
 
+def _numeric(value) -> float | None:
+    """A number the submission carries, however it spelt it, or None.
+
+    A model sends "2.05" or "30,153" often enough that refusing strings would
+    drop real movements; anything that does not parse is None, never a raise.
+    """
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    try:
+        return float(str(value).replace(",", "").strip())
+    except (TypeError, ValueError):
+        return None
+
+
 def _relevance_terms(metric_cfg: dict) -> set[str]:
     from ..tools.refs import relevance_terms
 
@@ -698,6 +725,22 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
         reply.setdefault("limitations", []).append(
             "The movement could not be established from the evidence."
         )
+    if isinstance(movement, dict):
+        # The submit schema cannot forbid every malformed shape a model can
+        # send, and a ValidationError here would end a 10-30 minute run with
+        # no artifact (Fable review cycle 6, finding 1). Coerce or degrade,
+        # never crash: numbers-as-strings are read, anything else drops the
+        # movement to None with the reason declared.
+        coerced = {k: _numeric(movement.get(k)) for k in ("from_value", "to_value", "delta")}
+        unit = str(movement.get("unit") or "").strip()
+        if None in coerced.values() or not unit:
+            movement = None
+            reply.setdefault("limitations", []).append(
+                "The submitted movement was malformed (non-numeric values or a missing "
+                "unit), so no movement is stated."
+            )
+        else:
+            movement = {**movement, **coerced, "unit": unit}
     if isinstance(movement, dict) and metric_cfg["unit"] == "bps":
         frm, to = movement.get("from_value"), movement.get("to_value")
         if (
@@ -751,6 +794,24 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
         reply.get("disagreements"), Disagreement, dropped, "disagreement"
     )
 
+    residual = reply.get("residual") if isinstance(reply.get("residual"), dict) else None
+    if residual is not None and (
+        _numeric(residual.get("value")) is None or not str(residual.get("unit") or "").strip()
+    ):
+        residual = None
+        reply.setdefault("limitations", []).append(
+            "The submitted residual was malformed (non-numeric value or a missing unit), "
+            "so no residual is stated."
+        )
+
+    raw_confidence = _numeric(reply.get("attribution_confidence"))
+    confidence = 0 if raw_confidence is None else int(raw_confidence)
+    if not 0 <= confidence <= 100:
+        reply.setdefault("limitations", []).append(
+            f"attribution_confidence clamped from {confidence} into 0-100."
+        )
+        confidence = min(100, max(0, confidence))
+
     # _settle_basis records its own substitution in reply["limitations"], so it
     # runs before the limitations list is read out of the reply.
     basis = _settle_basis(reply.get("basis"), registry, records, reply)
@@ -770,10 +831,10 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
         headline=str(reply.get("headline") or ""),
         headline_evidence=remap(reply.get("headline_evidence")),
         drivers=drivers,
-        residual=reply.get("residual") if isinstance(reply.get("residual"), dict) else None,
+        residual=residual,
         notable_items=[str(i) for i in reply.get("notable_items") or []],
         disagreements=disagreements,
-        attribution_confidence=int(reply.get("attribution_confidence") or 0),
+        attribution_confidence=confidence,
         limitations=limitations,
         evidence_records=records,
     )
@@ -1245,7 +1306,7 @@ def build_answer(payload: dict, research: Research, question: str, docs: list[Do
     key_facts, limitations, confidence = enforce_answer_gate(
         [remap(f) for f in payload.get("key_facts") or [] if isinstance(f, dict)],
         limitations,
-        int(payload.get("confidence") or 0),
+        int(_numeric(payload.get("confidence")) or 0),
         {record.id for record in records},
     )
     return {

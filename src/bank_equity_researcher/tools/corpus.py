@@ -53,11 +53,38 @@ class Document:
         return pdf[page_no - 1].get_pixmap(matrix=pymupdf.Matrix(zoom, zoom)).tobytes("png")
 
 
+@lru_cache(maxsize=1)
+def _assert_distinct_stems() -> None:
+    """Refuse a stem collision on EVERY load path, not only doc_alias_index.
+
+    The page-text and embedding caches key on the filename stem, so two
+    documents sharing one stem would serve one bank's pages for another's.
+    The all_documents() guard only ran when an alias index was built; cli
+    analyse/ask and evals run reach load_documents directly (Fable review
+    cycle 6, finding 3). Reads the manifests, not Document objects, so it
+    cannot recurse into load_documents.
+    """
+    stems: dict[str, str] = {}
+    for bank in manifest_banks():
+        manifest = json.loads((MANIFEST_DIR / f"{bank.lower()}.json").read_text())
+        for meta in manifest["documents"]:
+            stem = Path(meta["filename"]).stem
+            doc_id = f"{manifest['bank']}/{meta['period']}/{meta['doc_type']}"
+            if stems.get(stem, doc_id) != doc_id:
+                raise RuntimeError(
+                    f"{doc_id} and {stems[stem]} share the filename stem {stem!r}; "
+                    "the page-text and embedding caches are keyed by that stem, so "
+                    "one bank's pages would be served for the other's"
+                )
+            stems[stem] = doc_id
+
+
 @cache
 def load_documents(bank: str) -> list[Document]:
     manifest_path = MANIFEST_DIR / f"{bank.lower()}.json"
     if not manifest_path.exists():
         return []
+    _assert_distinct_stems()
     manifest = json.loads(manifest_path.read_text())
     docs = [Document(manifest["bank"], meta) for meta in manifest["documents"]]
     return [d for d in docs if d.path.exists() and d.path.suffix == ".pdf"]

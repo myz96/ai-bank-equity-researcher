@@ -1585,3 +1585,63 @@ def test_the_agent_reads_the_chart_annotation_layer(docs, case):
     assert result["annotations"], "the callout layer must reach the agent"
     assert any("Savings" in (r.quote or "") for r in research.records)
 
+
+
+# ---------------------------------------------------------------------------
+# A malformed submission degrades; it never crashes the run
+# ---------------------------------------------------------------------------
+
+
+def test_a_movement_without_a_unit_degrades_to_no_movement(docs, case):
+    """The submit schema cannot forbid every malformed shape, and a
+    ValidationError here would end a 10-30 minute run with no artifact."""
+    research = _research(_LLM([]), docs, case)
+    payload = _submission()
+    payload["movement"] = {"from_value": 208.0, "to_value": 205.0, "delta": -3.0}
+    del payload["movement"]["delta"]
+    payload["movement"]["delta"] = -3.0
+    payload["movement"].pop("unit", None)
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.movement is None
+    assert any("malformed" in item for item in attribution.limitations)
+
+
+def test_string_endpoints_are_read_as_numbers(docs, case):
+    research = _research(_LLM([]), docs, case)
+    payload = _submission()
+    payload["movement"] = {"from_value": "2,080", "to_value": "2,050",
+                           "delta": "-30", "unit": "bps"}
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.movement is not None
+    assert attribution.movement.from_value == 2080.0
+    assert attribution.movement.delta == -30.0
+
+
+def test_a_malformed_residual_degrades_to_none(docs, case):
+    research = _research(_LLM([]), docs, case)
+    payload = _submission()
+    payload["residual"] = {"value": "n/a", "unit": "bps"}
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.residual is None
+    assert any("residual was malformed" in item for item in attribution.limitations)
+
+
+def test_an_out_of_range_confidence_is_clamped_and_declared(docs, case):
+    research = _research(_LLM([]), docs, case)
+    payload = _submission()
+    payload["attribution_confidence"] = 105
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.attribution_confidence == 100
+    assert any("clamped" in item for item in attribution.limitations)
+
+
+def test_bank_language_refuses_a_bank_outside_the_case_scope(docs, case):
+    """A metric case loads one registry; answering for another bank from it
+    would hand out the case bank's vocabulary under the wrong name."""
+    research = _research(_LLM([]), docs, case)
+    own = research.bank_language()
+    assert own.get("measures") is not None
+    other = research.bank_language("WBC")
+    assert other["bank"] == "WBC"
+    assert "measures" not in other
+    assert "no language map" in other["note"]

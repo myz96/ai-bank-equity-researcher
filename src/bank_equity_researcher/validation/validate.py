@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import re
 
-from .schema import PRESENTATION_DOC_TYPES
+from .schema import PRESENTATION_DOC_TYPES, EvidenceRecord
 
 # Profit Announcement walks label bars to two decimals of a percent (0.01% =
 # 1bp), so extraction should be exact; +-0.5bp absorbs float noise only.

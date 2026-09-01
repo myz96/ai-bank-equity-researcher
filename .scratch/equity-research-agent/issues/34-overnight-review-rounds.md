@@ -1004,3 +1004,25 @@ stitched fields genuinely differ). Retired PRICES entries stay: rescoring
 saved artifacts reads them.
 
 Gate: 366 tests, dev rescore identical, ruff 15.
+
+## Fable review cycle 6 applied (2026-09-01)
+
+Five findings; four fixed, one already fixed convergently:
+- MUST: build_attribution crashed on submissions its own tool schema permits
+  (movement/residual without a unit, string endpoints, confidence 105) — a
+  10-30 minute run ended with NO artifact against the documented never-crash
+  contract. Now: _numeric() coercion reads numbers-as-strings; a malformed
+  movement or residual degrades to None with the reason declared; confidence
+  clamps into 0-100 with a limitation. Four regression tests.
+- MUST: Research.bank_language returned the case bank's vocabulary stamped
+  with another bank's name (registries is {} in a metric case, and the
+  fallback always answered). Now refuses with an explicit no-language-map
+  note. Test added.
+- NOTE: the stem-collision guard only ran on the doc_alias_index path;
+  _assert_distinct_stems (manifest-read, cached) now runs on every
+  load_documents call, and the stale comment class dies with it.
+- NOTE: validate.py's two F821s fixed (EvidenceRecord imported after the
+  schema split). Repo lint 15 -> 13.
+- Dead Combo fields: already deleted by simplifier round 3 (convergent).
+
+Gate: 371 tests, dev rescore identical to baseline.
