@@ -107,6 +107,28 @@ a frozen in-repo quarantine slate designed by an independent model, and a
 sealed case set held outside the repository, administered once at the final
 milestone. `docs/design/eval-review-guide.md` documents every judgment call.
 
+## Next steps (designed, not built)
+
+Ideas the failure analysis produced. Each is written down here instead of
+built, so the current system stays simple and measured.
+
+- **Frontier planner, cheap researcher.** `plan_research` is the highest
+  leverage point per token: have a frontier model write the plan (one short
+  call), then let the cheap model execute the research against it. The plan
+  is where depth is decided; execution is bookkeeping the cheap model
+  already does well.
+- **Measure the plan step's own lift.** Rerun the dev and holdout suites
+  with `plan_research` disabled and compare scorecards, so the mechanism's
+  cost (one bounce per case) is priced against its coverage gain.
+- **A quote-completeness bounce for questions.** At submit, list any stated
+  number that no cited quote prints and ask once for the quote or a
+  limitation. A bounce-and-retry, never a strip — the hard version was
+  ruled out as fragile for free prose (see docs/design.md, "the two answer
+  shapes").
+- **A cheap verifier pass.** A second cheap-model call that reads only the
+  draft answer and names unquoted claims and unopened documents, feeding
+  one revision. Critique is easier than generation for weak models.
+
 ## Layout
 
 - `src/bank_equity_researcher/` — plain Python: `agent/` (the closed loop),
