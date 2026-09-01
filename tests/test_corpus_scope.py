@@ -208,6 +208,18 @@ def test_stripping_a_fact_warns_that_the_prose_still_states_it():
     assert confidence == 85
 
 
+def test_a_key_fact_that_is_not_an_object_is_dropped_not_raised():
+    """The gate reads whatever the submit schema let through.
+
+    A model that writes a key fact as a bare string reaches this gate, and a
+    raise here would cost a whole run its artifact. The bad entry goes; the
+    facts beside it are gated as usual.
+    """
+    facts = ["CET1 was 12.3%.", {"fact": "CET1 was 12.3%.", "citations": ["ev-1"]}]
+    kept, _limitations, _confidence = enforce_answer_gate(facts, [], 85, {"ev-1"})
+    assert [f["fact"] for f in kept] == ["CET1 was 12.3%."]
+
+
 def test_no_warning_when_nothing_is_stripped():
     """The warning is the record of a strip, so an answer that lost nothing
     must not carry it: a limitation telling every reader the prose may state
@@ -308,3 +320,19 @@ def test_a_bank_name_alone_does_not_resolve():
     predicate (Codex audit round 2). Without it, a bare bank name resolves
     to whichever single document that bank filed."""
     assert C.resolve_doc_name("NAB", INDEX) is None
+
+
+def test_a_quantity_spelt_in_words_needs_a_citation():
+    """"three basis points" carries the same never-guess duty as "3 bps";
+    the digit-only classifier let it ship uncited at full confidence."""
+    facts = [{"fact": "NIM fell three basis points.", "citations": []}]
+    kept, limitations, _ = enforce_answer_gate(facts, [], 85, set())
+    assert kept == []
+    assert any("Stripped unsupported quantified fact" in x for x in limitations)
+
+
+def test_a_period_word_is_not_a_quantity():
+    """"the first half" names a period, not a number; the gate keeps it."""
+    facts = [{"fact": "Margins recovered in the first half.", "citations": []}]
+    kept, _, _ = enforce_answer_gate(facts, [], 85, set())
+    assert [f["fact"] for f in kept] == ["Margins recovered in the first half."]

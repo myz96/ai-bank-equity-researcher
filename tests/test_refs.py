@@ -12,7 +12,7 @@ from bank_equity_researcher.tools import refs
 
 FOOTER = "  {printed}                    Example Bank - Profit Announcement"
 
-CONTENTS = "\n".join(
+CONTENTS = "\n".join(  # noqa: FLY002 - one list item per PDF text-layer line
     [
         "Contents",
         "Example Bank - Profit Announcement",
@@ -92,8 +92,10 @@ def _book() -> _Doc:
                 FOOTER.format(printed=3),
                 "Loan Impairment Expense",
                 "Refer to Note 2.2 for the provision movements.",
-                "Total assets grew and the balance sheet expanded through the year in "
-                "every division and every product. page 4",
+                (
+                    "Total assets grew and the balance sheet expanded through the year "
+                    "in every division and every product. page 4"
+                ),
             ]
         ),
         "\n".join(
@@ -165,7 +167,7 @@ def test_notes_index_ignores_a_note_the_contents_page_never_declares():
         "undeclared",
         [
             CONTENTS,
-            "\n".join(["9.9 ", "Segment Reporting Detail", "Rows follow"]),
+            "9.9 \nSegment Reporting Detail\nRows follow",
         ],
     )
     assert "9.9" not in refs.notes_index(doc)
@@ -176,7 +178,7 @@ def test_notes_index_is_empty_without_a_contents_page():
     # declaring the notes, none of that becomes an index.
     doc = _Doc(
         "deck",
-        ["\n".join(["1.9 ", "Variable rate", "12.5 ", "Equity investments"])],
+        ["1.9 \nVariable rate\n12.5 \nEquity investments"],
         doc_type="results_presentation",
     )
     assert refs.notes_index(doc) == {}

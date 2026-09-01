@@ -347,7 +347,7 @@ def test_follow_references_resolves_a_note_pointer(docs, case, monkeypatch):
 
     refs._notes_cache.clear()
     refs._printed_cache.clear()
-    contents = "\n".join(
+    contents = "\n".join(  # noqa: FLY002 - one list item per PDF text-layer line
         ["Contents", "1.1 ", "Net Interest Income", "5",
          "2.2 ", "Provisions for Impairment and Asset Quality", "7",
          "6.2 ", "ASX Appendix 4E", "9"]
@@ -647,6 +647,199 @@ def test_finalise_caps_drivers_at_85_without_a_primary_walk(docs, case):
 
 
 # ---------------------------------------------------------------------------
+# Which failed walk check sinks the answer
+#
+# `finalise` sorts a failed walk check into one of two piles. A LOAD-BEARING
+# failure is fatal: it caps the answer at 40. A PERIPHERAL failure is declared
+# and costs no confidence. A walk failure is peripheral when the walk is not
+# the primary comparison, or when the walk still sums AND the drivers
+# reconcile — the chart read is then a second opinion the answer does not rest
+# on. The escalation reverses that: if NO walk sum passed anywhere, the
+# peripheral pile becomes fatal, because nothing else verified the split.
+# ---------------------------------------------------------------------------
+
+
+def _failed_walk(comparison: str, failed: list[str], passed: tuple[str, ...] = ()) -> dict:
+    """One entry of `research.walks`, as `read_chart` records it."""
+    return {
+        "comparison": comparison,
+        "source": "CBA/FY26/profit_announcement p14",
+        "checks_passed": list(passed),
+        "checks_failed": list(failed),
+    }
+
+
+def _with_walk(research, walk: dict, also_passed: tuple[str, ...] = ()) -> None:
+    research.walks.append(walk)
+    research.validation["passed"] += [*walk["checks_passed"], *also_passed]
+    research.validation["failed"] += walk["checks_failed"]
+
+
+def _finalised(research, case) -> object:
+    attribution, _ = RA.build_attribution(
+        _submission(), research, case, TAXONOMY["nim"], REGISTRY
+    )
+    return RA.finalise(attribution, research, case, TAXONOMY["nim"], REGISTRY, None)
+
+
+def test_a_primary_walk_that_does_not_sum_is_load_bearing_and_fatal(docs, case):
+    """The answer rests on the primary walk, so its failure is the answer's.
+
+    Nothing else read the split for THIS comparison, so a primary walk whose
+    own sum failed leaves the driver table unverified. That is fatal: the
+    answer caps at 40 and the check is named. A context walk that sums sits
+    beside it, so the escalation below is not what makes this fatal — the
+    classification is.
+    """
+    research = _research(_LLM([]), docs, case)
+    _with_walk(research, _failed_walk("context", [], passed=("walk_sum",)))
+    _with_walk(research, _failed_walk("primary", ["walk_sum (bars -1 != end-start -3) [p14]"]))
+    attribution = _finalised(research, case)
+    assert attribution.attribution_confidence == 40
+    assert any("Failed check: walk_sum" in limit for limit in attribution.limitations)
+
+
+def test_a_primary_walk_that_sums_beside_a_reconciling_bridge_is_peripheral(docs, case):
+    """A walk that sums, with drivers that reconcile, is a second opinion.
+
+    Some OTHER check on that walk failed — a label the taxonomy does not map,
+    say. The split is still verified twice over, so the failure is declared as
+    peripheral and costs the answer no confidence.
+    """
+    research = _research(_LLM([]), docs, case)
+    _with_walk(
+        research,
+        _failed_walk("primary", ["walk_label_unmapped (Other) [p14]"], passed=("walk_sum",)),
+    )
+    attribution = _finalised(research, case)
+    assert attribution.attribution_confidence > 40
+    assert any("Failed check: walk_label_unmapped" in limit for limit in attribution.limitations)
+
+
+def test_a_context_walk_failure_is_peripheral_while_some_walk_still_sums(docs, case):
+    """A walk of another comparison never carried this answer's split."""
+    research = _research(_LLM([]), docs, case)
+    _with_walk(
+        research,
+        _failed_walk("context", ["walk_sum (bars +2 != end-start -3) [p14]"]),
+        also_passed=("walk_sum",),
+    )
+    attribution = _finalised(research, case)
+    assert attribution.attribution_confidence > 40
+    assert any("Failed check: walk_sum" in limit for limit in attribution.limitations)
+
+
+def test_a_peripheral_failure_turns_fatal_when_no_walk_sum_passed(docs, case):
+    """With no walk sum passing anywhere, nothing verified the split.
+
+    The same context-walk failure that is peripheral above is fatal here. A
+    failure is set aside only because another reading stands behind the
+    drivers; take that reading away and the pile escalates.
+    """
+    research = _research(_LLM([]), docs, case)
+    _with_walk(research, _failed_walk("context", ["walk_sum (bars +2 != end-start -3) [p14]"]))
+    attribution = _finalised(research, case)
+    assert attribution.attribution_confidence == 40
+    assert any("Failed check: walk_sum" in limit for limit in attribution.limitations)
+
+
+# ---------------------------------------------------------------------------
+# The expense-split cap
+#
+# A hardcoded confidence override, and this is the receipt the override policy
+# asks for: the rule caps two named drivers at 80 and must be shown doing it,
+# and shown NOT doing it when only one of the pair is claimed.
+# ---------------------------------------------------------------------------
+
+BRIDGE_PAGE = (
+    "Cash net profit after tax\n"
+    "                             FY26     FY25\n"
+    "Operating expenses            400      300\n"
+    "Notable items                 330      100\n"
+    "Cash net profit after tax  10,982   10,252\n"
+)
+
+
+@pytest.fixture
+def bridge_docs() -> list[_Doc]:
+    return [_Doc("CBA/FY26/profit_announcement", ["cover", BRIDGE_PAGE])]
+
+
+def _bridge_submission(drivers: list[dict], delta: float) -> dict:
+    """Drivers that reconcile, each cited to the row that prints its number.
+
+    Both conditions matter: an unreconciled bridge and a weakly cited claim
+    each cap at 80 on their own, so either would hide the split cap.
+    """
+    return _submission(
+        evidence=[
+            {"id": "e1", "doc_id": "CBA/FY26/profit_announcement", "pdf_page": 2,
+             "quote": "Operating expenses            400      300",
+             "numbers": [{"label": "opex", "value": 400, "unit": "$m"}]},
+            {"id": "e2", "doc_id": "CBA/FY26/profit_announcement", "pdf_page": 2,
+             "quote": "Notable items                 330      100",
+             "numbers": [{"label": "notables", "value": 330, "unit": "$m"}]},
+        ],
+        movement={"from_value": 10252, "to_value": 10252 + delta, "delta": delta, "unit": "$m"},
+        headline_evidence=["e1"],
+        drivers=drivers,
+    )
+
+
+def _bridge_driver(canonical: str, value: float, evidence: str) -> dict:
+    return {"canonical": canonical, "contribution": {"value": value, "unit": "$m"},
+            "narrative": "n", "confidence": 95, "evidence": [evidence]}
+
+
+def _bridge_case(case: dict) -> dict:
+    return case | {"metric": "cash_earnings"}
+
+
+def test_the_underlying_and_notable_split_caps_both_claims_at_80(bridge_docs, case):
+    """A bank publishes the combined expense framing as well as the split.
+
+    Claiming the split is a reading of one of two framings the bank equally
+    publishes, so neither claim may stand near certain. Both drop to 80 and
+    the answer says why.
+    """
+    bridge = _bridge_case(case)
+    research = _research(_LLM([]), bridge_docs, bridge, metric="cash_earnings")
+    payload = _bridge_submission([
+        _bridge_driver("operating_expenses", 400.0, "e1"),
+        _bridge_driver("notable_items", 330.0, "e2"),
+    ], delta=730.0)
+    attribution, _ = RA.build_attribution(
+        payload, research, bridge, TAXONOMY["cash_earnings"], REGISTRY
+    )
+    attribution = RA.finalise(
+        attribution, research, bridge, TAXONOMY["cash_earnings"], REGISTRY, None
+    )
+    assert [driver.confidence for driver in attribution.drivers] == [80, 80]
+    assert any("capped at 80" in limit for limit in attribution.limitations)
+
+
+def test_a_bridge_claiming_only_one_of_the_pair_is_not_capped(bridge_docs, case):
+    """The rule reads the SPLIT, so one half of it is not the split.
+
+    An expense claim with no notable-items claim beside it is the combined
+    framing, which is the bank's own headline and needs no discount.
+    """
+    bridge = _bridge_case(case)
+    research = _research(_LLM([]), bridge_docs, bridge, metric="cash_earnings")
+    payload = _bridge_submission([_bridge_driver("operating_expenses", 400.0, "e1")], delta=400.0)
+    attribution, _ = RA.build_attribution(
+        payload, research, bridge, TAXONOMY["cash_earnings"], REGISTRY
+    )
+    attribution = RA.finalise(
+        attribution, research, bridge, TAXONOMY["cash_earnings"], REGISTRY, None
+    )
+    assert not any("capped at 80" in limit for limit in attribution.limitations)
+    # The claim is cited to a row that prints its number, so no OTHER cap
+    # reaches 80 either. This is what makes the pair test above sensitive.
+    assert attribution.drivers[0].confidence == 95
+
+
+# ---------------------------------------------------------------------------
 # The loop
 # ---------------------------------------------------------------------------
 
@@ -896,6 +1089,46 @@ def test_the_combo_chooses_the_orchestration_shell(monkeypatch, tmp_path, capsys
             runner_for(retired)
 
 
+def test_the_question_shell_is_reached_through_its_own_routing_seam():
+    """`ask` and `evals run --suite questions` share one entry point.
+
+    A second path to the question loop would let one caller measure the shell
+    while wearing another's label, which is the defect `runner_for` exists to
+    stop. A retired combo name is refused here exactly as it is for a case.
+    """
+    from bank_equity_researcher.agent.routing import question_runner_for
+
+    assert question_runner_for("agentic") is RA.run_agent_question
+    for retired in ("cheap", "normal"):
+        with pytest.raises(KeyError, match="pipeline-baseline-final"):
+            question_runner_for(retired)
+
+
+def test_a_combo_that_names_no_shell_is_refused_by_both_seams(monkeypatch):
+    """`orchestration` is the seam that chooses a shell, so a combo naming
+    none has nothing to run. The refusal says so instead of routing to the
+    agent by default."""
+    from bank_equity_researcher.agent.routing import question_runner_for, runner_for
+    from bank_equity_researcher.config import COMBOS, Combo
+
+    shell_less = Combo(name="shell-less", vision="v", judges=("a", "b"),
+                       orchestration="pipeline", agent="agent-model")
+    monkeypatch.setitem(COMBOS, "shell-less", shell_less)
+    for seam in (runner_for, question_runner_for):
+        with pytest.raises(ValueError, match="names no orchestration shell"):
+            seam("shell-less")
+
+
+def test_a_combo_that_declares_no_agent_model_cannot_start_a_run(wired, monkeypatch):
+    """The shell is the agent loop, so a combo with no agent model has nothing
+    to drive it. Starting the run and failing on the first model call would
+    spend the corpus load and the wall clock before saying so."""
+    monkeypatch.setattr(RA, "LLM", lambda: _LLM([]))
+    monkeypatch.setitem(RA.COMBOS, "agentic", _Combo(agent=""))
+    with pytest.raises(ValueError, match="declares no agent model"):
+        RA.run_agent_case("CBA", "nim", "FY26", "FY25", "agentic")
+
+
 def test_every_combo_the_cli_help_names_can_actually_run():
     """Three `--combo` help strings read "agentic | agentic-glm |
     agentic-cheap" while `COMBOS` held one name, so a user who followed the
@@ -941,6 +1174,11 @@ def test_the_judge_action_still_grades_a_retired_slug(tmp_path, monkeypatch):
 
 
 def test_the_tool_surface_is_the_documented_one():
+    """The schemas the model reads and the methods that answer them agree.
+
+    Drift between the two surfaces only as a runtime TypeError, in the middle
+    of a paid run.
+    """
     names = [spec["function"]["name"] for spec in RA.TOOL_SPECS]
     assert names == [
         "search_pages", "read_page", "read_chart", "cite", "follow_references",
@@ -950,6 +1188,8 @@ def test_the_tool_surface_is_the_documented_one():
     for spec in [*RA.TOOL_SPECS, RA.SUBMIT_SPEC]:
         assert spec["function"]["parameters"]["type"] == "object"
         assert spec["function"]["description"]
+    for name in names:
+        assert callable(getattr(RA.Research, name, None)), f"no Research method for tool {name}"
 
 
 # ---------------------------------------------------------------------------
@@ -1015,7 +1255,9 @@ def test_a_question_submission_becomes_an_answer_artifact(wired, monkeypatch):
     # The fact keeps its citation, remapped onto the record code minted.
     ids = {r["id"] for r in output["evidence_records"]}
     assert output["key_facts"][0]["evidence"][0] in ids
-    assert out.name == f"ask-{RA.slugify(QUESTION)}-agentic"
+    # The slug carries the caller-fixed scope: the same wording asked of two
+    # banks or two periods must not overwrite one artifact with the other.
+    assert out.name == f"ask-{RA.slugify(QUESTION)}-cba-fy26-fy25-agentic"
     assert out.parent.name == "out"
     saved = json.loads((out / "answer.json").read_text())
     assert saved["key_facts"] == output["key_facts"]
@@ -1176,6 +1418,30 @@ def test_the_turn_cap_reports_itself_and_not_the_clock(wired, monkeypatch):
     assert reported.startswith("the turn cap")
     assert "the tool-call budget (2 calls)" in reported
     assert "wall-clock" not in reported
+
+
+def test_the_wall_clock_is_the_third_rung_of_the_budget_ladder(docs, case):
+    """Three rails stop a run, and the report names the one that bound.
+
+    The ladder is ordered, so a run over two rails at once reports the FIRST.
+    The wall clock reports the combo's own limit, not the soft limit the
+    caller measured against: a turn already under way may run past the soft
+    limit, and a message quoting that number would name a bound the run never
+    agreed to.
+    """
+    combo = _Combo(max_tool_calls=6, cost_ceiling_usd=1.0, wall_clock_s=600.0)
+    research = _research(_LLM([]), docs, case)
+    llm = _LLM([])
+
+    assert RA._budget_hit(research, llm, combo, 0.0, 600.0) is None
+    assert RA._budget_hit(research, llm, combo, 600.0, 600.0) == "the wall-clock budget (600s)"
+    # The soft limit binds early; the message still quotes the combo's rail.
+    assert RA._budget_hit(research, llm, combo, 400.0, 300.0) == "the wall-clock budget (600s)"
+
+    llm.usage.cost_usd = 1.0
+    assert RA._budget_hit(research, llm, combo, 600.0, 600.0) == "the cost ceiling ($1.00)"
+    research.tool_calls = 6
+    assert RA._budget_hit(research, llm, combo, 600.0, 600.0) == "the tool-call budget (6 calls)"
 
 
 # ---------------------------------------------------------------------------
@@ -1635,6 +1901,104 @@ def test_an_out_of_range_confidence_is_clamped_and_declared(docs, case):
     assert any("clamped" in item for item in attribution.limitations)
 
 
+def test_a_boolean_is_not_a_number(docs, case):
+    """`True` is an `int` in Python, so a plain isinstance test reads it as 1.0.
+
+    A model that sends `"from_value": true` would then ship a movement from
+    one basis point, which is a number nobody wrote. The value is not a
+    number, so it degrades like any other malformed value.
+    """
+    assert RA._numeric(True) is None
+    assert RA._numeric(False) is None
+    research = _research(_LLM([]), docs, case)
+    payload = _submission()
+    payload["movement"] = {"from_value": True, "to_value": 205, "delta": -3, "unit": "bps"}
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.movement is None
+    assert any("malformed" in item for item in attribution.limitations)
+
+
+def test_a_movement_submitted_as_nulls_says_it_was_not_established(docs, case):
+    """A model that sends the movement keys with nothing in them is not
+    malformed — it is telling us it found no movement. That answer gets its
+    own words, not the malformed-shape words, because the two say different
+    things to a reader of the artifact."""
+    research = _research(_LLM([]), docs, case)
+    payload = _submission()
+    payload["movement"] = {"from_value": None, "to_value": None, "delta": None, "unit": "bps"}
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.movement is None
+    assert any("could not be established from the evidence" in item
+               for item in attribution.limitations)
+    assert not any("malformed" in item for item in attribution.limitations)
+
+
+# One malformed sub-object must never cost a run its artifact. Each shape below
+# is one the submit schema permits and the assembly code must survive: it drops
+# the bad part, keeps the good part, and returns.
+
+
+def _a_non_dict_evidence_item(research, case):
+    payload = _submission(evidence=[["not a dict"], *_submission()["evidence"]])
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    return attribution.drivers[0].contribution.value
+
+
+def _a_non_dict_driver(research, case):
+    payload = _submission(drivers=["not a dict", *_submission()["drivers"]])
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    return attribution.drivers[0].contribution.value
+
+
+def _a_contribution_stated_as_null(research, case):
+    driver = {**_submission()["drivers"][0], "contribution": {"value": None, "unit": "bps"}}
+    payload = _submission(drivers=[driver])
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    return attribution.drivers[0].contribution
+
+
+def _an_empty_quote_offered_to_cite(research, case):
+    out = research.cite("CBA/FY26/profit_announcement", 12, [""])
+    return out["rejected"][0]["reason"]
+
+
+def _a_malformed_number_offered_to_cite(research, case):
+    research.cite("CBA/FY26/profit_announcement", 12, [{
+        "quote": "Net interest margin    2.05%    2.08%",
+        "numbers": [{"label": "bad", "value": "n/a", "unit": "%"},
+                    {"label": "NIM FY26", "value": 2.05, "unit": "%"}],
+    }])
+    return [fact.label for fact in research.records[0].numbers]
+
+
+def _a_non_dict_key_fact(research, case):
+    payload = {
+        "evidence": _submission()["evidence"],
+        "answer": "The margin fell 3 basis points.",
+        "key_facts": ["not a dict", {"fact": "NIM was 2.05%.", "citations": ["e1"]}],
+        "confidence": 80,
+    }
+    answer = RA.build_answer(payload, research, "How did the margin move?", [])
+    return [fact["fact"] for fact in answer["key_facts"]]
+
+
+@pytest.mark.parametrize(
+    "shape,survives",
+    [
+        (_a_non_dict_evidence_item, -3.0),
+        (_a_non_dict_driver, -3.0),
+        (_a_contribution_stated_as_null, None),
+        (_an_empty_quote_offered_to_cite, "no quote was given"),
+        (_a_malformed_number_offered_to_cite, ["NIM FY26"]),
+        (_a_non_dict_key_fact, ["NIM was 2.05%."]),
+    ],
+    ids=lambda value: getattr(value, "__name__", "")[1:].replace("_", " ") or None,
+)
+def test_a_malformed_sub_object_is_dropped_and_the_rest_still_ships(shape, survives, docs, case):
+    research = _research(_LLM([]), docs, case)
+    assert shape(research, case) == survives
+
+
 def test_bank_language_refuses_a_bank_outside_the_case_scope(docs, case):
     """A metric case loads one registry; answering for another bank from it
     would hand out the case bank's vocabulary under the wrong name."""
@@ -1645,3 +2009,65 @@ def test_bank_language_refuses_a_bank_outside_the_case_scope(docs, case):
     assert other["bank"] == "WBC"
     assert "measures" not in other
     assert "no language map" in other["note"]
+
+
+def test_numeric_rejects_non_finite_spellings():
+    """nan and inf parse as floats but state no quantity; int(nan) raises,
+    so letting them through crashes the confidence and movement paths."""
+    assert RA._numeric("nan") is None
+    assert RA._numeric("inf") is None
+    assert RA._numeric(float("nan")) is None
+    assert RA._numeric("2,050") == 2050.0
+
+
+def test_question_confidence_is_clamped_into_range():
+    payload = {"confidence": 105}
+    assert RA._clamped_confidence(payload, "confidence") == 100
+    assert any("clamped" in item for item in payload["limitations"])
+    payload = {"confidence": -7}
+    assert RA._clamped_confidence(payload, "confidence") == 0
+
+
+def test_a_string_residual_is_stored_coerced(docs, case):
+    """The coerced value must be STORED, not merely validated: "1,000" passed
+    the guard but reached the contract as a string and crashed it."""
+    research = _research(_LLM([]), docs, case)
+    payload = _submission()
+    payload["residual"] = {"value": "1,000", "unit": "bps"}
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.residual is not None
+    assert attribution.residual.value == 1000.0
+
+
+def test_an_empty_residual_unit_is_valid(docs, case):
+    """check_drivers_reconcile reads an empty residual unit as the movement's
+    own unit, so the malformed-shape guard must not kill it."""
+    research = _research(_LLM([]), docs, case)
+    payload = _submission()
+    payload["residual"] = {"value": 1.0, "unit": ""}
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.residual is not None
+    assert attribution.residual.unit == ""
+
+
+def test_a_failed_walk_page_still_counts_as_read(docs, case, monkeypatch):
+    """The annotation read on the failure path can mint evidence from the
+    page, so provenance must count it read."""
+    monkeypatch.setattr(RA, "extract_walk",
+                        lambda *a, **k: (_ for _ in ()).throw(RuntimeError("unreadable")))
+    research = _research(_LLM([]), docs, case)
+    result = research.read_chart("CBA/FY26/profit_announcement", 14)
+    assert "error" in result
+    assert ("CBA/FY26/profit_announcement", 14) in research.pages_read
+
+
+def test_a_movement_with_no_evidence_records_cannot_claim_certainty(docs, case):
+    """A movement asserted with zero evidence records is a guess wearing a
+    number: it shipped at 95 with only a peripheral failed check."""
+    research = _research(_LLM([]), docs, case)
+    payload = _submission(evidence=[], headline_evidence=[], drivers=[])
+    payload["attribution_confidence"] = 95
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.evidence_records == []
+    assert attribution.attribution_confidence <= 20
+    assert any("cites no evidence records" in item for item in attribution.limitations)

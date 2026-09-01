@@ -321,11 +321,9 @@ HEADLINE_ATTRIBUTION = {
 
 
 def test_cited_quotes_includes_headline_citations():
+    # The equality is exact, so it also holds out the record that HEADLINE_
+    # ATTRIBUTION carries and neither list cites.
     assert cited_quotes(HEADLINE_ATTRIBUTION) == ["driver quote", "headline quote"]
-
-
-def test_cited_quotes_still_excludes_records_neither_list_cites():
-    assert "never cited" not in cited_quotes(HEADLINE_ATTRIBUTION)
 
 
 def _many(driver_count: int, headline_count: int) -> dict:

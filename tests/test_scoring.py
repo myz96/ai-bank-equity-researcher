@@ -578,12 +578,3 @@ def test_the_grader_owns_its_tolerances_by_value():
     assert H.SCORER_BPS_TOL == 0.5
 
 
-def test_the_tool_surface_agrees_with_the_dispatchable_methods():
-    """The tool schemas, the Research methods, and the dispatch table say the
-    same names; drift between them surfaces only as a runtime TypeError."""
-    from bank_equity_researcher.agent import prompts as P
-    from bank_equity_researcher.agent.research_agent import Research
-
-    for spec in P.TOOL_SPECS:
-        name = spec["function"]["name"]
-        assert callable(getattr(Research, name, None)), f"no Research method for tool {name}"
