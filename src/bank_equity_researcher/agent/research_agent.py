@@ -32,7 +32,7 @@ from ..taxonomy import METRIC_ALIASES, TAXONOMY
 from ..tools.corpus import Document, documents_for_period, documents_for_question
 from ..tools.extract import extract_walk, extract_walk_annotations, printed_page_of
 from ..tools.refs import relevance_terms, scan_page
-from ..tools.retrieve import retrieve
+from ..tools.retrieve import retrieve_pool
 from ..validation.quotes import match_quote
 from ..validation.schema import (
     Attribution,
@@ -268,13 +268,10 @@ class Research:
 
     def search_pages(self, query: str, doc_id: str | None = None) -> dict:
         docs = [self._doc(doc_id)] if doc_id else self.docs
-        hits: list[tuple[float, str, int]] = []
-        for doc in docs:
-            for page, score in retrieve(doc, str(query), top_k=6):
-                hits.append((score, doc.doc_id, page))
-        hits.sort(key=lambda h: (-h[0], h[1], h[2]))
+        pooled = retrieve_pool(docs, str(query), top_k=MAX_SEARCH_HITS)
         results = []
-        for score, did, page in hits[:MAX_SEARCH_HITS]:
+        for doc, page, score in pooled[:MAX_SEARCH_HITS]:
+            did = doc.doc_id
             text = self._page_text(self.doc_by_id[did], page)
             results.append(
                 {

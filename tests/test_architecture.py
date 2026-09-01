@@ -28,7 +28,14 @@ def _imported_subpackages(path: Path):
         if isinstance(node, ast.ImportFrom):
             if node.level and node.module:
                 yield node.module
-            elif not node.level and node.module:
+            elif node.level or node.module == PACKAGE:
+                # `from .. import tools` carries no module, and `from
+                # bank_equity_researcher import tools` carries only the
+                # package root: in both, the NAMES are the modules (the
+                # walker's two bypasses, Sol architecture round 4).
+                for alias in node.names:
+                    yield alias.name
+            elif node.module:
                 yield _strip_package(node.module)
         elif isinstance(node, ast.Import):
             for alias in node.names:
@@ -55,3 +62,21 @@ def test_config_never_imports_the_agent():
             f"config.py imports {module}: routing lives in agent/routing.py and "
             "config stays data only"
         )
+
+
+def test_the_walker_reads_every_import_spelling(tmp_path):
+    """The layering pins are only as good as the walker: each spelling below
+    must surface `tools`, or a cycle could return through the blind one."""
+    spellings = [
+        "from ..tools.corpus import DOC_TYPES",
+        "from .. import tools",
+        "from bank_equity_researcher import tools",
+        "from bank_equity_researcher.tools import corpus",
+        "import bank_equity_researcher.tools.corpus",
+    ]
+    for src in spellings:
+        f = tmp_path / "probe.py"
+        f.write_text(src)
+        found = list(_imported_subpackages(f))
+        assert any(m == "tools" or m.startswith("tools") for m in found), (src, found)
+

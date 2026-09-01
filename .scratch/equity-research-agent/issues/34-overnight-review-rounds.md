@@ -1185,3 +1185,20 @@ Three of four MUSTs fixed with pins (413 tests):
   unreadable optional chart dropped a reconciled ROE from 95 to 40.
 Remaining from round 3: the retrieval fusion comparability MUST (next), and
 the arch-round walker bypass.
+
+## Sol review round 3 part 2 + Sol architecture round 4 applied (2026-09-01)
+
+- Retrieval is POOLED: one BM25 index over the task's whole corpus (idf
+  computed once, scores comparable across documents) and one pooled dense
+  ranking, global reciprocal-rank fusion. The per-document rank reset gave
+  every document's own top page 2.0 and lexical tie-breaks dropped the one
+  relevant document from the top eight (Sol's executed 13-document repro).
+  search_pages rewired; the old per-document retrieve() deleted; a mocked
+  comparability pin added.
+- The layering walker's two bypasses closed (`from .. import tools` and
+  `from bank_equity_researcher import tools`), with a five-spelling pin that
+  tests the walker itself.
+- Sol arch r4 TASTE items (validation/gates.py split; agent/toolbox.py
+  slice) queued for the next architecture application round.
+
+Gate: 415 tests, ruff clean, dev rescore identical.

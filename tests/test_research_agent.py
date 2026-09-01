@@ -235,8 +235,10 @@ def test_build_records_rejects_an_id_no_tool_minted(docs, case):
 
 def test_search_pages_ranks_and_snippets(docs, case, monkeypatch):
     monkeypatch.setattr(
-        RA, "retrieve",
-        lambda doc, query, top_k=6: [(12, 1.5), (13, 0.5)] if len(doc.page_texts()) > 13 else [],
+        RA, "retrieve_pool",
+        lambda docs, query, top_k=8: [
+            (doc, 12, 1.5) for doc in docs if len(doc.page_texts()) > 13
+        ] + [(doc, 13, 0.5) for doc in docs if len(doc.page_texts()) > 13],
     )
     research = _research(_LLM([]), docs, case)
     out = research.search_pages("net interest margin")
@@ -247,7 +249,8 @@ def test_search_pages_ranks_and_snippets(docs, case, monkeypatch):
 
 
 def test_search_pages_can_restrict_to_one_document(docs, case, monkeypatch):
-    monkeypatch.setattr(RA, "retrieve", lambda doc, query, top_k=6: [(2, 1.0)])
+    monkeypatch.setattr(RA, "retrieve_pool",
+                        lambda docs, query, top_k=8: [(doc, 2, 1.0) for doc in docs])
     research = _research(_LLM([]), docs, case)
     out = research.search_pages("margin", doc_id="CBA/FY25/results_presentation")
     assert {r["doc_id"] for r in out["results"]} == {"CBA/FY25/results_presentation"}
@@ -860,8 +863,10 @@ def wired(monkeypatch, tmp_path, docs):
         RA, "documents_for_question", lambda question, bank=None, periods=None, notes=None: docs
     )
     monkeypatch.setattr(
-        RA, "retrieve",
-        lambda doc, query, top_k=6: [(12, 1.0)] if len(doc.page_texts()) > 13 else [],
+        RA, "retrieve_pool",
+        lambda docs, query, top_k=8: [
+            (doc, 12, 1.0) for doc in docs if len(doc.page_texts()) > 13
+        ],
     )
     return tmp_path
 
@@ -2174,3 +2179,39 @@ def test_an_unrelated_citation_does_not_ground_the_movement(docs, case):
     assert attribution.attribution_confidence <= 20
     assert any("No cited record states the movement" in item
                for item in attribution.limitations)
+
+
+def test_pooled_scores_are_globally_comparable(monkeypatch):
+    """Per-document rank fusion gave every document's own top page the same
+    2.0 and lexical tie-breaks dropped the one relevant document from the top
+    eight (executed repro). Pooled ranks order the relevant page first."""
+    import pathlib
+
+    import numpy as np
+
+    from bank_equity_researcher.tools import retrieve as RT
+
+    class _Poolable:
+        def __init__(self, name):
+            self.path = pathlib.Path(f"/fake/{name}.pdf")
+            self.doc_id = name
+
+    docs = [_Poolable("aaa-irrelevant"), _Poolable("zzz-relevant")]
+
+    def fake_pool_index(paths):
+        pages = [(paths[0], 1), (paths[1], 1)]
+
+        class _BM25:
+            def get_scores(self, tokens):
+                return [0.1, 9.0]
+
+        return _BM25(), np.array([[0.0, 1.0], [1.0, 0.0]]), pages
+
+    class _Encoder:
+        def encode(self, texts, **kw):
+            return np.array([[1.0, 0.0]])
+
+    monkeypatch.setattr(RT, "_pool_index", fake_pool_index)
+    monkeypatch.setattr(RT, "_encoder", lambda: _Encoder())
+    ranked = RT.retrieve_pool(docs, "margin walk")
+    assert ranked[0][0].doc_id == "zzz-relevant"
