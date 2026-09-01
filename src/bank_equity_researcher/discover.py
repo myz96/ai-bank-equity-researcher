@@ -15,6 +15,7 @@ from urllib.parse import urljoin
 import httpx
 
 from .config import MANIFEST_DIR
+from .corpus import DOC_TYPES
 from .llm import LLM
 
 DISCOVER_MODEL = "deepseek/deepseek-v4-pro-0813"
@@ -121,10 +122,25 @@ def discover(bank: str, periods: list[str], seed_url: str, today: str) -> dict:
                     f"FETCHED {url}\nTEXT: {page['text']}\nLINKS:\n" + "\n".join(page["links"])
                 )
         elif action == "done":
+            # The prompt names the 4 doc types discovery TARGETS; the model may
+            # answer with any term in the shared vocabulary. A value outside it
+            # would silently lose slide-page numbering and the presentation
+            # walk tolerance (the hand-built MQG manifest did exactly that,
+            # review round 7), so an unknown term fails here, loudly, before
+            # the manifest is written.
+            for d in reply.get("documents", []):
+                if d.get("doc_type") not in DOC_TYPES:
+                    raise RuntimeError(
+                        f"discovery returned doc_type {d.get('doc_type')!r} for "
+                        f"{d.get('filename')}, which is not in corpus.DOC_TYPES; "
+                        "map it to an existing term or extend the vocabulary "
+                        "with its consumers checked"
+                    )
             manifest = {
                 "bank": bank.upper(),
                 "notes": f"Discovered by the discovery agent ({DISCOVER_MODEL}) on {today}; "
-                "URLs seen on the bank's own pages, verified by fetch_corpus.",
+                "URLs seen on the bank's own pages. scripts/fetch_corpus.py "
+                "downloads and hashes them.",
                 "documents": [
                     {
                         "period": d["period"],

@@ -772,3 +772,25 @@ dev rescore identical to baseline, ruff delta zero):
 
 Convergence: cycle 1 found 2 hard + ~6 judgement; cycle 2 found 0 hard
 behavioural, 6 doc/count nits. Cycle 3 is the convergence check.
+
+## Round 9 — code-review skill, cycle 3 (2026-09-01)
+
+Both axes verified every cycle-2 fix. Four new findings, all fixed:
+- registry/mqg.json did not exist — both registry load paths fall back to {},
+  so MQG ran without its calendar, language map, or full-name resolution
+  ("Macquarie" named no bank). Fixed with a deliberate SKELETON only (names,
+  31 March calendar, doc naming): measure/walk-label maps stay absent until
+  after the sealed exam, because distilling Macquarie's disclosure language
+  after the exam questions were authored risks steering the agent toward exam
+  topics. A new test requires a registry file for every manifest bank.
+  NOTE for the exam writeup: the frozen checkout runs WITHOUT this skeleton
+  (and with the old doc_types) — both handicaps are conservative.
+- discover.py wrote the model's doc_type into the manifest unchecked (the
+  4th hand-kept copy problem); it now fails loudly on any term outside
+  corpus.DOC_TYPES before writing.
+- discover.py's manifest note claimed "verified by fetch_corpus" at write
+  time, before any fetch; reworded to what actually happens.
+- 3 ruff hits that entered with f94aa99 (I001, ISC004 x2 in
+  test_review_round5.py) fixed; repo lint count 29 -> 26, remainder queued.
+
+Gate: 445 tests, dev rescore identical to baseline, no new ruff.

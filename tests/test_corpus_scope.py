@@ -244,3 +244,20 @@ def test_every_manifest_doc_type_is_in_the_vocabulary():
 
 def test_presentation_doc_types_are_vocabulary_terms():
     assert set(C.PRESENTATION_DOC_TYPES) <= C.DOC_TYPES
+
+
+def test_every_manifest_bank_has_a_registry_file():
+    """A manifest without a registry file loads a silent empty map.
+
+    Both registry load paths fall back to {}, so the bank loses its calendar,
+    its language map, and full-name resolution (banks_named) with no error.
+    That happened: manifest/mqg.json landed without registry/mqg.json, and
+    "Macquarie" named no bank (review round 9, 2026-09-01). A bank that truly
+    needs no registry should record that decision here, not by omission.
+    """
+    from bank_equity_researcher.config import MANIFEST_DIR, REGISTRY_DIR
+
+    for manifest in MANIFEST_DIR.glob("*.json"):
+        assert (REGISTRY_DIR / manifest.name).exists(), (
+            f"{manifest.name}: manifest exists but registry/{manifest.name} does not"
+        )

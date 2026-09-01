@@ -31,7 +31,12 @@ from bank_equity_researcher import cli
 from bank_equity_researcher import evals as E
 from bank_equity_researcher import llm as L
 from bank_equity_researcher.config import COMBOS, runner_for
-from bank_equity_researcher.schema import Attribution, Contribution, DriverClaim, Movement
+from bank_equity_researcher.schema import (
+    Attribution,
+    Contribution,
+    DriverClaim,
+    Movement,
+)
 from bank_equity_researcher.validate import (
     CLAIM_CITATION_CAP,
     WHOLE_TABLE_FAILURES,
@@ -72,12 +77,16 @@ def _attribution(unit="$m", movement=(5132.0, 5445.0, 313.0), drivers=()) -> Att
         # Codex's executed repro: `comparison_leak` fired on a 95-confidence
         # driver, `cap_unreconciled_drivers` returned [] and the confidence
         # stayed at 95.
-        "comparison_leak (funding.deposits claims -3, which is the 'Deposits' bar of "
-        "CBA/1H26/results_presentation p28, a walk for a different comparison; "
-        "the task-comparison walk shows -5)",
-        "component_from_prior_half (credit_impairment_charge claims -1 $m, which is a "
-        "delta against the PRIOR HALF's column and matches no 1H26 versus 1H25 delta "
-        "in the evidence)",
+        (
+            "comparison_leak (funding.deposits claims -3, which is the 'Deposits' bar of "
+            "CBA/1H26/results_presentation p28, a walk for a different comparison; "
+            "the task-comparison walk shows -5)"
+        ),
+        (
+            "component_from_prior_half (credit_impairment_charge claims -1 $m, which is a "
+            "delta against the PRIOR HALF's column and matches no 1H26 versus 1H25 delta "
+            "in the evidence)"
+        ),
     ],
 )
 def test_a_wrong_claim_check_that_lost_its_named_cap_caps_the_table(failure):
