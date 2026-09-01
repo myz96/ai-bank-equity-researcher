@@ -31,6 +31,7 @@ from pathlib import Path
 from ..agent.routing import question_runner_for, runner_for
 from ..config import COMBOS, LIVE_COMBO, OUT_DIR, REGISTRY_DIR, REPO_ROOT
 from ..judging.judge import (
+    QUESTION_MAX_QUOTES,
     answer_prose,
     cited_quotes,
     crossref_answer_prose,
@@ -291,7 +292,7 @@ def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
             # default for comparability with its earlier runs.
             row = score_crossref(
                 gold, output, judge_llm, judges, doc_index,
-                max_quotes=48 if kind == "questions" else None,
+                max_quotes=QUESTION_MAX_QUOTES if kind == "questions" else None,
             )
         except Exception as exc:  # noqa: BLE001 - a crashed case is a scored failure
             row = {"case": label, "error": str(exc)[:300]}
@@ -527,7 +528,7 @@ def _slot_ancestor(canonical: str, slots: dict[str, float]) -> str | None:
 
 
 def _score_one_framing(framing: Framing, claims: list[DriverClaim], unit: str,
-                       known_canonicals: frozenset | None = None) -> dict:
+                       known_canonicals: frozenset | None) -> dict:
     entries: list[dict] = []
     first_seen: set[str] = set()
     deferred: dict[str, list[int]] = {}

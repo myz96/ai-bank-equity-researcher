@@ -958,7 +958,9 @@ def test_the_underlying_and_notable_split_caps_both_claims_at_80(bridge_docs, ca
         attribution, research, bridge, TAXONOMY["cash_earnings"], REGISTRY, None
     )
     assert [driver.confidence for driver in attribution.drivers] == [80, 80]
-    assert any("capped at 80" in limit for limit in attribution.limitations)
+    assert all("expense_split_cap_80" in d.checks_passed for d in attribution.drivers)
+    assert any("Capped at 80" in limit and "underlying/notable split" in limit
+               for limit in attribution.limitations)
 
 
 def test_a_bridge_claiming_only_one_of_the_pair_is_not_capped(bridge_docs, case):
@@ -2539,3 +2541,58 @@ def test_pooled_scores_are_globally_comparable(pooled, tmp_path):
     # both of them beat the page that neither half named.
     assert set(ranked[:2]) == {("zzz", 1), ("aaa", 2)}
     assert ranked[2] == ("aaa", 1)
+
+
+def test_a_stale_embedding_cache_is_rebuilt(tmp_path, monkeypatch):
+    """A cached matrix whose row count no longer matches the page count would
+    shift every later document's vectors onto the wrong pages; it must be
+    recomputed, not trusted."""
+    import numpy as np
+
+    from bank_equity_researcher.tools import retrieve as RT
+
+    class _Enc:
+        def encode(self, texts, **kw):
+            return np.ones((len(texts), 2))
+
+    class _Doc2:
+        def __init__(self):
+            self.path = tmp_path / "ZZS-FY26-results-announcement.pdf"
+
+        def page_texts(self):
+            return ["one", "two", "three"]
+
+    monkeypatch.setattr(RT, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(RT, "_encoder", lambda: _Enc())
+    stale = tmp_path / "cache" / "emb" / "ZZS-FY26-results-announcement.npy"
+    stale.parent.mkdir(parents=True)
+    np.save(stale, np.zeros((2, 2)))
+    doc = _Doc2()
+    RT._DOCS[str(doc.path)] = doc
+    RT._doc_embeddings.cache_clear()
+    fresh = RT._doc_embeddings(str(doc.path))
+    assert fresh.shape[0] == 3
+    assert np.load(stale).shape[0] == 3
+
+
+def test_discover_clears_the_corpus_caches_after_writing(monkeypatch, tmp_path):
+    """A long-lived process that discovers and then researches must not read
+    the pre-manifest scope out of the lru caches."""
+    from bank_equity_researcher.tools import corpus as C
+    from bank_equity_researcher.tools import discover as D
+
+    cleared = []
+    monkeypatch.setattr(D, "MANIFEST_DIR", tmp_path)
+    monkeypatch.setattr(D, "LLM", lambda: type("L", (), {
+        "chat_json": lambda self, m, p, max_tokens: {"action": "done", "documents": [{
+            "period": "FY26", "doc_type": "results_announcement", "published": None,
+            "url": "https://x/y.pdf", "filename": "ZZU-FY26-results-announcement.pdf"}]},
+        "usage": type("U", (), {"calls": 1, "cost_usd": 0.0,
+                                "prompt_tokens": 0, "completion_tokens": 0})(),
+    })())
+    monkeypatch.setattr(C.load_documents, "cache_clear",
+                        lambda: cleared.append("docs"))
+    monkeypatch.setattr(C._assert_distinct_stems, "cache_clear",
+                        lambda: cleared.append("stems"))
+    D.discover("ZZU", ["FY26"], "https://x", "2026-09-01")
+    assert set(cleared) == {"docs", "stems"}

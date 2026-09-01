@@ -609,3 +609,14 @@ def test_an_invented_child_cannot_fill_a_parent_slot():
     assert result["correct"] == 0
     assert result["recall_matched"] == 0
     assert all(entry["label"] == "unscored" for entry in result["claims"])
+
+
+def test_score_case_wires_the_taxonomy_vocabulary_through():
+    """The taxonomy gate exists only if score_case passes the vocabulary;
+    deleting the known_canonicals argument at the call site stayed green."""
+    import inspect
+
+    from bank_equity_researcher.evals import harness as H
+
+    src = inspect.getsource(H.score_case)
+    assert "known_canonicals=frozenset(TAXONOMY[" in src

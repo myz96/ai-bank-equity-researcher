@@ -681,3 +681,42 @@ def test_a_fail_under_a_truncated_quote_window_is_flagged():
 
     short = J.judge_fact(FakeLLM(), "a fact", "the note", ["one quote"], ("j1",))
     assert short.verdict == "fail"
+
+
+def test_the_report_renders_a_residual_without_a_table():
+    """A valid residual vanished from the report whenever no driver was
+    quantified; it is part of the arithmetic story either way."""
+    from bank_equity_researcher.render import render_report
+    from bank_equity_researcher.validation.schema import (
+        Attribution,
+        Contribution,
+        Movement,
+    )
+
+    a = Attribution(bank="B", metric="roe", period="FY26", comparator="FY25", basis="cash",
+                    movement=Movement(from_value=13.0, to_value=14.0, delta=1.0, unit="ppt"),
+                    residual=Contribution(value=1.0, unit="ppt"),
+                    headline="ROE rose.", attribution_confidence=50)
+    report = render_report(a)
+    assert "Residual (unexplained): +1 ppt" in report
+
+
+def test_the_residual_table_row_matches_the_header_width():
+    from bank_equity_researcher.render import render_report
+    from bank_equity_researcher.validation.schema import (
+        Attribution,
+        Contribution,
+        DriverClaim,
+        Movement,
+    )
+
+    a = Attribution(bank="B", metric="roe", period="FY26", comparator="FY25", basis="cash",
+                    movement=Movement(from_value=13.0, to_value=14.0, delta=1.0, unit="ppt"),
+                    residual=Contribution(value=0.5, unit="ppt"),
+                    drivers=[DriverClaim(canonical="earnings", narrative="up",
+                                         contribution=Contribution(value=0.5, unit="ppt"))],
+                    headline="ROE rose.", attribution_confidence=50)
+    lines = [l for l in render_report(a).splitlines() if "residual (unexplained)" in l]
+    header = [l for l in render_report(a).splitlines() if l.startswith("| Driver |")]
+    assert lines and header
+    assert lines[0].count("|") == header[0].count("|")

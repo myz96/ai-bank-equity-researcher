@@ -1234,3 +1234,26 @@ Gate: 415 tests, ruff clean, CLI runs, dev rescore identical.
   FLAGS instead of failing (the count cap now counts as truncation); the
   framing rank orders by recall fraction first; a dotted child outside the
   metric's taxonomy vocabulary is unscored and cannot fill a parent slot.
+
+## Fable arch r4 + simplifier r6 + pruning r6 applied (2026-09-01)
+
+- validation/quantities.py: ONE home for the quantity standard (NUMBER_WORDS,
+  UNIT_TOKENS, WORDED_NOUNS, QUANTITY_RE, WORDED_QUANTITY_RE, BARE_INDEX_RE).
+  The worded noun list unified with the digit standard's (the undocumented
+  million/billion/dollars gap removed) — gated on the 119-movement replay:
+  identical two true-positive firings.
+- ANSWER_GATE_CONFIDENCE_CAP renamed NOTHING_SUPPORTED_CAP with a truthful
+  comment (the second applier is cap_ungrounded_movement, not the evidence
+  gate).
+- cap_drivers (renamed from _cap_drivers) gains a cap parameter; the bridge
+  expense-split cap routes through it (tag expense_split_cap_80, shared
+  wording). The walk 85 driver-follow stays a follow-of-answer-cap.
+- QUESTION_MAX_QUOTES lives in judge.py with its measured reason; finalise
+  states its min-only ordering rule once; corroborate marked tags-only.
+- Simplifier r6 micros: toolbox doc lookup, findall, dead defaults deleted,
+  the classified alias replaced by context_walks.
+- Pruning r6: 7/7 newest pins verified killing their mutations; the 5
+  surviving mutations pinned (taxonomy wiring via source inspection, cap
+  ordering via source order, both residual render branches, stale embedding
+  rebuild, discover cache clears, the already-capped early return).
+  Suite 428 -> 435.

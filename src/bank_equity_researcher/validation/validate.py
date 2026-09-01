@@ -26,7 +26,8 @@ from __future__ import annotations
 
 import re
 
-from .gates import _NUMBER_WORDS, ANSWER_GATE_CONFIDENCE_CAP
+from .gates import NOTHING_SUPPORTED_CAP
+from .quantities import BARE_INDEX_RE, WORDED_QUANTITY_RE
 from .schema import PRESENTATION_DOC_TYPES, EvidenceRecord
 
 # PA walk bars are exact, so their sum should reconcile within rounding of the
@@ -1495,25 +1496,6 @@ def quote_prints(quote: str | None, value: float, unit: str | None = None) -> bo
     return False
 
 
-# A bare one- or two-digit token with no decimal, no thousands run and no
-# unit word beside it is as likely a label index or a note number as a
-# quantity ("See Note 1" printed the 1 that laundered a +1 ppt delta,
-# executed repro). Stripping those tokens before the printed-check holds the
-# grounding bar at the same digit standard the quantity classifier uses.
-_BARE_INDEX_RE = re.compile(
-    r"(?<![\d.,$])\b\d{1,2}\b"
-    r"(?![.,]\d)(?!\s*(?:%|bps|bp\b|ppt|per\s?cent|percent|basis|million|billion|bn\b|m\b))"
-)
-# A movement stated in WORDS is still stated ("increased one percentage
-# point from thirteen to fourteen"); the cap must stand down rather than
-# call a worded statement ungrounded (executed false-positive repro).
-_WORDED_QUANTITY_RE = re.compile(
-    rf"\b(?:{_NUMBER_WORDS})\s+(?:basis[-\s]+points?|bps|per\s?cent|"
-    rf"percent(?:age)?\s+points?|percent|ppt|points?)\b",
-    re.IGNORECASE,
-)
-
-
 def cap_ungrounded_movement(attribution) -> bool:
     """Cap an answer whose CITED evidence never states the movement.
 
@@ -1536,9 +1518,9 @@ def cap_ungrounded_movement(attribution) -> bool:
     for record in attribution.evidence_records:
         if record.id not in cited_ids:
             continue
-        if _WORDED_QUANTITY_RE.search(record.quote or ""):
+        if WORDED_QUANTITY_RE.search(record.quote or ""):
             return False
-        quantity_text = _BARE_INDEX_RE.sub(" ", record.quote or "")
+        quantity_text = BARE_INDEX_RE.sub(" ", record.quote or "")
         for value in (movement.from_value, movement.to_value, movement.delta):
             # quote_prints over the bare-index-stripped text: decimals,
             # thousands runs and unit-adjacent digits ground; "Note 1" does
@@ -1549,38 +1531,39 @@ def cap_ungrounded_movement(attribution) -> bool:
                 for number in record.numbers
             ):
                 return False
-    if attribution.attribution_confidence <= ANSWER_GATE_CONFIDENCE_CAP:
+    if attribution.attribution_confidence <= NOTHING_SUPPORTED_CAP:
         return False
-    attribution.attribution_confidence = ANSWER_GATE_CONFIDENCE_CAP
+    attribution.attribution_confidence = NOTHING_SUPPORTED_CAP
     for driver in attribution.drivers:
-        driver.confidence = min(driver.confidence, ANSWER_GATE_CONFIDENCE_CAP)
+        driver.confidence = min(driver.confidence, NOTHING_SUPPORTED_CAP)
     attribution.limitations.append(
         "No cited record states the movement (its endpoints and delta appear in no "
-        f"cited quote or extracted figure), so confidence is capped at {ANSWER_GATE_CONFIDENCE_CAP}."
+        f"cited quote or extracted figure), so confidence is capped at {NOTHING_SUPPORTED_CAP}."
     )
     return True
 
 
-def _cap_drivers(attribution, tag: str, reason: str, applies=None) -> list[str]:
-    """Cap every quantified driver above CLAIM_CITATION_CAP that `applies`
-    selects (all of them when None), stamp `tag`, and record one limitation
-    with `reason`. Mutates; returns what it capped. The cap never raises a
-    confidence and never strips a claim. All three cap rules share this body,
-    so a capped claim always reads the same in the artifact."""
+def cap_drivers(attribution, tag: str, reason: str, applies=None,
+                cap: int = CLAIM_CITATION_CAP) -> list[str]:
+    """Cap every quantified driver above `cap` that `applies` selects (all of
+    them when None), stamp `tag`, and record one limitation with `reason`.
+    Mutates; returns what it capped. The cap never raises a confidence and
+    never strips a claim. Every driver-cap rule shares this body, so a capped
+    claim always reads the same in the artifact."""
     capped: list[str] = []
     for driver in attribution.drivers:
-        if driver.contribution is None or driver.confidence <= CLAIM_CITATION_CAP:
+        if driver.contribution is None or driver.confidence <= cap:
             continue
         if applies is not None and not applies(driver):
             continue
-        driver.confidence = CLAIM_CITATION_CAP
+        driver.confidence = cap
         driver.checks_passed.append(tag)
         capped.append(
             f"{driver.canonical} {driver.contribution.value:+g} {driver.contribution.unit}"
         )
     if capped:
         attribution.limitations.append(
-            f"Capped at {CLAIM_CITATION_CAP}: " + ", ".join(capped) + ". " + reason
+            f"Capped at {cap}: " + ", ".join(capped) + ". " + reason
         )
     return capped
 
@@ -1626,7 +1609,7 @@ def cap_weakly_cited_claims(attribution) -> list[str]:
             or any(quote_states(record.quote, value, unit) for record in cited)
         )
 
-    return _cap_drivers(
+    return cap_drivers(
         attribution, "computed_delta_cap_80",
         "The records these claims cite do not state those numbers, so each one is "
         "arithmetic over the evidence rather than a figure read from it.",
@@ -1840,7 +1823,7 @@ def cap_unreconciled_drivers(attribution, failures: list[str]) -> list[str]:
     hits = [f for f in failures if any(f.startswith(name) for name in WHOLE_TABLE_FAILURES)]
     if not hits:
         return []
-    return _cap_drivers(
+    return cap_drivers(
         attribution, "unreconciled_bridge_cap_80",
         hits[0].split(" (")[0]
         + " failed. That check condemns the whole quantified table: it proves one of "
@@ -1877,7 +1860,7 @@ def cap_drivers_on_failed_walks(attribution, walks) -> list[str]:
     }
     if not broken:
         return []
-    return _cap_drivers(
+    return cap_drivers(
         attribution, "failed_walk_cap_80",
         "Each of these claims cites a walk whose own bars do not sum to that chart's "
         "endpoints, so the read it rests on disagrees with itself.",

@@ -4,14 +4,13 @@ evidence, and the confidence ceiling they apply when nothing survives.
 
 from __future__ import annotations
 
-import re
-
+from .quantities import QUANTITY_RE
 from .schema import Attribution
 
-# The nothing-supported confidence ceiling, shared by BOTH gates: the answer
-# gate applies it when no kept fact is grounded, and the evidence gate when no
-# resolved citation grounds a movement.
-ANSWER_GATE_CONFIDENCE_CAP = 20
+# The nothing-supported confidence ceiling: the answer gate applies it when
+# no kept fact is grounded, and validate.cap_ungrounded_movement when no
+# cited record states the movement.
+NOTHING_SUPPORTED_CAP = 20
 
 
 def enforce_evidence_gate(attribution: Attribution) -> Attribution:
@@ -41,27 +40,6 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
 
 
 
-# A quantity spelt in words is a quantity: "NIM fell three basis points"
-# carries the same never-guess duty as "3 bps", and classifying on digits
-# alone let it ship uncited at full confidence. A number word counts only beside a quantity noun, so a period
-# name ("the first half") never trips it.
-_NUMBER_WORDS = (
-    "zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
-    "thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|"
-    "thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred"
-)
-_QUANTITY_RE = re.compile(
-    # A digit is a quantity when it looks like one: a decimal or thousands
-    # separator, three or more digits, or a unit/currency beside it. A bare
-    # one- or two-digit token can be a LABEL INDEX ("Tier 1 capital", "Stage
-    # 3"), and stripping the qualitative sentence it sits in punishes prose
-    # that claims no number. The trade accepted: "rose by 5" alone escapes.
-    rf"\d+[.,]\d|\d{{3,}}|\$\s*\d|\d+\s*(?:%|bps|bp\b|ppt|per\s?cent|percent|basis|million|billion|bn\b|m\b)|"
-    rf"\b(?:{_NUMBER_WORDS})\s+(?:basis[-\s]+points?|bps|per\s?cent|percent(?:age)?\s+points?|"
-    rf"percent|ppt|points?|million|billion|dollars?)\b",
-    re.IGNORECASE,
-)
-
 
 def enforce_answer_gate(
     key_facts: list, limitations: list[str], confidence: int, known_ids: set[str]
@@ -85,7 +63,7 @@ def enforce_answer_gate(
         cited = [cited] if isinstance(cited, str) else list(cited)
         resolved = [str(e) for e in cited if str(e) in known_ids]
         fact = str(item.get("fact", ""))
-        if _QUANTITY_RE.search(fact) and not resolved:
+        if QUANTITY_RE.search(fact) and not resolved:
             stripped.append(fact[:80])
             limitations.append(f'Stripped unsupported quantified fact: "{fact[:80]}"')
             continue
@@ -105,5 +83,5 @@ def enforce_answer_gate(
         # Kept facts with no resolved citation are prose the gate cannot call
         # quantified; an answer whose every fact is ungrounded is still an
         # answer with nothing supported ("Outlook remained resilient" at 95).
-        confidence = min(int(confidence or 0), ANSWER_GATE_CONFIDENCE_CAP)
+        confidence = min(int(confidence or 0), NOTHING_SUPPORTED_CAP)
     return kept, limitations, int(confidence or 0)

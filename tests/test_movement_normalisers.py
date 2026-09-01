@@ -741,3 +741,17 @@ def test_a_movement_stated_in_words_is_not_capped():
     )
     assert cap_ungrounded_movement(a) is False
     assert a.attribution_confidence == 90
+
+
+def test_grounding_runs_after_the_scale_repair():
+    """The cap must read the REPAIRED endpoints: a percent-scale movement was
+    capped as ungrounded and then repaired to the very values its quotes
+    print, still capped. Moving the call back above the settle pair went
+    green before this pin."""
+    import inspect
+
+    from bank_equity_researcher.agent import research_agent as RA
+
+    src = inspect.getsource(RA.finalise)
+    assert src.index("settle_ratio_scale(") < src.index("cap_ungrounded_movement(")
+    assert src.index("settle_identity_scale(") < src.index("cap_ungrounded_movement(")

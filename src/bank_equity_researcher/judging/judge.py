@@ -215,6 +215,12 @@ def _ask(llm, model: str, question: str, prompt: str, allowed: tuple[str, ...]) 
     return JudgeReply(model=model, question=question, answer=answer, why=why)
 
 
+# The widened window for researcher-question answers: they cite ~40 records,
+# and the default window dropped 15 before entailment (measured 2026-08-30),
+# so a MORE thorough answer lost grounding it actually had.
+QUESTION_MAX_QUOTES = 48
+
+
 def judge_fact(
     llm,
     fact_text: str,
@@ -275,7 +281,7 @@ def _combine(
     has_quotes: bool,
     truncated: bool,
     quotes_used: int,
-    quotes_truncated: bool = False,
+    quotes_truncated: bool,
 ) -> Verdict:
     def answers(question: str) -> set[str]:
         return {r.answer for r in replies if r.question == question and r.answer}

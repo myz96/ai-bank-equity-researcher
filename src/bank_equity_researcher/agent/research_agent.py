@@ -40,6 +40,7 @@ from ..validation.validate import (
     _percent_evidenced,
     _settle_basis,
     build_period_note,
+    cap_drivers,
     cap_drivers_on_failed_walks,
     cap_ungrounded_movement,
     cap_unreconciled_drivers,
@@ -405,6 +406,11 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
 
     An answer is scored by what it can prove: the checks, the thresholds and
     the grading of which failure is fatal do not read who assembled it.
+
+    ORDERING RULE: every confidence write in this pipeline is a min() (or
+    guards on being above its threshold first), so caps compose in any order
+    and a later step can never raise what an earlier one lowered. Only the
+    scale normalisers are order-sensitive, and grounding runs after them.
     """
     calendar = research.calendar
     period, comparator = case["period"], case["comparator"]
@@ -424,7 +430,6 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     walks.sort(key=lambda w: 0 if w.get("comparison") == "primary" else 1)
     primary_walks = [w for w in walks if w.get("comparison") == "primary"]
     context_walks = [w for w in walks if w.get("comparison") == "context"]
-    classified = primary_walks + context_walks
     label_map = registry.get(f"{case['metric']}_walk_labels", {})
     view_walks, _view_note = walks_for_view(walks)
     cross_source = cross_source_view(view_walks, label_map)
@@ -439,6 +444,7 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     # movement was capped as ungrounded and then repaired to the very
     # endpoints its quotes print, still capped (executed repro).
     cap_ungrounded_movement(attribution)
+    # corroborate only TAGS (single/multi-source); it writes no confidence.
     corroborate(attribution, cross_source)
     cap_weakly_cited_claims(attribution)
     if is_bridge:
@@ -449,11 +455,12 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
             and d.canonical in ("operating_expenses", "notable_items")
         }
         if len(split) == 2:
-            for driver in split.values():
-                driver.confidence = min(driver.confidence, 80)
-            attribution.limitations.append(
+            cap_drivers(
+                attribution, "expense_split_cap_80",
                 "Expenses are claimed on the underlying/notable split; the bank equally "
-                "publishes the combined headline framing, so both claims are capped at 80."
+                "publishes the combined headline framing, so neither claim may stand "
+                "near certain.",
+                applies=lambda driver: driver.canonical in split,
             )
 
     validation = research.validation
@@ -492,7 +499,7 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     fatal = output_failed + [f for f in validation["failed"] if f not in peripheral]
     honest_partial: list[str] = []
     if metric_cfg["method"] == "two_level_arithmetic" or (
-        metric_cfg["method"] == "walk_extraction" and classified and not primary_walks
+        metric_cfg["method"] == "walk_extraction" and context_walks and not primary_walks
     ):
         fatal = [f for f in fatal if f != "no_quantified_drivers"]
         honest_partial += [f for f in output_failed if f == "no_quantified_drivers"]

@@ -280,3 +280,16 @@ def test_null_confidence_is_low_not_a_crash():
     self-report; both forms mean LOW, never a crash."""
     assert DriverClaim(canonical="x").confidence == 40
     assert DriverClaim(canonical="x", confidence=None).confidence == 40
+
+
+def test_an_already_capped_movement_returns_false():
+    """The early return: a movement already at or under the ceiling is not
+    re-capped and no duplicate limitation is written."""
+    from bank_equity_researcher.validation.schema import Attribution, Movement
+    from bank_equity_researcher.validation.validate import cap_ungrounded_movement
+
+    a = Attribution(bank="B", metric="roe", period="FY26", comparator="FY25", basis="cash",
+                    movement=Movement(from_value=13.0, to_value=14.0, delta=1.0, unit="ppt"),
+                    attribution_confidence=20)
+    assert cap_ungrounded_movement(a) is False
+    assert a.limitations == []

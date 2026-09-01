@@ -90,7 +90,7 @@ class Research:
         results = []
         for doc, page, score in pooled[:MAX_SEARCH_HITS]:
             did = doc.doc_id
-            text = self._page_text(self.doc_by_id[did], page)
+            text = self._page_text(doc, page)
             results.append(
                 {
                     "doc_id": did,
@@ -457,7 +457,7 @@ class Research:
 
 def _snippet(text: str, query: str) -> str:
     """A window of the page around the first query word that appears on it."""
-    words = [w for w in re.findall(r"[A-Za-z]{4,}", query.lower())]
+    words = re.findall(r"[A-Za-z]{4,}", query.lower())
     lowered = text.lower()
     at = next((lowered.find(w) for w in words if lowered.find(w) >= 0), -1)
     start = max(0, at - SNIPPET_CHARS // 3) if at >= 0 else 0
