@@ -185,7 +185,10 @@ def test_money_tolerance_is_max_of_relative_and_absolute():
 
 @pytest.mark.parametrize(
     "raw,expected",
-    [("bpts", "bps"), ("bps of average GLAA", "bps"), ("$ m", "$m"), (None, "")],
+    # The spelling only the SCORER meets: a gold file writes the denominator
+    # beside the unit. Case, punctuation and the other spellings are pinned
+    # once, in test_unit_tolerances.test_unit_spellings_canonicalise.
+    [("bps of average GLAA", "bps")],
 )
 def test_normalize_unit(raw, expected):
     assert normalize_unit(raw) == expected

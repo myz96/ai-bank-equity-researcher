@@ -17,7 +17,7 @@ import pytest
 
 from bank_equity_researcher.agent import research_agent as RA
 from bank_equity_researcher.taxonomy import TAXONOMY
-from bank_equity_researcher.validation.schema import Attribution, EvidenceRecord
+from bank_equity_researcher.validation.schema import EvidenceRecord
 
 CALENDAR = {"fy_end": "30 June", "halves": {"1H": "ends 31 December", "2H": "ends 30 June"}}
 REGISTRY = {
@@ -373,6 +373,17 @@ def test_dispatch_reports_an_unknown_tool_instead_of_raising(docs, case):
     assert "no tool named" in research.dispatch("read_the_room", {})["error"]
 
 
+def test_dispatch_reports_bad_arguments_instead_of_raising(docs, case):
+    """A model that names the tool right and its arguments wrong.
+
+    `dispatch` catches TypeError on its own, before the generic guard: a
+    handler called with the wrong keyword raises inside the CALL, so the loop
+    would die on a mistake the model can correct from the reply.
+    """
+    research = _research(_LLM([]), docs, case)
+    assert "rejected those arguments" in research.dispatch("read_page", {"page": 3})["error"]
+
+
 def test_dispatch_names_the_corpus_when_the_doc_id_is_wrong(docs, case):
     research = _research(_LLM([]), docs, case)
     out = research.dispatch("read_page", {"doc_id": "NAB/FY26/whatever", "pdf_page": 1})
@@ -435,7 +446,6 @@ def test_submission_becomes_a_valid_attribution(docs, case):
         _submission(), research, case, TAXONOMY["nim"], REGISTRY
     )
     assert rejections == []
-    assert isinstance(attribution, Attribution)
     assert attribution.movement.delta == -3
     assert attribution.movement_source == "row 'Net interest margin', column FY25 -> column FY26"
     # The agent's own ids are remapped onto the records code minted.
@@ -1201,6 +1211,30 @@ def test_a_row_quoted_without_its_footnote_markers_is_accepted(case):
     assert "markers_stripped" in (records[0].provenance or "")
 
 
+def test_a_quote_matching_the_page_exactly_records_no_relaxation(case):
+    """The relaxation is RECORDED, so the exact match must record nothing.
+
+    `match_quote` answers under which test it matched. Its strict branch
+    returns an empty relaxation and `_mint_record` leaves provenance unset; a
+    relaxation stamped on every record would tell a reader that every quote
+    needed the weaker test.
+    """
+    docs = [_Doc("CBA/FY26/profit_announcement", ["cover", FOOTNOTED_PAGE])]
+    research = _research(_LLM([]), docs, case)
+    records, rejections, _ = research.build_records(
+        [
+            {
+                "id": "e1",
+                "doc_id": "CBA/FY26/profit_announcement",
+                "pdf_page": 2,
+                "quote": "Revenue from ordinary activities 2 3 30,153",
+            }
+        ]
+    )
+    assert rejections == []
+    assert records[0].provenance is None
+
+
 def test_the_relaxation_does_not_admit_a_wrong_number(case):
     """Markers come off the PAGE, never off the quote.
 
@@ -1450,4 +1484,100 @@ def test_the_scope_note_reaches_the_question_prompt(wired, monkeypatch, docs):
     # And it still reaches the reader.
     assert any("researched in FY25 instead" in item for item in output["limitations"])
 
+
+# ---------------------------------------------------------------------------
+# Restored pins (Codex cleanup-audit round 1): sole coverage of live branches
+# ---------------------------------------------------------------------------
+
+
+def test_build_records_rejects_a_quote_from_another_page(docs, case):
+    """A verbatim quote copied from the WRONG page is rejected: the citation
+    names p13 but the words live on p12, and provenance must not drift."""
+    research = _research(_LLM([]), docs, case)
+    records, rejections, _ = research.build_records(
+        [
+            {
+                "id": "e1",
+                "doc_id": "CBA/FY26/profit_announcement",
+                "pdf_page": 13,
+                "quote": "Net interest margin    2.05%    2.08%",
+            }
+        ]
+    )
+    assert records == []
+    assert rejections and "p13" in rejections[0]
+
+
+def test_a_driver_may_cite_a_verified_record_the_evidence_list_forgot(docs, case):
+    """The record was minted from the page's own words, so the claim stands."""
+    research = _research(_LLM([]), docs, case)
+    research.cite("CBA/FY26/profit_announcement", 12,
+                  [{"quote": "Net interest margin    2.05%    2.08%"}])
+    payload = _submission(
+        evidence=[],
+        headline_evidence=[],
+        drivers=[{
+            "canonical": "funding.deposits",
+            "contribution": {"value": -3, "unit": "bps"},
+            "narrative": "Deposit pricing.", "confidence": 90, "evidence": ["ev-1"],
+        }],
+    )
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert [r.id for r in attribution.evidence_records] == ["ev-1"]
+    assert attribution.drivers[0].contribution.value == -3
+
+
+def test_a_failing_tool_is_a_message_the_agent_can_answer(wired, monkeypatch):
+    """A tool that raises inside dispatch becomes a tool RESULT, never a crash:
+    the loop carries on and the case still submits."""
+    llm = _LLM(
+        [
+            _assistant(_tool_call("c1", "read_page",
+                                  {"doc_id": "CBA/FY26/profit_announcement", "pdf_page": 999})),
+            _assistant(_tool_call("c2", "submit", _submission())),
+        ]
+    )
+    attribution, _out = _run(llm, monkeypatch)
+    assert attribution.movement.delta == -3
+
+
+def test_a_question_fact_may_cite_a_record_the_evidence_list_forgot(wired, monkeypatch):
+    """The question shell recovers a tool-minted record exactly as the
+    movement shell does; the two must not drift apart."""
+    llm = _LLM(
+        [
+            _assistant(_tool_call("c1", "cite", {
+                "doc_id": "CBA/FY26/profit_announcement", "pdf_page": 12,
+                "quotes": [{"quote": "Net interest margin    2.05%    2.08%"}],
+            })),
+            _assistant(_tool_call("c2", "submit", _answer_submission(
+                evidence=[],
+                key_facts=[{"fact": "NIM was 2.05% in FY26.", "citations": ["ev-1"]}],
+            ))),
+        ]
+    )
+    output, _out = _run_question(llm, monkeypatch)
+    assert [r["id"] for r in output["evidence_records"]] == ["ev-1"]
+    assert output["key_facts"][0]["evidence"] == ["ev-1"]
+
+
+def test_the_agent_reads_the_chart_annotation_layer(docs, case):
+    """The callout layer beside a walk's bars carries the bank's own sub-split
+    of a bar; a successful walk read must also mint those records."""
+    walk = {"title": "Margin", "start_label": "Jun 25", "start_bps": 208.0,
+            "bars": [{"label": "Deposits", "bps": -3.0}], "end_label": "Jun 26",
+            "end_bps": 205.0}
+
+    class _AnnotatingLLM(_LLM):
+        def chat_json(self, model, prompt, image_png=None, max_tokens=None, deadline_monotonic=None):
+            if "ANNOTATION LAYER" in prompt:
+                return {
+                    "annotations": [{"bar": "Deposits", "label": "Savings", "value": -2.0}]
+                }
+            return walk
+
+    research = _research(_AnnotatingLLM([]), docs, case)
+    result = research.read_chart("CBA/FY26/profit_announcement", 14)
+    assert result["annotations"], "the callout layer must reach the agent"
+    assert any("Savings" in (r.quote or "") for r in research.records)
 

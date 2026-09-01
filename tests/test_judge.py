@@ -127,6 +127,18 @@ VERDICT_TABLE = [
         (None, None),
     ),
     (
+        # The only NON-OBJECT reply in the table. `_ask` reads the answer out
+        # of the reply and reads "why" only when the reply is a dict, so a list
+        # is the shape that reaches both guards at once.
+        "MALFORMED: a list where an object belongs",
+        {
+            JUDGES[0]: {STATED: [STATED], ENTAILED: {"entailed": ENTAILED}},
+            JUDGES[1]: {STATED: {"stated": STATED}, ENTAILED: {"entailed": ENTAILED}},
+        },
+        FLAGGED,
+        (None, None),
+    ),
+    (
         "MALFORMED: the key is missing",
         {
             JUDGES[0]: {STATED: {"why": "it says so"}, ENTAILED: {"entailed": ENTAILED}},
@@ -161,6 +173,18 @@ def test_empty_citations_are_not_entailed_without_asking():
     assert verdict.quotes_used == 0
 
 
+def test_blank_quotes_count_as_no_citation():
+    """A record whose quote is empty is still a citation in the list.
+
+    The quote block is filtered before the entailment question is asked, so
+    blank strings must leave the list empty and take the same path as no
+    citation at all — a judge asked to entail whitespace will oblige.
+    """
+    verdict = judge_fact(FakeLLM(both(STATED, ENTAILED)), FACT, ANSWER, ["", "   "], JUDGES)
+    assert verdict.entailed == NOT_ENTAILED
+    assert verdict.quotes_used == 0
+
+
 def test_each_judge_answers_two_separate_questions():
     """The two questions are two calls, so the entailment ruling is not
     anchored by the judge's own 'the note states it' answer."""
@@ -176,7 +200,9 @@ def test_each_judge_answers_two_separate_questions():
 
 @pytest.mark.parametrize(
     "written,expected",
-    [("Stated", STATED), ("not_entailed", NOT_ENTAILED)],
+    # Three writings, three of the normaliser's own steps: case, the
+    # underscore, and the surrounding space that a model adds to a bare word.
+    [("Stated", STATED), ("not_entailed", NOT_ENTAILED), (" NOT ENTAILED ", NOT_ENTAILED)],
 )
 def test_answer_normalisation(written, expected):
     """Case, spaces and underscores are the same answer; anything else is not."""
@@ -582,6 +608,11 @@ def test_judge_fact_max_quotes_widens_the_window():
     assert default.quotes_used == 24
     widened = J.judge_fact(FakeLLM(), "a fact", "the note", quotes, ("j1", "j2"), max_quotes=48)
     assert widened.quotes_used == 40
+    # The window dropped quotes; the CHARACTER budget did not. The two counts
+    # are reported side by side on the scorecard, so the flag must stay off
+    # when nothing was cut for length.
+    assert default.quotes_truncated is False
+    assert widened.quotes_truncated is False
     llm = FakeLLM()
     J.judge_fact(llm, "a fact", "the note", quotes, ("j1", "j2"), max_quotes=48)
     assert any("quote number 39" in p for p in llm.prompts)
@@ -619,4 +650,19 @@ def test_quotes_dropped_by_the_character_budget_are_reported():
         assert f"q{i} " in entailment
     assert f"q{verdict.quotes_used} " not in entailment
 
+
+def test_quotes_inside_the_budget_are_not_flagged():
+    """The negative control for quote truncation: a small set is never marked
+    truncated, and the count is the set's own size."""
+    from bank_equity_researcher.judging import judge as J
+
+    class FakeLLM:
+        def chat_json(self, model, prompt, max_tokens=None):
+            if '"stated"' in prompt or "does the NOTE state" in prompt:
+                return {"stated": "stated", "why": ""}
+            return {"entailed": "entailed", "why": ""}
+
+    verdict = J.judge_fact(FakeLLM(), "a fact", "the note", ["short one", "short two"], ("j1",))
+    assert verdict.quotes_truncated is False
+    assert verdict.quotes_used == 2
 

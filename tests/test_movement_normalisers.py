@@ -669,6 +669,35 @@ def test_three_basis_points_do_not_close_a_dollar_bridge():
     assert any(f.startswith("drivers_unit_mismatch") for f in failed)
 
 
+def test_a_residual_in_the_movement_s_own_unit_still_closes_the_bridge():
+    """The ordinary residual, and the arm of the filter every real bridge takes.
+
+    A residual is admitted when its unit is EMPTY or the movement's own. The
+    unit-typed sum was written for the off-unit case, so the case that closes
+    every honest bridge needs its own pin: an admitted residual joins the sum
+    and raises no `drivers_unit_mismatch`.
+    """
+    attribution = _ratio(
+        "$m", (5132.0, 5445.0, 313.0), "cash_earnings",
+        drivers=[("net_interest_income", 310.0, None)],
+    )
+    attribution.residual = Contribution(value=3.0, unit="$m")
+    passed, failed = check_drivers_reconcile(attribution)
+    assert "drivers_reconcile" in passed
+    assert not any(f.startswith("drivers_unit_mismatch") for f in failed)
+
+
+def test_a_bridge_with_nothing_quantified_reports_it_and_reconciles_nothing():
+    """`no_quantified_drivers` is the name the author shell reads to tell an
+    honest partial answer from a broken one, so the check must emit it rather
+    than pass an empty sum against the movement's delta."""
+    attribution = _ratio("$m", (5132.0, 5445.0, 313.0), "cash_earnings", drivers=[])
+    passed, failed = check_drivers_reconcile(attribution)
+    assert passed == []
+    assert "no_quantified_drivers" in failed
+    assert not any(f.startswith("drivers_reconcile") for f in failed)
+
+
 def test_a_residual_with_no_unit_still_closes_the_bridge():
     """An unlabelled residual makes no competing unit claim, so it is read in
     the movement's unit, exactly as the contribution filter reads it."""

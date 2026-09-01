@@ -127,6 +127,20 @@ def test_a_name_with_the_wrong_bank_does_not_resolve():
     assert C.resolve_doc_name("CBA/FY25/results-book", INDEX) is None
 
 
+def test_a_name_with_the_wrong_period_does_not_resolve():
+    """The containment pass agrees on BANK and PERIOD, and the period half of
+    that rule needs its own row: the bank above is right here and only the year
+    is wrong, so a name naming a book no bank filed that year resolves to
+    nothing."""
+    assert C.resolve_doc_name("NAB/FY26/results-book", INDEX) is None
+
+
+def test_an_empty_name_does_not_resolve():
+    """The guard before the index lookup. An empty key is inside every alias,
+    so without it the containment pass reads a blank name as every document."""
+    assert C.resolve_doc_name("", INDEX) is None
+
+
 # ---------------------------------------------------------------------------
 # Item 16: the gate strips facts, not prose
 # ---------------------------------------------------------------------------
@@ -152,6 +166,15 @@ def test_stripping_a_fact_warns_that_the_prose_still_states_it():
     # One surviving fact means the answer is still an answer, so the
     # nothing-survived cap does not fire.
     assert confidence == 85
+
+
+def test_no_warning_when_nothing_is_stripped():
+    """The warning is the record of a strip, so an answer that lost nothing
+    must not carry it: a limitation telling every reader the prose may state
+    unsupported numbers is a false alarm on a clean answer."""
+    facts = [{"fact": "CET1 was 12.3%.", "citations": ["ev-1"]}]
+    _kept, limitations, _confidence = enforce_answer_gate(facts, [], 85, {"ev-1"})
+    assert not any("prose was NOT rewritten" in x for x in limitations)
 
 
 # ---------------------------------------------------------------------------

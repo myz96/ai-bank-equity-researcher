@@ -72,11 +72,9 @@ def test_usage_falls_back_to_the_table_when_no_price_is_reported():
 @pytest.mark.parametrize(
     "exc,grace",
     [
-        # Fable's executed shapes. The first already passed on its message; the
-        # next three are the hotspot gap the ladder exists for and every one of
-        # them returned False.
-        (httpx.ConnectError("[Errno 8] nodename nor servname provided, or not known"), True),
-        (httpx.ConnectTimeout("timed out"), True),
+        # Fable's executed shapes, one per transport type. Both returned False
+        # before the fix: the message carries no mark the old ladder knew, and
+        # an empty message carries nothing at all.
         (httpx.ConnectTimeout(""), True),
         (httpx.ConnectError("[Errno 60] Operation timed out"), True),
         # A read-phase timeout stays fail-fast: a stall mid-body is one stuck

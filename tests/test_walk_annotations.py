@@ -75,6 +75,28 @@ def test_annotation_records_pair_each_label_with_its_own_value():
     assert records[1].numbers[0].value == -1.0
 
 
+def test_annotation_records_keep_the_label_verbatim_in_the_quote():
+    """The quote is what the judge and the report read, so its shape is fixed.
+
+    A callout carries the bar it hangs off, then its own label, then its value.
+    The "[chart annotation]" prefix is how every reader tells a callout from a
+    sentence the page prints.
+    """
+    records = annotation_records(GOOD, _Doc(), 63, 61, _ids(), "bps")
+    assert records[0].quote == "[chart annotation] Asset Pricing: Home loans: Pricing +9"
+
+
+def test_annotation_records_stamp_provenance_in_code():
+    """The page a callout came from is stamped by the caller, never by the
+    model: a vision read that named its own page could point a citation at a
+    page it never saw. The pdf page and the printed page are different numbers
+    and must not be swapped."""
+    records = annotation_records(GOOD, _Doc(), 63, 61, _ids(), "bps")
+    assert [(r.doc_id, r.pdf_page, r.printed_page) for r in records] == [
+        ("BANK/FY21/results_presentation", 63, 61)
+    ] * 3
+
+
 def test_annotation_records_keep_a_callout_that_carries_no_number():
     """A qualifying phrase beside a bar is evidence too; it just has no value."""
     records = annotation_records(GOOD, _Doc(), 63, 61, _ids(), "bps")
