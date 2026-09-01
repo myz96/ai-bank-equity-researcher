@@ -267,63 +267,17 @@ class LLM:
         if model not in ALWAYS_REASONS:
             payload["reasoning"] = {"enabled": False}
 
-        deadline_s = max(DEADLINE_FLOOR_S, max_tokens * DEADLINE_SECONDS_PER_TOKEN)
-        last_error: Exception | None = None
-        attempt = 0
-        grace = 0
-        out_of_time = False
-        while attempt < retries:
-            left = _time_left(deadline_monotonic)
-            if left is not None and left <= 0:
-                out_of_time = True
-                break
-            try:
-                status, body = self._post(payload, _request_budget(deadline_s, deadline_monotonic))
-                if status == 400 and "reasoning" in payload:
-                    payload.pop("reasoning")
-                    continue
-                if status == 429:
-                    attempt += 1
-                    last_error = RuntimeError("429 Too Many Requests")
-                    # The sleep belongs to the NEXT attempt, so the last 429
-                    # used to buy a 75-second wait for a retry that never came.
-                    if attempt >= retries:
-                        break
-                    if not _sleep_within(15 * attempt, deadline_monotonic):
-                        out_of_time = True
-                        break
-                    continue
-                if status >= 400:
-                    raise RuntimeError(f"HTTP {status}: {body[:300]!r}")
-                data = json.loads(body)
-                if "choices" not in data:
-                    raise RuntimeError(f"no choices: {str(data)[:300]}")
-                usage = data.get("usage", {})
-                self.usage.add(model, usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0))
-                text = data["choices"][0]["message"]["content"]
-                if not text:
-                    raise RuntimeError("empty content (reasoning consumed the budget?)")
-                return text
-            except Exception as exc:  # noqa: BLE001
-                last_error = exc
-                if _network_error(exc) and grace < NETWORK_GRACE:
-                    # A dead network is waited out, never charged as an attempt.
-                    grace += 1
-                    if _sleep_within(NETWORK_GRACE_SLEEP, deadline_monotonic):
-                        continue
-                    out_of_time = True
-                    break
-                attempt += 1
-                # The ladder is 1, 2, 4, 8, 16 seconds and it belongs to the
-                # attempt that FOLLOWS. The while-loop conversion slept
-                # 2**attempt after incrementing, which doubled every rung and
-                # added a 32-second wait after the last attempt was gone.
-                if attempt >= retries:
-                    break
-                if not _sleep_within(2 ** (attempt - 1), deadline_monotonic):
-                    out_of_time = True
-                    break
-        raise _give_up("chat", model, attempt, retries, out_of_time, last_error)
+        def parse(data: dict) -> str:
+            usage = data.get("usage", {})
+            self.usage.add(model, usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0))
+            text = data["choices"][0]["message"]["content"]
+            if not text:
+                raise RuntimeError("empty content (reasoning consumed the budget?)")
+            return text
+
+        return self._completion("chat", payload, max_tokens=max_tokens,
+                                retries=retries, deadline_monotonic=deadline_monotonic,
+                                parse=parse)
 
     def chat_tools(
         self,
@@ -359,6 +313,32 @@ class LLM:
         if model not in ALWAYS_REASONS:
             payload["reasoning"] = {"enabled": False}
 
+        def parse(data: dict) -> dict:
+            usage = data.get("usage", {})
+            self.usage.add(
+                model,
+                usage.get("prompt_tokens", 0),
+                usage.get("completion_tokens", 0),
+                cost_usd=usage.get("cost"),
+            )
+            message = data["choices"][0]["message"]
+            if not message.get("content") and not message.get("tool_calls"):
+                raise RuntimeError("empty reply: neither content nor a tool call")
+            return message
+
+        return self._completion("chat_tools", payload, max_tokens=max_tokens,
+                                retries=retries, deadline_monotonic=deadline_monotonic,
+                                parse=parse)
+
+    def _completion(self, what: str, payload: dict, *, max_tokens: int, retries: int,
+                    deadline_monotonic: float | None, parse):
+        """The one retry ladder every request climbs.
+
+        chat() and chat_tools() used to carry it twice, line for line; only
+        the payload and the success `parse` differ, so they hand those in.
+        A parse that raises (truncated or empty reply) is charged as a normal
+        attempt, exactly as when the check lived inline.
+        """
         deadline_s = max(DEADLINE_FLOOR_S, max_tokens * DEADLINE_SECONDS_PER_TOKEN)
         last_error: Exception | None = None
         attempt = 0
@@ -377,6 +357,8 @@ class LLM:
                 if status == 429:
                     attempt += 1
                     last_error = RuntimeError("429 Too Many Requests")
+                    # The sleep belongs to the NEXT attempt, so the last 429
+                    # used to buy a 75-second wait for a retry that never came.
                     if attempt >= retries:
                         break
                     if not _sleep_within(15 * attempt, deadline_monotonic):
@@ -388,17 +370,7 @@ class LLM:
                 data = json.loads(body)
                 if "choices" not in data:
                     raise RuntimeError(f"no choices: {str(data)[:300]}")
-                usage = data.get("usage", {})
-                self.usage.add(
-                    model,
-                    usage.get("prompt_tokens", 0),
-                    usage.get("completion_tokens", 0),
-                    cost_usd=usage.get("cost"),
-                )
-                message = data["choices"][0]["message"]
-                if not message.get("content") and not message.get("tool_calls"):
-                    raise RuntimeError("empty reply: neither content nor a tool call")
-                return message
+                return parse(data)
             except Exception as exc:  # noqa: BLE001
                 last_error = exc
                 if _network_error(exc) and grace < NETWORK_GRACE:
@@ -409,12 +381,16 @@ class LLM:
                     out_of_time = True
                     break
                 attempt += 1
+                # The ladder is 1, 2, 4, 8, 16 seconds and it belongs to the
+                # attempt that FOLLOWS. The while-loop conversion slept
+                # 2**attempt after incrementing, which doubled every rung and
+                # added a 32-second wait after the last attempt was gone.
                 if attempt >= retries:
                     break
                 if not _sleep_within(2 ** (attempt - 1), deadline_monotonic):
                     out_of_time = True
                     break
-        raise _give_up("chat_tools", model, attempt, retries, out_of_time, last_error)
+        raise _give_up(what, payload["model"], attempt, retries, out_of_time, last_error)
 
     def chat_json(self, model: str, prompt: str, *, json_retries: int = 2, **kwargs):
         """chat() plus a parse-failure retry, so every JSON caller inherits it.

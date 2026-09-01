@@ -5,6 +5,10 @@ from __future__ import annotations
 import argparse
 import json
 
+from .config import LIVE_COMBO
+
+_COMBO_HELP = f"model combo: {LIVE_COMBO} (the only live combo)"
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(prog="bank-equity-researcher")
@@ -15,8 +19,7 @@ def main() -> int:
     analyse.add_argument("--metric", required=True, help="nim | cash_earnings | roe | cet1 | impairment | cti")
     analyse.add_argument("--period", required=True, help="e.g. FY26, 1H26")
     analyse.add_argument("--comparator", default=None, help="defaults: FY->prior FY, half->PCP")
-    analyse.add_argument("--combo", default="agentic",
-                         help="model combo: agentic (the only live combo)")
+    analyse.add_argument("--combo", default=LIVE_COMBO, help=_COMBO_HELP)
 
     ask = sub.add_parser("ask", help="answer a free-form question from the corpus")
     ask.add_argument("--bank", default=None,
@@ -24,8 +27,7 @@ def main() -> int:
     ask.add_argument("--periods", default=None,
                      help="comma-separated, e.g. FY26,FY25; omit when the question names them")
     ask.add_argument("--question", required=True, help="the question to answer")
-    ask.add_argument("--combo", default="agentic",
-                     help="model combo: agentic (the only live combo)")
+    ask.add_argument("--combo", default=LIVE_COMBO, help=_COMBO_HELP)
 
     discover_cmd = sub.add_parser("discover", help="agentically build a manifest for a bank")
     discover_cmd.add_argument("--bank", required=True)
@@ -36,8 +38,8 @@ def main() -> int:
     evals_cmd.add_argument("action", choices=["run", "crossref", "rescore", "judge"])
     evals_cmd.add_argument("--suite", default="dev",
                            help="dev | holdout | questions (free-form researcher questions)")
-    evals_cmd.add_argument("--combo", default="agentic",
-                           help="agentic (the only live combo). rescore and judge also accept a "
+    evals_cmd.add_argument("--combo", default=LIVE_COMBO,
+                           help=_COMBO_HELP + ". rescore and judge also accept a "
                                 "retired combo name: they read saved artifacts by slug and run "
                                 "no shell.")
     evals_cmd.add_argument("--only", default=None,

@@ -101,6 +101,14 @@ MAX_TURNS_AFTER_BUDGET = 10
 HARD_STOP_FACTOR = 1.5
 
 
+def _hard_stop_s(combo) -> float:
+    """The loop's hard stop in seconds — the wall-clock rail with its overrun
+    factor. Stated once: the loop's budget messages measure it on time.time()
+    and the retry ladders on time.monotonic(), and the two must agree on the
+    quantity they measure."""
+    return HARD_STOP_FACTOR * combo.wall_clock_s
+
+
 # The tool surface, described once. Both research tasks — a metric movement and
 # a free-form question — drive the SAME loop over the SAME tools, so a change to
 # a tool changes one paragraph, not two.
@@ -1605,7 +1613,7 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                 else f"the turn cap ({turn_cap} turns), after {exhausted}"
             )
             break
-        if spent >= HARD_STOP_FACTOR * combo.wall_clock_s:
+        if spent >= _hard_stop_s(combo):
             exhausted = exhausted or f"the wall-clock budget ({combo.wall_clock_s:.0f}s)"
             break
         if exhausted is None:
@@ -1688,7 +1696,7 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                     # a single turn carrying five chart reads issued ten vision
                     # calls with no cost check between them.
                     stop = f"the cost ceiling (${combo.cost_ceiling_usd:.2f})"
-                elif time.time() - started >= HARD_STOP_FACTOR * combo.wall_clock_s:
+                elif time.time() - started >= _hard_stop_s(combo):
                     stop = f"the wall-clock budget ({combo.wall_clock_s:.0f}s)"
                 if stop is not None:
                     exhausted = exhausted or stop
@@ -1739,7 +1747,7 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
     # The loop's own hard stop, stated once as an absolute monotonic instant so
     # every model call can be held to it. time.time() drives the loop's budget
     # messages; a retry ladder needs a clock that never steps backwards.
-    deadline = time.monotonic() + HARD_STOP_FACTOR * combo.wall_clock_s
+    deadline = time.monotonic() + _hard_stop_s(combo)
     llm = LLM()
     metric_key = METRIC_ALIASES[metric.lower()]
     metric_cfg = TAXONOMY[metric_key]
@@ -1947,7 +1955,7 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = "agent
     if not combo.agent:
         raise ValueError(f"combo {combo_name} declares no agent model")
     # The same absolute hard stop the movement shell sets; see run_agent_case.
-    deadline = time.monotonic() + HARD_STOP_FACTOR * combo.wall_clock_s
+    deadline = time.monotonic() + _hard_stop_s(combo)
     llm = LLM()
 
     scope_notes: list[str] = []

@@ -86,6 +86,11 @@ COMBOS: dict[str, Combo] = {
     ),
 }
 
+# The one live combo, named once. Every CLI default and eval default reads
+# this, so renaming the combo is a two-line change here instead of a hunt
+# through six string literals (simplifier round, 2026-09-01).
+LIVE_COMBO = "agentic"
+
 
 def runner_for(combo_name: str):
     """The case runner (ADR-0005).

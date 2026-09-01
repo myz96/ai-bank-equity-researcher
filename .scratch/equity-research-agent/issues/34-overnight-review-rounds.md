@@ -834,3 +834,23 @@ CONVERGENCE CALL: cycle 1 found 2 hard + judgement backlog; cycle 2 six
 doc-truth nits; cycles 3-5 found only consequences of in-review fixes plus
 cosmetics, and every verification passed. The code-review skill phase closes
 here. The queued judgement-call smells hand over to the code-simplifier phase.
+
+## Simplifier round 1 (2026-09-01) — the queued backlog
+
+The judgement-call smells queued by review rounds 7-11, implemented:
+- llm.py: chat() and chat_tools() now climb ONE retry ladder — _completion()
+  takes the payload and a success-parse callback; the ~55 duplicated lines
+  and their comments live once. A parse that raises still charges an attempt.
+- research_agent.py: _hard_stop_s(combo) states the hard stop once for the
+  four sites that computed HARD_STOP_FACTOR * wall_clock_s on two clocks.
+- config.py: LIVE_COMBO names the live combo once; cli.py (3 defaults + help)
+  and evals.py (run_judge_suite, rescore, judges lookup) read it; the
+  JUDGE_COMBO constant beside a hand-kept default is gone.
+- cli.py: one _COMBO_HELP string instead of three copies.
+
+Gate: 453 tests, dev rescore identical to baseline, ruff steady at 26, CLI
+--help runs.
+
+Still queued: review-round test file naming (folds into the test pruning
+pass); 26 pre-existing ruff pedantic hits; validate.py's indirect pymupdf
+dependency via corpus (accepted shape).

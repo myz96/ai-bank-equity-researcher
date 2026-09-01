@@ -28,7 +28,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .config import COMBOS, OUT_DIR, REGISTRY_DIR, REPO_ROOT
+from .config import COMBOS, LIVE_COMBO, OUT_DIR, REGISTRY_DIR, REPO_ROOT
 from .judge import answer_prose, cited_quotes, judge_facts
 from .schema import Attribution, DriverClaim
 from .validate import (
@@ -1051,10 +1051,7 @@ def judge_case_checklist(llm, gold: dict, combo: str, judges: tuple[str, ...]) -
     return {**row, **graded}
 
 
-JUDGE_COMBO = "agentic"
-
-
-def run_judge_suite(suite: str = "dev", combo: str = "agentic", bank: str | None = None) -> Path:
+def run_judge_suite(suite: str = "dev", combo: str = LIVE_COMBO, bank: str | None = None) -> Path:
     """Judge every case's narrative checklist and write a coverage scorecard.
 
     `combo` is a SLUG SELECTOR, exactly as `rescore` treats it: it names which
@@ -1068,7 +1065,7 @@ def run_judge_suite(suite: str = "dev", combo: str = "agentic", bank: str | None
     """
     from .llm import LLM
 
-    judges = COMBOS[JUDGE_COMBO].judges
+    judges = COMBOS[LIVE_COMBO].judges
     llm = LLM()
     rows = []
     for gold in load_gold(suite, bank):
@@ -1245,7 +1242,7 @@ def delta_table_lines(old_rows: list[dict], new_rows: list[dict]) -> list[str]:
 
 def rescore(
     suite: str = "dev",
-    combo: str = "agentic",
+    combo: str = LIVE_COMBO,
     bank: str | None = None,
     since: str | None = None,
     until: str | None = None,
