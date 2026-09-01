@@ -28,17 +28,24 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
+from ..agent.routing import question_runner_for, runner_for
 from ..config import COMBOS, LIVE_COMBO, OUT_DIR, REGISTRY_DIR, REPO_ROOT
 from ..judging.judge import answer_prose, cited_quotes, judge_facts
+from ..llm import LLM
+from ..render import case_slug
+from ..tools.corpus import banks_named, doc_alias_index, resolve_doc_name
 from ..validation.schema import Attribution, DriverClaim
-from ..validation.validate import (
-    MONEY_ABS_TOL_M,
-    MONEY_REL_TOL,
-    RATIO_TOL_PPT,
-    WALK_BAR_TOL_PA,
-    cross_source_view,
-    normalize_unit,
-)
+from ..validation.validate import cross_source_view, normalize_unit
+
+# The GRADER'S OWN tolerances, deliberately not imported from the product's
+# validation constants although the values agree today: a loosened product
+# tolerance must show up as eval failures, and a grader that inherits the
+# loosening cannot see it (Fable architecture round 1, finding 1).
+# tests/test_scoring.py pins these numbers by literal value.
+SCORER_MONEY_ABS_TOL_M = 10.0
+SCORER_MONEY_REL_TOL = 0.01
+SCORER_RATIO_TOL_PPT = 0.1
+SCORER_BPS_TOL = 0.5
 
 GOLD_DIR = REPO_ROOT / "evals" / "gold"
 RESULTS_DIR = REPO_ROOT / "evals" / "results"
@@ -106,7 +113,6 @@ def load_question_gold(split: str = "dev", bank: str | None = None) -> list[dict
     the banks the question names, which is the only sense a bank filter has
     when one case can span three of them.
     """
-    from ..tools.corpus import banks_named
 
     cases = []
     for path in sorted(GOLD_DIR.glob("*.json")):
@@ -126,7 +132,6 @@ def load_question_gold(split: str = "dev", bank: str | None = None) -> list[dict
 
 def _same_document(gold_doc: str, record_doc_id: str, index: dict[str, str] | None) -> bool:
     """Whether a gold location's document name is the record's document."""
-    from ..tools.corpus import resolve_doc_name
 
     resolved = resolve_doc_name(gold_doc, index) if index else None
     if resolved is not None:
@@ -268,9 +273,6 @@ def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
     The shell comes from agent.routing.question_runner_for and from nowhere else, so a
     suite can never measure one shell under the other's label.
     """
-    from ..agent.routing import question_runner_for
-    from ..llm import LLM
-    from ..tools.corpus import doc_alias_index
 
     run_question = question_runner_for(combo)
     judges = COMBOS[combo].judges
@@ -406,12 +408,12 @@ def tolerance_for(unit: str | None) -> Tolerance:
     if canonical == "$m":
         # Banks round to $m; 1% or $10m (whichever is larger) absorbs
         # re-presented comparatives without letting real errors through.
-        return Tolerance(MONEY_ABS_TOL_M, MONEY_REL_TOL)
+        return Tolerance(SCORER_MONEY_ABS_TOL_M, SCORER_MONEY_REL_TOL)
     if canonical in ("ppt", "%"):
-        return Tolerance(RATIO_TOL_PPT)
+        return Tolerance(SCORER_RATIO_TOL_PPT)
     if canonical == "bps":
-        return Tolerance(WALK_BAR_TOL_PA)
-    return Tolerance(WALK_BAR_TOL_PA)
+        return Tolerance(SCORER_BPS_TOL)
+    return Tolerance(SCORER_BPS_TOL)
 
 
 def values_match(value: float, target: float, unit: str | None) -> bool:
@@ -920,7 +922,6 @@ def run_suite(suite: str, combo: str, bank: str | None = None, only: str | None 
     metric names and/or bank-metric-period fragments, matched case-insensitively
     against "BANK-metric-PERIOD" (e.g. "cash_earnings", "nim-1H26",
     "NAB,WBC-cti"). Full suites remain the gate at the end of a round."""
-    from ..agent.routing import runner_for
 
     run_case = runner_for(combo)
 
@@ -999,7 +1000,6 @@ def scorecard_meta(stamp: str, *extra: str) -> list[str]:
 
 def artifact_dir(gold: dict, combo: str) -> Path:
     """The saved out/<slug>/ directory for one gold case and one combo."""
-    from ..render import case_slug
 
     return OUT_DIR / case_slug(gold["bank"], gold["metric"], gold["period"],
                                gold["comparator"], combo)
@@ -1052,7 +1052,6 @@ def run_judge_suite(suite: str = "dev", combo: str = LIVE_COMBO, bank: str | Non
     they have nothing to do with the arm that produced it, and a retired name
     holds no judges to read.
     """
-    from ..llm import LLM
 
     judges = COMBOS[LIVE_COMBO].judges
     llm = LLM()

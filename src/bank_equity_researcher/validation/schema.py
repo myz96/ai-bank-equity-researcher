@@ -49,7 +49,7 @@ class EvidenceRecord(BaseModel):
     quote: str = Field(max_length=600)  # verbatim, <=50 words by prompt contract
     numbers: list[NumberFact] = []
     # The weaker test this quote matched its page under, when it did not match
-    # the page's characters as printed (research_agent.MARKER_RELAXATION). None
+    # the page's characters as printed (validation.quotes.MARKER_RELAXATION). None
     # means the strict test passed.
     provenance: str | None = None
 

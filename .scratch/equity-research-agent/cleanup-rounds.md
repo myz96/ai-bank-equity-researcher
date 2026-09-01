@@ -13,7 +13,7 @@ pre-cleanup-baseline, no new ruff).
 | Simplifier | 2 | 6 | 1 (audit r1) | 6 |
 | Comment sweep | 4 | 6 | 1 (audit r1) | 6 |
 | Test pruning | 3 | 6 | 1 (audit r1) | 6 |
-| Architecture | 0 | 6 | 1 (+r2 in flight) | 6 |
+| Architecture | 1 | 6 | 1 (+r2 in flight) | 6 |
 
 Counting rules: a round counts when its report lands AND its accepted
 findings are applied and committed (or it says CONVERGED/CONSOLIDATED).

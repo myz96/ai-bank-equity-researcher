@@ -967,3 +967,25 @@ named 8 lost pins; pruning round 2 independently restored 4 of them plus 8
 more of its own; the 5 neither caught alone are restored (commit e0a982b).
 
 Gate: 362 tests, dev rescore identical, ruff 15.
+
+## Fable architecture round 1 applied (2026-09-01)
+
+Findings (import graph verified acyclic by AST walk) and dispositions:
+- APPLIED: the grader owns its tolerances — SCORER_* constants in harness.py,
+  pinned by literal value in test_scoring; a loosened product tolerance now
+  SURFACES as eval failures instead of being inherited by the grader.
+- APPLIED: the verbatim-quote gate moved to validation/quotes.py (match_quote,
+  quote_key, strip_markers, MARKER_RELAXATION with the full _MARKER_RE
+  evidence block) — every EvidenceRecord minter shares one gate; schema's
+  docstring no longer points up the layer stack.
+- APPLIED: agent/prompts.py — 591 lines of pure prompt/schema data out of
+  research_agent.py (2030 -> ~1450 lines); no logic moved. This was the
+  SAFE slice of the deferred three-way split.
+- APPLIED: harness's seven in-function imports hoisted (no cycle needs them);
+  tool-surface drift test added (every TOOL_SPECS name must be a Research
+  method).
+- ESCALATED to the user, not changed: the two shells run different gate sets
+  (cap_weakly_cited_claims runs in the case shell only; the question shell
+  has resolvability-stripping but no stated-number cap). Whether question
+  facts should get the weak-citation cap is a product decision.
+- NOTED: question_scope's synthetic case/metric_cfg shape (product shape).

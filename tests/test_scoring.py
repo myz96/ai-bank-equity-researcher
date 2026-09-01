@@ -560,3 +560,30 @@ def test_a_unit_spelling_difference_is_not_a_mismatch():
     )
     result = score_drivers(gold_framings(gold), [claim("nii", 229, unit="$M")], "$m")
     assert result["claims"][0]["label"] == CORRECT
+
+
+def test_the_grader_owns_its_tolerances_by_value():
+    """The scorer's tolerances are pinned by LITERAL value, on purpose.
+
+    They are not imported from validation: a loosened product tolerance must
+    surface as eval failures, and a grader that inherits the loosening grades
+    it away. Changing any number here is a conscious re-calibration of the
+    gold standard, not a refactor.
+    """
+    from bank_equity_researcher.evals import harness as H
+
+    assert H.SCORER_MONEY_ABS_TOL_M == 10.0
+    assert H.SCORER_MONEY_REL_TOL == 0.01
+    assert H.SCORER_RATIO_TOL_PPT == 0.1
+    assert H.SCORER_BPS_TOL == 0.5
+
+
+def test_the_tool_surface_agrees_with_the_dispatchable_methods():
+    """The tool schemas, the Research methods, and the dispatch table say the
+    same names; drift between them surfaces only as a runtime TypeError."""
+    from bank_equity_researcher.agent import prompts as P
+    from bank_equity_researcher.agent.research_agent import Research
+
+    for spec in P.TOOL_SPECS:
+        name = spec["function"]["name"]
+        assert callable(getattr(Research, name, None)), f"no Research method for tool {name}"

@@ -15,8 +15,10 @@ from dataclasses import dataclass
 
 import pytest
 
+from bank_equity_researcher.agent import prompts as PROMPTS
 from bank_equity_researcher.agent import research_agent as RA
 from bank_equity_researcher.taxonomy import TAXONOMY
+from bank_equity_researcher.validation import quotes as Q
 from bank_equity_researcher.validation.schema import EvidenceRecord
 
 CALENDAR = {"fy_end": "30 June", "halves": {"1H": "ends 31 December", "2H": "ends 30 June"}}
@@ -144,18 +146,18 @@ def _research(llm, docs, case, metric="nim") -> RA.Research:
 
 def test_quote_key_ignores_layout_but_not_words():
     """A PDF text layer breaks a row wherever the column gaps fall."""
-    assert RA.quote_key("Net interest margin  2.05%") == RA.quote_key(
+    assert Q.quote_key("Net interest margin  2.05%") == Q.quote_key(
         "Net interest\nmargin\n2.05%"
     )
     # An era page splits a number across a space; dropping whitespace pairs it
     # with the number a reader sees.
-    assert RA.quote_key("47.0") == RA.quote_key("47. 0")
+    assert Q.quote_key("47.0") == Q.quote_key("47. 0")
     # Different words are still different.
-    assert RA.quote_key("margin fell") != RA.quote_key("margin rose")
+    assert Q.quote_key("margin fell") != Q.quote_key("margin rose")
 
 
 def test_quote_key_unifies_typographic_marks():
-    assert RA.quote_key("the bank’s margin – down") == RA.quote_key("the bank's margin - down")
+    assert Q.quote_key("the bank’s margin – down") == Q.quote_key("the bank's margin - down")
 
 
 def test_build_records_accepts_a_verbatim_quote(docs, case):
@@ -991,7 +993,7 @@ def test_the_question_submit_spec_asks_for_the_smaller_payload():
     assert set(properties) == {"evidence", "answer", "key_facts", "confidence", "limitations"}
     assert spec["parameters"]["required"] == ["evidence", "answer", "key_facts", "confidence"]
     # The evidence contract is the movement's own, not a second one.
-    assert properties["evidence"] is RA._EVIDENCE_SCHEMA
+    assert properties["evidence"] is PROMPTS._EVIDENCE_SCHEMA
 
 
 def test_a_question_submission_becomes_an_answer_artifact(wired, monkeypatch):
@@ -1319,7 +1321,7 @@ def test_the_relaxation_does_not_delete_the_data_it_walks_past(page, quote):
     The record then showed the reader and the grounding judge a sentence with
     its load-bearing numbers removed.
     """
-    assert RA.match_quote(quote, page) == (False, "")
+    assert Q.match_quote(quote, page) == (False, "")
 
 
 def test_a_newline_column_is_not_a_footnote_marker():
@@ -1332,13 +1334,13 @@ def test_a_newline_column_is_not_a_footnote_marker():
     current-period value and presenting 102 as the first column.
     """
     page = "Credit and Capital Markets \n \n80 \n102 \n114  \n-22% \n-30%"
-    assert "80" in RA.strip_markers(page)
-    assert RA.match_quote("Credit and Capital Markets 102 114", page)[0] is False
+    assert "80" in Q.strip_markers(page)
+    assert Q.match_quote("Credit and Capital Markets 102 114", page)[0] is False
 
 
 def test_a_marker_is_still_stripped_between_a_label_and_its_value():
     """The shape rule is narrower, not absent."""
-    matched, relaxation = RA.match_quote(
+    matched, relaxation = Q.match_quote(
         "Revenue from ordinary activities 30,153",
         "Revenue from ordinary activities 2 3 30,153",
     )
@@ -1348,7 +1350,7 @@ def test_a_marker_is_still_stripped_between_a_label_and_its_value():
 def test_a_superscript_marker_comes_off_wherever_it_stands():
     """No page prints a value in superscript, so a superscript is always a
     marker — including at the end of a row label."""
-    matched, _ = RA.match_quote(
+    matched, _ = Q.match_quote(
         "Restructuring and notable items (170) (130)",
         "Restructuring and notable items ¹ (170) (130)",
     )
@@ -1394,7 +1396,7 @@ def test_the_cite_tool_requires_its_numbers():
     cite = next(t for t in RA.TOOL_SPECS if t["function"]["name"] == "cite")
     item = cite["function"]["parameters"]["properties"]["quotes"]["items"]
     assert item["required"] == ["quote", "numbers"]
-    assert "numbers" in RA.HOW_TO_RESEARCH
+    assert "numbers" in PROMPTS.HOW_TO_RESEARCH
 
 
 # ---------------------------------------------------------------------------
