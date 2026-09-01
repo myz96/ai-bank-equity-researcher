@@ -1202,3 +1202,14 @@ the arch-round walker bypass.
   slice) queued for the next architecture application round.
 
 Gate: 415 tests, ruff clean, dev rescore identical.
+
+## Fable architecture round 3 applied (2026-09-01)
+
+The two blessed splits, moves only, bodies verbatim: validation/gates.py
+(the two gates, the shared cap, the quantity classifier — 109 lines; schema
+keeps models and vocabulary, 136 lines) and agent/toolbox.py (the Research
+class with its limits and helpers — 468 lines; research_agent.py is the
+orchestration/assembly module at 1,000 lines). Importers updated everywhere;
+no re-export shims.
+
+Gate: 415 tests, ruff clean, CLI runs, dev rescore identical.

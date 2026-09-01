@@ -26,7 +26,8 @@ from __future__ import annotations
 
 import re
 
-from .schema import ANSWER_GATE_CONFIDENCE_CAP, PRESENTATION_DOC_TYPES, EvidenceRecord
+from .gates import ANSWER_GATE_CONFIDENCE_CAP
+from .schema import PRESENTATION_DOC_TYPES, EvidenceRecord
 
 # PA walk bars are exact, so their sum should reconcile within rounding of the
 # endpoints (each endpoint rounded to 1bp): 1bp.
@@ -1564,7 +1565,7 @@ def _cap_drivers(attribution, tag: str, reason: str, applies=None) -> list[str]:
 def cap_weakly_cited_claims(attribution) -> list[str]:
     """Cap a quantified claim whose own citations do not state its number.
 
-    The evidence gate (schema.enforce_evidence_gate) asks whether a citation
+    The evidence gate (gates.enforce_evidence_gate) asks whether a citation
     RESOLVES. That is a structural question, and a claim passes it while the
     records it points at say nothing like the number claimed: the CBA FY26
     impairment run shipped +150 / -17 / -71 $m at confidence 85 citing two

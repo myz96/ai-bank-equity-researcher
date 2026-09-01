@@ -17,6 +17,7 @@ import pytest
 
 from bank_equity_researcher.agent import prompts as PROMPTS
 from bank_equity_researcher.agent import research_agent as RA
+from bank_equity_researcher.agent import toolbox as TB
 from bank_equity_researcher.taxonomy import TAXONOMY
 from bank_equity_researcher.validation import quotes as Q
 from bank_equity_researcher.validation.schema import EvidenceRecord
@@ -135,8 +136,8 @@ def case() -> dict:
     }
 
 
-def _research(llm, docs, case, metric="nim") -> RA.Research:
-    return RA.Research(llm, _Combo(), docs, case, TAXONOMY[metric], REGISTRY)
+def _research(llm, docs, case, metric="nim") -> TB.Research:
+    return TB.Research(llm, _Combo(), docs, case, TAXONOMY[metric], REGISTRY)
 
 
 # ---------------------------------------------------------------------------
@@ -235,7 +236,7 @@ def test_build_records_rejects_an_id_no_tool_minted(docs, case):
 
 def test_search_pages_ranks_and_snippets(docs, case, monkeypatch):
     monkeypatch.setattr(
-        RA, "retrieve_pool",
+        TB, "retrieve_pool",
         lambda docs, query, top_k=8: [
             (doc, 12, 1.5) for doc in docs if len(doc.page_texts()) > 13
         ] + [(doc, 13, 0.5) for doc in docs if len(doc.page_texts()) > 13],
@@ -245,11 +246,11 @@ def test_search_pages_ranks_and_snippets(docs, case, monkeypatch):
     assert out["results"][0]["doc_id"] in {d.doc_id for d in docs}
     assert out["results"][0]["pdf_page"] == 12
     assert "margin" in out["results"][0]["snippet"].lower()
-    assert len(out["results"]) <= RA.MAX_SEARCH_HITS
+    assert len(out["results"]) <= TB.MAX_SEARCH_HITS
 
 
 def test_search_pages_can_restrict_to_one_document(docs, case, monkeypatch):
-    monkeypatch.setattr(RA, "retrieve_pool",
+    monkeypatch.setattr(TB, "retrieve_pool",
                         lambda docs, query, top_k=8: [(doc, 2, 1.0) for doc in docs])
     research = _research(_LLM([]), docs, case)
     out = research.search_pages("margin", doc_id="CBA/FY25/results_presentation")
@@ -266,10 +267,10 @@ def test_read_page_returns_the_text_and_the_printed_number(docs, case):
 
 
 def test_read_page_caps_a_long_page(docs, case):
-    long_doc = _Doc("CBA/FY26/results_book", ["x" * (RA.MAX_PAGE_CHARS + 500)])
+    long_doc = _Doc("CBA/FY26/results_book", ["x" * (TB.MAX_PAGE_CHARS + 500)])
     research = _research(_LLM([]), [long_doc], case)
     out = research.read_page("CBA/FY26/results_book", 1)
-    assert len(out["text"]) == RA.MAX_PAGE_CHARS
+    assert len(out["text"]) == TB.MAX_PAGE_CHARS
     assert out["truncated"] is True
 
 
@@ -863,7 +864,7 @@ def wired(monkeypatch, tmp_path, docs):
         RA, "documents_for_question", lambda question, bank=None, periods=None, notes=None: docs
     )
     monkeypatch.setattr(
-        RA, "retrieve_pool",
+        TB, "retrieve_pool",
         lambda docs, query, top_k=8: [
             (doc, 12, 1.0) for doc in docs if len(doc.page_texts()) > 13
         ],
@@ -1197,7 +1198,7 @@ def test_the_tool_surface_is_the_documented_one():
         assert spec["function"]["parameters"]["type"] == "object"
         assert spec["function"]["description"]
     for name in names:
-        assert callable(getattr(RA.Research, name, None)), f"no Research method for tool {name}"
+        assert callable(getattr(TB.Research, name, None)), f"no Research method for tool {name}"
 
 
 # ---------------------------------------------------------------------------
@@ -1320,7 +1321,7 @@ def test_a_chart_read_for_a_question_is_not_classified_against_a_comparison(docs
         },
     )
     case, metric_cfg, registries = RA.question_scope(QUESTION, docs)
-    research = RA.Research(llm, _Combo(), docs, case, metric_cfg, {}, registries)
+    research = TB.Research(llm, _Combo(), docs, case, metric_cfg, {}, registries)
     out = research.read_chart("CBA/FY26/profit_announcement", 14, unit="$m")
     assert out["walk"]["comparison"] == "unclassified"
     assert research.records[0].kind == "walk_vision"
@@ -1329,7 +1330,7 @@ def test_a_chart_read_for_a_question_is_not_classified_against_a_comparison(docs
 def test_bank_language_answers_for_the_bank_the_question_asks_about(docs):
     case, metric_cfg, _registries = RA.question_scope(QUESTION, docs)
     registries = {"CBA": REGISTRY, "NAB": {"measures": {"core_profit": "cash earnings"}}}
-    research = RA.Research(llm := _LLM([]), _Combo(), docs, case, metric_cfg, {}, registries)
+    research = TB.Research(llm := _LLM([]), _Combo(), docs, case, metric_cfg, {}, registries)
     assert research.bank_language("NAB")["measures"]["core_profit"] == "cash earnings"
     assert research.bank_language("CBA")["measures"]["core_profit"].startswith("cash NPAT")
     # A question has no metric, so no walk-label list is offered for one.
@@ -1547,7 +1548,7 @@ def test_a_question_chart_needs_its_unit_named(docs, case):
     """
     question_case, metric_cfg, _registries = RA.question_scope("What drove NIM?", docs)
     assert metric_cfg["unit"] == ""
-    research = RA.Research(_LLM([]), _Combo(), docs, question_case, metric_cfg, REGISTRY)
+    research = TB.Research(_LLM([]), _Combo(), docs, question_case, metric_cfg, REGISTRY)
     result = research.read_chart("CBA/FY26/profit_announcement", 14)
     assert "name the unit" in result["error"]
     assert research.walks == []
@@ -1559,7 +1560,7 @@ def test_a_question_chart_read_with_a_named_unit_echoes_it(docs, case):
             "bars": [{"label": "Deposits", "bps": -3.0}], "end_label": "Jun 26",
             "end_bps": 205.0}
     llm = _LLM([], walk_reply=walk)
-    research = RA.Research(llm, _Combo(), docs, question_case, metric_cfg, REGISTRY)
+    research = TB.Research(llm, _Combo(), docs, question_case, metric_cfg, REGISTRY)
     result = research.read_chart("CBA/FY26/profit_announcement", 14, unit="bps")
     assert result["unit"] == "bps"
     assert research.records[0].numbers[0].unit == "bps"
@@ -1713,13 +1714,13 @@ def test_the_cost_ceiling_binds_inside_a_turn(wired, monkeypatch):
         ]
     )
     # Every dispatched call spends the whole ceiling.
-    original = RA.Research.search_pages
+    original = TB.Research.search_pages
 
     def _expensive(self, query, doc_id=None):
         llm.usage.cost_usd += 0.60
         return original(self, query, doc_id)
 
-    monkeypatch.setattr(RA.Research, "search_pages", _expensive)
+    monkeypatch.setattr(TB.Research, "search_pages", _expensive)
     attribution, _out = _run(llm, monkeypatch, combo)
     assert attribution.provenance["tool_calls"] == 1
     assert attribution.provenance["budget_exhausted"].startswith("the cost ceiling")
@@ -2059,7 +2060,7 @@ def test_an_empty_residual_unit_is_valid(docs, case):
 def test_a_failed_walk_page_still_counts_as_read(docs, case, monkeypatch):
     """The annotation read on the failure path can mint evidence from the
     page, so provenance must count it read."""
-    monkeypatch.setattr(RA, "extract_walk",
+    monkeypatch.setattr(TB, "extract_walk",
                         lambda *a, **k: (_ for _ in ()).throw(RuntimeError("unreadable")))
     research = _research(_LLM([]), docs, case)
     result = research.read_chart("CBA/FY26/profit_announcement", 14)

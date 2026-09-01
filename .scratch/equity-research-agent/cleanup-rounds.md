@@ -13,7 +13,7 @@ pre-cleanup-baseline, no new ruff).
 | Simplifier | 5 | 6 | 4 | 6 |
 | Comment sweep | 6 | 6 | 4 | 6 |
 | Test pruning | 4 | 6 | 4 | 6 |
-| Architecture | 2 | 6 | 4 | 6 |
+| Architecture | 3 | 6 | 4 | 6 |
 
 Counting rules: a round counts when its report lands AND its accepted
 findings are applied and committed (or it says CONVERGED/CONSOLIDATED).

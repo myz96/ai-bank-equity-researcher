@@ -412,10 +412,10 @@ def test_headline_evidence_survives_the_report_round_trip():
 
 def test_headline_evidence_drops_an_id_that_resolves_to_no_record():
     """The never-guess gate is structural: an id citing nothing cites nothing."""
+    from bank_equity_researcher.validation.gates import enforce_evidence_gate
     from bank_equity_researcher.validation.schema import (
         Attribution,
         EvidenceRecord,
-        enforce_evidence_gate,
     )
 
     attribution = enforce_evidence_gate(

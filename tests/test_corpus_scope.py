@@ -13,7 +13,7 @@ import pytest
 
 from bank_equity_researcher.tools import corpus as C
 from bank_equity_researcher.validation import schema as S
-from bank_equity_researcher.validation.schema import enforce_answer_gate
+from bank_equity_researcher.validation.gates import enforce_answer_gate
 
 # ---------------------------------------------------------------------------
 # A full name made only of generic words

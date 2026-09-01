@@ -4,7 +4,7 @@ Provenance is stamped by code, never by the model.
 
 No page-text extractor sits here: the closed loop reads a page with `read_page`
 and mints its own records from the agent's verbatim quotes
-(`research_agent._mint_record`)."""
+(`toolbox._mint_record`)."""
 
 from __future__ import annotations
 
