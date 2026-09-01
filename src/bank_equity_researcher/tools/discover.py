@@ -16,6 +16,7 @@ import httpx
 from ..config import MANIFEST_DIR
 from ..llm import LLM
 from ..validation.schema import DOC_TYPES
+from . import corpus
 
 DISCOVER_MODEL = "deepseek/deepseek-v4-pro-0813"
 MAX_STEPS = 15
@@ -154,6 +155,10 @@ def discover(bank: str, periods: list[str], seed_url: str, today: str) -> dict:
             }
             path = MANIFEST_DIR / f"{bank.lower()}.json"
             path.write_text(json.dumps(manifest, indent=2) + "\n")
+            # The corpus caches predate this manifest; a long-lived process
+            # that discovers and then researches would read stale scope.
+            corpus.load_documents.cache_clear()
+            corpus._assert_distinct_stems.cache_clear()
             manifest["_usage"] = {
                 "calls": llm.usage.calls,
                 "cost_usd": round(llm.usage.cost_usd, 4),

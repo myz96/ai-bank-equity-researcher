@@ -80,7 +80,17 @@ def render_report(attribution: Attribution) -> str:
                 f"| {', '.join(d.evidence)} |"
             )
         if a.residual:
-            lines.append(f"| *residual (unexplained)* | — | {a.residual.value:+g} {a.residual.unit} | — | — |")
+            lines.append(
+                f"| *residual (unexplained)* | — | {a.residual.value:+g} {a.residual.unit} "
+                "| — | — | — |"
+            )
+        lines.append("")
+
+    if a.residual and not quantified:
+        # The residual is part of the arithmetic story whether or not any
+        # driver is quantified; it vanished from the report whenever the
+        # table did not render (five saved artifacts hide non-zero residuals).
+        lines.append(f"**Residual (unexplained): {a.residual.value:+g} {a.residual.unit}**")
         lines.append("")
 
     for d in a.drivers:

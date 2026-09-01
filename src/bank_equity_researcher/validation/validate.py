@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import re
 
-from .gates import ANSWER_GATE_CONFIDENCE_CAP
+from .gates import _NUMBER_WORDS, ANSWER_GATE_CONFIDENCE_CAP
 from .schema import PRESENTATION_DOC_TYPES, EvidenceRecord
 
 # PA walk bars are exact, so their sum should reconcile within rounding of the
@@ -1495,6 +1495,25 @@ def quote_prints(quote: str | None, value: float, unit: str | None = None) -> bo
     return False
 
 
+# A bare one- or two-digit token with no decimal, no thousands run and no
+# unit word beside it is as likely a label index or a note number as a
+# quantity ("See Note 1" printed the 1 that laundered a +1 ppt delta,
+# executed repro). Stripping those tokens before the printed-check holds the
+# grounding bar at the same digit standard the quantity classifier uses.
+_BARE_INDEX_RE = re.compile(
+    r"(?<![\d.,$])\b\d{1,2}\b"
+    r"(?![.,]\d)(?!\s*(?:%|bps|bp\b|ppt|per\s?cent|percent|basis|million|billion|bn\b|m\b))"
+)
+# A movement stated in WORDS is still stated ("increased one percentage
+# point from thirteen to fourteen"); the cap must stand down rather than
+# call a worded statement ungrounded (executed false-positive repro).
+_WORDED_QUANTITY_RE = re.compile(
+    rf"\b(?:{_NUMBER_WORDS})\s+(?:basis[-\s]+points?|bps|per\s?cent|"
+    rf"percent(?:age)?\s+points?|percent|ppt|points?)\b",
+    re.IGNORECASE,
+)
+
+
 def cap_ungrounded_movement(attribution) -> bool:
     """Cap an answer whose CITED evidence never states the movement.
 
@@ -1503,9 +1522,10 @@ def cap_ungrounded_movement(attribution) -> bool:
     the earlier rule asked whether any citation RESOLVED. A movement is
     grounded when some cited record states one of its endpoints or its delta,
     unit-aware, through the same machinery that grounds a driver claim.
-    Replayed over the 113 saved movements: ONE firing, a retired-arm CTI
-    artifact whose citations print neither endpoint nor delta — a true
-    positive; zero firings on any live-arm artifact. Mutates; True if capped.
+    Replayed over the 119 saved movements: TWO firings, both retired-arm
+    artifacts whose citations print divisional pieces but never the group
+    endpoints or delta — true positives; zero firings on any live-arm
+    artifact. Mutates; True if capped.
     """
     movement = attribution.movement
     if movement is None:
@@ -1516,12 +1536,15 @@ def cap_ungrounded_movement(attribution) -> bool:
     for record in attribution.evidence_records:
         if record.id not in cited_ids:
             continue
+        if _WORDED_QUANTITY_RE.search(record.quote or ""):
+            return False
+        quantity_text = _BARE_INDEX_RE.sub(" ", record.quote or "")
         for value in (movement.from_value, movement.to_value, movement.delta):
-            # quote_prints is the right bar here: a movement row's cells print
-            # bare numbers (a walk chart's endpoints print "171.0 -> 174.0"
-            # with no unit token), and a bare printed magnitude grounds the
-            # endpoint while a unit-named one must convert.
-            if quote_prints(record.quote, value, movement.unit) or any(
+            # quote_prints over the bare-index-stripped text: decimals,
+            # thousands runs and unit-adjacent digits ground; "Note 1" does
+            # not. NumberFacts stay label-blind by design — the same standard
+            # every driver claim is grounded under.
+            if quote_prints(quantity_text, value, movement.unit) or any(
                 _converted_prints(abs(number.value), number.unit, abs(value), movement.unit)
                 for number in record.numbers
             ):

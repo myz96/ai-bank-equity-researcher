@@ -396,9 +396,7 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
         limitations=limitations,
         evidence_records=records,
     )
-    attribution = enforce_evidence_gate(attribution)
-    cap_ungrounded_movement(attribution)
-    return attribution, rejections
+    return enforce_evidence_gate(attribution), rejections
 
 
 def finalise(attribution: Attribution, research: Research, case: dict, metric_cfg: dict,
@@ -418,8 +416,6 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
             (period_date[0] - 6, period_date[1]) if period_date[0] > 6
             else (period_date[0] + 6, period_date[1] - 1)
         )
-        if prior_half_date == comparator_date:
-            prior_half_date = None
     prior_half_tag = half_label(prior_half_date, calendar)
     bank_basis = primary_basis(registry)
     is_bridge = metric_cfg["method"] == "bridge_extraction"
@@ -439,6 +435,10 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     # points, and settle_identity_scale then reads the corrected endpoints.
     settle_ratio_scale(attribution, metric_cfg["unit"])
     settle_identity_scale(attribution, metric_cfg["method"])
+    # Grounding is judged AFTER the scale normalisers: a percent-scale
+    # movement was capped as ungrounded and then repaired to the very
+    # endpoints its quotes print, still capped (executed repro).
+    cap_ungrounded_movement(attribution)
     corroborate(attribution, cross_source)
     cap_weakly_cited_claims(attribution)
     if is_bridge:

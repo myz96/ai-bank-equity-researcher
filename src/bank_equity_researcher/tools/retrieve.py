@@ -41,7 +41,12 @@ def _doc_embeddings(doc_path: str):
     texts = doc.page_texts()
     emb_cache = DATA_DIR / "cache" / "emb" / (doc.path.stem + ".npy")
     if emb_cache.exists():
-        return np.load(emb_cache)
+        embeddings = np.load(emb_cache)
+        # A stale cache (the PDF replaced with a different page count) would
+        # shift every later document's rows against the wrong pages in the
+        # pooled matrix (executed repro: B/p1's vector answered as A/p3).
+        if embeddings.shape[0] == len(texts):
+            return embeddings
     embeddings = _encoder().encode(
         [t[:2000] for t in texts], normalize_embeddings=True, show_progress_bar=False
     )
