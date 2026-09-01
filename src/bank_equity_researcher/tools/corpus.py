@@ -180,13 +180,34 @@ def banks_named(text: str) -> list[str]:
     return [bank for _, bank in sorted(found)]
 
 
+# "from FY21 to FY26", "FY21-FY26", "between FY21 and FY26": a RANGE names
+# every year inside it. Parsing only the endpoints handed a six-year question
+# two years' documents, and the agent could never cite the middle (the
+# longitudinal crossref case missed 4 of 6 required pages by construction).
+# "and" separates a range only under "between": "compare FY21 and FY26"
+# names two years, not six.
+_PERIOD_RANGE_RE = re.compile(
+    r"\bFY\s?(?:20)?(\d{2})\s*(?:-|–|to|through)\s*FY\s?(?:20)?(\d{2})\b"
+    r"|\bbetween\s+FY\s?(?:20)?(\d{2})\s+and\s+FY\s?(?:20)?(\d{2})\b",
+    re.IGNORECASE,
+)
+
+
 def periods_named(text: str) -> list[str]:
-    """The reporting periods a question names, in the order it names them."""
+    """The reporting periods a question names, ranges expanded, in order."""
     seen: list[str] = []
     for prefix, year in _PERIOD_RE.findall(text or ""):
         period = f"{prefix.upper()}{year}"
         if period not in seen:
             seen.append(period)
+    for a, b, c_, d in _PERIOD_RANGE_RE.findall(text or ""):
+        start, end = (a, b) if a else (c_, d)
+        lo, hi = sorted((int(start), int(end)))
+        if hi - lo < 10:
+            for year in range(lo, hi + 1):
+                period = f"FY{year:02d}"
+                if period not in seen:
+                    seen.append(period)
     return seen
 
 

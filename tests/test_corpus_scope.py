@@ -362,3 +362,19 @@ def test_an_answer_of_only_ungrounded_prose_is_capped():
     facts = [{"fact": "Outlook remained resilient.", "citations": []}]
     kept, _, confidence = enforce_answer_gate(facts, [], 95, set())
     assert kept and confidence <= 20
+
+
+def test_a_period_range_names_every_year_inside_it():
+    """"from FY21 to FY26" is a six-year question. Parsing only the endpoints
+    handed the agent two years' documents, and the longitudinal crossref case
+    missed 4 of 6 required pages by construction."""
+    assert C.periods_named("How did NIM evolve from FY21 to FY26?") == [
+        "FY21", "FY26", "FY22", "FY23", "FY24", "FY25",
+    ]
+    assert C.periods_named("across FY24-FY26") == ["FY24", "FY26", "FY25"]
+    assert C.periods_named("between FY23 and FY25, then 1H26") == [
+        "FY23", "FY25", "1H26", "FY24",
+    ]
+    assert C.periods_named("in FY25 and FY26") == ["FY25", "FY26"]
+    # A bare "and" is a comparison, not a range: two years, never six.
+    assert C.periods_named("compare FY21 and FY26") == ["FY21", "FY26"]
