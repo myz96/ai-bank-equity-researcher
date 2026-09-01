@@ -493,3 +493,34 @@ def test_a_unit_spelling_difference_is_not_an_off_unit_contribution():
                 "confidence": 90}]
     assert drop_off_unit_contributions(drivers, "$m") == []
     assert drivers[0]["contribution"] is not None
+
+
+# ---------------------------------------------------------------------------
+# Review round 10: a registry that knows no basis settles none
+# ---------------------------------------------------------------------------
+
+
+def test_a_measures_less_registry_settles_no_basis():
+    """A skeleton registry must not rewrite the agent's declared basis.
+
+    primary_basis defaulted to "cash" even for a registry with no measures
+    block, so _settle_basis rewrote a declared "statutory" to "cash" and its
+    limitation claimed "the registry names cash as the bank's headline basis"
+    — a false claim. MQG (statutory NPAT, skeleton registry) hit exactly this.
+    """
+    from bank_equity_researcher.validate import _settle_basis, primary_basis
+
+    assert primary_basis({}) is None
+    assert primary_basis({"measures": {}}) is None
+    reply: dict = {}
+    assert _settle_basis("statutory", {}, [], reply) == "statutory"
+    assert "limitations" not in reply
+
+
+def test_a_registry_with_measures_still_normalises_an_unprinted_basis():
+    from bank_equity_researcher.validate import _settle_basis
+
+    registry = {"measures": {"core_profit": "cash earnings"}}
+    reply: dict = {}
+    assert _settle_basis("statutory", registry, [], reply) == "cash"
+    assert any("Basis normalised" in x for x in reply["limitations"])

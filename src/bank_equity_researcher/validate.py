@@ -999,9 +999,21 @@ _BASIS_WORDS = {
 }
 
 
-def primary_basis(registry: dict) -> str:
-    """The bank's own headline basis, read from the registry vocabulary."""
-    core = str(registry.get("measures", {}).get("core_profit", "")).lower()
+def primary_basis(registry: dict) -> str | None:
+    """The bank's own headline basis, read from the registry vocabulary.
+
+    None when the registry carries no measures block: a skeleton registry
+    (MQG) or a missing one knows no basis, and the "cash" default here used
+    to stand in for that knowledge — _settle_basis then rewrote a declared
+    "statutory" to "cash" and claimed the registry named it (review round 10).
+    The default survives only under a measures block whose core_profit names
+    no basis word, where every committed registry is an Australian major
+    reporting cash earnings.
+    """
+    measures = registry.get("measures")
+    if not measures:
+        return None
+    core = str(measures.get("core_profit", "")).lower()
     for basis, words in _BASIS_WORDS.items():
         if any(word in core for word in words):
             return basis
@@ -1096,7 +1108,7 @@ def _settle_basis(basis: str, registry: dict, records: list[EvidenceRecord], rep
     """
     basis = str(basis or "").strip().lower() or "cash"
     primary = primary_basis(registry)
-    if basis == primary or _basis_printed(basis, records):
+    if primary is None or basis == primary or _basis_printed(basis, records):
         return basis
     reply.setdefault("limitations", []).append(
         f"Basis normalised from '{basis}' to '{primary}': no page in evidence prints "

@@ -1422,7 +1422,7 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
         if prior_half_date == comparator_date:
             prior_half_date = None
     prior_half_tag = half_label(prior_half_date, calendar)
-    bank_basis = primary_basis(registry) if registry.get("measures") else None
+    bank_basis = primary_basis(registry)
     is_bridge = metric_cfg["method"] == "bridge_extraction"
 
     walks = research.walks

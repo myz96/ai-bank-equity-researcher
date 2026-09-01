@@ -794,3 +794,23 @@ Both axes verified every cycle-2 fix. Four new findings, all fixed:
   test_review_round5.py) fixed; repo lint count 29 -> 26, remainder queued.
 
 Gate: 445 tests, dev rescore identical to baseline, no new ruff.
+
+## Round 10 — code-review skill, cycle 4 (2026-09-01)
+
+Both axes verified every cycle-3 fix. Three new findings, all fixed:
+- BEHAVIOURAL (Spec, reproduced live): primary_basis defaulted to "cash" for
+  a registry with no measures block, so _settle_basis rewrote a declared
+  "statutory" to "cash" and its limitation claimed the registry named it —
+  false, and exactly what MQG (statutory NPAT, skeleton registry) would hit.
+  primary_basis now returns None without measures; _settle_basis keeps the
+  agent's declared basis; research_agent's duplicate inline guard removed
+  (one source of truth). Dev banks all carry measures blocks, so the dev
+  rescore is untouched — verified identical.
+- The round-9 discovery gate shipped unexecuted (no test imported
+  discover.py). tests/test_discover.py now drives the gate both ways with a
+  scripted LLM and pins the manifest stays unwritten on refusal.
+- The discovery PROMPT's own doc_type enumeration is now held to
+  corpus.DOC_TYPES by test, so a vocabulary rename cannot strand it.
+
+Gate: 450 tests, dev rescore identical to baseline, ruff steady at 26
+(all pre-existing, queued).
