@@ -1,4 +1,4 @@
-"""The canonical driver taxonomy (docs/design/driver-taxonomy.md, ticket 01).
+"""The canonical driver taxonomy (docs/design/driver-taxonomy.md).
 
 Bank-agnostic. Per-bank verbatim label mappings live in registry/<bank>.json.
 """
@@ -46,14 +46,14 @@ TAXONOMY: dict[str, dict] = {
         "method": "bridge_extraction",
         # One query per bridge component (the P&L section titles every bank's
         # results book uses), so retrieval covers each component's own page
-        # rather than only summary/reconciliation pages (ticket 25).
+        # rather than only summary/reconciliation pages.
         "retrieval_queries": [
             "cash earnings statutory net profit reconciliation non-cash items",
             "total operating income operating performance net profit after tax cash basis",
             # Phrased for the NII section's TABLE page (the row levels and the
-            # stated PCP movement), not the continuation page of its prose: the
-            # old growth-phrased query ranked the continuation page first and
-            # the 1H26 author never saw the stated PCP movement (ticket 27).
+            # stated PCP movement), not the continuation page of its prose: a
+            # growth-phrased query ranks the prose continuation page first, and
+            # the author then never sees the stated PCP movement.
             "net interest income cash basis net interest margin average interest earning assets table",
             "other operating income commissions lending fees trading income",
             "underlying operating expenses staff information technology restructuring notable items",
@@ -246,12 +246,12 @@ TAXONOMY: dict[str, dict] = {
         "method": "two_level_arithmetic",
         "retrieval_queries": [
             # Phrased for the GROUP KPI / performance-summary page, not for the
-            # ratio label alone (ticket 27, NAB FY25). Every divisional table
-            # repeats the row "Cost to income ratio", so a label-only query
-            # ranked three NAB divisional pages above the Group KPI page and
-            # the author took a division's 34.0% for the Group's 47.3%. Naming
-            # the section title as well as both common label forms puts the KPI
-            # page first for CBA, NAB and WBC alike.
+            # ratio label alone. Every divisional table repeats the row "Cost to
+            # income ratio", so a label-only query ranked three NAB FY25
+            # divisional pages above the Group KPI page and the author took a
+            # division's 34.0% for the Group's 47.3%. Naming the section title
+            # as well as both label forms puts the KPI page first for CBA, NAB
+            # and WBC alike.
             "key performance indicators group performance cost to income ratio "
             "operating expenses to total operating income",
             "operating expenses staff technology investment productivity",

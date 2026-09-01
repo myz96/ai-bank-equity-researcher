@@ -885,3 +885,17 @@ helpers (a cross-module private import is worse); the three RISKY proposals
 the grounding gate; the unreachable combo.agent guard is a rail).
 
 Gate: 443 tests, dev rescore identical to baseline, ruff 21 (down 5).
+
+## Comment sweep wave 1 (2026-09-01) — user directive
+
+Five parallel agents, one per file group, comments/docstrings only (AST
+verified identical in both groups that checked). Rule: keep non-obvious
+constraints, business logic, and the evidence receipts the override policy
+requires; cut narration, ticket/round breadcrumbs, and blow-by-blow defect
+stories (each compressed to rule + one receipt). Net -115 lines across 14
+files. Kept whole: the validate.py HARDCODED-OVERRIDE POLICY, every artifact
+path and measured value, judge prompts and scorecard Disclosure (runtime
+text), cache-key invariant, clock semantics. Restored one over-cut: the
+NETWORK_GRACE infra-only/disclosure sentence (frozen-baseline comparability).
+
+Gate: 443 tests, dev rescore identical to baseline, ruff steady at 21.

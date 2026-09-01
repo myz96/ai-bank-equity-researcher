@@ -1,5 +1,5 @@
-"""The output contract (ticket 06) with the never-guess gate (ticket 07):
-a quantified claim without evidence references does not survive validation.
+"""The output contract with the never-guess gate: a quantified claim without
+evidence references does not survive validation.
 """
 
 from __future__ import annotations
@@ -27,8 +27,8 @@ class EvidenceRecord(BaseModel):
     numbers: list[NumberFact] = []
     # How the page reached the evidence pool when retrieval did not rank it
     # there on its own: "reference_follow:<doc> p<source> -> <target>" for a
-    # page the deterministic follower turned to (ticket 22). None means the
-    # page came from the ordinary page budget.
+    # page the deterministic follower turned to. None means the page came from
+    # the ordinary page budget.
     provenance: str | None = None
 
 
@@ -47,12 +47,10 @@ class DriverClaim(BaseModel):
     # subtracting it gives a half-on-half number, not the task's comparison.
     columns: str | None = None
     narrative: str = ""
-    # An author reply that omits the field crashed a whole case mid-suite
-    # (WBC impairment FY25, round-3 log). An unstated self-report is LOW
-    # confidence, not a crash: 40 is the fatal-cap floor, so the claim can
-    # never read as confident and the calibration table shows it honestly.
-    # The validator covers the other common form of an unstated field, an
-    # explicit JSON null (Codex round-4 finding 5).
+    # An unstated self-report is LOW confidence, not a crash (an omitted field
+    # once failed a whole case: WBC impairment FY25). 40 is the fatal-cap
+    # floor, so such a claim can never read as confident. The validator covers
+    # the other form of an unstated field, an explicit JSON null.
     confidence: int = Field(default=40, ge=0, le=100)
 
     @field_validator("confidence", mode="before")
@@ -97,16 +95,15 @@ class Attribution(BaseModel):
     # Which document, row and period COLUMN each endpoint came from. Half-year
     # tables print three period columns, so naming the column is the only way
     # a reader can tell a prior-corresponding-period movement from a
-    # half-on-half one (defect 24).
+    # half-on-half one.
     movement_source: str | None = None
     headline: str = ""
     # Evidence ids the HEADLINE's own statements rest on. A headline carries
     # facts that belong to no single driver — the movement as another document
     # states it, the statutory-versus-cash framing, the summary measures the
-    # bank leads with — and until this list existed those facts had no citation
-    # list at all. A reader checks a claim against the records the answer cites,
-    # and so does the grounding judge, so a headline fact with no citation could
-    # never be graded however well the pipeline had sourced it.
+    # bank leads with. A reader checks a claim against the records the answer
+    # cites, and so does the grounding judge, so a headline fact with no
+    # citation can never be graded however well the pipeline sourced it.
     headline_evidence: list[str] = []
     drivers: list[DriverClaim] = []
     residual: Contribution | None = None
@@ -123,10 +120,9 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
     """Structural never-guess rule: strip any quantified contribution that has
     no resolvable evidence reference. The strip is logged, never silent.
 
-    The stripped driver used to be forced to confidence 20 as well. Ticket 33
-    replayed the estate: the strip fired on 0 of the 90 saved attributions, so
-    the 20 override carried no evidence and the wave-1 cleanup deleted it. The
-    strip stays: it is the structural rule, not a confidence judgment.
+    The strip is a structural rule, not a confidence judgment. A companion
+    confidence-20 override was deleted because a replay measured it firing on 0
+    of the 90 saved attributions.
     """
     known_ids = {record.id for record in attribution.evidence_records}
     # The headline's citation list obeys the same structural rule: an id that
@@ -181,11 +177,10 @@ def enforce_answer_gate(
             limitations.append(f'Stripped unsupported quantified fact: "{fact[:80]}"')
             continue
         kept.append({"fact": fact, "evidence": resolved})
-    # The gate strips the FACT LIST. It does not touch the answer's prose,
-    # because rewriting an answer to remove a number is a second authoring
-    # pass, and this gate is deterministic by design. So the prose can still
-    # state a number whose fact was just deleted, and a reader who reads only
-    # the answer would never know. Say so, once, naming the claims.
+    # The gate strips the FACT LIST only. Rewriting the prose to remove a
+    # number is a second authoring pass, and this gate is deterministic by
+    # design. So the prose can still state a number whose fact was deleted, and
+    # a reader who reads only the answer would never know.
     if stripped:
         limitations.append(
             f"{len(stripped)} unsupported quantified claim(s) were removed from the key "

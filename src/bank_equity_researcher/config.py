@@ -1,5 +1,5 @@
 """Paths, model combos, and pricing. Model roles are configured here, never
-hardcoded in pipeline code (ticket 07)."""
+hardcoded in pipeline code."""
 
 from __future__ import annotations
 
@@ -18,9 +18,8 @@ PRICES: dict[str, tuple[float, float]] = {
     "qwen/qwen3.7-flash": (0.03, 0.13),
     "deepseek/deepseek-v4-pro-0813": (1.122, 3.366),
     "z-ai/glm-5.3": (1.40, 4.40),
-    # Mid-tier reasoning candidates for the research loop (user, 2026-08-31):
-    # opus is too expensive to run often; these price the closed loop at
-    # cents per case. Catalogue prices read live 2026-08-31.
+    # Mid-tier reasoning candidates for the research loop; they price the
+    # closed loop at cents per case. Catalogue prices read live 2026-08-31.
     "z-ai/glm-5.3-flash": (0.07, 0.25),
     "openai/gpt-5.6-luna": (0.20, 1.20),
     "deepseek/deepseek-v4-flash-0731": (0.14, 0.28),
@@ -44,9 +43,9 @@ class Combo:
     author_max_tokens: int
     judges: tuple[str, str]
     # Which orchestration shell answers a case. "agent", the closed-loop
-    # tool-use research agent (ADR-0005), is the only one left: ticket 33 wave
-    # 3 froze the open-loop "pipeline" shell at the tag
-    # `pipeline-baseline-final`. The field stays as the seam runner_for reads.
+    # tool-use research agent (ADR-0005), is the only one left; the open-loop
+    # "pipeline" shell is frozen at the tag `pipeline-baseline-final`. The
+    # field stays as the seam runner_for reads.
     orchestration: str = "agent"
     # The tool-calling model that drives the research loop.
     agent: str = ""
@@ -63,15 +62,13 @@ class Combo:
 
 
 COMBOS: dict[str, Combo] = {
-    # THE product combo (user decision, 2026-08-31, iteration close): one
-    # model everywhere - z-ai/glm-5.3-flash in the closed loop. Evidence:
-    # metric anchors 4/4 with the project's best brier (0.011) at ~$0.03 a
-    # case; researcher questions 11/15 coverage (tied with opus) and 7/20
-    # fully-grounded facts (best of every arm tested, frontier included);
-    # finds the audited Note 2.2 on p118 unaided. Trade accepted: 10-30
-    # minutes a case. Opus/deepseek/qwen comparisons live in
-    # evals/results/ and the design doc; their combos were retired with
-    # the collapse (git history has them).
+    # THE product combo (user decision, 2026-08-31): one model everywhere -
+    # z-ai/glm-5.3-flash in the closed loop. Evidence: metric anchors 4/4 with
+    # the project's best brier (0.011) at ~$0.03 a case; researcher questions
+    # 11/15 coverage (tied with opus) and 7/20 fully-grounded facts (best of
+    # every arm tested, frontier included); finds the audited Note 2.2 on p118
+    # unaided. Trade accepted: 10-30 minutes a case. The opus/deepseek/qwen
+    # comparisons live in evals/results/ and the design doc.
     "agentic": Combo(
         name="agentic",
         extract="qwen/qwen3.7-flash",
@@ -86,9 +83,7 @@ COMBOS: dict[str, Combo] = {
     ),
 }
 
-# The one live combo, named once. Every CLI default and eval default reads
-# this, so renaming the combo is a two-line change here instead of a hunt
-# through six string literals (simplifier round, 2026-09-01).
+# The one live combo, named once: every CLI default and eval default reads it.
 LIVE_COMBO = "agentic"
 
 
@@ -97,13 +92,9 @@ def runner_for(combo_name: str):
 
     Every caller that answers a case — the CLI and the eval harness — goes
     through this one function, or `evals run --combo agentic` silently measures
-    one shell while wearing the other's label (Codex architecture critique
-    2026-08-30, finding 1). The open-loop shell used to be the other branch
-    here; ticket 33 wave 3 froze it at the tag `pipeline-baseline-final` and
-    deleted it, so the closed loop is the only shell. The function stays
-    because it is the seam that kept the two honest, and every caller already
-    goes through it. The import is lazy so config stays free of shell
-    dependencies.
+    one shell while wearing the other's label. The closed loop is the only
+    shell left, and the function stays as the seam that keeps a caller honest.
+    The import is lazy so config stays free of shell dependencies.
     """
     _require_agent(combo_name)
     from .research_agent import run_agent_case
@@ -123,7 +114,7 @@ def question_runner_for(combo_name: str):
 
 
 def _require_agent(combo_name: str) -> None:
-    """A combo that is not an agent combo has no shell to run since wave 3.
+    """A combo that is not an agent combo has no shell to run.
 
     Saved artifacts from a retired arm stay readable, and `evals rescore` and
     `evals judge` still read them by slug, so this refuses only a fresh RUN.

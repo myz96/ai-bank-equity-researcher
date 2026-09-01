@@ -1,4 +1,4 @@
-"""CLI entry point: the surface the evaluators run (ticket 07)."""
+"""CLI entry point: the surface the evaluators run."""
 
 from __future__ import annotations
 
@@ -74,8 +74,8 @@ def main() -> int:
             card = rescore(args.suite, args.combo, args.bank, args.since, args.until,
                            args.baseline, args.label)
         elif args.suite == "questions":
-            # Free-form researcher questions: the answer suite, scored on
-            # location coverage and judged fact accuracy.
+            # The answer suite: scored on location coverage and on judged fact
+            # accuracy.
             from .evals import run_question_suite
 
             card = run_question_suite(args.combo, args.bank, only=args.only)
@@ -110,9 +110,9 @@ def main() -> int:
         print(json.dumps(manifest, indent=2))
         return 0
 
-    # Every case runner is reached through config.runner_for (ADR-0005). Since
-    # ticket 33 wave 3 the closed-loop research agent is the only shell; the
-    # open-loop pipeline is frozen at the tag `pipeline-baseline-final`.
+    # Every case runner is reached through config.runner_for (ADR-0005). The
+    # closed-loop research agent is the only shell; the open-loop pipeline is
+    # frozen at the tag `pipeline-baseline-final`.
     from .config import runner_for
 
     run_case = runner_for(args.combo)

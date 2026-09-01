@@ -1,8 +1,8 @@
-"""The eval harness (ticket 05): runs gold cases through the pipeline and
-produces a scorecard — driver precision/recall, calibration, per-stage
-extraction accuracy — never one blended number.
+"""The eval harness: runs gold cases through the pipeline and produces a
+scorecard — driver precision/recall, calibration, per-stage extraction
+accuracy — never one blended number.
 
-Scoring semantics (ticket 28, Codex findings 1, 4, 5, 6):
+Scoring semantics:
 
 - A claim carries one of three labels: correct, incorrect, or unscored. A claim
   is unscored when the gold has no verified value for it. Unscored claims stay
@@ -46,7 +46,7 @@ RESULTS_DIR = REPO_ROOT / "evals" / "results"
 CONFIDENT_THRESHOLD = 85  # claims at/above this count for the confidently-wrong rate
 RELIABILITY_BUCKETS = [(0, 50), (50, 70), (70, 85), (85, 95), (95, 101)]
 
-# The three claim labels (finding 1). "unscored" is not a soft "incorrect": it
+# The three claim labels. "unscored" is not a soft "incorrect": it
 # means the gold cannot decide the claim, so the claim must not reach precision
 # or calibration.
 CORRECT = "correct"
@@ -73,8 +73,8 @@ def load_gold(suite: str, bank: str | None = None) -> list[dict]:
             if bank and gold_file["bank"].upper() != bank.upper():
                 continue
             if "movement" not in case:
-                # Cross-reference consolidation cases (ticket 26) run through
-                # the ask entry point, not the metric pipeline; skip here.
+                # Cross-reference consolidation cases run through the ask entry
+                # point, not the metric pipeline; skip here.
                 continue
             cases.append({**case, "bank": gold_file["bank"], "period": gold_file["period"],
                           "comparator": gold_file["comparator"], "basis": gold_file["basis"]})
@@ -82,8 +82,8 @@ def load_gold(suite: str, bank: str | None = None) -> list[dict]:
 
 
 def load_crossref_gold(bank: str | None = None) -> list[dict]:
-    """Cross-reference consolidation cases (ticket 26): cases carrying
-    required_locations instead of a movement. HOLDOUT: run only at milestones."""
+    """Cross-reference consolidation cases: cases carrying required_locations
+    instead of a movement. HOLDOUT: run only at milestones."""
     cases = []
     for path in sorted(GOLD_DIR.glob("*.json")):
         gold_file = json.loads(path.read_text())
@@ -156,13 +156,13 @@ def score_crossref(
 
     Location coverage is the fraction of gold required_locations whose
     (doc, pdf_page) appears among the evidence records cited by the answer's
-    key_facts. It measures retrieval, not correctness (finding 7).
+    key_facts. It measures retrieval, not correctness.
 
     A gold author writes a document's name as a person does — "NAB/FY25/
     investor-presentation", "WBC/FY25/presentation-and-IDP" — and the corpus
     knows it by its doc_id. `doc_index` (corpus.doc_alias_index) maps one onto
     the other, so a spelling difference can never read as a missed page.
-    Without it the name is matched as a substring, as it always was.
+    Without it the name is matched as a substring.
 
     Fact accuracy is the fraction of gold_answer_facts that the judges rule
     BOTH stated by the answer AND entailed by its cited quotes. Pass `llm` and
@@ -220,7 +220,7 @@ def score_crossref(
 
 
 # A crossref case passes only when the answer reached every required location
-# AND the judges confirmed the gold facts (finding 7). Coverage is a necessary
+# AND the judges confirmed the gold facts. Coverage is a necessary
 # condition, never a sufficient one: the mortgage-offset answer scored 1/1
 # coverage while omitting the required balances and adding an unsupported
 # causal reading.
@@ -241,11 +241,8 @@ def crossref_passes(coverage_fraction: float | None, fact_check: dict | None) ->
     Three states, not two. A flagged fact is neither a pass nor a fail
     (judge.judge_facts), and the 0.75 allowance is what "neither" costs. A
     FAILED fact is the answer stating something the judges ruled absent or
-    unentailed, and no allowance covers that.
-
-    The rule used to read `accuracy_fraction` alone, which collapses all three
-    states into passed/total. A case with three passes and one unanimous FAIL
-    scored 0.75 and passed, though nothing about it was uncertain.
+    unentailed, and no allowance covers that. `accuracy_fraction` alone cannot
+    decide this: it collapses the three states into passed/total.
     """
     if coverage_fraction is None or not fact_check:
         return None
@@ -267,11 +264,9 @@ def run_answer_suite(kind: str, gold_cases: list[dict], combo: str) -> Path:
     """Run free-form question cases through the COMBO'S OWN shell and score them.
 
     One runner serves both answer suites — the crossref holdout and the
-    researcher questions — because they differ only in which gold they load
-    (finding 8: the run/write loops belong behind one helper). The shell comes
-    from config.question_runner_for and from nowhere else (finding 1), so a
-    suite can never measure one shell under the other's label. Since ticket 33
-    wave 3 that seam has one shell behind it, the closed loop.
+    researcher questions — because they differ only in which gold they load.
+    The shell comes from config.question_runner_for and from nowhere else, so a
+    suite can never measure one shell under the other's label.
     """
     from .config import question_runner_for
     from .corpus import doc_alias_index
@@ -390,8 +385,8 @@ def run_question_suite(combo: str, bank: str | None = None, split: str = "dev",
 
 
 # ---------------------------------------------------------------------------
-# One typed tolerance (finding 6). The constants live in validate.py with the
-# reason they have their value; this is the single place that applies them to
+# One typed tolerance. The constants live in validate.py with the reason
+# they have their value; this is the single place that applies them to
 # a comparison, so the harness and the deterministic checks cannot disagree.
 # ---------------------------------------------------------------------------
 
@@ -422,14 +417,10 @@ def tolerance_for(unit: str | None) -> Tolerance:
 def values_match(value: float, target: float, unit: str | None) -> bool:
     """A sign flip is never a rounding difference, so it never matches.
 
-    The sign rule used to be gated on `abs(target) > tol`, which made it dead
-    code: opposite signs put the two numbers at least `|value| + |target|`
-    apart, so wherever the gate was open the distance check below had already
-    returned False. Inside the gate — a target smaller than its own tolerance,
-    which the $10m money floor makes common — a claim of the OPPOSITE
-    DIRECTION scored correct. Two live dev gold targets sit there: CBA 1H26
-    impairment moved -1 $m, and an answer of +9 $m was graded a match, so a
-    charge that fell was credited to an answer that said it rose.
+    The sign rule carries the cases where the target is smaller than its own
+    tolerance, which the $10m money floor makes common: CBA 1H26 impairment
+    moved -1 $m, and the distance check alone graded an answer of +9 $m a
+    match, so a charge that fell was credited to an answer that said it rose.
     """
     tol = tolerance_for(unit).for_target(target)
     if value * target < 0:
@@ -438,7 +429,7 @@ def values_match(value: float, target: float, unit: str | None) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Gold framings (finding 4)
+# Gold framings
 # ---------------------------------------------------------------------------
 
 
@@ -536,7 +527,7 @@ def _slot_ancestor(canonical: str, slots: dict[str, float]) -> str | None:
 
 
 # ---------------------------------------------------------------------------
-# Driver scoring (findings 1 and 4)
+# Driver scoring
 # ---------------------------------------------------------------------------
 
 
@@ -563,11 +554,10 @@ def _score_one_framing(framing: Framing, claims: list[DriverClaim], unit: str) -
         entries.append(entry)
         value = entry["value"]
 
-        # The gold states its values in ONE unit, and the harness used to apply
-        # that unit to every claim whatever the claim said its own unit was: a
-        # "+3 bps" contribution was scored against a "+3 $m" gold slot and
-        # graded correct by tolerance. A claim in another unit is a claim about
-        # something else, so it is wrong, not right.
+        # The gold states its values in ONE unit. A claim in another unit is a
+        # claim about something else, so it is wrong, not right: without this
+        # check a "+3 bps" contribution matched a "+3 $m" gold slot by
+        # tolerance alone.
         claimed_unit = normalize_unit(claim.contribution.unit)
         if claimed_unit and claimed_unit != normalize_unit(unit):
             label(
@@ -697,7 +687,7 @@ def score_drivers(framings: list[Framing], claims: list[DriverClaim], unit: str)
 
 
 # ---------------------------------------------------------------------------
-# Extraction scoring (finding 5)
+# Extraction scoring
 # ---------------------------------------------------------------------------
 
 _NUMBER = re.compile(r"-?\d+(?:\.\d+)?")
@@ -806,7 +796,7 @@ def walk_label_map(bank: str, metric: str) -> dict[str, str]:
 
 
 def score_movement(gold: dict, attribution: Attribution, unit: str) -> dict:
-    """Numbers, unit, basis and comparator all have to agree (finding 6)."""
+    """Numbers, unit, basis and comparator all have to agree."""
     movement, gold_movement = attribution.movement, gold["movement"]
     numbers_ok = bool(
         movement
@@ -966,7 +956,7 @@ def run_suite(suite: str, combo: str, bank: str | None = None, only: str | None 
 
 
 # ---------------------------------------------------------------------------
-# Scorecards and the offline rescore (ticket 28 verification)
+# Scorecards and the offline rescore
 # ---------------------------------------------------------------------------
 
 
@@ -996,7 +986,7 @@ def run_stamp() -> str:
 
 
 def scorecard_meta(stamp: str, *extra: str) -> list[str]:
-    """The header that makes two runs comparable experiments (finding 10)."""
+    """The header that makes two runs comparable experiments."""
     lines = [
         "## Run metadata",
         "",
@@ -1017,8 +1007,8 @@ def artifact_dir(gold: dict, combo: str) -> Path:
 
 
 # ---------------------------------------------------------------------------
-# Narrative checklist grading (ticket 29 finding 7; gold README: "checklist
-# items are never value-scored; they are graded by citation-grounding").
+# Narrative checklist grading (gold README: "checklist items are never
+# value-scored; they are graded by citation-grounding").
 # ---------------------------------------------------------------------------
 
 
@@ -1058,11 +1048,10 @@ def run_judge_suite(suite: str = "dev", combo: str = LIVE_COMBO, bank: str | Non
     `combo` is a SLUG SELECTOR, exactly as `rescore` treats it: it names which
     saved `out/<slug>/` artifacts to grade and never which shell to run,
     because this action runs no shell. It therefore accepts a retired combo
-    name, and the frozen `-cheap` baseline stays gradable. Reading
-    `COMBOS[combo].judges` here made a retired name raise a bare `KeyError`,
-    and the default was itself a retired name, so the call crashed on its own
-    defaults. The judges come from the one live combo instead: they grade the
-    artifact, so they have nothing to do with the arm that produced it.
+    name, and a frozen baseline stays gradable. The judges come from the one
+    live combo instead of from `COMBOS[combo]`: they grade the artifact, so
+    they have nothing to do with the arm that produced it, and a retired name
+    holds no judges to read.
     """
     from .llm import LLM
 
@@ -1090,7 +1079,7 @@ def run_judge_suite(suite: str = "dev", combo: str = LIVE_COMBO, bank: str | Non
 def judge_scorecard_lines(
     stamp: str, suite: str, combo: str, judges, rows: list[dict], llm
 ) -> list[str]:
-    """Coverage first (finding 2), then the rate, then every judged item."""
+    """Coverage first, then the rate, then every judged item."""
     judged = [r for r in rows if r.get("status") == "judged"]
     items = sum(r["total"] for r in judged)
     passed = sum(r["passed"] for r in judged)

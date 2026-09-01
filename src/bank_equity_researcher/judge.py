@@ -1,15 +1,14 @@
-"""The citation-grounding judge (tickets 02 and 05; ticket 29 finding 7).
+"""The citation-grounding judge.
 
-Ticket 02 quarantines narrative claims from numeric calibration: a claim with
-no published number is never scored against gold values. It is graded here
+A narrative claim is quarantined from numeric calibration: a claim with no
+published number is never scored against gold values. It is graded here
 instead, by asking whether the note SAYS the claim and whether the note's own
 cited quotes SUPPORT it.
 
-The protocol answers Codex finding 7 — coverage is not correctness. Citing the
-right page proves the retriever found the page. It does not prove the answer
-states the fact, and it does not prove the quote entails the fact. So each fact
-gets two narrow questions, and each question goes to two judges from different
-model families (config.Combo.judges):
+Coverage is not correctness. Citing the right page proves the retriever found
+the page. It does not prove the answer states the fact, and it does not prove
+the quote entails the fact. So each fact gets two narrow questions, and each
+question goes to two judges from different model families (config.Combo.judges):
 
 1. Does the answer state this fact?      stated | partial | absent
 2. Do the cited quotes entail this fact?  entailed | not-entailed
@@ -36,8 +35,7 @@ Verdict rules, in order:
 
 Empty citations are `not-entailed` deterministically, and no entailment call is
 made: nothing cannot entail anything, and asking a model to confirm that wastes
-money. This is the case Codex named — an answer that adds an unsupported causal
-reading still cites a required page, and coverage alone called it a pass.
+money.
 """
 
 from __future__ import annotations
@@ -165,12 +163,9 @@ def _truncate(text: str, limit: int) -> tuple[str, bool]:
 def _fit_quotes(quotes: list[str], char_limit: int) -> tuple[str, int, bool]:
     """The quote block, how many quotes it holds, and whether any were dropped.
 
-    A character budget cuts the block; the count of quotes must follow it. The
-    block used to be truncated mid-sentence and the count taken from the list
-    BEFORE the cut, so a verdict reached on twelve quotes was reported as
-    reached on forty-eight, and the half-quote at the cut could only push a
-    judge towards NOT_ENTAILED. Whole quotes only, and the count is what the
-    judge actually read.
+    Whole quotes only, and the count is the number the judge actually read: a
+    half-quote at the cut can only push a judge towards NOT_ENTAILED, and a
+    count taken before the cut overstates the evidence window.
     """
     lines: list[str] = []
     used = 0
@@ -305,9 +300,8 @@ def _combine(
     elif stated_answers <= {PARTIAL, ABSENT}:
         # Both judges say the note does not state the fact; they differ only on
         # how much of it is missing. The verdict is the same either way, so the
-        # item fails here instead of costing a human a review. A human is
-        # flagged for a decision the judges could not make, never for a
-        # difference of wording. The split is still recorded.
+        # item fails here instead of costing a human a review. The split is
+        # still recorded.
         stated, stated_split = PARTIAL, None
         notes.append(f"judges split {sorted(stated_answers)}, both short of stated")
     else:
@@ -344,7 +338,7 @@ def judge_facts(
     judges: tuple[str, ...],
     max_quotes: int | None = None,
 ) -> dict:
-    """Grade a list of facts and summarise them, coverage first (finding 2).
+    """Grade a list of facts and summarise them, coverage first.
 
     `passed` counts only facts that are BOTH stated and entailed. A flagged
     fact is never counted as a pass, and its count is reported beside the rate
@@ -424,18 +418,16 @@ def cited_quotes(attribution: dict) -> list[str]:
     DRIVER's evidence list, and the HEADLINE's. A headline states facts that
     belong to no single driver — the movement as a second document states it,
     the statutory-versus-cash framing, the summary measures the bank leads with
-    — and while only driver lists were read here, such a fact could never be
+    — so a headline-only fact reading driver lists alone could never be
     entailed however well the answer had sourced it.
 
     Records the answer never cited are not the answer's grounding, so they are
-    still not evidence for it here.
+    not evidence for it here.
 
     MAX_QUOTES bounds the window, and the two lists share it: neither may
     starve the other. Drivers cite many records and a headline cites few, so
     the drivers take every slot the headline does not need, and never fewer
-    than half. A flat "drivers first" order failed the same way the missing
-    field did — the answer's headline citations fell off the end of the window
-    exactly when they were most needed.
+    than half.
     """
     driver_ids = {e for driver in attribution.get("drivers", []) for e in driver.get("evidence", [])}
     headline_ids = {e for e in (attribution.get("headline_evidence") or [])} - driver_ids

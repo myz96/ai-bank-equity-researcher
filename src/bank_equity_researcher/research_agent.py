@@ -83,7 +83,6 @@ from .validate import (
 # about 3000 characters, so this covers the densest of them whole; beyond it a
 # page is a chapter and the agent should search inside it instead.
 MAX_PAGE_CHARS = 7000
-# Search results per call, and how much of each page the snippet shows.
 MAX_SEARCH_HITS = 8
 SNIPPET_CHARS = 240
 # A rejected submission is returned to the agent to correct. After this many
@@ -184,9 +183,9 @@ def _hard_stop_s(combo) -> float:
     return HARD_STOP_FACTOR * combo.wall_clock_s
 
 
-# The tool surface, described once. Both research tasks — a metric movement and
-# a free-form question — drive the SAME loop over the SAME tools, so a change to
-# a tool changes one paragraph, not two.
+# Both research tasks — a metric movement and a free-form question — drive the
+# SAME loop over the SAME tools, so a change to a tool changes one paragraph,
+# not two.
 HOW_TO_RESEARCH = """HOW TO RESEARCH
 - search_pages finds candidate pages by keyword and by meaning. Search with
   the words the BANK would print, not the words of the question.
@@ -207,7 +206,6 @@ HOW_TO_RESEARCH = """HOW TO RESEARCH
 - bank_language returns this bank's own vocabulary for its measures.
 - submit ends the research and delivers the answer, citing records by id."""
 
-# The two rules no research task may break, in the words both prompts use.
 NEVER_GUESS_RULES = """1. NEVER GUESS. Every number you state must come from an evidence record you
    submit and cite. A quantified claim with no evidence id is deleted before
    the answer ships. If you do not know, say so in limitations.
@@ -572,17 +570,11 @@ TOOL_SPECS: list[dict] = [
                                     "items": _NUMBER_SCHEMA,
                                 },
                             },
-                            # "numbers" is required because the deterministic
-                            # checks read it. The open-loop pipeline's extractor
-                            # always emits these facts and the agent's cite tool
-                            # left them optional, so four saved agentic bridge
-                            # artifacts hold ZERO of them and every check that
-                            # reads record.numbers ran on an empty pool: the
-                            # column checks, the percent-evidence tests and half
-                            # the citation cap were silently switched off in the
-                            # shell that exists to be compared against the
-                            # pipeline. An empty list is a valid answer for a
-                            # prose quote.
+                            # "numbers" is required because every check that
+                            # reads record.numbers — the column checks, the
+                            # percent-evidence tests, half the citation cap —
+                            # runs on an empty pool without it. An empty list is
+                            # a valid answer for a prose quote.
                             "required": ["quote", "numbers"],
                         },
                     },
@@ -854,8 +846,7 @@ def match_quote(quote: str, text: str) -> tuple[bool, str]:
     comparison, so "the margin fell 5 basis points" would match a page saying 3.
 
     One function, because the gate is applied twice - when `cite` mints a
-    record, and again when a submission's evidence list is resolved. Two copies
-    of it drifted into two different rules for the same question.
+    record, and again when a submission's evidence list is resolved.
     """
     key = quote_key(quote)
     if key in quote_key(text):
@@ -984,12 +975,10 @@ class Research:
     def read_chart(self, doc_id: str, pdf_page: int, unit: str | None = None) -> dict:
         doc = self._doc(doc_id)
         page = int(pdf_page)
-        # A metric case knows its unit. A free-form question does not have a
-        # metric, and the question shell used to hand every chart "$m" — so a
-        # margin walk came back with its bars stamped as dollars, and the
-        # unit-typed checks then measured basis points against a money
-        # tolerance. There is no unit to default to here, so the agent names
-        # it and the reply echoes what the bars were read and checked in.
+        # A metric case knows its unit. A free-form question has no metric and
+        # so no unit to default to: the agent names it, and the reply echoes
+        # what the bars were read and checked in. A defaulted unit stamps a
+        # margin walk as dollars and measures bps against a money tolerance.
         unit = str(unit).strip() if unit else (self.metric_cfg.get("unit") or "")
         if not unit:
             return {
@@ -1009,10 +998,9 @@ class Research:
             self.validation["failed"].append(f"walk_extraction_error p{page}: {exc}")
             # The ANNOTATION layer is a separate read of the same page, and the
             # open-loop pipeline attempts it whether or not the walk read
-            # succeeded. This shell used to return here, so an unreadable chart
-            # cost the agent callout evidence the baseline shell still had —
-            # the two shells stopped being evidence-comparable exactly where a
-            # page was hardest to read. The bar labels are simply unknown.
+            # succeeded. Returning here instead would cost the agent callout
+            # evidence the pipeline still has, exactly where a page is hardest
+            # to read. The bar labels are simply unknown.
             return {
                 "error": f"the chart on {doc.doc_id} p{page} could not be read: {exc}",
                 "annotations": self._read_annotations(doc, page, case_desc, unit, ()),
@@ -1041,9 +1029,9 @@ class Research:
         self.records.append(record)
         self.pages_read.add((doc.doc_id, page))
         # The chart's ANNOTATION layer, exactly as the open-loop pipeline reads
-        # it. Without this the two shells were not evidence-comparable: the
-        # pipeline's author saw the bank's own sub-split of each bar and the
-        # agent never could, so a difference in their answers measured the
+        # it. Without it the two shells are not evidence-comparable: the
+        # pipeline's author sees the bank's own sub-split of each bar and the
+        # agent never could, so a difference in their answers would measure the
         # tools, not the orchestration. One extra vision call per chart, and it
         # degrades to nothing on any failure.
         bar_labels = tuple(str(bar.get("label", "")) for bar in walk.get("bars", []))
@@ -1151,12 +1139,11 @@ class Research:
         """One evidence record, or the reason the quote does not support one.
 
         Returns (record, reason, dropped numbers). A NumberFact is the model's
-        own account of what the quote prints, and nothing checked it: an agent
-        could cite an unrelated verbatim sentence, attach a figure of its own,
-        and every check that reads record.numbers — the column checks, the
-        percent-evidence tests, the citation cap — would then read a number no
-        page states. The quote is verified against the page first, so a figure
-        the quote prints is a figure the PAGE prints.
+        own account of what the quote prints, so the quote is verified against
+        the page before its numbers are read: a figure the quote prints is then
+        a figure the PAGE prints, and every check over record.numbers — the
+        column checks, the percent-evidence tests, the citation cap — reads
+        figures a page states.
         """
         quote = str(item.get("quote") or "").strip()
         if not quote:
@@ -1372,11 +1359,11 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     # guess. An id no tool minted still resolves to nothing and still falls to
     # the evidence gate.
     #
-    # This runs BEFORE every normaliser that reads the evidence. It used to run
-    # after, and `_percent_evidenced` then decided the percent-to-bps lift
-    # against a record list the recovery had not filled yet: a NIM movement
-    # whose only evidence arrived through `headline_evidence` kept its percent
-    # scale and shipped as "2.08 -> 2.05, -0.03 bps" (Codex round-5 repro).
+    # This runs BEFORE every normaliser that reads the evidence:
+    # `_percent_evidenced` decides the percent-to-bps lift against the record
+    # list, so a recovery running after it leaves a NIM movement whose only
+    # evidence arrived through `headline_evidence` on its percent scale
+    # ("2.08 -> 2.05, -0.03 bps").
     minted_by_id = {record.id: record for record in research.records}
     present = {record.id for record in records}
     _recover_minted(
@@ -1522,9 +1509,6 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     settle_ratio_scale(attribution, metric_cfg["unit"])
     settle_identity_scale(attribution, metric_cfg["method"])
     corroborate(attribution, cross_source)
-    # The same evidence-ladder cap the open-loop pipeline applies, from the
-    # same function: a claim is scored by what its own citations state,
-    # whichever shell assembled it.
     cap_weakly_cited_claims(attribution)
     if is_bridge:
         split = {
@@ -1587,7 +1571,7 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     peripheral += honest_partial
     validation["failed"] += output_failed
     # A claim-specific cap, so it runs whether or not the walk failure was
-    # graded load-bearing for the answer as a whole (review round 3).
+    # graded load-bearing for the answer as a whole.
     cap_drivers_on_failed_walks(attribution, walks)
     if fatal or peripheral:
         attribution.limitations.extend(f"Failed check: {f}" for f in fatal + peripheral)
@@ -1656,8 +1640,8 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
 
     `deadline_monotonic` is the same hard stop this loop reads between turns,
     handed to every model call so ONE call cannot sit past it. The loop reads
-    its wall clock between calls only, so a turn holding a retry ladder used to
-    add minutes the loop could not see. The submit turns carry it too: a
+    its wall clock between calls only, so a turn holding a retry ladder would
+    otherwise add minutes the loop cannot see. The submit turns carry it too: a
     submission asked for after the budget ran out is still inside the case.
     """
     tools = [*TOOL_SPECS, submit_spec]
@@ -1676,11 +1660,10 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
         turns += 1
         turn_cap = combo.max_tool_calls + MAX_TURNS_AFTER_BUDGET
         if turns > turn_cap:
-            # A model that ignores the submit request, turn after turn. That is
-            # a different stop from running out of time, and it used to report
-            # itself as the wall clock — a bound such a run never comes near.
-            # The budget that latched first is kept beside it: it is why the
-            # model was being asked to submit at all.
+            # A model that ignores the submit request, turn after turn, is a
+            # different stop from running out of time: such a run never comes
+            # near the wall clock. The budget that latched first is kept beside
+            # it: it is why the model was being asked to submit at all.
             exhausted = (
                 f"the turn cap ({turn_cap} turns)" if exhausted is None
                 else f"the turn cap ({turn_cap} turns), after {exhausted}"
@@ -1735,12 +1718,10 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
             # An accepted answer is FINAL. Every remaining call in the turn is
             # ANSWERED, so the transcript the provider sees stays complete, but
             # none of them RUNS. A tool dispatched after acceptance writes into
-            # the same research state the accepted answer is built from: a cite
-            # placed after submit minted the very record the answer cited, and
-            # a dangling citation the evidence gate had stripped came back as a
-            # quantified claim at confidence 85. The same two calls in the
-            # other order behaved correctly, so the artifact turned on how the
-            # provider happened to order one turn's calls.
+            # the same research state the accepted answer is built from — a
+            # cite placed after submit mints the very record the answer cites —
+            # so the artifact would turn on how the provider happened to order
+            # one turn's calls.
             if payload is not None:
                 messages.append(
                     _tool_result(call_id, {
@@ -1910,9 +1891,8 @@ def question_scope(question: str, docs: list[Document]) -> tuple[dict, dict, dic
     }
     metric_cfg = {
         "name": "the question",
-        # No metric, so no unit. "$m" sat here and every chart a question read
-        # was stamped as dollars, whatever it showed. An empty unit makes
-        # read_chart ask for one instead of inventing it.
+        # No metric, so no unit: an empty unit makes read_chart ask the agent
+        # for one instead of stamping every chart with a default.
         "unit": "",
         "method": "free_form",
         "retrieval_queries": [str(question)],
@@ -2006,10 +1986,10 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = LIVE_C
             "role": "user",
             "content": QUESTION_PROMPT.format(
                 question=question,
-                # The scope note used to reach the reader alone. The agent was
-                # asked about a period the corpus does not hold, handed another
-                # period's documents, and told nothing: it spent budget hunting
-                # for pages that do not exist.
+                # The scope note reaches the AGENT, not the reader alone. A
+                # question about a period the corpus does not hold gets another
+                # period's documents; an agent not told that spends its budget
+                # hunting for pages that do not exist.
                 period_note=(
                     "\nSCOPE OF THE DOCUMENTS YOU WERE GIVEN:\n"
                     + "\n".join(f"- {note}" for note in scope_notes)
@@ -2042,8 +2022,8 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = LIVE_C
             ],
         }
     output = build_answer(payload, research, question, docs)
-    # A period the corpus does not hold was substituted silently before this;
-    # the note travels with the answer that rests on it.
+    # The scope note travels with the answer that rests on it, so a substituted
+    # period is never silent.
     output["limitations"] = scope_notes + list(output["limitations"])
     if exhausted:
         output["limitations"].append(_stopped_early_note(exhausted))

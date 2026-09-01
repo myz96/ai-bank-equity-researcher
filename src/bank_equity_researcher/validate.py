@@ -61,10 +61,9 @@ COMPONENT_TOL = 2.0
 # --------------------------------------------------------------------------
 # Unit-typed tolerances
 #
-# A tolerance means nothing without the unit it is stated in. Every constant
-# above was calibrated in BASIS POINTS, and the checks below applied them to
-# whatever unit the answer happened to use: 1.0 is a rounding step in bps and
-# five times the whole movement in percentage points. The shipped CBA FY26
+# A tolerance means nothing without the unit it is stated in. The constants
+# above are calibrated in BASIS POINTS: 1.0 is a rounding step in bps and five
+# times the whole movement in percentage points. The shipped CBA FY26
 # cost-to-income artifact carried drivers summing to 0.0 ppt against a -0.2 ppt
 # movement and passed drivers_reconcile, because the movement it claimed to
 # explain was smaller than the slack it was measured with.
@@ -81,12 +80,12 @@ COMPONENT_TOL = 2.0
 # --------------------------------------------------------------------------
 # One spelling per unit
 #
-# A tolerance table is a dict keyed by a unit STRING, so "PPT" and "bpts" and
-# "$ m" missed every entry and took the default: a ppt movement measured with
-# the 1.0 reconciliation slack is measured with five times its own size. The
-# scorer already canonicalised aliases and the checks did not, so the two
-# disagreed about the same answer. The vocabulary lives here, beside the
-# tolerances it keys, and evals imports it (the reverse import is a cycle).
+# A tolerance table is a dict keyed by a unit STRING, so "PPT", "bpts" and
+# "$ m" miss every entry and take the default: a ppt movement measured with the
+# 1.0 reconciliation slack is measured with five times its own size. One
+# canonical spelling keeps the scorer and the checks reading the same answer the
+# same way. The vocabulary lives here, beside the tolerances it keys, and evals
+# imports it (the reverse import is a cycle).
 # --------------------------------------------------------------------------
 
 UNIT_ALIASES = {
@@ -419,10 +418,9 @@ def movement_arithmetic_tolerance(unit: str | None) -> float:
     """Slack for "from + delta == to", in the movement's own unit.
 
     check_movement reads it, and so do the two delta harmonisers that REPAIR a
-    delta before any check sees it. They used to carry a hard-coded 0.51, which
-    is a basis-point quantity: a ppt movement whose delta was out by 0.5 was
-    left alone by the repair and then failed the 0.1 ppt check, so a repairable
-    one-line slip sank the answer to confidence 40 instead of being corrected.
+    delta before any check sees it. A hard-coded 0.51 is a basis-point
+    quantity: a ppt movement whose delta was out by 0.5 escaped the repair,
+    then failed the 0.1 ppt check, and the answer shipped at confidence 40.
     """
     return _tolerance_for(MOVEMENT_ARITHMETIC_TOL, unit, MOVEMENT_ARITHMETIC_TOL_DEFAULT)
 
@@ -502,14 +500,12 @@ def cross_source_view(walks: list[dict], label_map: dict[str, str]) -> dict[str,
 
 
 def corroborate(attribution, cross_source: dict[str, list[dict]]) -> None:
-    """Annotate each quantified driver with its corroboration status and cap
-    single-source confidence. Mutates the attribution in place.
+    """Annotate each quantified driver with its corroboration status.
 
-    This used to synthesise a Disagreement whenever two walks decomposed one
-    movement past CORROBORATION_TOL. Ticket 33 replayed the estate: the branch
-    produced 0 auto-disagreements over 90 artifacts, and the model itself wrote
-    all 89 disagreements the estate holds. The wave-1 cleanup deleted it, with
-    the bare `gap <= 3` reason-picker that lived inside it.
+    Mutates the attribution in place. No Disagreement is synthesised here: an
+    auto-disagreement branch over CORROBORATION_TOL fired on 0 of the 90 saved
+    artifacts, where the model itself wrote all 89 disagreements the estate
+    holds.
     """
     for driver in attribution.drivers:
         if driver.contribution is None:
@@ -526,14 +522,12 @@ def corroborate(attribution, cross_source: dict[str, list[dict]]) -> None:
                 driver.checks_passed.append(f"corroborated_{len(walk_docs)}_sources")
         elif n_sources <= 1:
             # The single-source TAG stays: a reader deserves to know a number
-            # was seen in one document. The confidence override that used to
-            # sit here (min 85) was DELETED after the caps-off ablation
-            # (2026-08-31, evals/results/audits/capsoff-*): it fired 70x on a
-            # 25-case suite, demoted overwhelmingly-correct claims, capped
-            # exactly ON the 85 confident threshold rather than below it, and
-            # still left a wrong claim inside the confident band. The ladder's
-            # remaining caps catch the wrong-claim tail; this one only bought
-            # Brier damage.
+            # was seen in one document. No confidence override sits here. The
+            # caps-off ablation (2026-08-31, evals/results/audits/capsoff-*)
+            # deleted the min-85 cap: it fired 70x on a 25-case suite, demoted
+            # overwhelmingly-correct claims, capped exactly ON the 85 confident
+            # threshold rather than below it, and still left a wrong claim
+            # inside the confident band.
             driver.checks_passed.append("single_source")
 
 
@@ -550,13 +544,12 @@ def check_comparison_leak(
     a leak whether or not the bank published a walk for the task — where it did
     not, the other comparison's numbers belong in the driver narrative.
 
-    The check no longer caps the offender BY NAME. Ticket 33 replayed the
-    estate: the `comparison_leak_cap_80` override fired on 0 of the 90 saved
-    artifacts, so it carried no evidence under the hardcoded-override policy
-    above and the wave-1 cleanup deleted it. `comparison_leak` is a
-    `WHOLE_TABLE_FAILURE` instead (round 5), so a leak takes every quantified
-    claim to `CLAIM_CITATION_CAP`, and the named failure still reaches the
-    fatal grading the shell applies to a failed check.
+    The check does not cap the offender BY NAME: the `comparison_leak_cap_80`
+    override fired on 0 of the 90 saved artifacts, so it carried no evidence
+    under the hardcoded-override policy above. `comparison_leak` is a
+    `WHOLE_TABLE_FAILURE` instead, so a leak takes every quantified claim to
+    `CLAIM_CITATION_CAP`, and the named failure still reaches the fatal grading
+    the shell applies to a failed check.
     """
     passed, failed = [], []
     for driver in attribution.drivers:
@@ -766,13 +759,12 @@ def check_component_columns(
     reported, so a claim that is right for a reason this code cannot see still
     passes.
 
-    The check no longer caps the offender BY NAME, on the same ground as
-    `check_comparison_leak`: ticket 33 replayed the estate and the
-    `component_column_cap_80` override fired on 0 of the 90 saved artifacts,
-    so the wave-1 cleanup deleted it under the hardcoded-override policy.
-    `component_from_prior_half` is a `WHOLE_TABLE_FAILURE` instead (round 5),
-    so a component read from the prior half's column takes every quantified
-    claim to `CLAIM_CITATION_CAP`.
+    The check does not cap the offender BY NAME, on the same ground as
+    `check_comparison_leak`: the `component_column_cap_80` override fired on 0
+    of the 90 saved artifacts, so it carried no evidence under the
+    hardcoded-override policy. `component_from_prior_half` is a
+    `WHOLE_TABLE_FAILURE` instead, so a component read from the prior half's
+    column takes every quantified claim to `CLAIM_CITATION_CAP`.
     """
     passed, failed = [], []
     if attribution.movement is None:
@@ -882,12 +874,10 @@ def check_movement_basis(
     header and once under a "cash earnings basis" one, a few lines apart: NAB's
     FY25 book page 15 prints "Cost to income ratio 49.6% | 48.5%" and then
     "Cost to income ratio 47.3% | 46.5%". The row label alone cannot tell them
-    apart, so check_movement_variant sees nothing wrong.
-
-    The masking made it worse. The author declared basis "statutory", no cited
-    quote printed that word, and _settle_basis substituted the registry's
-    primary basis — so the statutory numbers reached the scorer wearing the
-    cash label and the basis check passed on a wrong row.
+    apart, so check_movement_variant sees nothing wrong. _settle_basis then
+    masks the slip: it substitutes the registry's primary basis for a
+    declaration no cited quote prints, so statutory numbers reach the scorer
+    wearing the cash label.
 
     Two signals, in order. First the basis word inside the author's own
     citation. Then the basis the answer DECLARES, for the case where the
@@ -968,10 +958,7 @@ IDENTITY_SCALE = 100.0
 #
 # These read a model's own submission and restate it before any check runs,
 # so a check downstream of one of them is asserting that the restatement
-# worked. They lived in author.py, which was the open-loop baseline's
-# module; ticket 33 wave 3 froze that arm at the tag `pipeline-baseline-final`
-# and deleted it from main, so they move here beside the checks that read
-# their output. Nothing about them changed in the move.
+# worked. They sit here beside the checks that read their output.
 # --------------------------------------------------------------------------
 
 
@@ -1003,12 +990,11 @@ def primary_basis(registry: dict) -> str | None:
     """The bank's own headline basis, read from the registry vocabulary.
 
     None when the registry carries no measures block: a skeleton registry
-    (MQG) or a missing one knows no basis, and the "cash" default here used
-    to stand in for that knowledge — _settle_basis then rewrote a declared
-    "statutory" to "cash" and claimed the registry named it (review round 10).
-    The default survives only under a measures block whose core_profit names
-    no basis word, where every committed registry is an Australian major
-    reporting cash earnings.
+    (MQG) or a missing one knows no basis, and a "cash" default there let
+    _settle_basis rewrite a declared "statutory" to "cash" and claim the
+    registry named it (review round 10). The default survives only under a
+    measures block whose core_profit names no basis word, where every committed
+    registry is an Australian major reporting cash earnings.
     """
     measures = registry.get("measures")
     if not measures:
@@ -1036,14 +1022,11 @@ def drop_off_unit_contributions(drivers: list[dict], unit: str) -> list[str]:
     The number is not deleted — it stays in the narrative, where it belongs —
     but it stops being a quantified contribution.
 
-    The driver used to fall to a hardcoded 60 as well. Ticket 33 replayed the
-    estate: the drop fired on 0 of the 90 saved artifacts, so the 60 override
-    carried no evidence and the wave-1 cleanup deleted it. The drop itself
-    stays, because it is a shape rule and not a confidence judgment.
+    No confidence override sits here: the drop fired on 0 of the 90 saved
+    artifacts, so a hardcoded 60 carried no evidence. The drop itself stays,
+    because it is a shape rule and not a confidence judgment.
 
-    The closed-loop shell has guarded this since it was written and the
-    open-loop author never did, so the same submission was corrected in one
-    shell and shipped in the other. Both call this. Mutates; returns the notes.
+    Mutates; returns the notes.
     """
     dropped: list[str] = []
     for driver in drivers:
@@ -1100,19 +1083,17 @@ def settle_charge_sign(movement: dict, taxonomy: dict, reply: dict) -> dict:
 def _settle_basis(basis: str, registry: dict, records: list[EvidenceRecord], reply: dict) -> str:
     """A declared basis must be a word the bank printed on a page we read.
 
-    The extractor used to invent one: it tagged CBA's unlabelled Group NIM row
-    "statutory", and the author faithfully repeated it, so a correct movement
-    was scored wrong on its basis alone. When the claimed basis appears nowhere
-    in the cited quotes, fall back to the bank's headline basis from the
-    registry and record the substitution.
+    An extractor invents one: it tagged CBA's unlabelled Group NIM row
+    "statutory", and the author repeated it, so a correct movement was scored
+    wrong on its basis alone. When the claimed basis appears nowhere in the
+    cited quotes, fall back to the bank's headline basis from the registry and
+    record the substitution.
 
-    This function owns the no-declaration default too. It used to be a
-    hardcoded "cash" (here and at the caller), which shipped an invented basis
-    for a bank whose registry names none — MQG reports statutory NPAT and its
-    skeleton registry knows no basis, so "cash" was fabricated knowledge
-    (review round 11). Now: the registry's headline basis stands in when it
-    knows one, and "as reported" says plainly that nothing was declared or
-    known. Never "cash" without a registry behind it.
+    This function owns the no-declaration default too. The registry's headline
+    basis stands in when it knows one, and "as reported" says plainly that
+    nothing was declared or known. Never "cash" without a registry behind it: a
+    hardcoded "cash" shipped an invented basis for MQG, which reports statutory
+    NPAT under a skeleton registry that knows no basis (review round 11).
     """
     declared = str(basis or "").strip().lower()
     primary = primary_basis(registry)
@@ -1210,21 +1191,17 @@ CLAIM_CITATION_CAP = 80
 # ground +12.
 #
 # The suffix group is what makes the rest of the pattern work at all. Without
-# it the trailing (?![\w]) failed on every glued unit, the engine backtracked,
-# and the pool took a PREFIX of the number: "$10,982m" read as 10, "$2.5bn" as
-# 2, and "5bps" vanished. Both directions of the citation cap inverted at once
-# — the driver whose number the record printed was capped, and a neighbour with
-# a small round value was certified by a digit prefix. 8% of the shipped quotes
-# carry a digit glued to a letter.
+# it the trailing (?![\w]) fails on every glued unit, the engine backtracks,
+# and the pool takes a PREFIX of the number: "$10,982m" reads as 10, "$2.5bn"
+# as 2, and "5bps" vanishes. 8% of the shipped quotes carry a digit glued to a
+# letter.
 #
 # The unit a bank SPELLS OUT counts as a glued unit too. "decreased 5 basis
 # points" reached the pool as a bare 5, so the number carried no unit into the
-# conversion table and any unit the model named was accepted for it. The
-# spelled-out money units were already here; the ratio ones were not, which is
-# the half of the same rule that was missing. A multi-word alternative must
-# precede every alternative that is a prefix of it, because the engine takes
-# the first that matches: "percentage points" before "per cent", "basis point"
-# before "b".
+# conversion table and any unit the model named was accepted for it. A
+# multi-word alternative must precede every alternative that is a prefix of it,
+# because the engine takes the first that matches: "percentage points" before
+# "per cent", "basis point" before "b".
 #
 # A bank writes a negative change in brackets and glues the unit OUTSIDE them:
 # "Net interest margin (%) 2.05 2.08 (3)bpts". The closing bracket stood
@@ -1494,7 +1471,7 @@ def quote_prints(quote: str | None, value: float, unit: str | None = None) -> bo
     {"value": 5, "unit": "$m"}, and B3's conversion table then bound a unit the
     page never printed.
 
-    Round 4: a row does say which unit it is in, whenever it prints a header.
+    A row does say which unit it is in, whenever it prints a header.
     "Net interest margin (%) 2.05 2.08" minted an invented {"value": 2.05,
     "unit": "$m"} off a percent cell, and the weak-citation cap then left a
     +2.05 $m driver at 95. So a bare number is read first in the units the
@@ -1607,18 +1584,16 @@ def cap_weakly_cited_claims(attribution) -> list[str]:
 def check_drivers_reconcile(attribution) -> tuple[list[str], list[str]]:
     """Quantified drivers + residual should sum to the movement delta.
 
-    The SUM is unit-typed as well as the tolerance. Round 1 made the slack
-    follow the movement's unit and left the addition unit-blind, so a `+3 bps`
-    bar still reconciled a `$m` bridge: three basis points were added as three
-    dollars-million. A contribution stated in another unit is a fact about
-    something else, so it is named and it never enters the total.
+    The SUM is unit-typed as well as the tolerance. A unit-blind addition let a
+    `+3 bps` bar reconcile a `$m` bridge: three basis points were added as
+    three dollars-million. A contribution stated in another unit is a fact
+    about something else, so it is named and it never enters the total.
 
-    The RESIDUAL follows the same rule. Round 2 typed the contributions and
-    left the residual, so an off-unit residual was named in
-    `drivers_unit_mismatch` and then added to the total anyway — three basis
-    points closed a dollar bridge, and `drivers_reconcile` PASSED beside its
-    own mismatch failure. A residual with NO unit makes no competing claim, so
-    it is read in the movement's unit.
+    The RESIDUAL follows the same rule. An untyped residual was named in
+    `drivers_unit_mismatch` and then added to the total anyway, so three basis
+    points closed a dollar bridge and `drivers_reconcile` PASSED beside its own
+    mismatch failure. A residual with NO unit makes no competing claim, so it
+    is read in the movement's unit.
     """
     passed, failed = [], []
     if attribution.movement is None:
@@ -1665,13 +1640,12 @@ RATIO_LEVEL_CEILING = 200.0
 def check_ratio_level(movement, metric_unit: str | None = None) -> tuple[list[str], list[str]]:
     """A ratio movement's endpoints must be ratio-sized.
 
-    A percent-to-bps lift exists for a bps metric; its mirror never did. So a
-    ppt metric whose endpoints arrived in BASIS POINTS passed every check:
-    movement arithmetic is self-consistent (1160 - 20 = 1140), the drivers
-    reconcile at the same wrong scale, and settle_identity_scale's guard needs
-    a contribution larger than the level, which 1160 never is. The unit-typed
-    tolerances round 1 introduced are only as good as the unit LABEL, and
-    nothing asked whether the label fitted the number.
+    Every other check is self-consistent at the wrong scale, so a ppt metric
+    whose endpoints arrive in BASIS POINTS passes them all: the arithmetic
+    holds (1160 - 20 = 1140), the drivers reconcile at that same scale, and
+    settle_identity_scale's guard needs a contribution larger than the level,
+    which 1160 never is. A unit-typed tolerance is only as good as the unit
+    LABEL, so this check asks whether the label fits the number.
 
     The gate is the METRIC's unit, which the taxonomy fixes, exactly as it is
     in settle_ratio_scale. Keyed on the movement's unit, which the model
@@ -1767,23 +1741,20 @@ def settle_ratio_scale(attribution, metric_unit: str | None, records=None) -> st
 # "closed" was never closed, and code cannot say which of the remaining shares
 # is carrying the gap.
 #
-# `comparison_leak` and `component_from_prior_half` are HERE since round 5, and
-# the reason they used to be absent is exactly why they belong. Each one named
-# its own offender and capped it in place, so the whole-table cap would have
-# punished drivers the check itself clears. Ticket 33 wave 1 then deleted both
-# named caps — `comparison_leak_cap_80` and `component_column_cap_80` fired on
+# `comparison_leak` and `component_from_prior_half` are here because no named
+# cap survives: `comparison_leak_cap_80` and `component_column_cap_80` fired on
 # 0 of the 90 saved artifacts, so neither carried evidence under the
-# hardcoded-override policy — and this list was not revisited. Nothing capped
-# the offender afterwards: a driver the check proves wrong shipped at 95 and
-# entered the confidently-wrong population. EVIDENCE: the repro is synthetic —
+# hardcoded-override policy. Without these two names nothing caps the offender
+# at all — a driver the check proves wrong shipped at 95 and entered the
+# confidently-wrong population. EVIDENCE: the repro is synthetic —
 # tests/test_review_round5.py (Codex round-5 finding 2) builds the failing
 # driver and asserts the cap; no saved artifact fires either check, and with
 # both names present evals/results/round6-check.jsonl is byte-identical to
 # evals/results/pre-cleanup-baseline.jsonl (the .md pair differs only in the
-# run-timestamp title). The whole
-# table pays because the failure indicts the COLUMN the table was read from —
-# a walk for another comparison, or the prior half's column — and one driver
-# reading the wrong column is evidence its neighbours were read the same way.
+# run-timestamp title). The whole table pays because the failure indicts the
+# COLUMN the table was read from — a walk for another comparison, or the prior
+# half's column — and one driver reading the wrong column is evidence its
+# neighbours were read the same way.
 #
 # `walk_sum` and `walk_extraction_error` are absent for a different reason.
 # They indict the CHART READ, not the driver table: the bars extracted off a
@@ -1806,10 +1777,9 @@ WHOLE_TABLE_FAILURES = (
 def cap_unreconciled_drivers(attribution, failures: list[str]) -> list[str]:
     """Carry a fatal check down to the DRIVERS. Mutates; returns what it capped.
 
-    A failed check used to lower `attribution_confidence` alone, and every
-    per-driver `confidence` survived it untouched. The calibration metrics read
-    the DRIVER's confidence, so the Brier score and the confidently-wrong rate
-    were blind to every failed check: 22 saved artifacts carry a "Failed check"
+    The calibration metrics read the DRIVER's confidence, so a failed check
+    that lowers `attribution_confidence` alone is invisible to the Brier score
+    and the confidently-wrong rate: 22 saved artifacts carry a "Failed check"
     limitation and ship drivers at 80-90, and the suite's one confidently-wrong
     claim is exactly this — a bridge that failed drivers_reconcile, an answer
     that declared 40, and the offending driver still at 85.

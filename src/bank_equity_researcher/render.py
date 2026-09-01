@@ -1,6 +1,6 @@
 """Deterministic markdown rendering of both artifacts — the attribution report
-(ticket 06) and the free-form answer. No model writes prose here; neither
-artifact can contradict its own data."""
+and the free-form answer. No model writes prose here; neither artifact can
+contradict its own data."""
 
 from __future__ import annotations
 
@@ -113,11 +113,7 @@ def render_report(attribution: Attribution) -> str:
 #
 # A reader, a scorer and a judge must not be able to tell which shell wrote
 # an answer, so the answer's slug and its markdown have one implementation.
-# It lived in ask.py, the open-loop baseline; ticket 33 wave 3 froze that arm
-# at the tag `pipeline-baseline-final` and deleted it from main, so the
-# renderer moves here beside render_report. Nothing about it changed.
 # --------------------------------------------------------------------------
-
 
 
 def slugify(text: str, max_words: int = 8) -> str:

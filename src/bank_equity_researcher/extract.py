@@ -2,10 +2,9 @@
 plus the printed-page mapping every citation stamps (printed_page_of).
 Provenance is stamped by code, never by the model.
 
-The page-text extractor that used to sit here went with the open-loop shell:
-the closed loop reads a page with `read_page` and mints its own records from
-the agent's verbatim quotes (`research_agent._mint_record`). Git history holds
-it at the tag `pipeline-baseline-final`."""
+No page-text extractor sits here: the closed loop reads a page with `read_page`
+and mints its own records from the agent's verbatim quotes
+(`research_agent._mint_record`)."""
 
 from __future__ import annotations
 
@@ -108,8 +107,7 @@ def annotation_records(
 
     `bar_labels` are the labels the walk reader already took off this chart. An
     "annotation" that only repeats one of them is not a callout, and the same
-    bar reaching the author twice invites it to claim the bar twice. The prompt
-    asks for the callouts alone; this makes the rule mechanical.
+    bar reaching the author twice invites it to claim the bar twice.
     """
     items = raw.get("annotations") if isinstance(raw, dict) else None
     if not isinstance(items, list):
@@ -164,7 +162,7 @@ def extract_walk_annotations(
     bar_labels: tuple[str, ...] = (),
     deadline_monotonic: float | None = None,
 ) -> list[EvidenceRecord]:
-    """One bounded vision read of a walk page's CALLOUT layer (ticket 27).
+    """One bounded vision read of a walk page's CALLOUT layer.
 
     A walk chart carries two layers. The bars are one, and extract_walk reads
     them. The other is the annotation layer: the bank's own sub-split of a bar
@@ -178,8 +176,8 @@ def extract_walk_annotations(
     bonus, so its loss must never cost the case its walk or its answer.
 
     `deadline_monotonic` is the case's own deadline. One read_chart is TWO
-    vision calls, and each of them used to carry its own retry ladder, so a
-    chart read near the end of a case could run long past it.
+    vision calls, each with its own retry ladder, so without the deadline a
+    chart read near the end of a case runs long past it.
     """
     prompt = ANNOTATION_PROMPT.format(case=case, unit=unit, max_items=MAX_ANNOTATION_RECORDS)
     try:
@@ -205,8 +203,8 @@ def extract_walk(llm: LLM, model: str, doc: Document, page_no: int, case: str, n
     call so a chart read cannot outlive the case it belongs to.
     """
     prompt = WALK_PROMPT.format(case=case, unit=unit)
-    # The parse-failure retry now lives in LLM.chat_json, so every JSON caller
-    # gets it (ticket 27). The budget stays at the retry's old ceiling.
+    # The parse-failure retry lives in LLM.chat_json; max_tokens stays at the
+    # ceiling that retry used.
     try:
         walk = llm.chat_json(model, prompt, image_png=doc.render_page(page_no), max_tokens=4000,
                              deadline_monotonic=deadline_monotonic)
@@ -246,12 +244,10 @@ def extract_walk(llm: LLM, model: str, doc: Document, page_no: int, case: str, n
     # at different scales (12.3% -> 123 with bars in true bps). If one scale
     # factor on the endpoints makes the walk sum, apply and record it.
     #
-    # The trigger is check_walk's own tolerance, in the walk's unit. It was a
-    # flat 10, which is a quantity in BASIS POINTS: on a ppt walk nothing could
-    # ever reach it, so the harmoniser was dead code there, and on a $m walk it
-    # accepted a residual of ten dollars-million as "the walk sums" — ten times
-    # the money tolerance, and enough to rescale endpoints onto a wrong factor
-    # that then passed check_walk.
+    # The trigger must be check_walk's own tolerance, in the walk's unit. A
+    # flat number is a quantity in BASIS POINTS: on a ppt walk nothing reaches
+    # it, and on a $m walk a flat 10 accepts a ten-dollars-million residual as
+    # "the walk sums" — enough to rescale endpoints onto a wrong factor.
     tolerance = walk_sum_tolerance(doc.doc_type, unit)
     bar_sum = sum(b["bps"] for b in walk["bars"])
     if abs(walk["start_bps"] + bar_sum - walk["end_bps"]) > tolerance:

@@ -23,14 +23,13 @@ ALWAYS_REASONS = {"z-ai/glm-5.3"}
 #
 # httpx's `timeout` bounds the gap between chunks, never the whole call, so a
 # provider that drips a response body a few bytes at a time keeps the socket
-# alive for ever. A dev-suite run stalled for 30 minutes on exactly that: the
-# process sat in bytes_join assembling response.content while the API itself
-# answered a fresh request in under two seconds. The deadline below is checked
-# per chunk, so a slow route is abandoned and retried on another route.
+# alive for ever. A dev-suite run stalled for 30 minutes on exactly that. The
+# deadline below is checked per chunk, so a slow route is abandoned and retried
+# on another route.
 #
 # The budget scales with the output the caller asked for: a 4k-token
 # extraction gets the floor, and a 24k-token reasoning author gets room to
-# finish. Generous against a healthy route, decisive against a dead one.
+# finish.
 DEADLINE_FLOOR_S = 120.0
 DEADLINE_SECONDS_PER_TOKEN = 0.02
 # A well-formed reply is a few hundred KB. Beyond this the body is a fault,
@@ -113,25 +112,26 @@ class Usage:
 # inside every gap, so a 20-minute case restarts from scratch each time. The
 # grace ladder waits out gaps: up to NETWORK_GRACE tries at
 # NETWORK_GRACE_SLEEP seconds each (~9 minutes) that do NOT consume normal
-# attempts. Genuine request errors keep failing fast. Infra-only: no prompt,
-# scoring or answer-content change (post-freeze disclosure in the report).
+# attempts. Genuine request errors keep failing fast. Added post-freeze as an
+# infra-only change — no prompt, scoring or answer-content change — which is
+# what keeps frozen-baseline results comparable; the report discloses it.
 NETWORK_GRACE = 12
 NETWORK_GRACE_SLEEP = 45
 
 # A CONNECT-phase failure is the dead network, whatever English it carries.
-# Classifying on the message alone missed the shape the ladder exists for: on a
+# Classifying on the message alone misses the shape the ladder exists for: on a
 # hotspot gap the router usually stays up and DROPS packets, so httpx raises
 # `ConnectTimeout("timed out")` or the OS raises ETIMEDOUT
 # ("[Errno 60] Operation timed out"), and neither string matches a mark below.
-# The 2026-08-31 review executed all six shapes: only the three where the
-# router ANSWERS (DNS failure, refusal, reset) were getting grace.
+# Only the shapes where the router ANSWERS (DNS failure, refusal, reset) are
+# caught by a mark.
 #
 # READ-phase timeouts are deliberately absent. A stall part-way through a
 # response body is one stuck provider route, not a gap in the network, and
 # retrying on another route clears it faster than waiting does.
 _NETWORK_ERROR_TYPES = (httpx.ConnectError, httpx.ConnectTimeout)
-# Kept as the fallback for a failure that never reaches httpx's own types: the
-# OSError a socket layer hands up unwrapped.
+# The fallback for a failure that never reaches httpx's own types: the OSError
+# a socket layer hands up unwrapped.
 _NETWORK_ERROR_MARKS = (
     "nodename", "errno 8", "temporary failure in name resolution",
     "connection refused", "connection reset", "no route to host",
@@ -167,10 +167,8 @@ def _time_left(deadline_monotonic: float | None) -> float | None:
 def _sleep_within(seconds: float, deadline_monotonic: float | None) -> bool:
     """Wait, unless the wait would outlive the case. True when a retry may follow.
 
-    A grace wait is nine minutes of patience for a network gap, and patience
-    spent after the case's own budget is gone is not patience — it is a call
-    made late. So the wait happens only when the case still has room for the
-    wait AND for the attempt that follows it.
+    The wait happens only when the case still has room for the wait AND for the
+    attempt that follows it.
     """
     left = _time_left(deadline_monotonic)
     if left is not None and left <= seconds:
@@ -189,9 +187,8 @@ def _give_up(what: str, model: str, attempt: int, retries: int, out_of_time: boo
              last_error: Exception | None) -> RuntimeError:
     """The error a call raises when it has no attempt left, or no time left.
 
-    The two are named apart on purpose. "Five attempts failed" and "the case
-    ended while this call was still waiting" ask for different repairs, and a
-    run that dies inside a network gap must say so.
+    The two are named apart on purpose: "five attempts failed" and "the case
+    ended while this call was still waiting" ask for different repairs.
     """
     if out_of_time:
         return RuntimeError(
@@ -208,10 +205,9 @@ class LLM:
     def _post(self, payload: dict, deadline_s: float) -> tuple[int, bytes]:
         """One request, streamed, under an absolute wall-clock deadline.
 
-        The body is read chunk by chunk so the elapsed time and the byte count
-        are checked as it arrives. A route that never stops sending is aborted
-        here instead of holding the whole run; the caller's retry loop then
-        tries again, usually on a different provider.
+        A route that never stops sending is aborted here instead of holding the
+        whole run; the caller's retry loop then tries again, usually on a
+        different provider.
         """
         started = time.monotonic()
         chunks: list[bytes] = []
@@ -291,7 +287,7 @@ class LLM:
         OpenRouter speaks the OpenAI tools schema, so a turn is an ordinary
         request that also carries `tools`. The return value is the assistant
         MESSAGE, because the caller needs both halves of it: the prose and the
-        tool calls it asked for. A reply is empty only when it carries neither.
+        tool calls it asked for.
 
         `deadline_monotonic` is the CASE's absolute deadline, and this is the
         call that most needs it: the research loop reads its wall clock only
@@ -328,10 +324,8 @@ class LLM:
                     deadline_monotonic: float | None, parse):
         """The one retry ladder every request climbs.
 
-        chat() and chat_tools() used to carry it twice, line for line; only
-        the payload and the success `parse` differ, so they hand those in.
         A parse that raises (truncated or empty reply) is charged as a normal
-        attempt, exactly as when the check lived inline.
+        attempt.
         """
         if payload["model"] not in ALWAYS_REASONS:
             payload["reasoning"] = {"enabled": False}
@@ -354,7 +348,7 @@ class LLM:
                     attempt += 1
                     last_error = RuntimeError("429 Too Many Requests")
                     # The sleep belongs to the NEXT attempt, so the last 429
-                    # used to buy a 75-second wait for a retry that never came.
+                    # must not buy a wait for a retry that never comes.
                     if attempt >= retries:
                         break
                     if not _sleep_within(15 * attempt, deadline_monotonic):
@@ -378,9 +372,7 @@ class LLM:
                     break
                 attempt += 1
                 # The ladder is 1, 2, 4, 8, 16 seconds and it belongs to the
-                # attempt that FOLLOWS. The while-loop conversion slept
-                # 2**attempt after incrementing, which doubled every rung and
-                # added a 32-second wait after the last attempt was gone.
+                # attempt that FOLLOWS.
                 if attempt >= retries:
                     break
                 if not _sleep_within(2 ** (attempt - 1), deadline_monotonic):
@@ -455,11 +447,7 @@ _REPAIRS = (
 
 
 def _decode_error(body: str) -> ValueError:
-    """Re-run the failing decode to build a message that names the text.
-
-    A bare "Expecting ':' delimiter: line 18 column 19" costs a whole rerun to
-    diagnose; the window either side of the fault names the culprit at once.
-    """
+    """Re-run the failing decode to build a message that names the text."""
     try:
         json.JSONDecoder(strict=False).raw_decode(body)
     except json.JSONDecodeError as exc:

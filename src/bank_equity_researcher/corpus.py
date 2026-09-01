@@ -17,8 +17,7 @@ from .config import DATA_DIR, MANIFEST_DIR, REGISTRY_DIR
 # (validate.walk_sum_tolerance) — so a manifest value outside this set
 # silently degrades both. That happened: the hand-built MQG manifest shipped
 # "mda"/"presentation" and lost slide-page handling and the presentation walk
-# tolerance (review round 7, 2026-09-01). tests/test_corpus_scope.py holds
-# every manifest to this set.
+# tolerance. tests/test_corpus_scope.py holds every manifest to this set.
 DOC_TYPES = frozenset({
     "asx_announcement",
     "investor_discussion_pack",
@@ -98,9 +97,6 @@ def manifest_banks() -> list[str]:
 def all_documents() -> list[Document]:
     docs = [doc for bank in manifest_banks() for doc in load_documents(bank)]
     # The cache-key invariant, checked where the whole corpus is assembled.
-    # Two documents with one stem would silently share cached page text and
-    # cached embeddings; an error naming both beats an answer sourced from the
-    # wrong bank's document.
     stems: dict[str, str] = {}
     for doc in docs:
         stem = Path(doc.filename).stem
@@ -118,9 +114,8 @@ def all_documents() -> list[Document]:
 # Which documents a free-form question may read.
 #
 # A metric case names its bank and its two periods, so its corpus is given. A
-# question names them in prose ("Westpac's FY25 expense bridge", "Across CBA,
-# NAB and Westpac in FY25"), so the scope is read out of the question with the
-# same vocabulary the registry already holds: the ticker, and the distinctive
+# question names them in prose, so the scope is read out of the question with
+# the vocabulary the registry already holds: the ticker, and the distinctive
 # word of the bank's full name. Nothing here is specific to one bank or to one
 # document shape.
 # ---------------------------------------------------------------------------
@@ -156,11 +151,10 @@ def bank_name_phrases() -> dict[str, str]:
     words.
 
     "National Australia Bank" is three words, and every one of them names some
-    Australian bank, so the distinctive-word index holds nothing for NAB and a
-    question that spelled the name out raised "the question names no bank in
-    the corpus". A phrase is distinctive where its words are not, so the whole
-    name is matched too. This reads the registry like everything else here: no
-    bank is named in code.
+    Australian bank, so the distinctive-word index holds nothing for NAB. A
+    phrase is distinctive where its words are not, so the whole name is matched
+    too. This reads the registry like everything else here: no bank is named in
+    code.
     """
     phrases: dict[str, str] = {}
     for bank in manifest_banks():
@@ -233,10 +227,9 @@ def documents_for_question(
     not hold is dropped rather than refused: a question about FY26 guidance is
     answered out of the FY25 documents that publish it.
 
-    That substitution used to be SILENT. An answer then read as though it came
-    from the period the reader asked about, when the corpus held no document of
-    that period at all. `notes` collects one line per substitution, and both
-    shells put those lines in the answer's limitations.
+    A silent substitution would read as though the answer came from the period
+    the reader asked about. `notes` collects one line per substitution, and
+    both shells put those lines in the answer's limitations.
     """
     banks = [bank.upper()] if bank else banks_named(question)
     if not banks:
@@ -294,9 +287,8 @@ def resolve_doc_name(name: str, index: dict[str, str]) -> str | None:
     An exact alias decides on its own. Otherwise the containment pass needs the
     written name to agree with the document's BANK and PERIOD: a bare
     "results-book" is inside exactly one alias whenever one bank happens to
-    file its book under that word, and the old code returned that document
-    though the name identified no bank and no period. A name that does not say
-    which bank it means is unclear, and unclear returns None.
+    file its book under that word. A name that does not say which bank it means
+    is unclear, and unclear returns None.
     """
     key = _doc_key(name)
     if not key:

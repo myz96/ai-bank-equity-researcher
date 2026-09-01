@@ -1,5 +1,4 @@
-"""Deterministic reference-following, between page selection and extraction
-(ticket 22).
+"""Deterministic reference-following, between page selection and extraction.
 
 Retrieval ranks a page by how much the page looks like the question. The
 why-layer of a bank result does not look like the question: it sits in appendix
@@ -49,8 +48,6 @@ _MAX_PRINTED_OFFSET = 40
 # How far into a target page the relevance probe reads. The running header and
 # the printed page number occupy the first lines of every book page.
 _TARGET_PROBE_LINES = 20
-# A target must share at least this many content words with the case. One word
-# is too weak: "Integrated Risk Management" shares "risk" with a CET1 case and
 # Note ids run 1.1 to 12.99. A wider pattern swallows ratios ("17.73"), share
 # counts and percentages printed alone on a line.
 _NOTE_ID = r"(?:[1-9]|1[0-2])\.\d{1,2}"

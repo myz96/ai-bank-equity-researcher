@@ -1,8 +1,7 @@
 """The agentic pocket (ADR-0004): document discovery for a bank with no
-manifest. The model navigates the bank's website — fetch a page, read it,
-choose the next link — until it can name the result documents for the
-requested periods. The loop, the tools, and the hand-off are deterministic
-code; only the navigation choices are the model's.
+manifest. The model navigates the bank's website until it can name the result
+documents for the requested periods. The loop, the tools, and the hand-off are
+deterministic code; only the navigation choices are the model's.
 """
 
 from __future__ import annotations
@@ -125,9 +124,9 @@ def discover(bank: str, periods: list[str], seed_url: str, today: str) -> dict:
             # The prompt names the 4 doc types discovery TARGETS; the model may
             # answer with any term in the shared vocabulary. A value outside it
             # would silently lose slide-page numbering and the presentation
-            # walk tolerance (the hand-built MQG manifest did exactly that,
-            # review round 7), so an unknown term fails here, loudly, before
-            # the manifest is written.
+            # walk tolerance (the hand-built MQG manifest did exactly that), so
+            # an unknown term fails here, loudly, before the manifest is
+            # written.
             for d in reply.get("documents", []):
                 if d.get("doc_type") not in DOC_TYPES:
                     raise RuntimeError(
