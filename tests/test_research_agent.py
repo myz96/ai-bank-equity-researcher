@@ -3,8 +3,8 @@
 Every test here is offline: the documents are synthetic, the model is a
 stand-in that replays a scripted transcript, and no PDF is opened. What the
 tests pin down is the part that must not drift — the tool adapters, the
-verbatim-citation gate, and the submit path that turns one submission into the
-same artifact the pipeline emits.
+verbatim-citation gate, and the submit path that turns one submission into an
+artifact.
 """
 
 from __future__ import annotations
@@ -397,7 +397,7 @@ def test_a_unique_doc_id_suffix_still_resolves(docs, case):
 
 
 # ---------------------------------------------------------------------------
-# The submit path: one submission becomes the pipeline's artifact
+# The submit path: one submission becomes the artifact
 # ---------------------------------------------------------------------------
 
 
@@ -509,9 +509,7 @@ def test_a_delta_that_contradicts_its_endpoints_is_normalised(docs, case):
 
 
 def test_a_carried_in_record_evidences_the_percent_to_bps_lift(docs, case):
-    """Round-5 finding 1, as the reviewer executed it.
-
-    The recovery of a minted record cited outside the `evidence` list ran AFTER
+    """The recovery of a minted record cited outside the `evidence` list ran AFTER
     `_percent_evidenced`, so a movement whose only evidence arrived through
     `headline_evidence` had no record to test against. The lift stayed silent
     and `2.08 -> 2.05` shipped as a movement of `-0.03 bps`. The recovery now
@@ -566,15 +564,10 @@ def test_a_contribution_in_another_unit_stops_being_a_contribution(docs, case):
 
 
 def test_the_delta_harmoniser_repairs_a_ratio_slip_the_check_would_fail(docs, case):
-    """Round 1 gave check_movement a unit-typed table and left the two
-    normalisers that REPAIR a delta on a flat 0.51, which is a basis-point
-    quantity. For a ppt movement the repair stayed silent exactly where the
-    check then failed at 0.1, so a repairable one-line slip sank the answer to
-    confidence 40.
-
-    This ran through the open-loop author until ticket 33 wave 3 froze that arm
-    at the tag `pipeline-baseline-final`. The closed loop carries its own copy
-    of the harmoniser, so the rule is asserted here instead.
+    """check_movement took a unit-typed table while the two normalisers that
+    REPAIR a delta kept a flat 0.51, which is a basis-point quantity. For a ppt
+    movement the repair stayed silent exactly where the check then failed at
+    0.1, so a repairable one-line slip sank the answer to confidence 40.
     """
     cti = case | {"metric": "cti"}
     research = _research(_LLM([]), docs, cti, metric="cti")
@@ -610,7 +603,7 @@ def test_one_malformed_sub_object_does_not_discard_the_run(docs, case):
 
 
 def test_finalise_caps_a_failing_answer_at_40(docs, case):
-    """The pipeline's fatal cap runs over the agent's answer unchanged."""
+    """A fatal check caps the whole answer at 40."""
     research = _research(_LLM([]), docs, case)
     payload = _submission(
         movement={"from_value": 208, "to_value": 205, "delta": -3, "unit": "bps"},
@@ -695,7 +688,7 @@ def test_the_loop_researches_then_submits(wired, monkeypatch):
     assert attribution.provenance["orchestration"] == "agent"
     assert attribution.provenance["tool_calls"] == 2
     assert attribution.provenance["budget_exhausted"] == "no"
-    # The artifacts the harness reads are both written, in the pipeline's shape.
+    # The artifacts the harness reads are both written.
     saved = json.loads((out / "attribution.json").read_text())
     assert saved["bank"] == "CBA" and saved["metric"] == "nim"
     assert (out / "report.md").read_text().startswith("# CBA — nim — FY26 vs FY25")
@@ -754,7 +747,7 @@ def test_the_tool_call_budget_forces_a_submission(wired, monkeypatch):
 
 
 def test_the_case_deadline_reaches_every_model_call(wired, monkeypatch):
-    """Round-5 finding 4: the loop reads its wall clock only BETWEEN calls.
+    """The loop reads its wall clock only BETWEEN calls.
 
     One `chat_tools` call could hold twelve 45-second grace waits, and a
     `read_chart` two more ladders, so a case could run minutes past its own
@@ -858,13 +851,10 @@ def test_the_loop_can_cite_a_page_then_submit_by_id(wired, monkeypatch):
 
 
 def test_the_combo_chooses_the_orchestration_shell(monkeypatch, tmp_path, capsys):
-    """--combo reaches the shell through config.runner_for, and nothing else.
+    """--combo reaches the runner through routing.runner_for, and nothing else.
 
-    Codex critique finding 1: every caller selects its runner through one
-    function, or `evals run --combo agentic` silently measures one shell while
-    wearing the other's label. Ticket 33 wave 3 left one shell behind that
-    seam, so the test now asserts that every live combo reaches the agent and
-    that a retired combo name is refused rather than quietly routed.
+    Every live combo must reach the agent, and a retired combo name must be
+    refused rather than quietly routed under a stale label.
     """
     import sys
 
@@ -887,8 +877,7 @@ def test_the_combo_chooses_the_orchestration_shell(monkeypatch, tmp_path, capsys
         return run
 
     monkeypatch.setattr(research_agent, "run_agent_case", _fake("agent"))
-    # The collapse (user, 2026-08-31) left ONE live combo. Retired names below
-    # must refuse, never route.
+    # ONE live combo. Retired names below must refuse, never route.
     for combo in ("agentic",):
         monkeypatch.setattr(
             sys, "argv",
@@ -898,8 +887,8 @@ def test_the_combo_chooses_the_orchestration_shell(monkeypatch, tmp_path, capsys
         assert cli.main() == 0
         assert called[-1] == f"agent:{combo}"
     capsys.readouterr()
-    # The frozen arm's combos are gone from main; a run under one of their
-    # names fails loudly instead of measuring the agent under a stale label.
+    # A run under a retired combo name fails loudly instead of measuring the
+    # agent under a stale label.
     for retired in ("cheap", "normal"):
         with pytest.raises(KeyError, match="pipeline-baseline-final"):
             runner_for(retired)
@@ -907,8 +896,8 @@ def test_the_combo_chooses_the_orchestration_shell(monkeypatch, tmp_path, capsys
 
 def test_every_combo_the_cli_help_names_can_actually_run():
     """Three `--combo` help strings read "agentic | agentic-glm |
-    agentic-cheap" after the collapse left `COMBOS` holding one name, so a user
-    who followed the help text got a KeyError from `runner_for`."""
+    agentic-cheap" while `COMBOS` held one name, so a user who followed the
+    help text got a KeyError from `runner_for`."""
     import re
     from pathlib import Path
 
@@ -922,8 +911,8 @@ def test_every_combo_the_cli_help_names_can_actually_run():
 
 def test_the_offline_actions_default_to_the_live_combo():
     """`run_judge_suite` and `rescore` both defaulted to `cheap`, a name
-    `COMBOS` has not held since the collapse, so `run_judge_suite()` crashed on
-    its own defaults."""
+    `COMBOS` no longer holds, so `run_judge_suite()` crashed on its own
+    defaults."""
     import inspect
 
     from bank_equity_researcher.evals import harness as E
@@ -933,7 +922,7 @@ def test_the_offline_actions_default_to_the_live_combo():
 
 
 def test_the_judge_action_still_grades_a_retired_slug(tmp_path, monkeypatch):
-    """The judge action reads SAVED artifacts and runs no shell, so it takes
+    """The judge action reads SAVED artifacts and runs no case, so it takes
     the combo as a slug selector exactly as rescore does. Reading
     `COMBOS[combo].judges` made a retired slug raise a bare KeyError and left
     the frozen `-cheap` baseline with no judge path at all."""
@@ -1083,7 +1072,7 @@ def test_bank_language_answers_for_the_bank_the_question_asks_about(docs):
 
 
 # ---------------------------------------------------------------------------
-# Review round 1: a submission ends the turn, and budgets bind per call
+# A submission ends the turn, and budgets bind per call
 # ---------------------------------------------------------------------------
 
 
@@ -1172,7 +1161,7 @@ def test_the_turn_cap_reports_itself_and_not_the_clock(wired, monkeypatch):
 
 
 # ---------------------------------------------------------------------------
-# Review round 1: footnote markers, and the unit a question's chart is read in
+# Footnote markers, and the unit a question's chart is read in
 # ---------------------------------------------------------------------------
 
 
@@ -1287,15 +1276,14 @@ def test_a_question_chart_read_with_a_named_unit_echoes_it(docs, case):
 
 
 # ---------------------------------------------------------------------------
-# Review round 2
+# The marker relaxation is narrow on purpose
 #
-# The marker relaxation is a fix of a round-1 fix. "A standalone one- or
-# two-digit token" is not the shape of a footnote marker, it is the shape of
-# most small numbers on a results page: over the 607 pages of CBA's FY26 and
-# 1H26 books the old pattern removed 10,158 tokens, 16.7 a page, and 324 pages
-# lost ten or more. What it removed was the day and the two-digit year of every
-# column header, every bps value under 100, and the tier of every capital
-# instrument.
+# "A standalone one- or two-digit token" is not the shape of a footnote marker,
+# it is the shape of most small numbers on a results page: over the 607 pages of
+# CBA's FY26 and 1H26 books the old pattern removed 10,158 tokens, 16.7 a page,
+# and 324 pages lost ten or more. What it removed was the day and the two-digit
+# year of every column header, every bps value under 100, and the tier of every
+# capital instrument.
 # ---------------------------------------------------------------------------
 
 
@@ -1310,7 +1298,7 @@ def test_a_question_chart_read_with_a_named_unit_echoes_it(docs, case):
     ],
 )
 def test_the_relaxation_does_not_delete_the_data_it_walks_past(page, quote):
-    """All three quotes were accepted as verbatim before the pattern narrowed.
+    """Both quotes were accepted as verbatim before the pattern narrowed.
 
     The record then showed the reader and the grounding judge a sentence with
     its load-bearing numbers removed.
@@ -1319,7 +1307,7 @@ def test_the_relaxation_does_not_delete_the_data_it_walks_past(page, quote):
 
 
 def test_a_newline_column_is_not_a_footnote_marker():
-    """Reviewer C finding 3, ANZ 1H26 results announcement p59.
+    """ANZ 1H26 results announcement p59.
 
     `strip_markers` narrowed to a shape rule that still deleted a data column
     whenever the run of digits sat on its own line. The first data column held
@@ -1333,8 +1321,7 @@ def test_a_newline_column_is_not_a_footnote_marker():
 
 
 def test_a_marker_is_still_stripped_between_a_label_and_its_value():
-    """The round-1 repro, which must keep passing: the shape rule is narrower,
-    not absent."""
+    """The shape rule is narrower, not absent."""
     matched, relaxation = RA.match_quote(
         "Revenue from ordinary activities 30,153",
         "Revenue from ordinary activities 2 3 30,153",
@@ -1385,9 +1372,9 @@ def test_a_number_the_quote_does_not_print_is_dropped(docs, case):
 
 
 def test_the_cite_tool_requires_its_numbers():
-    """The pipeline's extractor always emits NumberFacts and the agent's cite
-    left them optional, so four saved agentic bridge artifacts hold ZERO of
-    them and every check reading record.numbers ran on an empty pool."""
+    """`cite` left the numbers optional, so four saved agentic bridge artifacts
+    hold ZERO NumberFacts and every check reading record.numbers ran on an
+    empty pool."""
     cite = next(t for t in RA.TOOL_SPECS if t["function"]["name"] == "cite")
     item = cite["function"]["parameters"]["properties"]["quotes"]["items"]
     assert item["required"] == ["quote", "numbers"]
@@ -1400,9 +1387,8 @@ def test_the_cite_tool_requires_its_numbers():
 
 
 def test_the_callout_layer_is_read_even_when_the_bars_are_not(docs, case):
-    """The pipeline attempts the callouts whatever the walk read did, and this
-    shell returned early — so the two shells stopped being evidence-comparable
-    exactly where a page is hardest to read."""
+    """read_chart returned early on an unreadable walk, so the callouts were
+    lost exactly where a page is hardest to read."""
 
     class _AnnotationsOnlyLLM(_LLM):
         def chat_json(self, model, prompt, image_png=None, max_tokens=None, deadline_monotonic=None):
@@ -1486,7 +1472,7 @@ def test_the_scope_note_reaches_the_question_prompt(wired, monkeypatch, docs):
 
 
 # ---------------------------------------------------------------------------
-# Restored pins (Codex cleanup-audit round 1): sole coverage of live branches
+# Sole coverage of live branches: do not delete without a replacement
 # ---------------------------------------------------------------------------
 
 
@@ -1542,8 +1528,8 @@ def test_a_failing_tool_is_a_message_the_agent_can_answer(wired, monkeypatch):
 
 
 def test_a_question_fact_may_cite_a_record_the_evidence_list_forgot(wired, monkeypatch):
-    """The question shell recovers a tool-minted record exactly as the
-    movement shell does; the two must not drift apart."""
+    """Question mode recovers a tool-minted record exactly as movement mode
+    does; the two must not drift apart."""
     llm = _LLM(
         [
             _assistant(_tool_call("c1", "cite", {

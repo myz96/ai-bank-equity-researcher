@@ -72,9 +72,9 @@ def test_usage_falls_back_to_the_table_when_no_price_is_reported():
 @pytest.mark.parametrize(
     "exc,grace",
     [
-        # Fable's executed shapes, one per transport type. Both returned False
-        # before the fix: the message carries no mark the old ladder knew, and
-        # an empty message carries nothing at all.
+        # One shape per transport type. Both returned False before the fix: the
+        # message carries no mark the old ladder knew, and an empty message
+        # carries nothing at all.
         (httpx.ConnectTimeout(""), True),
         (httpx.ConnectError("[Errno 60] Operation timed out"), True),
         # A read-phase timeout stays fail-fast: a stall mid-body is one stuck
@@ -123,9 +123,9 @@ def _sleepless(monkeypatch) -> list[float]:
 
 
 def test_five_server_errors_sleep_the_original_ladder_and_not_after_the_last(monkeypatch):
-    """Finding 7's repro: the while-loop conversion slept [2, 4, 8, 16, 32] —
-    62 seconds, 32 of them after no attempt remained. The loop before it slept
-    [1, 2, 4, 8, 16], and the last of those was wasted too."""
+    """The while-loop conversion slept [2, 4, 8, 16, 32] — 62 seconds, 32 of
+    them after no attempt remained. The loop before it slept [1, 2, 4, 8, 16],
+    and the last of those was wasted too."""
     slept = _sleepless(monkeypatch)
     client = L.LLM()
     calls = {"n": 0}
@@ -159,9 +159,9 @@ def test_a_deadline_already_past_stops_the_call_before_it_posts(monkeypatch):
 
 
 def test_a_grace_wait_that_would_outlive_the_case_is_not_taken(monkeypatch):
-    """Finding 4's repro, in the shape that costs the most: one call could hold
-    twelve 45-second grace waits, roughly nine minutes, after the case's own
-    wall clock had already run out."""
+    """The shape that costs the most: one call could hold twelve 45-second
+    grace waits, roughly nine minutes, after the case's own wall clock had
+    already run out."""
     slept = _sleepless(monkeypatch)
     client = L.LLM()
     calls = {"n": 0}

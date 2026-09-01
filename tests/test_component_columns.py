@@ -1,4 +1,4 @@
-"""The component-column check (ticket 27): rule 10's discipline one level down.
+"""The component-column check (ticket 27).
 
 A bridge answer can carry the right movement and still read its components out
 of the wrong table columns. The fixtures mirror the CBA 1H26 GPS table shape —

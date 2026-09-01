@@ -1,4 +1,4 @@
-"""Question scoping: which bank, which period, which document (review round 1).
+"""Question scoping: which bank, which period, which document.
 
 Three ways a free-form question reached the wrong corpus, or none at all:
 
@@ -16,7 +16,7 @@ from bank_equity_researcher.validation import schema as S
 from bank_equity_researcher.validation.schema import enforce_answer_gate
 
 # ---------------------------------------------------------------------------
-# Item 13: a full name made only of generic words
+# A full name made only of generic words
 # ---------------------------------------------------------------------------
 
 
@@ -55,7 +55,7 @@ def test_generic_words_alone_still_name_no_bank():
 
 
 # ---------------------------------------------------------------------------
-# Item 14: a substituted period is declared
+# A substituted period is declared
 # ---------------------------------------------------------------------------
 
 
@@ -92,7 +92,7 @@ def test_a_period_the_corpus_holds_is_not_declared(only_fy25):
 
 
 # ---------------------------------------------------------------------------
-# Item 15: a document name must identify its bank
+# A document name must identify its bank
 # ---------------------------------------------------------------------------
 
 
@@ -143,7 +143,7 @@ def test_an_empty_name_does_not_resolve():
 
 
 # ---------------------------------------------------------------------------
-# Item 16: the gate strips facts, not prose
+# The gate strips facts, not prose
 # ---------------------------------------------------------------------------
 
 
@@ -179,7 +179,7 @@ def test_no_warning_when_nothing_is_stripped():
 
 
 # ---------------------------------------------------------------------------
-# Item 17: the cache-key invariant is enforced, not assumed
+# The cache-key invariant is enforced, not assumed
 # ---------------------------------------------------------------------------
 
 
@@ -214,7 +214,7 @@ def test_the_real_corpus_holds_the_invariant():
 
 
 # ---------------------------------------------------------------------------
-# Review round 7: every manifest doc_type is in the shared vocabulary
+# Every manifest doc_type is in the shared vocabulary
 # ---------------------------------------------------------------------------
 
 
@@ -224,9 +224,9 @@ def test_every_manifest_doc_type_is_in_the_vocabulary():
     printed_page_of and walk_sum_tolerance both dispatch on the doc_type
     string. The hand-built MQG manifest shipped "mda"/"presentation", so its
     slides lost slide-page numbering and its walks were held to the 1.0 text
-    tolerance instead of the presentation lift (review round 7, 2026-09-01).
-    discover.py's prompt names the vocabulary, but a hand-built manifest
-    bypasses the prompt; this test does not.
+    tolerance instead of the presentation lift. discover.py's prompt names the
+    vocabulary, but a hand-built manifest bypasses the prompt; this test does
+    not.
     """
     for doc in C.all_documents():
         assert doc.doc_type in S.DOC_TYPES, (
@@ -245,8 +245,8 @@ def test_every_manifest_bank_has_a_registry_file():
     Both registry load paths fall back to {}, so the bank loses its calendar,
     its language map, and full-name resolution (banks_named) with no error.
     That happened: manifest/mqg.json landed without registry/mqg.json, and
-    "Macquarie" named no bank (review round 9, 2026-09-01). A bank that truly
-    needs no registry should record that decision here, not by omission.
+    "Macquarie" named no bank. A bank that truly needs no registry should
+    record that decision here, not by omission.
     """
     from bank_equity_researcher.config import MANIFEST_DIR, REGISTRY_DIR
 

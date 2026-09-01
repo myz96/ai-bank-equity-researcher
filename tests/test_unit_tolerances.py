@@ -1,4 +1,4 @@
-"""Unit-typed tolerances (review round 1, items 1, 2 and 0).
+"""Unit-typed tolerances.
 
 Every numeric check in validate.py compared a gap against a constant that was
 calibrated in BASIS POINTS, whatever unit the number was actually stated in.
@@ -70,7 +70,7 @@ def _attribution(unit: str, delta: float, contributions: list[float], **kw) -> A
 
 
 # --------------------------------------------------------------------------
-# Item 1: reconcile_tolerance is unit-typed
+# reconcile_tolerance is unit-typed
 # --------------------------------------------------------------------------
 
 
@@ -117,7 +117,7 @@ def test_presentation_lift_applies_to_bps_only():
 
 
 # --------------------------------------------------------------------------
-# Item 2: walk_sum_tolerance is unit-typed
+# walk_sum_tolerance is unit-typed
 # --------------------------------------------------------------------------
 
 
@@ -153,7 +153,7 @@ def test_a_ppt_walk_can_fail_its_sum_check():
 
 
 # --------------------------------------------------------------------------
-# check_movement's flat 0.51 (item 1, the author normaliser's share)
+# check_movement's flat 0.51
 # --------------------------------------------------------------------------
 
 
@@ -190,7 +190,7 @@ def test_an_uppercase_unit_gets_its_own_tolerance():
 
 
 # --------------------------------------------------------------------------
-# Item 0: the weak-citation cap, both shells
+# The weak-citation cap
 # --------------------------------------------------------------------------
 
 

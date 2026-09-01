@@ -1937,7 +1937,7 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = LIVE_C
                        periods: list[str] | None = None):
     """Answer one free-form question in the closed loop. Returns (output, out_dir).
 
-    The signature is the one config.question_runner_for hands to every caller,
+    The signature is the one routing.question_runner_for hands to every caller,
     so no caller needs an adapter. `bank` and `periods` are hints from a caller
     that already knows them; a question that names its own banks and periods
     needs neither.

@@ -131,9 +131,9 @@ def test_a_broken_movement_caps_the_whole_driver_table():
 @pytest.mark.parametrize(
     "failure",
     [
-        # Codex's executed repro: `comparison_leak` fired on a 95-confidence
-        # driver, `cap_unreconciled_drivers` returned [] and the confidence
-        # stayed at 95.
+        # `comparison_leak` fired on a 95-confidence driver,
+        # `cap_unreconciled_drivers` returned [] and the confidence stayed
+        # at 95.
         (
             "comparison_leak (funding.deposits claims -3, which is the 'Deposits' bar of "
             "CBA/1H26/results_presentation p28, a walk for a different comparison; "
@@ -229,13 +229,11 @@ def test_a_walk_that_sums_caps_nobody():
 
 
 def test_a_comparison_leak_names_the_driver_it_finds():
-    """Reviewer C finding 6 and Codex finding 1, minus the cap.
-
-    The check names the offender — it prints the bar, its label and its source.
-    It used to cap that driver at 80 as well. Ticket 33 wave 1 deleted the cap:
-    `comparison_leak_cap_80` fired on 0 of the 90 saved artifacts, so it cited
-    no run. The naming, and the fatal grading both shells apply to a failed
-    check, are untouched.
+    """The check names the offender — it prints the bar, its label and its
+    source. It used to cap that driver at 80 as well. Ticket 33 wave 1 deleted
+    the cap: `comparison_leak_cap_80` fired on 0 of the 90 saved artifacts, so
+    it cited no run. The naming, and the fatal grading of a failed check, are
+    untouched.
     """
     attribution = _attribution(
         drivers=[
@@ -262,7 +260,7 @@ def test_a_comparison_leak_names_the_driver_it_finds():
 
 
 def test_the_dollar_fact_no_longer_reaches_the_citation_cap():
-    """The whole chain reviewer C executed: mint, bind, cap.
+    """The whole chain: mint, bind, cap.
 
     The fact would not be minted at all now; even if it were, it grounds
     nothing, so the driver loses its right to near-certainty.
@@ -278,7 +276,7 @@ def test_the_dollar_fact_no_longer_reaches_the_citation_cap():
 
 
 def test_null_confidence_is_low_not_a_crash():
-    """Codex round-4 finding 5: an explicit JSON null is the other common
-    form of an unstated self-report; both forms mean LOW, never a crash."""
+    """An explicit JSON null is the other common form of an unstated
+    self-report; both forms mean LOW, never a crash."""
     assert DriverClaim(canonical="x").confidence == 40
     assert DriverClaim(canonical="x", confidence=None).confidence == 40

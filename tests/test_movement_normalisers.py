@@ -1,15 +1,15 @@
-"""Movement, basis and sign normalisers (ticket 27, NAB/WBC movement round).
+"""Movement, basis and sign normalisers (ticket 27).
 
 Two defects the WBC FY25 cases exposed:
 
 - The impairment charge arrived re-signed. Westpac prints the line inside the
-  P&L, where an expense is bracketed, so the shell reported -537 -> -424,
+  P&L, where an expense is bracketed, so the answer reported -537 -> -424,
   delta +113 for a charge that FELL by $113m.
-- The shell read "Return on average ordinary equity" when Westpac headlines
+- The answer read "Return on average ordinary equity" when Westpac headlines
   ROTE ex Notable Items one line below. The registry already named the row.
 
 The normalisers live in validation/validate.py beside the checks that read
-their output; the closed loop calls every one of them.
+their output.
 """
 
 from __future__ import annotations
@@ -284,11 +284,11 @@ def test_variant_words_ignore_hyphens(name, why, metric, source, label, fires):
 
 
 # ---------------------------------------------------------------------------
-# The ratio-identity scale normaliser (ticket 27, iteration 3)
+# The ratio-identity scale normaliser (ticket 27)
 #
 # ROE and CTI derive their level-1 split from an identity. The growth rate
 # enters that identity as a FRACTION, and a dollar movement enters it divided
-# by average equity. An author that feeds a rate printed in per cent straight
+# by average equity. An answer that feeds a rate printed in per cent straight
 # in states the split 100 times too large: the WBC FY25 run split a -0.24 ppt
 # movement into -23.76 and +0.56 ppt, and the CBA FY21 run split a +1.3 ppt
 # movement into +146 and -16. Both movements were CORRECT and both shipped
@@ -418,13 +418,11 @@ def test_identity_scale_ignores_a_split_stated_in_another_unit():
 
 
 # ---------------------------------------------------------------------------
-# Review round 2: the off-unit contribution drop
+# The off-unit contribution drop
 #
 # A contribution is a share of THIS movement, so it is stated in the movement's
-# own unit. The drop used to be reached only through the open-loop author, so
-# these tests went through that shell. It is gone; the rule is not, and the
-# closed loop calls it at research_agent.build_attribution. The end-to-end case
-# lives in test_research_agent.py; this is the rule on its own.
+# own unit. research_agent.build_attribution calls the drop. The end-to-end
+# case lives in test_research_agent.py; this is the rule on its own.
 # ---------------------------------------------------------------------------
 
 
@@ -452,7 +450,7 @@ def test_a_unit_spelling_difference_is_not_an_off_unit_contribution():
 
 
 # ---------------------------------------------------------------------------
-# Review round 10: a registry that knows no basis settles none
+# A registry that knows no basis settles none
 # ---------------------------------------------------------------------------
 
 
@@ -581,9 +579,7 @@ def test_the_ratio_level_check_keys_on_the_metric_unit():
 
 
 def test_the_ratio_corrector_settles_the_movement_unit():
-    """Reviewer round-4 finding 2, verbatim.
-
-    The NAB FY25 ROE submission carried the metric's numbers in basis points
+    """The NAB FY25 ROE submission carried the metric's numbers in basis points
     AND the label "bps". The corrector divided the numbers by 100 and left the
     label, so the artifact shipped "11.6 -> 11.4, -0.2 bps" — the gold movement
     written in a unit 100x out.
@@ -602,9 +598,7 @@ def test_the_ratio_corrector_settles_the_movement_unit():
 
 
 def test_the_ratio_corrector_does_not_reverse_the_percent_to_bps_lift():
-    """Reviewer C finding 2, verbatim.
-
-    CET1's taxonomy unit is bps. The model labels the movement "%", the lift
+    """CET1's taxonomy unit is bps. The model labels the movement "%", the lift
     multiplies the endpoints by 100, and `settle_ratio_scale` — keying on the
     model's own label rather than the METRIC's unit, which the taxonomy fixes —
     divided them straight back. No check then fires, and the artifact ships
@@ -640,7 +634,7 @@ def test_a_money_metric_never_reaches_the_ratio_corrector():
 
 
 def test_a_basis_point_bar_no_longer_reconciles_a_dollar_bridge():
-    """Round 1 made the tolerance unit-typed and left the addition unit-blind."""
+    """The tolerance became unit-typed and the addition stayed unit-blind."""
     attribution = _ratio(
         "$m", (5132.0, 5445.0, 313.0), "cash_earnings",
         drivers=[("nii", 310.0, None), ("mix", 3.0, "bps")],
@@ -652,9 +646,7 @@ def test_a_basis_point_bar_no_longer_reconciles_a_dollar_bridge():
 
 
 def test_three_basis_points_do_not_close_a_dollar_bridge():
-    """Reviewer C finding 4 and Codex finding 5, verbatim.
-
-    The unit-typed sum covered the CONTRIBUTIONS and left the RESIDUAL
+    """The unit-typed sum covered the CONTRIBUTIONS and left the RESIDUAL
     unfiltered, so `drivers_reconcile` PASSED beside its own
     `drivers_unit_mismatch` failure.
     """
@@ -688,9 +680,9 @@ def test_a_residual_in_the_movement_s_own_unit_still_closes_the_bridge():
 
 
 def test_a_bridge_with_nothing_quantified_reports_it_and_reconciles_nothing():
-    """`no_quantified_drivers` is the name the author shell reads to tell an
-    honest partial answer from a broken one, so the check must emit it rather
-    than pass an empty sum against the movement's delta."""
+    """`no_quantified_drivers` is the name `finalise` reads to tell an honest
+    partial answer from a broken one, so the check must emit it rather than
+    pass an empty sum against the movement's delta."""
     attribution = _ratio("$m", (5132.0, 5445.0, 313.0), "cash_earnings", drivers=[])
     passed, failed = check_drivers_reconcile(attribution)
     assert passed == []

@@ -78,9 +78,9 @@ def _attribution(unit="$m", movement=(5132.0, 5445.0, 313.0), drivers=(), record
 @pytest.mark.parametrize(
     "quote,expected",
     [
-        # The reviewer's own repro, verbatim. The trailing lookahead failed on a
-        # glued unit, so the engine backtracked and the pool took a PREFIX of
-        # the number: these returned [10.0], [], and [2.0].
+        # The trailing lookahead failed on a glued unit, so the engine
+        # backtracked and the pool took a PREFIX of the number: these returned
+        # [10.0], [], and [2.0].
         ("cash NPAT of $10,982m", [(10982.0, "$m")]),
         ("fell 5bps", [(5.0, "bps")]),
         ("$2.5bn buyback", [(2.5, "$bn")]),
@@ -183,9 +183,7 @@ def test_a_number_with_no_unit_grounds_nothing():
 
 
 def test_a_basis_point_sentence_does_not_mint_a_dollar_fact():
-    """Reviewer C finding 1, verbatim.
-
-    The agent cites a real, verbatim, basis-point sentence and attaches
+    """The agent cites a real, verbatim, basis-point sentence and attaches
     {"value": 5, "unit": "$m"}. `quote_prints` compared magnitudes with no unit
     at all, so the fact was kept, `_states` then bound it, and a `+5 $m` driver
     kept confidence 95.
@@ -193,7 +191,7 @@ def test_a_basis_point_sentence_does_not_mint_a_dollar_fact():
     quote = "Net interest margin decreased 5 basis points to 2.03 per cent."
     assert quote_prints(quote, 5, "$m") is False
     assert quote_prints(quote, 5, "bps") is True
-    # Codex finding 2's spelling of the same defect, in the other direction.
+    # The same defect in the other direction.
     assert quote_prints("NPAT was $150m", 150, "bps") is False
     assert quote_prints("NPAT was $150m", 150, "$m") is True
 
@@ -226,9 +224,7 @@ def test_the_quote_that_does_name_the_family_still_grounds_its_number():
 
 
 def test_a_percent_row_does_not_mint_a_dollar_fact():
-    """Reviewer finding 1, verbatim.
-
-    Round 3 bound the unit of a number that carries its unit GLUED to it, and
+    """The unit binding read only a number carrying its unit GLUED to it, and
     a table row does not: it prints the unit once, in the header, and the cells
     bare. `quote_prints` therefore took a percent cell for a dollar figure.
     """
@@ -297,7 +293,7 @@ def test_a_billions_row_does_not_print_the_same_number_in_millions(quote, value)
 
 
 def test_a_billions_row_does_not_state_a_millions_claim():
-    """Reviewer finding 3, verbatim: both families held the generic "$"."""
+    """Both families held the generic "$"."""
     assert quote_states("Assets ($bn) 2.5", 2.5, "$m") is False
     assert quote_states("Assets ($bn) 2.5", 2.5, "$bn") is True
     # The conversion is available; it is the 1:1 reading that was wrong.
@@ -317,8 +313,8 @@ def test_a_dollar_row_that_names_no_scale_still_grounds_a_money_claim():
 
 
 def test_a_full_row_grounds_its_own_figures_and_no_others():
-    """The row the round-4 reviewer's artifact quotes IN FULL: its printed
-    figures ground the fact they state and refuse the one they do not.
+    """A row quoted IN FULL: its printed figures ground the fact they state
+    and refuse the one they do not.
 
     The extractor gate read the digits of a LABEL as printed numbers, so
     "Level 2 common equity Tier 1 capital ratio" lost its no-number exemption

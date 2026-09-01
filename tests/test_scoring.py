@@ -1,4 +1,4 @@
-"""Scorer regression tests (ticket 28, Codex finding 13).
+"""Scorer regression tests (ticket 28).
 
 Every case names the counterexample it prevents:
 
@@ -34,10 +34,6 @@ from bank_equity_researcher.validation.schema import (
     Movement,
     NumberFact,
 )
-
-# --------------------------------------------------------------------------
-# builders
-# --------------------------------------------------------------------------
 
 
 def claim(canonical: str, value: float | None, confidence: int = 90, unit: str = "bps") -> DriverClaim:
@@ -141,7 +137,7 @@ NIM_LABELS = {
 
 
 # --------------------------------------------------------------------------
-# 1. typed tolerance (finding 6)
+# 1. typed tolerance
 # --------------------------------------------------------------------------
 
 TOLERANCE_TABLE = [
@@ -349,7 +345,7 @@ def test_unquantified_claims_are_not_scored():
 
 
 # --------------------------------------------------------------------------
-# 3. movement scoring: unit, basis, comparator (finding 6)
+# 3. movement scoring: unit, basis, comparator
 # --------------------------------------------------------------------------
 
 MOVEMENT_TABLE = [
@@ -421,7 +417,7 @@ def test_money_movement_uses_the_shared_tolerance():
 
 
 # --------------------------------------------------------------------------
-# 4. extraction: one-to-one by label, value and comparison (finding 5)
+# 4. extraction: one-to-one by label, value and comparison
 # --------------------------------------------------------------------------
 
 FULL_WALK_GOLD = {
@@ -508,7 +504,7 @@ def test_extraction_not_scored_when_gold_walk_is_another_comparison():
 
 
 # --------------------------------------------------------------------------
-# 5. calibration and coverage (finding 1)
+# 5. calibration and coverage
 # --------------------------------------------------------------------------
 
 
@@ -530,7 +526,7 @@ def test_calibration_covers_scored_claims_only():
 
 
 # ---------------------------------------------------------------------------
-# Review round 2: the scorer reads the claim's own unit
+# The scorer reads the claim's own unit
 #
 # score_drivers took ONE unit from the gold movement and applied it to every
 # claim, so a "+3 bps" contribution was measured against a "+3 $m" gold slot

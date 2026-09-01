@@ -1,4 +1,4 @@
-"""The walk-page annotation read (ticket 27, iteration 3).
+"""The walk-page annotation read (ticket 27).
 
 A walk chart carries two layers. extract_walk reads the bars. The annotation
 layer — the callouts that split one bar into its named parts, each part with
@@ -158,7 +158,7 @@ def test_annotation_prompt_names_no_bank_chart_or_value():
 
 def test_annotation_records_drop_a_repeat_of_a_bar_the_walk_already_read():
     """An "annotation" that only repeats a bar is not a callout, and the same
-    bar reaching the author twice invites it to claim the bar twice."""
+    bar reaching the agent twice invites it to claim the bar twice."""
     raw = {
         "annotations": [
             {"bar": "Asset pricing", "label": "Asset pricing", "value": -5},
@@ -178,7 +178,7 @@ def test_annotation_records_keep_everything_when_no_bar_was_read():
 
 
 # ---------------------------------------------------------------------------
-# Review round 2: the endpoint scale harmoniser is measured in the walk's unit
+# The endpoint scale harmoniser is measured in the walk's unit
 #
 # The harmoniser fires when the bars do not reach the endpoints and one scale
 # factor on the endpoints closes the gap. Its trigger was a flat 10, which is a

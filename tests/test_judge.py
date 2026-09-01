@@ -1,11 +1,11 @@
-"""Citation-grounding judge tests (tickets 02, 05; ticket 29 finding 7).
+"""Citation-grounding judge tests (tickets 02, 05, 29).
 
 The verdict table is the specification. Every row names the mistake it stops:
 
 - AGREEMENT PASS: both judges say the note states the fact and the quotes
   entail it, so the fact counts.
 - AGREEMENT FAIL: the judges agree the grounding is missing. A cited page is
-  not a supported claim (finding 7: coverage is not correctness).
+  not a supported claim: coverage is not correctness.
 - DISAGREEMENT: two judges from different model families split ON THE VERDICT,
   so no verdict is recorded. A tie-break would invent agreement that does not
   exist.
@@ -70,10 +70,6 @@ class FakeLLM:
 def both(stated: str, entailed: str) -> dict:
     return {model: {STATED: {"stated": stated}, ENTAILED: {"entailed": entailed}} for model in JUDGES}
 
-
-# ---------------------------------------------------------------------------
-# The verdict table
-# ---------------------------------------------------------------------------
 
 VERDICT_TABLE = [
     # name, per-model replies, expected verdict, expected (stated, entailed)
@@ -301,7 +297,7 @@ def test_answer_prose_drops_quotes_and_provenance():
 
 
 # ---------------------------------------------------------------------------
-# Headline citations (ticket 27, iteration 3)
+# Headline citations (ticket 27)
 #
 # A headline states facts that belong to no single driver: the movement as a
 # second document states it, the statutory-versus-cash framing, the summary
@@ -441,7 +437,7 @@ def test_headline_evidence_drops_an_id_that_resolves_to_no_record():
 
 
 # ---------------------------------------------------------------------------
-# Crossref: coverage is not correctness (finding 7)
+# Crossref: coverage is not correctness
 # ---------------------------------------------------------------------------
 
 
