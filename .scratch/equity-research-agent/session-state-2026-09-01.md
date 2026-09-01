@@ -44,12 +44,16 @@ DONE (rounds logged in issues/34):
    convergence check over all 16 src files) launched ~12:00 — gate + commit
    its result before anything else touches src.
 
+4. Restructure — DONE (661f313): agent/ tools/ validation/ judging/ evals/
+   subpackages; evals.py -> evals/harness.py; lint 21 -> 15.
+
 REMAINING (in order):
-4. Restructure src into subfolders (import-only commits) — wait for wave 2.
-5. improve-codebase-architecture skill cycles (mattpocock plugin cache).
-6. Test pruning LAST (fold review-round test files into behaviour-named
-   files, keep high-value only), then final proof: full tests + rescore +
-   live spot-check + summary.
+5. improve-codebase-architecture skill — BLOCKED on the user: the skill
+   refuses model invocation. The user must type
+   /mattpocock-skills:improve-codebase-architecture themselves.
+6. Test pruning LAST (proposal agent running; fold review-round test files
+   into behaviour-named files, keep high-value only), then final proof:
+   full tests + rescore + live spot-check + summary.
 
 ## Report obligations (Wednesday, do not lose)
 
