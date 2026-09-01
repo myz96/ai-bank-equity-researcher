@@ -1213,3 +1213,24 @@ orchestration/assembly module at 1,000 lines). Importers updated everywhere;
 no re-export shims.
 
 Gate: 415 tests, ruff clean, CLI runs, dev rescore identical.
+
+## Pruning r5 + Sol audit r5 + Sol review r4 applied (2026-09-01, three commits)
+
+- Pruning r5 (1155da7): 13 mutation-verified pins (each applied its mutation,
+  failed, reverted); the weak pooled/movement pins rebuilt; two deletions;
+  one src proposal (the redundant prior-half guard) applied in the product
+  commit. Suite 415 -> 428.
+- Product batch (6e8da1c): stale embedding caches rebuild on row mismatch
+  (the pooled matrix misattributed B/p1 as A/p3); discover clears corpus
+  caches after writing; cap_ungrounded_movement holds the quantity digit
+  standard (bare note numbers stripped) and stands down for worded
+  movements; the cap moved after the scale normalisers (a repaired percent
+  movement stayed wrongly capped); quotes render one-line (source text
+  leaked past answer_prose's line filter into judged prose — live repro);
+  residuals render outside the table too, and the table row has six cells.
+  Grounding replay: 119 movements, two firings, both retired-arm artifacts
+  citing divisional pieces but never the group movement — true positives.
+- Eval batch (f77c1f5): an entailment fail under a truncated quote window
+  FLAGS instead of failing (the count cap now counts as truncation); the
+  framing rank orders by recall fraction first; a dotted child outside the
+  metric's taxonomy vocabulary is unscored and cannot fill a parent slot.
