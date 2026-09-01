@@ -34,9 +34,9 @@ class Document:
         # filename is "BANK-PERIOD-doctype.pdf" and the stems stay distinct —
         # but nothing in code enforces it, and discover.py copies a filename
         # straight out of a model reply, where a generic basename such as
-        # "results-announcement.pdf" is exactly what an IR page offers. The
-        # guard in all_documents() below turns a collision into an error
-        # instead of wrong text. Neither cache invalidates on content change,
+        # "results-announcement.pdf" is exactly what an IR page offers.
+        # _assert_distinct_stems turns a collision into an error on every load
+        # path. Neither cache invalidates on content change,
         # so a PDF replaced in place keeps serving its old text.
         cache = DATA_DIR / "cache" / "pages" / (Path(self.filename).stem + ".json")
         if cache.exists():
@@ -96,19 +96,7 @@ def manifest_banks() -> list[str]:
 
 
 def all_documents() -> list[Document]:
-    docs = [doc for bank in manifest_banks() for doc in load_documents(bank)]
-    # The cache-key invariant, checked where the whole corpus is assembled.
-    stems: dict[str, str] = {}
-    for doc in docs:
-        stem = Path(doc.filename).stem
-        if stems.get(stem, doc.doc_id) != doc.doc_id:
-            raise RuntimeError(
-                f"two documents share the filename stem {stem!r} ({stems[stem]} and "
-                f"{doc.doc_id}); the page-text and embedding caches are keyed by that "
-                "stem, so rename one in its manifest before running"
-            )
-        stems[stem] = doc.doc_id
-    return docs
+    return [doc for bank in manifest_banks() for doc in load_documents(bank)]
 
 
 # ---------------------------------------------------------------------------

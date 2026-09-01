@@ -405,8 +405,6 @@ def tolerance_for(unit: str | None) -> Tolerance:
         return Tolerance(SCORER_MONEY_ABS_TOL_M, SCORER_MONEY_REL_TOL)
     if canonical in ("ppt", "%"):
         return Tolerance(SCORER_RATIO_TOL_PPT)
-    if canonical == "bps":
-        return Tolerance(SCORER_BPS_TOL)
     return Tolerance(SCORER_BPS_TOL)
 
 

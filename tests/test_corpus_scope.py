@@ -222,33 +222,40 @@ def test_no_warning_when_nothing_is_stripped():
 # ---------------------------------------------------------------------------
 
 
-def test_two_documents_sharing_a_filename_stem_are_refused(monkeypatch):
+def _write_manifest(directory, bank, filename):
+    import json as _json
+
+    (directory / f"{bank.lower()}.json").write_text(_json.dumps({
+        "bank": bank,
+        "documents": [{"period": "FY25", "doc_type": "results_announcement",
+                       "filename": filename, "url": "", "sha256": None}],
+    }))
+
+
+def test_two_documents_sharing_a_filename_stem_are_refused(monkeypatch, tmp_path):
     """The page-text and embedding caches are keyed by the filename stem.
 
     Two documents with one stem would share both caches, so one bank's pages
-    would be served for another's. The manifests hold the convention today;
+    would be served for another's. The guard runs on EVERY load path;
     discover.py copies a filename out of a model reply, where a generic
     basename is exactly what a bank's IR page offers.
     """
-
-    class _Stemmed:
-        def __init__(self, bank, filename):
-            self.bank = bank
-            self.filename = filename
-            self.period = "FY25"
-            self.doc_id = f"{bank}/FY25/results_announcement"
-
-    monkeypatch.setattr(C, "manifest_banks", lambda: ["CBA", "NAB"])
-    monkeypatch.setattr(
-        C, "load_documents",
-        lambda bank: [_Stemmed(bank, "results-announcement.pdf")],
-    )
-    with pytest.raises(RuntimeError, match="share the filename stem"):
-        C.all_documents()
+    _write_manifest(tmp_path, "AAA", "results-announcement.pdf")
+    _write_manifest(tmp_path, "BBB", "results-announcement.pdf")
+    monkeypatch.setattr(C, "MANIFEST_DIR", tmp_path)
+    C._assert_distinct_stems.cache_clear()
+    C.load_documents.cache_clear()
+    try:
+        with pytest.raises(RuntimeError, match="share the filename stem"):
+            C.load_documents("AAA")
+    finally:
+        C._assert_distinct_stems.cache_clear()
+        C.load_documents.cache_clear()
 
 
 def test_the_real_corpus_holds_the_invariant():
     """The committed manifests must keep their stems distinct."""
+    C._assert_distinct_stems.cache_clear()
     C.all_documents()
 
 

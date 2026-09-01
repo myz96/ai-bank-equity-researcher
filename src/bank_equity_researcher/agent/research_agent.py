@@ -31,7 +31,7 @@ from ..render import case_slug, render_answer, render_report, slugify
 from ..taxonomy import METRIC_ALIASES, TAXONOMY
 from ..tools.corpus import Document, documents_for_period, documents_for_question
 from ..tools.extract import extract_walk, extract_walk_annotations, printed_page_of
-from ..tools.refs import scan_page
+from ..tools.refs import relevance_terms, scan_page
 from ..tools.retrieve import retrieve
 from ..validation.quotes import match_quote, quote_key
 from ..validation.schema import (
@@ -137,6 +137,11 @@ def _provenance(combo, docs, started: float, llm, research, exhausted) -> dict:
         "charts_read": len(research.walks),
         "budget_exhausted": exhausted or "no",
     }
+
+
+def _document_lines(docs) -> str:
+    """The corpus listing both task prompts print: one line per document."""
+    return "\n".join(f"- {d.doc_id} ({d.period}, {len(d.page_texts())} pages)" for d in docs)
 
 
 def _stopped_early_note(exhausted: str) -> str:
@@ -669,8 +674,6 @@ def _numeric(value) -> float | None:
 
 
 def _relevance_terms(metric_cfg: dict) -> set[str]:
-    from ..tools.refs import relevance_terms
-
     return relevance_terms(" ".join([*metric_cfg["retrieval_queries"], metric_cfg["name"]]))
 
 
@@ -1189,9 +1192,7 @@ def run_agent_case(bank: str, metric: str, period: str, comparator: str | None,
                     "headline measure from the results book's KPI table"
                 ),
                 unit=metric_cfg["unit"],
-                documents="\n".join(
-                    f"- {d.doc_id} ({d.period}, {len(d.page_texts())} pages)" for d in docs
-                ),
+                documents=_document_lines(docs),
             ),
         },
     ]
@@ -1360,9 +1361,7 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = LIVE_C
                     if scope_notes
                     else ""
                 ),
-                documents="\n".join(
-                    f"- {d.doc_id} ({d.period}, {len(d.page_texts())} pages)" for d in docs
-                ),
+                documents=_document_lines(docs),
             ),
         },
     ]

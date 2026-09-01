@@ -1043,3 +1043,16 @@ Gate: 371 tests, dev rescore identical to baseline.
   failures); it does not count and is relaunched.
 
 Gate: 374 tests, dev rescore identical to baseline.
+
+## Fable simplifier round 4 applied (2026-09-01)
+
+Five of six applied: the all_documents stem guard deleted (strictly weaker
+than _assert_distinct_stems, which now runs on every load path; the
+collision test drives the real guard through tmp manifests with cache
+clears); WALK_BAR_TOL_PA / MONEY_REL_TOL / MONEY_ABS_TOL_M deleted (zero
+readers after the SCORER_* split); the harness bps branch collapsed; the
+relevance_terms import hoisted; _document_lines shares the corpus listing
+both prompts print. DECLINED: flattening build_answer's per-fact
+_recover_minted loop — touches citation recovery, needs a replay first.
+
+Gate: 374 tests, dev rescore identical, ruff 13.
