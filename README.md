@@ -103,7 +103,10 @@ milestone. `docs/design/eval-review-guide.md` documents every judgment call.
 
 ## Layout
 
-- `src/bank_equity_researcher/` — the agent (16 files of plain Python)
+- `src/bank_equity_researcher/` — plain Python: `agent/` (the closed loop),
+  `tools/` (corpus, retrieval, references, chart reads, discovery),
+  `validation/` (the contract and checks), `judging/`, `evals/`, and
+  cross-cutting top-level modules (cli, config, llm, render, taxonomy)
 - `docs/design.md` — the design doc: the four owned decisions
 - `docs/adr/` — architecture decision records
 - `docs/design/` — driver taxonomy, frontier benchmarks, eval review guide
