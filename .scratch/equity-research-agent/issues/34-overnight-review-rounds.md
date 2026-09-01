@@ -1144,3 +1144,9 @@ with pins (suite 412):
   escapes.
 - The answer-confidence cap counts GROUNDED kept facts: an answer of only
   ungrounded prose ("Outlook remained resilient") no longer carries 95.
+
+Gate-change neutrality replay (the rescore gate cannot see cap changes):
+all 111 saved out/*/attribution.json artifacts replayed through the new
+movement cap and the tightened _states — 0 new firings on either. The
+changes bind only in the reproduced defect paths; receipts stamped beside
+both overrides.

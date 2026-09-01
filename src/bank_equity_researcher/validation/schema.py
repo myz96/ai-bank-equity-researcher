@@ -166,7 +166,8 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
     # record grounds it — an unrelated record in the evidence pool changes
     # nothing (reproduced twice: an empty pool at 95, then an unrelated
     # dividend record beside a CTI movement at 95). The cap matches the
-    # question shell's nothing-survived cap.
+    # question shell's nothing-survived cap. Replayed over the 111 saved
+    # artifacts: 0 firings — it binds only in the reproduced defect paths.
     if (attribution.movement is not None
             and not attribution.headline_evidence
             and not any(driver.evidence for driver in attribution.drivers)

@@ -1502,7 +1502,8 @@ def _states(
     Across a conversion the slack is the TIGHTER of the two units' own slack,
     read in the claim's unit — the _converted_prints doctrine. The claim-unit
     tolerance alone certified a 0.02 ppt claim from a 10 bps fact: 0.1 ppt of
-    slack is the whole of ten basis points.
+    slack is the whole of ten basis points. Replayed over the 111 saved
+    artifacts: 0 newly capped claims.
     """
     converted = convert_unit(abs(number), number_unit, unit)
     if converted is None:
