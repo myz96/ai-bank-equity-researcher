@@ -1,73 +1,70 @@
 # WBC — cti — FY25 vs FY24
 
-**Movement (ex_notables basis):** 50.29ppt → 53.04ppt (+2.75ppt) | **Attribution confidence:** 85/100
+**Movement (ex_notables basis):** 50.29ppt → 53.04ppt (+2.75ppt) | **Attribution confidence:** 80/100
 
 *Read from: row 'Expense to income ratio (excluding Notable Items)', column Full Year Sept 2024 -> column Full Year Sept 2025*
 
-Westpac's headline cost-to-income measure — Expense to income ratio ex Notable Items — rose from 50.29% in FY24 to 53.04% in FY25, a +2.75 ppt deterioration (the KPI page rounds this to "3ppts to FY24"). The ratio rose because operating expenses grew faster than income (negative jaws): net operating income ex Notable Items rose 3.2% ($21,763m to $22,464m) while operating expenses ex Notable Items rose 8.9% ($10,944m to $11,916m). Expense growth was the dominant driver, driven by staff costs, UNITE investment spend and a $273m restructuring charge, partly offset by productivity. Income growth partially offset the rise. The ratio is ex Notable Items, so notable items are excluded from both sides.
+Westpac's cost-to-income ratio (Expense to income ratio ex Notable Items) rose 2.75 ppt in FY25, from 50.29% in FY24 to 53.04% in FY25 (results book p58; investor pack p6 shows 53.0%, up 3ppts). The rise reflects negative jaws: operating expenses grew 9% to $11,916m while net operating income excluding Notable Items grew only 3.2% to $22,464m, so expense growth outran income growth and pushed the ratio up. The bank's FY25 expenses bridge decomposes the +$972m expense rise into staff costs, technology, volume and other, investments and a restructuring charge, partly offset by productivity savings. Notable Items on operating expenses were nil in both years, so they contributed nothing to the ratio.
 
-> [ev-11] WBC/FY25/results_announcement, PDF p58: "Expense to income ratio (excluding Notable Items) 53.04% 50.29% 54.21% 51.83%"
-> [ev-14] WBC/FY25/investor_discussion_pack, printed p6: "53.0% Cost to income ratio ex Notable Items1 3ppts to FY24"
-> [ev-10] WBC/FY25/results_announcement, PDF p58: "Net operating income 22,384 21,588 11,591 10,793 Add/(less): Notable Items (net interest income) 93 163 (125) 218 Add/(less): Notable Items (non-interest income) (13) 12 5 (18) Net operating income excluding Notable Items 22,464 21,763 11,471 10,993"
-> [ev-13] WBC/FY25/results_announcement, PDF p9: "Net operating income 22,464 21,763 3 11,471 10,993 4 Operating expenses (11,916) (10,944) 9 (6,218) (5,698) 9"
-> [ev-12] WBC/FY25/results_announcement, PDF p9: "Operating expenses were 9% higher. The increase included restructuring costs of $273 million to support targeted productivity initiatives under our Fit for Growth program. Excluding these costs, operating expenses increased 6% mainly due to higher staff costs and the step up in UNITE investment spend. Productivity provided a partial offset."
+> [ev-1] WBC/FY25/results_announcement, PDF p58: "Expense to income ratio (excluding Notable Items) 53.04% 50.29% 54.21% 51.83%"
+> [ev-10] WBC/FY25/investor_discussion_pack, printed p6: "53.0% Cost to income ratio ex Notable Items1 3ppts to FY24"
+> [ev-3] WBC/FY25/results_announcement, PDF p58: "Net operating income excluding Notable Items 22,464 21,763 11,471 10,993"
+> [ev-4] WBC/FY25/results_announcement, PDF p18: "Total operating expenses (11,916) (10,944) 9 (6,218) (5,698) 9"
+> [ev-11] WBC/FY25/investor_discussion_pack, printed p27: "[walk chart] FY25 EXPENSES ($M): FY24 10944 -> FY25 11916"
 
 ## Drivers
 
 | Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
 |---|---|---|---|---|---|
-| `income_growth` | Net operating income ex Notable Items | -1.57 ppt | 80 | 2 () | ev-10, ev-13, ev-17 |
-| `expense_growth` | Operating expenses ex Notable Items | +4.46 ppt | 80 | 2 () | ev-9, ev-13, ev-15, ev-16, ev-12 |
-| `notable_items` | Notable Items | +0 ppt | 80 | 1 (single_source) | ev-10 |
-| *residual (unexplained)* | — | -0.14 ppt | — | — |
+| `notable_items` | Notable Items | +0 ppt | 80 | 1 (single_source) | ev-25 |
+| *residual (unexplained)* | — | +2.75 ppt | — | — | — |
 
-### income_growth — "Net operating income ex Notable Items"
-*-1.57 ppt | confidence 80/100*
+### expense_growth — "Operating expenses (jaws denominator)"
+*unquantified | confidence 90/100*
 
-Net operating income ex Notable Items rose 3.2% from $21,763m to $22,464m. Net interest income +$557m (AIEA up 3% on loan growth, Core NIM down 1bp, Treasury & Markets NIM flat) and non-interest income +$144m (higher card fees, Institutional lending fees, markets and net wealth income). Income growth alone would have lowered the ratio.
-> [ev-10] WBC/FY25/results_announcement, PDF p58: "Net operating income 22,384 21,588 11,591 10,793 Add/(less): Notable Items (net interest income) 93 163 (125) 218 Add/(less): Notable Items (non-interest income) (13) 12 5 (18) Net operating income excluding Notable Items 22,464 21,763 11,471 10,993"
-> [ev-13] WBC/FY25/results_announcement, PDF p9: "Net operating income 22,464 21,763 3 11,471 10,993 4 Operating expenses (11,916) (10,944) 9 (6,218) (5,698) 9"
-> [ev-17] WBC/FY25/investor_discussion_pack, printed p40: "7,113 557 144 113 17 6,972 (972) FY24 Net interest income Non interest income Expenses Impairment charges Tax & NCI FY25 FY25 NET PROFIT"
+Operating expenses grew 9% to $11,916m from $10,944m, faster than income, raising the ratio. The bank's FY25 expenses bridge splits the +$972m into staff costs +$397m, technology +$146m, volume and other +$199m, investments +$359m and restructuring charge +$273m, partly offset by productivity -$402m. Driven by UNITE investment, wage growth, higher software amortisation and the Fit for Growth restructuring charge; occupancy fell 7%.
+> [ev-4] WBC/FY25/results_announcement, PDF p18: "Total operating expenses (11,916) (10,944) 9 (6,218) (5,698) 9"
+> [ev-6] WBC/FY25/results_announcement, PDF p18: "Total operating expenses increased 9% to $11,916 million. The increase included a restructuring charge of $273 million in the Second Half of 2025 to support targeted productivity initiatives under our Fit for Growth program. Excluding this charge, operating expenses increased by 6% due to the ramp up in UNITE investment, wage growth and higher software amortisation."
+> [ev-11] WBC/FY25/investor_discussion_pack, printed p27: "[walk chart] FY25 EXPENSES ($M): FY24 10944 -> FY25 11916"
+> [ev-23] WBC/FY25/investor_discussion_pack, printed p27: "9% INCREASE"
+> [ev-24] WBC/FY25/investor_discussion_pack, printed p27: "6% increase ex restructuring"
+> [ev-22] WBC/FY25/investor_discussion_pack, printed p27: "UNITE investment $399m Amortisation up $106m Lower investment ex UNITE"
+> [ev-7] WBC/FY25/results_announcement, PDF p18: "Staff expenses1 increased by 7% to $6,326 million mainly due to wage growth, UNITE and the investment in bankers."
+> [ev-8] WBC/FY25/results_announcement, PDF p18: "Technology expenses increased 13% to $3,136 million due to higher costs related to the UNITE program, an increase in software amortisation related to projects completed in prior years and higher software maintenance and licensing costs."
+> [ev-9] WBC/FY25/results_announcement, PDF p18: "Occupancy expenses decreased by 7% to $652 million with further reductions in the Group's corporate and branch footprint."
 
-### expense_growth — "Operating expenses ex Notable Items"
-*+4.46 ppt | confidence 80/100*
+### income_growth — "Operating income growth (jaws numerator)"
+*unquantified | confidence 80/100*
 
-Operating expenses ex Notable Items rose 8.9% from $10,944m to $11,916m, outrunning income growth (negative jaws). Walk: staff costs +$397m, technology +$146m, volume & other +$199m, investments +$359m, restructuring charge +$273m, partly offset by productivity -$402m. Ex restructuring, expenses +6%.
-> [ev-9] WBC/FY25/results_announcement, PDF p58: "Expense to income ratio (excluding Notable Items) $m Full Year Sept 2025 Full Year Sept 2024 Half Year Sept 2025 Half Year March 2025 Operating expenses 11,916 10,944 6,218 5,698"
-> [ev-13] WBC/FY25/results_announcement, PDF p9: "Net operating income 22,464 21,763 3 11,471 10,993 4 Operating expenses (11,916) (10,944) 9 (6,218) (5,698) 9"
-> [ev-15] WBC/FY25/investor_discussion_pack, printed p27: "10,944 397 146 199 359 273 11,916 (402) FY24 Staff costs Technology Volume and other Productivity Investments Restructuring charge FY25 FY25 EXPENSES ($M)"
-> [ev-16] WBC/FY25/investor_discussion_pack, printed p27: "9% INCREASE Simpler operating model Reduced property footprint Digitisation UNITE investment $399m Amortisation up $106m Lower investment ex UNITE 6% increase ex restructuring"
-> [ev-12] WBC/FY25/results_announcement, PDF p9: "Operating expenses were 9% higher. The increase included restructuring costs of $273 million to support targeted productivity initiatives under our Fit for Growth program. Excluding these costs, operating expenses increased 6% mainly due to higher staff costs and the step up in UNITE investment spend. Productivity provided a partial offset."
+Net operating income excluding Notable Items grew 3.2% to $22,464m from $21,763m, slower than expenses, so income growth did not offset the expense rise. Net interest income +3% to $19,473m and non-interest income +5% to $2,991m. Revenue rose 3% to $22.5bn per the investor pack.
+> [ev-3] WBC/FY25/results_announcement, PDF p58: "Net operating income excluding Notable Items 22,464 21,763 11,471 10,993"
+> [ev-26] WBC/FY25/results_announcement, PDF p11: "Net interest income increased 3% to $19,473 million."
+> [ev-27] WBC/FY25/results_announcement, PDF p16: "Non-interest income increased by 5% to $2,991 million."
+> [ev-21] WBC/FY25/investor_discussion_pack, printed p20: "Revenue $21.8bn $22.5bn 3% Expenses ($10.9bn) ($11.9bn) 9% Expenses excluding restructuring charge ($10.9bn) ($11.6bn) 6%"
 
 ### notable_items — "Notable Items"
 *+0 ppt | confidence 80/100*
 
-The ratio is ex Notable Items; income-side notable items (FY25 net +$80m, FY24 net +$175m) are excluded from both numerator and denominator, so they do not drive this ratio's movement.
-> [ev-10] WBC/FY25/results_announcement, PDF p58: "Net operating income 22,384 21,588 11,591 10,793 Add/(less): Notable Items (net interest income) 93 163 (125) 218 Add/(less): Notable Items (non-interest income) (13) 12 5 (18) Net operating income excluding Notable Items 22,464 21,763 11,471 10,993"
-
-## Notable items
-- Restructuring charge of $273m (Fit for Growth) included in expenses; income-side notable items excluded from the ex-Notable ratio
-
-## Source disagreements
-- **Cost-to-income ratio movement magnitude** (rounding): 3ppts to FY24 (investor pack KPI) vs +2.75 ppt (computed from results announcement levels 53.04% vs 50.29%)
-  Preferred: +2.75 ppt. The investor pack KPI page rounds the movement to '3ppts to FY24'; the precise delta from the stated levels on results announcement page 58 is +2.75 ppt.
+Notable Items on operating expenses were nil in both FY25 and FY24, so notable items contributed nothing to the ratio movement; the ratio is reported ex Notable Items.
+> [ev-25] WBC/FY25/results_announcement, PDF p58: "Less: Notable Items (operating expenses) - - - -"
 
 ## Limitations
-- The bank does not publish a dedicated cost-to-income ratio walk chart; the ppt contributions for income growth (-1.57) and expense growth (+4.46) are computed by holding the other side at its FY24 level using disclosed levels, so they are my arithmetic (confidence capped at 80) rather than a bank-stated decomposition.
-- The residual of -0.14 ppt reflects the interaction between simultaneous income and expense growth; the bank does not disclose this split.
-- The delta of +2.75 ppt is computed by subtracting two stated period levels; the bank's own KPI page rounds it to '3ppts'.
+- The bank does not publish a ppt decomposition of the cost-to-income ratio movement into income vs expense contributions; the FY25 expenses bridge (investor pack p27) is a $m bridge of the expense level, not a ppt bridge of the ratio. Accordingly the income_growth and expense_growth contributions are left unquantified in ppt and the full +2.75 ppt movement is reported as residual.
+- The jaws growth rates (income +3.2%, expenses +8.9%) are computed by subtracting the disclosed FY25 and FY24 levels, so they are capped at 80 confidence.
+- The investor pack p48 expenses bridge and p40 net profit bridge describe the half-on-half (2H25 vs 2H24) comparison, a different question from this task, and were not used for the driver table.
 - Capped at 80: notable_items +0 ppt. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it.
 
 ## Provenance
 - combo: fast
 - models: agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash
 - documents: WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)
-- generated: 2026-09-01T06:30:23+00:00
-- seconds: 413.2
-- cost_usd: 0.0065
-- tokens: 144394 in / 9796 out
+- generated: 2026-09-01T17:56:49+00:00
+- seconds: 125.1
+- cost_usd: 0.0096
+- tokens: 618352 in / 16404 out
+- latency: 28 calls, 124s in requests (slowest 18s), 0 retries, 0 grace waits, 0s slept
 - orchestration: agent
-- tool_calls: 21
-- pages_read: 8
-- charts_read: 2
+- tool_calls: 43
+- pages_read: 19
+- charts_read: 1
 - budget_exhausted: no

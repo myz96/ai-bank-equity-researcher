@@ -10,56 +10,87 @@
     "delta": 105.0,
     "unit": "$m"
   },
-  "movement_source": "row 'Total credit impairment charge', column Sep 24 column (Year to) -> column Sep 25 column (Year to)",
-  "headline": "NAB's credit impairment charge (CIC) rose $105m or 14.4% to $833m in FY25 (12 months to Sep 2025) from $728m in FY24. The FY25 charge comprises individually assessed charges of $964m and a $131m release from collective provisions. The credit impairment charge to GLAs (annualised) rose 1 bp to 0.11% from 0.10%. By division (net charge, Sep25 vs Sep24): Corporate & Institutional Banking +$153m (146 vs a write-back of 7); Corporate Functions and Other +$83m (write-back 122 vs 205); Business & Private Banking +$6m (529 vs 523); Personal Banking -$33m (255 vs 288); New Zealand Banking -$104m (25 vs 129). The divisional deltas sum to +$105m, matching the total.",
+  "movement_source": "row 'Total credit impairment charge', column Sep 24 column, results book p26 -> column Sep 25 column, results book p26",
+  "headline": "NAB's credit impairment charge (CIC) rose $105m or 14.4% to $833m in FY25 from $728m in FY24 (cash basis). The increase was driven by a higher individually assessed charge (+$328m to $964m), primarily in Corporate & Institutional Banking, partially offset by a lower collective charge (from a $92m charge to a $131m write-back, -$223m). CIC to GLAs (annualised) rose 1bp to 0.11%. The provision-type bridge (new and increased +$329m, write-backs -$46m, recoveries +$45m, collective -$223m) sums to +$105m. By division: C&IB +$153m, Corporate Functions +$83m, B&PB +$6m, NZ -$104m, Personal -$33m. The presentation corroborates the total (FY25 348+485=833; FY24 363+365=728) and the B&PB and NZ divisional charges.",
   "headline_evidence": [
     "ev-1",
-    "ev-2",
-    "ev-5",
-    "ev-6",
-    "ev-4",
-    "ev-9",
-    "ev-10",
+    "ev-8",
     "ev-11",
-    "ev-12",
-    "ev-13"
+    "ev-2",
+    "ev-6",
+    "ev-7",
+    "ev-9",
+    "ev-14",
+    "ev-15",
+    "ev-16",
+    "ev-17",
+    "ev-18",
+    "ev-19",
+    "ev-21",
+    "ev-22"
   ],
   "drivers": [
     {
       "canonical": "individual_provisions",
-      "bank_label": "Individually assessed credit impairment charge",
+      "bank_label": "New and increased individually assessed",
       "contribution": {
-        "value": 328.0,
+        "value": 329.0,
         "unit": "$m"
       },
-      "columns": "Sep 25 vs Sep 24 (Year to)",
-      "narrative": "Individually assessed charge rose $328m (51.6%) to $964m from $636m: new and increased +$329m to $1,192m, write-backs -$46m to $178m, recoveries -$45m to $50m. Driven by higher C&IB charge for impairment of a small number of customers plus non-recurrence of prior-year write-backs/recoveries, and modest increases in B&PB and NZ business lending and Personal unsecured retail.",
-      "confidence": 90,
+      "columns": "Sep 25 col vs Sep 24 col, New and increased row",
+      "narrative": "New and increased individually assessed charge rose $329m to $1,192m (FY24 $863m), driven by an increased charge in C&IB for impairment of a small number of customers combined with non-recurrence of write-backs/recoveries in Sep 2024, plus modest increases across B&PB and NZ business lending and unsecured retail in Personal Banking. Where: C&IB +$153m (146 vs write-back 7), B&PB +$6m (529 vs 523), NZ -$104m (25 vs 129), Personal -$33m (255 vs 288).",
+      "confidence": 80,
       "evidence": [
-        "ev-1",
+        "ev-3",
+        "ev-13",
         "ev-8",
+        "ev-16",
         "ev-14",
+        "ev-17",
         "ev-15"
       ],
       "checks_passed": [
-        "single_source"
+        "single_source",
+        "computed_delta_cap_80"
       ],
       "checks_failed": []
     },
     {
-      "canonical": "collective.asset_quality",
+      "canonical": "write_backs_recoveries",
+      "bank_label": "Write-backs and recoveries",
+      "contribution": {
+        "value": -1.0,
+        "unit": "$m"
+      },
+      "columns": "Sep 25 col vs Sep 24 col, Write-backs and Recoveries rows",
+      "narrative": "Write-backs increased $46m to $178m (FY24 $132m), reducing the charge; recoveries of amounts previously written off fell $45m to $50m (FY24 $95m), increasing the charge. Net -$1m within the individually assessed total.",
+      "confidence": 80,
+      "evidence": [
+        "ev-4",
+        "ev-5"
+      ],
+      "checks_passed": [
+        "single_source",
+        "computed_delta_cap_80"
+      ],
+      "checks_failed": []
+    },
+    {
+      "canonical": "collective",
       "bank_label": "Collective credit impairment (write-back)/charge",
       "contribution": {
         "value": -223.0,
         "unit": "$m"
       },
-      "columns": "Sep 25 vs Sep 24 (Year to)",
-      "narrative": "Collective swung from a $92m charge to a $131m write-back (-$223m). Driven by a net release of forward-looking provisions (incl. $283m FLA release) and release of provisions for customers transferred to individually assessed, partially offset by volume growth in B&PB business lending and asset quality deterioration across the Australian lending portfolio.",
+      "columns": "Sep 25 col vs Sep 24 col, Collective row",
+      "narrative": "Collective moved from a $92m charge to a $131m write-back (-$223m), driven by a net release of forward-looking provisions ($283m release) combined with release of provisions for customers transferred to individually assessed, partially offset by volume growth in B&PB business lending and asset quality deterioration. Where: Corporate Functions write-back fell $83m to $122m (FY24 $205m).",
       "confidence": 90,
       "evidence": [
-        "ev-1",
-        "ev-3",
-        "ev-7"
+        "ev-6",
+        "ev-9",
+        "ev-10",
+        "ev-12",
+        "ev-18"
       ],
       "checks_passed": [
         "single_source"
@@ -71,18 +102,29 @@
     "value": 0.0,
     "unit": "$m"
   },
-  "notable_items": [],
-  "disagreements": [],
+  "notable_items": [
+    "CIC to GLAs annualised rose 1bp to 0.11% (FY24 0.10%)",
+    "Collective write-back includes $283m release from forward-looking provisions"
+  ],
+  "disagreements": [
+    {
+      "topic": "C&IB credit impairment charge FY25",
+      "values": [
+        "results book: $146m charge",
+        "presentation p58 chart: $103m (30+73)"
+      ],
+      "preferred": "results book $146m",
+      "reason": "definitional",
+      "explanation": "The results book divisional table (page 40) shows C&IB CIC of $146m FY25, and the divisional deltas sum exactly to the group total. The presentation's half-yearly C&IB CIC chart implies $103m, likely a different scope (e.g. NAB Asset Servicing wind-down)."
+    }
+  ],
   "attribution_confidence": 40,
   "limitations": [
-    "The collective driver is a single net number (-$223m); the bank does not publish separate quantified splits for its forward-looking release, volume growth and asset-quality components, so these are described narratively (the $283m FLA release is stated in the CEO review).",
-    "The divisional impairment charges are net (individually assessed plus collective) and are presented as the where-layer; they do not map one-to-one onto the provision-type drivers.",
-    "The investor presentation divisional charts are half-yearly (context) and were used only to corroborate the FY levels; the results book divisional tables are the authoritative source.",
-    "The C&IB FY24 figure is a write-back of $7m (shown as a positive 7 in the results table), so its +$153m delta is computed from a charge of 146 against a write-back of 7.",
-    "Failed check: walk_sum (start -37 + bars +176.0 = 139.0 != end 206, tol 1.0 $m) [NAB/FY25/investor_presentation PDF p58 (ev-27)]",
-    "Failed check: walk_sum (start 201 + bars +36.0 = 237.0 != end 292, tol 1.0 $m) [NAB/FY25/investor_presentation PDF p49 (ev-25)]",
-    "Failed check: walk_sum (start 162 + bars -4.0 = 158.0 != end 97, tol 1.0 $m) [NAB/FY25/investor_presentation PDF p54 (ev-26)]",
-    "Failed check: walk_sum (start 65 + bars -92.0 = -27.0 != end 54, tol 1.0 $m) [NAB/FY25/investor_presentation PDF p62 (ev-28)]"
+    "The presentation's C&IB CIC chart (page 58, half-yearly values 30+73=103 for FY25) appears to differ from the results book's C&IB charge of $146m; the results book is authoritative and its divisional numbers sum exactly to the total, so the presentation figure is treated as a different scope/presentation.",
+    "The presentation page 26 CIC walk chart is a half-yearly (2H25) decomposition, not the FY25-vs-FY24 full-year comparison; it is used only to corroborate the total, not as a driver source.",
+    "The divisional deltas are the 'where' layer and are attributed to provision-type drivers per the bank's stated reasons; they are not a separate quantified bridge.",
+    "Capped at 80: individual_provisions +329 $m, write_backs_recoveries -1 $m. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it.",
+    "Failed check: walk_sum (start 365 + bars +93.0 = 458.0 != end 485, tol 1.0 $m) [NAB/FY25/investor_presentation PDF p26 (ev-19)]"
   ],
   "evidence_records": [
     {
@@ -91,76 +133,16 @@
       "pdf_page": 26,
       "printed_page": 24,
       "kind": "table",
-      "quote": "Individually assessed credit impairment charge New and increased 1,192 863 38.1 695 497 39.8 Write-backs (178) (132) 34.8 (97) (81) 19.8 Recoveries of amounts previously written off (50) (95) (47.4) (24) (26) (7.7) Total individually assessed credit impairment charge 964 636 51.6 574 390 47.2 Collective credit impairment (write-back) / charge (131) 92 large (89) (42) large Total credit impairment charge 833 728 14.4 485 348 39.4",
+      "quote": "Total credit impairment charge 833 728 14.4 485 348 39.4",
       "numbers": [
         {
-          "label": "New and increased individually assessed charge Sep25",
-          "value": 1192.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "New and increased individually assessed charge Sep24",
-          "value": 863.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Write-backs Sep25",
-          "value": -178.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Write-backs Sep24",
-          "value": -132.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Recoveries of amounts previously written off Sep25",
-          "value": -50.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Recoveries of amounts previously written off Sep24",
-          "value": -95.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total individually assessed credit impairment charge Sep25",
-          "value": 964.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total individually assessed credit impairment charge Sep24",
-          "value": 636.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Collective credit impairment (write-back)/charge Sep25",
-          "value": -131.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Collective credit impairment (write-back)/charge Sep24",
-          "value": 92.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total credit impairment charge Sep25",
+          "label": "Total credit impairment charge FY25",
           "value": 833.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total credit impairment charge Sep24",
+          "label": "Total credit impairment charge FY24",
           "value": 728.0,
           "unit": "$m",
           "basis": null
@@ -173,19 +155,19 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 26,
       "printed_page": 24,
-      "kind": "text",
-      "quote": "Credit impairment charge increased by $105 million or 14.4% to $833 million, driven by a higher level of individually assessed credit impairment charge primarily in Corporate and Institutional Banking. This was partially offset by a lower level of collective credit impairment charge.",
+      "kind": "table",
+      "quote": "Total individually assessed credit impairment charge 964 636 51.6 574 390 47.2",
       "numbers": [
         {
-          "label": "Credit impairment charge increase Sep25 v Sep24",
-          "value": 105.0,
+          "label": "Total individually assessed credit impairment charge FY25",
+          "value": 964.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Credit impairment charge increase Sep25 v Sep24",
-          "value": 14.4,
-          "unit": "%",
+          "label": "Total individually assessed credit impairment charge FY24",
+          "value": 636.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -196,12 +178,18 @@
       "doc_id": "NAB/FY25/results_book",
       "pdf_page": 26,
       "printed_page": 24,
-      "kind": "text",
-      "quote": "Collective credit impairment charge decreased by $223 million from a charge of $92 million to a write-back of $131 million. The write-back for the September 2025 full year of $131 million was driven by a net release of forward-looking provisions, combined with the release of provisions held for customers that transferred to individually assessed during the September 2025 full year. This was partially offset by the impact of volume growth in the Business and Private Banking business lending portfolio, combined with deterioration in asset quality across the Australian lending portfolio.",
+      "kind": "table",
+      "quote": "New and increased 1,192 863 38.1 695 497 39.8",
       "numbers": [
         {
-          "label": "Collective credit impairment charge decrease Sep25 v Sep24",
-          "value": 223.0,
+          "label": "New and increased individually assessed charge FY25",
+          "value": 1192.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "New and increased individually assessed charge FY24",
+          "value": 863.0,
           "unit": "$m",
           "basis": null
         }
@@ -214,18 +202,18 @@
       "pdf_page": 26,
       "printed_page": 24,
       "kind": "table",
-      "quote": "Credit impairment charge to GLAs - annualised 0.11 0.10 1 bp 0.12 0.09 3 bps",
+      "quote": "Write-backs (178) (132) 34.8 (97) (81) 19.8",
       "numbers": [
         {
-          "label": "Credit impairment charge to GLAs annualised Sep25",
-          "value": 0.11,
-          "unit": "%",
+          "label": "Write-backs FY25",
+          "value": 178.0,
+          "unit": "$m",
           "basis": null
         },
         {
-          "label": "Credit impairment charge to GLAs annualised Sep24",
-          "value": 0.1,
-          "unit": "%",
+          "label": "Write-backs FY24",
+          "value": 132.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -234,21 +222,21 @@
     {
       "id": "ev-5",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 14,
-      "printed_page": 12,
-      "kind": "text",
-      "quote": "Credit impairment charge increased by $105 million or 14.4%, driven by a higher level of individually assessed credit impairment charge primarily in Corporate and Institutional Banking. This was partially offset by a lower level of collective credit impairment charge.",
+      "pdf_page": 26,
+      "printed_page": 24,
+      "kind": "table",
+      "quote": "Recoveries of amounts previously written off (50) (95) (47.4) (24) (26) (7.7)",
       "numbers": [
         {
-          "label": "Credit impairment charge increase Sep25 v Sep24",
-          "value": 105.0,
+          "label": "Recoveries FY25",
+          "value": 50.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Credit impairment charge increase Sep25 v Sep24",
-          "value": 14.4,
-          "unit": "%",
+          "label": "Recoveries FY24",
+          "value": 95.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -257,32 +245,20 @@
     {
       "id": "ev-6",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 5,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Credit impairment charge was $833 million, versus a FY24 charge of $728 million. The FY25 charge includes individually assessed charges of $964 million and a $131 million release from collective provisions.",
+      "pdf_page": 26,
+      "printed_page": 24,
+      "kind": "table",
+      "quote": "Collective credit impairment (write-back) / charge (131) 92 large (89) (42) large",
       "numbers": [
         {
-          "label": "Credit impairment charge FY25",
-          "value": 833.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Credit impairment charge FY24",
-          "value": 728.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Individually assessed charges FY25",
-          "value": 964.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Collective provision release FY25",
+          "label": "Collective credit impairment write-back FY25",
           "value": 131.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Collective credit impairment charge FY24",
+          "value": 92.0,
           "unit": "$m",
           "basis": null
         }
@@ -292,15 +268,21 @@
     {
       "id": "ev-7",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 5,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The $131 million release from collective provisions includes a $283 million release from forward-looking provisions, partially offset by the impact of volume growth in the B&PB business lending portfolio, combined with asset quality deterioration.",
+      "pdf_page": 26,
+      "printed_page": 24,
+      "kind": "table",
+      "quote": "Credit impairment charge to GLAs - annualised 0.11 0.10 1 bp 0.12 0.09 3 bps",
       "numbers": [
         {
-          "label": "Forward-looking provision release FY25",
-          "value": 283.0,
-          "unit": "$m",
+          "label": "Credit impairment charge to GLAs annualised FY25",
+          "value": 0.11,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Credit impairment charge to GLAs annualised FY24",
+          "value": 0.1,
+          "unit": "%",
           "basis": null
         }
       ],
@@ -312,18 +294,12 @@
       "pdf_page": 26,
       "printed_page": 24,
       "kind": "text",
-      "quote": "Individually assessed credit impairment charge increased by $328 million or 51.6% to $964 million mainly due to:",
+      "quote": "Credit impairment charge increased by $105 million or 14.4% to $833 million, driven by a higher level of individually assessed credit impairment charge primarily in Corporate and Institutional Banking. This was partially offset by a lower level of collective credit impairment charge.",
       "numbers": [
         {
-          "label": "Individually assessed charge increase Sep25 v Sep24",
-          "value": 328.0,
+          "label": "CIC increase FY25 v FY24",
+          "value": 105.0,
           "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Individually assessed charge increase Sep25 v Sep24",
-          "value": 51.6,
-          "unit": "%",
           "basis": null
         }
       ],
@@ -332,20 +308,14 @@
     {
       "id": "ev-9",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 36,
-      "printed_page": 34,
-      "kind": "table",
-      "quote": "Credit impairment charge (529) (523) 1.1 (292) (237) 23.2",
+      "pdf_page": 26,
+      "printed_page": 24,
+      "kind": "text",
+      "quote": "Collective credit impairment charge decreased by $223 million from a charge of $92 million to a write-back of $131 million.",
       "numbers": [
         {
-          "label": "B&PB credit impairment charge Sep25",
-          "value": 529.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "B&PB credit impairment charge Sep24",
-          "value": 523.0,
+          "label": "Collective charge decrease FY25 v FY24",
+          "value": 223.0,
           "unit": "$m",
           "basis": null
         }
@@ -355,20 +325,14 @@
     {
       "id": "ev-10",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 38,
-      "printed_page": 36,
-      "kind": "table",
-      "quote": "Credit impairment charge (255) (288) (11.5) (97) (158) (38.6)",
+      "pdf_page": 26,
+      "printed_page": 24,
+      "kind": "text",
+      "quote": "The write-back for the September 2025 full year of $131 million was driven by a net release of forward-looking provisions, combined with the release of provisions held for customers that transferred to individually assessed during the September 2025 full year. This was partially offset by the impact of volume growth in the Business and Private Banking business lending portfolio, combined with deterioration in asset quality across the Australian lending portfolio.",
       "numbers": [
         {
-          "label": "Personal Banking credit impairment charge Sep25",
-          "value": 255.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Personal Banking credit impairment charge Sep24",
-          "value": 288.0,
+          "label": "Collective write-back FY25",
+          "value": 131.0,
           "unit": "$m",
           "basis": null
         }
@@ -378,20 +342,32 @@
     {
       "id": "ev-11",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 40,
-      "printed_page": 38,
-      "kind": "table",
-      "quote": "Credit impairment (charge) / write-back (146) 7 large (73) (73) -",
+      "pdf_page": 5,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Credit impairment charge was $833 million, versus a FY24 charge of $728 million. The FY25 charge includes individually assessed charges of $964 million and a $131 million release from collective provisions.",
       "numbers": [
         {
-          "label": "C&IB credit impairment charge Sep25",
-          "value": 146.0,
+          "label": "CIC FY25",
+          "value": 833.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "C&IB credit impairment write-back Sep24",
-          "value": -7.0,
+          "label": "CIC FY24",
+          "value": 728.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Individually assessed charges FY25",
+          "value": 964.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Collective release FY25",
+          "value": 131.0,
           "unit": "$m",
           "basis": null
         }
@@ -401,20 +377,14 @@
     {
       "id": "ev-12",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 44,
-      "printed_page": 42,
-      "kind": "table",
-      "quote": "Credit impairment (charge) / write-back (25) (129) (80.6) (50) 25 large",
+      "pdf_page": 5,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "The $131 million release from collective provisions includes a $283 million release from forward-looking provisions, partially offset by the impact of volume growth in the B&PB business lending portfolio, combined with asset quality deterioration.",
       "numbers": [
         {
-          "label": "NZ Banking credit impairment charge Sep25",
-          "value": 25.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "NZ Banking credit impairment charge Sep24",
-          "value": 129.0,
+          "label": "Release from forward-looking provisions FY25",
+          "value": 283.0,
           "unit": "$m",
           "basis": null
         }
@@ -424,20 +394,14 @@
     {
       "id": "ev-13",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 45,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Credit impairment write-back 122 205 (40.5) 27 95 (71.6)",
+      "pdf_page": 26,
+      "printed_page": 24,
+      "kind": "text",
+      "quote": "Individually assessed credit impairment charge increased by $328 million or 51.6% to $964 million mainly due to:",
       "numbers": [
         {
-          "label": "Corporate Functions credit impairment write-back Sep25",
-          "value": 122.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Corporate Functions credit impairment write-back Sep24",
-          "value": 205.0,
+          "label": "Individually assessed charge increase FY25 v FY24",
+          "value": 328.0,
           "unit": "$m",
           "basis": null
         }
@@ -447,14 +411,20 @@
     {
       "id": "ev-14",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 41,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Credit impairment charge up $153m",
+      "pdf_page": 36,
+      "printed_page": 34,
+      "kind": "table",
+      "quote": "Credit impairment charge (529) (523) 1.1 (292) (237) 23.2",
       "numbers": [
         {
-          "label": "C&IB credit impairment charge increase Sep25 v Sep24",
-          "value": 153.0,
+          "label": "B&PB credit impairment charge FY25",
+          "value": 529.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "B&PB credit impairment charge FY24",
+          "value": 523.0,
           "unit": "$m",
           "basis": null
         }
@@ -464,25 +434,44 @@
     {
       "id": "ev-15",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 41,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The increase was due to higher individually assessed provision charges reflecting impairments for a small number of larger customers in addition to the non-recurrence of recoveries and write-backs from the prior year, partially offset by collective provision write-backs.",
-      "numbers": [],
+      "pdf_page": 38,
+      "printed_page": 36,
+      "kind": "table",
+      "quote": "Credit impairment charge (255) (288) (11.5) (97) (158) (38.6)",
+      "numbers": [
+        {
+          "label": "Personal Banking credit impairment charge FY25",
+          "value": 255.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Personal Banking credit impairment charge FY24",
+          "value": 288.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
       "provenance": null
     },
     {
       "id": "ev-16",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 43,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Credit impairment charge down NZ$114m, 80.9%",
+      "pdf_page": 40,
+      "printed_page": 38,
+      "kind": "table",
+      "quote": "Credit impairment (charge) / write-back (146) 7 large (73) (73) -",
       "numbers": [
         {
-          "label": "NZ Banking credit impairment charge decrease Sep25 v Sep24",
-          "value": 80.9,
-          "unit": "%",
+          "label": "C&IB credit impairment charge FY25",
+          "value": 146.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "C&IB credit impairment write-back FY24",
+          "value": 7.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -491,21 +480,21 @@
     {
       "id": "ev-17",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 37,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Credit impairment charge up $6m, 1.1%",
+      "pdf_page": 44,
+      "printed_page": 42,
+      "kind": "table",
+      "quote": "Credit impairment (charge) / write-back (25) (129) (80.6) (50) 25 large",
       "numbers": [
         {
-          "label": "B&PB credit impairment charge increase Sep25 v Sep24",
-          "value": 6.0,
+          "label": "NZ credit impairment charge FY25",
+          "value": 25.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "B&PB credit impairment charge increase Sep25 v Sep24",
-          "value": 1.1,
-          "unit": "%",
+          "label": "NZ credit impairment charge FY24",
+          "value": 129.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -514,64 +503,85 @@
     {
       "id": "ev-18",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 37,
+      "pdf_page": 45,
       "printed_page": null,
-      "kind": "text",
-      "quote": "The increase mainly reflects a higher charge for home lending, partially offset by a lower charge for business lending.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-19",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 39,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Credit impairment charge down $33m, 11.5%",
+      "kind": "table",
+      "quote": "Credit impairment write-back 122 205 (40.5) 27 95 (71.6)",
       "numbers": [
         {
-          "label": "Personal Banking credit impairment charge decrease Sep25 v Sep24",
-          "value": 33.0,
+          "label": "Corporate Functions credit impairment write-back FY25",
+          "value": 122.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Personal Banking credit impairment charge decrease Sep25 v Sep24",
-          "value": 11.5,
-          "unit": "%",
+          "label": "Corporate Functions credit impairment write-back FY24",
+          "value": 205.0,
+          "unit": "$m",
           "basis": null
         }
       ],
       "provenance": null
     },
     {
-      "id": "ev-20",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 39,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The decrease was mainly driven by a lower charge for the unsecured retail portfolio, including the impact of lower arrears.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-21",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 45,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Credit impairment write-back down $83m, 40.5%",
+      "id": "ev-19",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 26,
+      "printed_page": 26,
+      "kind": "walk_vision",
+      "quote": "[walk chart] NAB credit impairment charge in FY25 vs FY24: Sep 24 365 -> Sep 25 485",
       "numbers": [
         {
-          "label": "Corporate Functions credit impairment write-back decrease Sep25 v Sep24",
-          "value": 83.0,
+          "label": "Individually assessed charge",
+          "value": 25.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Corporate Functions credit impairment write-back decrease Sep25 v Sep24",
-          "value": 40.5,
-          "unit": "%",
+          "label": "Underlying CP charge/(write-back)",
+          "value": -17.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Forward looking provisions",
+          "value": 85.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 49,
+      "printed_page": 49,
+      "kind": "table",
+      "quote": "Credit impairment charge to GLAs - annualised 201 322 237 292 1H24 2H24 1H25 2H25 Credit impairment charge",
+      "numbers": [
+        {
+          "label": "B&PB CIC 1H24",
+          "value": 201.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "B&PB CIC 2H24",
+          "value": 322.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "B&PB CIC 1H25",
+          "value": 237.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "B&PB CIC 2H25",
+          "value": 292.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -579,41 +589,33 @@
     },
     {
       "id": "ev-22",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 45,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The decrease was due to a lower level of net releases of the forward-looking provisions and the non-repeat of the impact of methodology refinements.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-23",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 43,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Lower credit impairment charges were due to a write-back of forward-looking collective provisions including release of the Agri FLA.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-24",
       "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 26,
-      "printed_page": 26,
-      "kind": "text",
-      "quote": "409 363 365 348 485",
+      "pdf_page": 62,
+      "printed_page": 62,
+      "kind": "table",
+      "quote": "65 76 (27) 54 1H24 2H24 1H25 2H25 0.12% 0.14% (0.05%) 0.10%",
       "numbers": [
         {
-          "label": "CIC Mar25 half",
-          "value": 348.0,
+          "label": "NZ CIC 1H24",
+          "value": 65.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "CIC Sep25 half",
-          "value": 485.0,
+          "label": "NZ CIC 2H24",
+          "value": 76.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NZ CIC 1H25",
+          "value": -27.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "NZ CIC 2H25",
+          "value": 54.0,
           "unit": "$m",
           "basis": null
         }
@@ -626,14 +628,15 @@
     "combo": "fast",
     "models": "agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-09-01T06:08:57+00:00",
-    "seconds": 259.7,
-    "cost_usd": 0.0176,
-    "tokens": "734437 in / 17531 out",
+    "generated": "2026-09-01T17:51:45+00:00",
+    "seconds": 170.0,
+    "cost_usd": 0.0126,
+    "tokens": "765070 in / 25872 out",
+    "latency": "28 calls, 169s in requests (slowest 39s), 0 retries, 0 grace waits, 0s slept",
     "orchestration": "agent",
-    "tool_calls": 57,
-    "pages_read": 21,
-    "charts_read": 4,
+    "tool_calls": 45,
+    "pages_read": 18,
+    "charts_read": 1,
     "budget_exhausted": "no"
   }
 }

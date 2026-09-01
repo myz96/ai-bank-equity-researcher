@@ -10,51 +10,64 @@
     "delta": -0.2,
     "unit": "ppt"
   },
-  "movement_source": "row 'Cash return on equity', column Year to Sep 24 column -> column Year to Sep 25 column",
-  "headline": "NAB's Cash ROE fell 20 bps to 11.4% in FY25 from 11.6% in FY24 (results book p71, p10; investor presentation p6). Cash earnings were broadly flat, down 0.2% to $7,091m from $7,102m (results book p9; presentation p5), while total average equity attributable to owners rose 2.16% to $62,355m from $61,039m (results book p71). The 0.2 ppt decline splits into a small negative earnings effect (cash earnings fell slightly at constant equity) and a larger negative equity effect (average equity grew at roughly constant earnings). Statutory ROE fell 60 bps to 10.8% from 11.4% on the same comparison (results book p71), a wider decline reflecting the statutory basis.",
+  "movement_source": "row 'Cash return on equity', column Sep 24 column -> column Sep 25 column",
+  "headline": "NAB's Cash ROE fell 20 bps to 11.4% in FY25 from 11.6% in FY24 (results book p10 states \"(20 bps)\"; p71 prints 11.4% vs 11.6%; presentation p6 corroborates). Cash earnings were broadly flat, down $11m or 0.2% to $7,091m (p14, p5), while total average equity attributable to owners rose 2.2% to $62,355m from $61,039m (p71). The movement splits arithmetically into a small negative earnings effect (~-0.02 ppt) and a larger negative equity effect (~-0.18 ppt), the latter reflecting equity growing faster than flat earnings despite the completed on-market buyback. Statutory ROE fell more sharply, 60 bps to 10.8% (p71), a definitional difference from the cash basis.",
   "headline_evidence": [
     "ev-1",
     "ev-3",
     "ev-4",
     "ev-6",
-    "ev-5",
-    "ev-2"
+    "ev-8"
   ],
   "drivers": [
     {
       "canonical": "earnings_effect",
-      "bank_label": "Movement in cash earnings at constant equity",
+      "bank_label": "Cash earnings movement at constant equity",
       "contribution": {
-        "value": -0.018,
+        "value": -0.02,
         "unit": "ppt"
       },
-      "columns": "Year to Sep 24 vs Year to Sep 25",
-      "narrative": "Derived, not disclosed: cash earnings fell 0.2% to $7,091m from $7,102m (ev-6, ev-5); at constant equity this lowers ROE by ~0.018 ppt. The decline reflects a higher credit impairment charge of $833m vs $728m (+14.4%) offsetting a 1.3% rise in underlying profit (ev-11, ev-6).",
+      "columns": "Sep 24 column to Sep 25 column",
+      "narrative": "Derived, not disclosed: cash earnings fell $11m or 0.2% to $7,091m (p14, p5). At constant equity, prior-period ROE of 11.6% times the -0.2% earnings growth (fraction -0.002) gives about -0.02 ppt. The bank attributes the flat earnings to higher net interest income (+$644m) offset by higher expenses, lower other income and a higher credit impairment charge (p14).",
       "confidence": 80,
       "evidence": [
-        "ev-6",
-        "ev-5",
-        "ev-11",
-        "ev-1"
+        "ev-1",
+        "ev-4",
+        "ev-8"
       ],
       "checks_passed": [],
       "checks_failed": []
     },
     {
       "canonical": "equity_effect",
-      "bank_label": "Movement in average equity at constant earnings",
+      "bank_label": "Average equity movement at constant earnings",
       "contribution": {
-        "value": -0.182,
+        "value": -0.18,
         "unit": "ppt"
       },
-      "columns": "Year to Sep 24 vs Year to Sep 25",
-      "narrative": "Derived as residual: total average equity rose 2.16% to $62,355m from $61,039m (ev-1), reducing ROE at roughly constant earnings. Equity growth reflects retained profits rising to $26,820m from $25,236m, outweighing a buyback-driven fall in contributed equity to $36,123m from $36,581m (ev-9, ev-7); DRP is satisfied by on-market purchase, issuing no new shares (ev-10).",
-      "confidence": 75,
+      "columns": "Sep 24 column to Sep 25 column",
+      "narrative": "Derived, not disclosed: total delta (-0.2 ppt) minus earnings effect (-0.02 ppt) = about -0.18 ppt. Average equity attributable to owners rose 2.2% to $62,355m from $61,039m (p71), growing faster than flat earnings. Despite the completed $3bn on-market buyback (p29), equity still rose; the DRP for the 2H25 dividend is to be neutralised (p7).",
+      "confidence": 80,
       "evidence": [
         "ev-1",
-        "ev-9",
-        "ev-7",
-        "ev-10"
+        "ev-5",
+        "ev-7"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "other_unmapped",
+      "bank_label": "Interaction residual",
+      "contribution": {
+        "value": 0.0,
+        "unit": "ppt"
+      },
+      "columns": "Sep 24 column to Sep 25 column",
+      "narrative": "The two derived effects sum to the total delta (-0.02 + -0.18 = -0.20 ppt), so the interaction residual is zero. The equity effect as computed already absorbs the interaction term per the method.",
+      "confidence": 80,
+      "evidence": [
+        "ev-1"
       ],
       "checks_passed": [
         "single_source"
@@ -66,24 +79,26 @@
     "value": 0.0,
     "unit": "ppt"
   },
-  "notable_items": [],
+  "notable_items": [
+    "Statutory ROE fell 60 bps to 10.8% vs Cash ROE -20 bps"
+  ],
   "disagreements": [
     {
-      "topic": "ROE basis",
+      "topic": "Statutory vs Cash ROE movement",
       "values": [
-        "Cash ROE -0.2 ppt (11.4 vs 11.6)",
-        "Statutory ROE -0.6 ppt (10.8 vs 11.4)"
+        "Statutory ROE -60 bps (10.8% vs 11.4%)",
+        "Cash ROE -20 bps (11.4% vs 11.6%)"
       ],
-      "preferred": "Cash ROE -0.2 ppt",
+      "preferred": "Cash ROE -20 bps",
       "reason": "definitional",
-      "explanation": "The task's headline row is Cash ROE; statutory ROE is a different basis and shows a wider 60 bps decline."
+      "explanation": "The bank's headline ROE measure is Cash ROE (11.4% vs 11.6%, -20 bps). Statutory ROE fell 60 bps to 10.8% from 11.4% (p71), a larger decline driven by the difference between cash and statutory earnings (statutory net profit fell $201m or 2.9% vs cash earnings down $11m or 0.2%)."
     }
   ],
-  "attribution_confidence": 80,
+  "attribution_confidence": 85,
   "limitations": [
-    "The earnings_effect and equity_effect are arithmetic derivations from the ROE endpoints and the cash earnings growth rate, not figures NAB discloses; the bank does not publish a ROE bridge for this comparison.",
-    "The equity_effect is computed as the residual (total delta minus earnings_effect) and therefore also absorbs the interaction term between earnings and equity growth.",
-    "The earnings growth rate (-0.2%) is read from the results book and investor presentation; the split is only as precise as that rate."
+    "The bank does not publish a walk/bridge decomposition of the Cash ROE movement; the earnings and equity effects are arithmetic derivations from the ROE endpoints and the bank-stated earnings growth rate, not disclosed figures.",
+    "The equity effect is derived as the residual (total delta minus earnings effect) and therefore absorbs the interaction term; its direction is supported by the 2.2% rise in average equity attributable to owners (p71) and the DRP neutralisation (p7), but the bank does not quantify the equity contribution itself.",
+    "No primary ROE walk chart exists in either document; the driver split rests on the arithmetic identity rather than a bank-published bridge."
   ],
   "evidence_records": [
     {
@@ -107,25 +122,25 @@
           "basis": null
         },
         {
-          "label": "Total average equity FY25",
+          "label": "Total average equity attributable to owners FY25",
           "value": 62355.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Total average equity FY24",
+          "label": "Total average equity attributable to owners FY24",
           "value": 61039.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Cash ROE FY25",
+          "label": "Cash return on equity FY25",
           "value": 11.4,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Cash ROE FY24",
+          "label": "Cash return on equity FY24",
           "value": 11.6,
           "unit": "%",
           "basis": null
@@ -139,16 +154,28 @@
       "pdf_page": 71,
       "printed_page": null,
       "kind": "table",
-      "quote": "Statutory return on equity 10.8% 11.4% 10.5% 11.1%",
+      "quote": "Statutory return on equity Earnings ($m) Net profit attributable to owners of the Company 6,759 6,960 3,352 3,407 Average equity ($m) Average equity 63,106 61,433 64,130 62,061 Less: Average non-controlling interests (751) (394) (755) (747) Total average equity (attributable to owners of the Company) 62,355 61,039 63,375 61,314 Statutory return on equity 10.8% 11.4% 10.5% 11.1%",
       "numbers": [
         {
-          "label": "Statutory ROE FY25",
+          "label": "Statutory net profit FY25",
+          "value": 6759.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Statutory net profit FY24",
+          "value": 6960.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Statutory return on equity FY25",
           "value": 10.8,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Statutory ROE FY24",
+          "label": "Statutory return on equity FY24",
           "value": 11.4,
           "unit": "%",
           "basis": null
@@ -158,28 +185,22 @@
     },
     {
       "id": "ev-3",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 10,
-      "printed_page": 8,
-      "kind": "table",
-      "quote": "Cash return on equity 11.4% 11.6% (20 bps) 11.0% 11.7% (70 bps)",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 6,
+      "printed_page": 6,
+      "kind": "text",
+      "quote": "Cash return on equity Basic cash EPS (cents) Dividend per share and payout ratio (cents) 10.7% 11.7% 12.9% 11.6% 11.4% FY21 FY22 FY23 FY24 FY25",
       "numbers": [
         {
-          "label": "Cash ROE FY25",
-          "value": 11.4,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Cash ROE FY24",
+          "label": "Cash return on equity FY24",
           "value": 11.6,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Cash ROE change FY25 v FY24",
-          "value": -20.0,
-          "unit": "bps",
+          "label": "Cash return on equity FY25",
+          "value": 11.4,
+          "unit": "%",
           "basis": null
         }
       ],
@@ -187,21 +208,21 @@
     },
     {
       "id": "ev-4",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 6,
-      "printed_page": 6,
-      "kind": "table",
-      "quote": "10.7% 11.7% 12.9% 11.6% 11.4% FY21 FY22 FY23 FY24 FY25",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 14,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "Cash earnings decreased by $11 million or 0.2%.",
       "numbers": [
         {
-          "label": "Cash ROE FY24",
-          "value": 11.6,
-          "unit": "%",
+          "label": "Cash earnings decrease FY25 v FY24",
+          "value": 11.0,
+          "unit": "$m",
           "basis": null
         },
         {
-          "label": "Cash ROE FY25",
-          "value": 11.4,
+          "label": "Cash earnings decrease FY25 v FY24",
+          "value": 0.2,
           "unit": "%",
           "basis": null
         }
@@ -210,22 +231,28 @@
     },
     {
       "id": "ev-5",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 5,
-      "printed_page": 5,
-      "kind": "table",
-      "quote": "7,102 7,091 FY24 FY25 10,823 10,965 FY24 FY25 Cash earnings1 ($m) Underlying profit ($m)",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 29,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "On 12 March 2025, the Group completed the on-market buyback that was announced on 15 August 2023 and subsequently increased on 2 May 2024 to $3 billion. Through this buy-back, the Group has bought back and cancelled 87,824,707 ordinary shares, including 16,572,039 ordinary shares ($0.6 billion or 0.15% of CET1 capital) in the September 2025 full year.",
       "numbers": [
         {
-          "label": "Cash earnings FY24",
-          "value": 7102.0,
-          "unit": "$m",
+          "label": "Buyback shares cancelled",
+          "value": 87824707.0,
+          "unit": "shares",
           "basis": null
         },
         {
-          "label": "Cash earnings FY25",
-          "value": 7091.0,
-          "unit": "$m",
+          "label": "Buyback shares cancelled in Sep 2025 full year",
+          "value": 16572039.0,
+          "unit": "shares",
+          "basis": null
+        },
+        {
+          "label": "Buyback value in Sep 2025 full year",
+          "value": 0.6,
+          "unit": "$b",
           "basis": null
         }
       ],
@@ -234,20 +261,59 @@
     {
       "id": "ev-6",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 9,
-      "printed_page": null,
+      "pdf_page": 10,
+      "printed_page": 8,
       "kind": "table",
-      "quote": "Cash earnings 7,091 7,102 (0.2) 3,508 3,583 (2.1)",
+      "quote": "Cash return on equity 11.4% 11.6% (20 bps) 11.0% 11.7% (70 bps)",
       "numbers": [
         {
-          "label": "Cash earnings FY25",
-          "value": 7091.0,
+          "label": "Cash return on equity FY25",
+          "value": 11.4,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cash return on equity FY24",
+          "value": 11.6,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cash return on equity movement FY25 v FY24",
+          "value": -20.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 7,
+      "printed_page": 7,
+      "kind": "text",
+      "quote": "DRP for 2H25 dividend to be neutralised",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 5,
+      "printed_page": 5,
+      "kind": "text",
+      "quote": "Financial results 5 7,102 7,091 FY24 FY25 10,823 10,965 FY24 FY25 Cash earnings1 ($m) Underlying profit ($m) 6,960 6,759 FY24 FY25 Statutory profit ($m) (1) Refer to page 39 for definition of cash earnings and reconciliation to statutory net profit 1.3% (0.2%) (2.9%)",
+      "numbers": [
+        {
+          "label": "Cash earnings FY24",
+          "value": 7102.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Cash earnings FY24",
-          "value": 7102.0,
+          "label": "Cash earnings FY25",
+          "value": 7091.0,
           "unit": "$m",
           "basis": null
         },
@@ -259,120 +325,6 @@
         }
       ],
       "provenance": null
-    },
-    {
-      "id": "ev-7",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 29,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "On 12 March 2025, the Group completed the on-market buyback that was announced on 15 August 2023 and subsequently increased on 2 May 2024 to $3 billion. Through this buy-back, the Group has bought back and cancelled 87,824,707 ordinary shares, including 16,572,039 ordinary shares ($0.6 billion or 0.15% of CET1 capital) in the September 2025 full year.",
-      "numbers": [
-        {
-          "label": "Shares bought back and cancelled in FY25",
-          "value": 16572039.0,
-          "unit": "shares",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-8",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 73,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Shares bought back (16,572) (60,690) Total ordinary shares, fully paid 3,063,033 3,074,038",
-      "numbers": [
-        {
-          "label": "Shares bought back FY25",
-          "value": 16572.0,
-          "unit": "shares",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-9",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 60,
-      "printed_page": 58,
-      "kind": "table",
-      "quote": "Equity Contributed equity 36,123 36,119 36,581 Reserves (21) (56) (362) Retained profits 26,820 26,106 25,236 Total equity (attributable to owners of the Company) 62,922 62,169 61,455",
-      "numbers": [
-        {
-          "label": "Contributed equity Sep 25",
-          "value": 36123.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Contributed equity Sep 24",
-          "value": 36581.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Retained profits Sep 25",
-          "value": 26820.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Retained profits Sep 24",
-          "value": 25236.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total equity attributable to owners Sep 25",
-          "value": 62922.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total equity attributable to owners Sep 24",
-          "value": 61455.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-10",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 31,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The Group periodically adjusts its DRP to reflect its capital position and outlook. There is no DRP discount for the 2025 final dividend. Eligible shareholders have the ability to participate in the DRP for the 2025 final dividend for up to 5 million NAB ordinary shares per participant. The Group expects to satisfy the DRP in full by an on-market purchase of ordinary shares.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-11",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 5,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Credit impairment charge was $833 million, versus a FY24 charge of $728 million. The FY25 charge includes individually assessed charges of $964 million and a $131 million release from collective provisions.",
-      "numbers": [
-        {
-          "label": "Credit impairment charge FY25",
-          "value": 833.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Credit impairment charge FY24",
-          "value": 728.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
     }
   ],
   "suggested_registry_patches": [],
@@ -380,13 +332,14 @@
     "combo": "fast",
     "models": "agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-09-01T05:54:08+00:00",
-    "seconds": 119.2,
-    "cost_usd": 0.0099,
-    "tokens": "314122 in / 8646 out",
+    "generated": "2026-09-01T17:45:12+00:00",
+    "seconds": 90.4,
+    "cost_usd": 0.0058,
+    "tokens": "325984 in / 13175 out",
+    "latency": "19 calls, 90s in requests (slowest 20s), 0 retries, 0 grace waits, 0s slept",
     "orchestration": "agent",
-    "tool_calls": 32,
-    "pages_read": 11,
+    "tool_calls": 27,
+    "pages_read": 8,
     "charts_read": 0,
     "budget_exhausted": "no"
   }

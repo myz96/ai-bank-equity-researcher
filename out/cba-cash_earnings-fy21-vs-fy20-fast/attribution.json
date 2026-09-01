@@ -4,41 +4,32 @@
   "period": "FY21",
   "comparator": "FY20",
   "basis": "cash",
-  "movement": {
-    "from_value": 7225.0,
-    "to_value": 8653.0,
-    "delta": 1428.0,
-    "unit": "$m"
-  },
-  "movement_source": "row 'Net profit after tax from continuing operations (cash basis)', column 30 Jun 20 column, Full Year Ended -> column 30 Jun 21 column, Full Year Ended",
-  "headline": "CBA's cash NPAT from continuing operations rose $1,428m or 19.8% to $8,653m in FY21 (FY20: $7,225m, restated). Total operating income was $24,156m, up 1.7% on FY20; operating performance (income less operating expenses, before impairment) was $12,797m, up 0.3%. Statutory NPAT (continuing operations) rose $1,455m or 19.7% to $8,843m, in line with cash NPAT; the non-cash items separating them are gain on disposals net of transaction costs ($183m FY21 vs $70m FY20) and hedging & IFRS volatility ($7m FY21 vs $93m FY20). The result was driven by a $1,964m decrease in loan impairment expense on improved economic conditions, a 1.7% increase in operating income and a 3.3% increase in operating expenses.",
+  "movement": null,
+  "movement_source": "row '?', column 30 Jun 20 column -> column 30 Jun 21 column",
+  "headline": "CBA's cash NPAT from continuing operations rose $1,428m or 19.8% to $8,653m in FY21 (FY20: $7,225m). The bank attributes the result to a 1.7% increase in operating income, a 3.3% increase in operating expenses and a $1,964m decrease in loan impairment expense. Statutory NPAT from continuing operations rose $1,455m or 19.7% to $8,843m; the $190m gap to cash NPAT reflects non-cash items (gain on disposals net of transaction costs $183m vs $70m, and hedging & IFRS volatility $7m vs $93m). The bridge: NII +$229m, other operating income +$166m, underlying operating expenses -$249m, remediation/notable items -$114m, loan impairment +$1,964m, and tax -$568m, summing to +$1,428m with no residual.",
   "headline_evidence": [
-    "ev-11",
-    "ev-12",
-    "ev-15",
-    "ev-16",
-    "ev-17",
-    "ev-26"
+    "ev-4",
+    "ev-14",
+    "ev-34",
+    "ev-39",
+    "ev-40"
   ],
   "drivers": [
     {
-      "canonical": "nii",
+      "canonical": "net_interest_income",
       "bank_label": "Net interest income",
       "contribution": {
         "value": 229.0,
         "unit": "$m"
       },
-      "columns": "30 Jun 21 vs 30 Jun 20, Full Year Ended",
-      "narrative": "Net interest income rose $229m or 1% to $18,839m, driven by a $32bn or 4% increase in average interest earning assets to $930bn (above-system home and business loan growth), partly offset by a 4bps decrease in NIM to 2.03% from higher liquid assets and the low-rate environment.",
+      "columns": "FY20 col 18,610 to FY21 col 18,839",
+      "narrative": "NII increased $229m or 1.2% to $18,839m, driven by a $32bn or 4% increase in average interest earning assets to $930bn (home loans +$17bn, non-lending +$20bn), partly offset by a 4bp decrease in NIM to 2.03% from higher liquid assets and the low-rate environment.",
       "confidence": 90,
       "evidence": [
-        "ev-19",
-        "ev-24",
-        "ev-25",
-        "ev-13",
-        "ev-31",
-        "ev-32",
-        "ev-33"
+        "ev-15",
+        "ev-5",
+        "ev-16",
+        "ev-41"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -50,21 +41,20 @@
         "value": 166.0,
         "unit": "$m"
       },
-      "columns": "30 Jun 21 vs 30 Jun 20, Full Year Ended",
-      "narrative": "Other operating income rose $166m: other banking income +$170m (higher CommSec equities income, institutional lending fees, minority investment profits, partly offset by lower retail FX/deposit/credit card income from COVID-19), funds management -$8m (Aligned Advice wind-down), insurance +$4m (fewer weather events).",
+      "columns": "FY20 col 23,761 to FY21 col 24,156 less NII",
+      "narrative": "Total operating income rose $395m or 1.7% to $24,156m. Other banking income +$170m to $5,007m (lending fees +$142m, other income +$109m, commissions +$7m, partly offset by trading income -$88m); funds management income -$8m to $165m; insurance income +$4m to $145m.",
       "confidence": 80,
       "evidence": [
+        "ev-8",
+        "ev-17",
+        "ev-18",
+        "ev-19",
         "ev-20",
         "ev-21",
         "ev-22",
-        "ev-23",
-        "ev-31",
-        "ev-38",
-        "ev-39"
+        "ev-41"
       ],
-      "checks_passed": [
-        "computed_delta_cap_80"
-      ],
+      "checks_passed": [],
       "checks_failed": []
     },
     {
@@ -74,38 +64,36 @@
         "value": -249.0,
         "unit": "$m"
       },
-      "columns": "30 Jun 21 vs 30 Jun 20, Full Year Ended",
-      "narrative": "Underlying operating expenses (ex-remediation) rose $249m or 2.4% to $10,784m, driven by higher investment spend (+$195m), volume-related costs (+$117m) and other costs (+$258m: wage inflation, concurrent rent), partly offset by business simplification savings (-$321m).",
+      "columns": "FY20 col 10,535 to FY21 col 10,784",
+      "narrative": "Operating expenses excluding remediation increased $249m or 2% to $10,784m (staff +$254m, occupancy +$67m, IT +$26m, other -$98m), driven by higher investment spend, additional operations and financial assistance staff, COVID-19 deferrals, wage inflation and volume-driven IT costs, partly offset by lower discretionary spend and simplification.",
       "confidence": 80,
       "evidence": [
-        "ev-5",
-        "ev-18",
-        "ev-27",
-        "ev-28",
-        "ev-29",
-        "ev-30"
+        "ev-9",
+        "ev-24",
+        "ev-6"
       ],
       "checks_passed": [
+        "single_source",
         "computed_delta_cap_80"
       ],
       "checks_failed": []
     },
     {
       "canonical": "notable_items",
-      "bank_label": "Remediation costs and other",
+      "bank_label": "Remediation costs and other (notable items)",
       "contribution": {
         "value": -114.0,
         "unit": "$m"
       },
-      "columns": "30 Jun 21 vs 30 Jun 20, Full Year Ended",
-      "narrative": "Remediation costs and other rose $114m to $575m, including $326m for historical Aligned Advice remediation and $249m for Banking/Wealth/employee remediation provisions.",
+      "columns": "FY20 col 461 to FY21 col 575",
+      "narrative": "Remediation costs and other rose from $461m to $575m (+$114m). FY21 includes $326m additional Aligned Advice remediation and $249m Banking/other Wealth/employee remediation; FY20 included $300m Aligned Advice, $94m Wealth/Banking refunds and $67m other remediation.",
       "confidence": 80,
       "evidence": [
-        "ev-6",
-        "ev-2"
+        "ev-10",
+        "ev-25"
       ],
       "checks_passed": [
-        "computed_delta_cap_80"
+        "single_source"
       ],
       "checks_failed": []
     },
@@ -116,17 +104,20 @@
         "value": 1964.0,
         "unit": "$m"
       },
-      "columns": "30 Jun 21 vs 30 Jun 20, Full Year Ended",
-      "narrative": "Loan impairment expense fell $1,964m to $554m (from $2,518m), driven by lower collective provision charges reflecting an improvement in economic conditions and outlook.",
-      "confidence": 80,
+      "columns": "FY20 col 2,518 to FY21 col 554",
+      "narrative": "LIE decreased $1,964m or 78% to $554m, driven by lower collective provision charges reflecting improved economic conditions and outlook. By division: RBS -$900m to $134m, Business Banking -$551m to $233m, New Zealand -$297m to a $5m benefit, IBM -$257m to $96m, partly offset by Corporate Centre +$41m to $96m.",
+      "confidence": 90,
       "evidence": [
-        "ev-8",
-        "ev-14",
-        "ev-17",
-        "ev-1"
+        "ev-7",
+        "ev-12",
+        "ev-26",
+        "ev-27",
+        "ev-28",
+        "ev-29",
+        "ev-30"
       ],
       "checks_passed": [
-        "failed_walk_cap_80"
+        "single_source"
       ],
       "checks_failed": []
     },
@@ -137,15 +128,17 @@
         "value": -568.0,
         "unit": "$m"
       },
-      "columns": "30 Jun 21 vs 30 Jun 20, Full Year Ended",
-      "narrative": "Corporate tax expense rose $568m to $3,590m (from $3,022m), in line with the higher pre-tax profit.",
-      "confidence": 80,
+      "columns": "FY20 col 3,022 to FY21 col 3,590",
+      "narrative": "Corporate tax expense increased $568m or 19% to $3,590m, reflecting a 29.3% effective tax rate, down 20bps from 29.5% primarily due to higher net profits from minority investments.",
+      "confidence": 90,
       "evidence": [
-        "ev-10"
+        "ev-13",
+        "ev-31",
+        "ev-42",
+        "ev-43"
       ],
       "checks_passed": [
-        "single_source",
-        "computed_delta_cap_80"
+        "single_source"
       ],
       "checks_failed": []
     }
@@ -154,54 +147,59 @@
     "value": 0.0,
     "unit": "$m"
   },
-  "notable_items": [
-    "Remediation costs and other: FY21 $575m vs FY20 $461m, +$114m (negative contribution)"
-  ],
-  "disagreements": [
-    {
-      "topic": "FY20 cash NPAT comparative",
-      "values": [
-        "FY20 report: $7,296m",
-        "FY21 report (restated): $7,225m"
-      ],
-      "preferred": "$7,225m",
-      "reason": "restatement",
-      "explanation": "The FY21 profit announcement restates FY20 comparatives to reflect a change in accounting policy and prior period restatements (Note 1.1 of the 2021 Annual Report). Per source hierarchy, the restated comparative from the newer document wins."
-    }
-  ],
-  "attribution_confidence": 90,
+  "notable_items": [],
+  "disagreements": [],
+  "attribution_confidence": 40,
   "limitations": [
-    "The results presentation page 9 Cash NPAT walk chart omits tax and remediation, so its bars (Operating Income +395, Operating Expenses -249, Loan Impairment +1,964) do not sum to the $1,428m movement; the complete bridge is taken from the profit announcement Group Performance Summary (page 31), which includes tax and remediation and sums exactly.",
-    "Other operating income (+$166m) is computed as total operating income less NII (other banking income +$170m, funds management -$8m, insurance +$4m); the bank does not print a single 'other operating income' line.",
-    "Tax contribution (-$568m) is a computed delta between the two period columns; the bank does not state a tax movement narrative.",
-    "Capped at 80: other_operating_income +166 $m, operating_expenses -249 $m, notable_items -114 $m, tax_and_other -568 $m. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it.",
-    "Expenses are claimed on the underlying/notable split; the bank equally publishes the combined headline framing, so both claims are capped at 80.",
-    "Capped at 80: credit_impairment_charge +1964 $m. Each of these claims cites a walk whose own bars do not sum to that chart's endpoints, so the read it rests on disagrees with itself.",
+    "The presentation's cash NPAT walk (page 9) shows only three bars (operating income +395, operating expenses -249, loan impairment +1,964) and omits tax and remediation as separate bars; the walk sum check fails because tax (-568) and remediation (-114) are not shown. I added these from the results book's stated tax and remediation movements, so the full bridge sums to +1,428.",
+    "Other operating income (+166) is my computed delta (total operating income +395 less NII +229); the bank prints the +170 other banking income and -4 funds management & insurance components separately.",
+    "Remediation/notable items delta (-114) is my computed difference between the FY20 and FY21 remediation rows; the bank does not state the delta directly.",
+    "The effective tax rate figures (29.3%/29.5%) are corroborated by the narrative sentence on page 40.",
+    "Capped at 80: operating_expenses -249 $m. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it.",
+    "Failed check: movement_missing",
     "Failed check: walk_sum (start 7225 + bars +2110.0 = 9335.0 != end 8653, tol 1.0 $m) [CBA/FY21/results_presentation PDF p9 (ev-1)]"
   ],
   "evidence_records": [
     {
-      "id": "ev-1",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 9,
-      "printed_page": 9,
-      "kind": "walk_vision",
-      "quote": "[walk chart] Cash NPAT: FY20 7225 -> FY21 8653",
+      "id": "ev-4",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Cash net profit after tax (\"cash NPAT\" or \"cash profit\") from continuing operations increased $1,428 million or 19.8% on the prior year to $8,653 million. The result was driven by a 1.7% increase in operating income, a 3.3% increase in operating expenses and a $1,964 million decrease in loan impairment expense.",
       "numbers": [
         {
-          "label": "Operating Income",
-          "value": 395.0,
+          "label": "Cash NPAT FY21",
+          "value": 8653.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Operating Expenses",
-          "value": -249.0,
+          "label": "Cash NPAT movement FY21 vs FY20",
+          "value": 1428.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Loan Impairment Expense",
+          "label": "Cash NPAT growth FY21 vs FY20",
+          "value": 19.8,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Operating income growth FY21 vs FY20",
+          "value": 1.7,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses growth FY21 vs FY20",
+          "value": 3.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Loan impairment expense decrease FY21 vs FY20",
           "value": 1964.0,
           "unit": "$m",
           "basis": null
@@ -210,16 +208,56 @@
       "provenance": null
     },
     {
-      "id": "ev-2",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 9,
-      "printed_page": 9,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Operating Expenses FY21: Remediation +575",
+      "id": "ev-5",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Net interest income increased 1.2% primarily driven by a 3.6% or $32 billion increase in average interest earning assets",
       "numbers": [
         {
-          "label": "Operating Expenses FY21 Remediation",
-          "value": 575.0,
+          "label": "Net interest income growth FY21 vs FY20",
+          "value": 1.2,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Operating expenses increased 3.3%. Excluding remediation costs2, operating expenses increased 2.4%",
+      "numbers": [
+        {
+          "label": "Operating expenses growth FY21 vs FY20",
+          "value": 3.3,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses growth ex-remediation FY21 vs FY20",
+          "value": 2.4,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 30,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense (LIE) decreased $1,964 million, primarily driven by lower collective provision charges reflecting an improvement in economic conditions and outlook.",
+      "numbers": [
+        {
+          "label": "Loan impairment expense decrease FY21 vs FY20",
+          "value": 1964.0,
           "unit": "$m",
           "basis": null
         }
@@ -227,22 +265,12 @@
       "provenance": null
     },
     {
-      "id": "ev-3",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 9,
-      "printed_page": 9,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Operating Expenses FY21: Ex-Remediation",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-4",
+      "id": "ev-8",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 31,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Total operating income 24,156 23,761 2 12,195 11,961 2",
+      "kind": "text",
+      "quote": "Total operating income 24,156 23,761 2",
       "numbers": [
         {
           "label": "Total operating income FY21",
@@ -260,114 +288,22 @@
       "provenance": null
     },
     {
-      "id": "ev-5",
+      "id": "ev-9",
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 31,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Operating expenses excluding remediation costs and other (10,784) (10,535) 2 (5,435) (5,349) 2",
+      "kind": "text",
+      "quote": "Operating expenses excluding remediation costs and other (10,784) (10,535) 2",
       "numbers": [
         {
           "label": "Operating expenses ex-remediation FY21",
-          "value": -10784.0,
+          "value": 10784.0,
           "unit": "$m",
           "basis": null
         },
         {
           "label": "Operating expenses ex-remediation FY20",
-          "value": -10535.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-6",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 31,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Remediation costs and other 2 (575) (461) 25 (333) (242) 38",
-      "numbers": [
-        {
-          "label": "Remediation costs and other FY21",
-          "value": -575.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Remediation costs and other FY20",
-          "value": -461.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-7",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 31,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Total operating expenses (11,359) (10,996) 3 (5,768) (5,591) 3",
-      "numbers": [
-        {
-          "label": "Total operating expenses FY21",
-          "value": -11359.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total operating expenses FY20",
-          "value": -10996.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-8",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 31,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Loan impairment expense (554) (2,518) (78) 328 (882) large",
-      "numbers": [
-        {
-          "label": "Loan impairment expense FY21",
-          "value": -554.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Loan impairment expense FY20",
-          "value": -2518.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-9",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 31,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Net profit before tax 12,243 10,247 19 6,755 5,488 23",
-      "numbers": [
-        {
-          "label": "Net profit before tax FY21",
-          "value": 12243.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net profit before tax FY20",
-          "value": 10247.0,
+          "value": 10535.0,
           "unit": "$m",
           "basis": null
         }
@@ -379,18 +315,18 @@
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 31,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Corporate tax expense (3,590) (3,022) 19 (1,970) (1,620) 22",
+      "kind": "text",
+      "quote": "Remediation costs and other 2 (575) (461) 25",
       "numbers": [
         {
-          "label": "Corporate tax expense FY21",
-          "value": -3590.0,
+          "label": "Remediation costs FY21",
+          "value": 575.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Corporate tax expense FY20",
-          "value": -3022.0,
+          "label": "Remediation costs FY20",
+          "value": 461.0,
           "unit": "$m",
           "basis": null
         }
@@ -402,18 +338,18 @@
       "doc_id": "CBA/FY21/profit_announcement",
       "pdf_page": 31,
       "printed_page": null,
-      "kind": "table",
-      "quote": "Net profit after tax from continuing operations (\"cash basis\") 8,653 7,225 20 4,785 3,868 24",
+      "kind": "text",
+      "quote": "Total operating expenses (11,359) (10,996) 3",
       "numbers": [
         {
-          "label": "Cash NPAT continuing operations FY21",
-          "value": 8653.0,
+          "label": "Total operating expenses FY21",
+          "value": 11359.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Cash NPAT continuing operations FY20",
-          "value": 7225.0,
+          "label": "Total operating expenses FY20",
+          "value": 10996.0,
           "unit": "$m",
           "basis": null
         }
@@ -423,44 +359,20 @@
     {
       "id": "ev-12",
       "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 30,
+      "pdf_page": 31,
       "printed_page": null,
       "kind": "text",
-      "quote": "Cash net profit after tax (\"cash NPAT\" or \"cash profit\") from continuing operations increased $1,428 million or 19.8% on the prior year to $8,653 million. The result was driven by a 1.7% increase in operating income, a 3.3% increase in operating expenses and a $1,964 million decrease in loan impairment expense.",
+      "quote": "Loan impairment expense (554) (2,518) (78)",
       "numbers": [
         {
-          "label": "Cash NPAT increase FY21 vs FY20",
-          "value": 1428.0,
+          "label": "Loan impairment expense FY21",
+          "value": 554.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Cash NPAT growth FY21 vs FY20",
-          "value": 19.8,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT FY21",
-          "value": 8653.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Operating income growth",
-          "value": 1.7,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Operating expenses growth",
-          "value": 3.3,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Loan impairment expense decrease",
-          "value": 1964.0,
+          "label": "Loan impairment expense FY20",
+          "value": 2518.0,
           "unit": "$m",
           "basis": null
         }
@@ -470,27 +382,21 @@
     {
       "id": "ev-13",
       "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 30,
+      "pdf_page": 31,
       "printed_page": null,
       "kind": "text",
-      "quote": "Net interest income increased 1.2% primarily driven by a 3.6% or $32 billion increase in average interest earning assets, mainly due to above system growth in home loans and business loans, and higher non-lending interest earning assets, partly offset by a decrease in consumer finance balances, and institutional lending. Net interest margin (NIM) decreased 4 basis points due to higher liquid assets, with the impact of the low-rate environment on deposit margins and earnings on capital largely offset by the benefit from lower wholesale funding costs and favourable funding mix",
+      "quote": "Corporate tax expense (3,590) (3,022) 19",
       "numbers": [
         {
-          "label": "Net interest income growth",
-          "value": 1.2,
-          "unit": "%",
+          "label": "Corporate tax expense FY21",
+          "value": 3590.0,
+          "unit": "$m",
           "basis": null
         },
         {
-          "label": "Average interest earning assets increase",
-          "value": 32.0,
-          "unit": "$bn",
-          "basis": null
-        },
-        {
-          "label": "NIM decrease",
-          "value": 4.0,
-          "unit": "bps",
+          "label": "Corporate tax expense FY20",
+          "value": 3022.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -499,14 +405,20 @@
     {
       "id": "ev-14",
       "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 30,
+      "pdf_page": 31,
       "printed_page": null,
       "kind": "text",
-      "quote": "Loan impairment expense (LIE) decreased $1,964 million, primarily driven by lower collective provision charges reflecting an improvement in economic conditions and outlook.",
+      "quote": "Net profit after tax from continuing operations (\"cash basis\") 8,653 7,225 20",
       "numbers": [
         {
-          "label": "Loan impairment expense decrease",
-          "value": 1964.0,
+          "label": "Cash NPAT FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Cash NPAT FY20",
+          "value": 7225.0,
           "unit": "$m",
           "basis": null
         }
@@ -516,198 +428,10 @@
     {
       "id": "ev-15",
       "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 9,
-      "printed_page": null,
+      "pdf_page": 32,
+      "printed_page": 12,
       "kind": "text",
-      "quote": "Net profit after tax $8,843m $8,653m Statutory NPAT Cash NPAT ▲19.7% on FY20 ▲19.8% on FY20",
-      "numbers": [
-        {
-          "label": "Statutory NPAT FY21",
-          "value": 8843.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT FY21",
-          "value": 8653.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Statutory NPAT growth",
-          "value": 19.7,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT growth",
-          "value": 19.8,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-16",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 26,
-      "printed_page": 26,
-      "kind": "table",
-      "quote": "Statutory NPAT – continuing operations 7,388 8,843 Non-cash items: – Gain on disposals net of transaction costs 1 70 183 – Hedging & IFRS volatility2 93 7 Cash NPAT – continuing operations 7,225 8,653",
-      "numbers": [
-        {
-          "label": "Statutory NPAT continuing operations FY20",
-          "value": 7388.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Statutory NPAT continuing operations FY21",
-          "value": 8843.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Gain on disposals net of transaction costs FY20",
-          "value": 70.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Gain on disposals net of transaction costs FY21",
-          "value": 183.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Hedging & IFRS volatility FY20",
-          "value": 93.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Hedging & IFRS volatility FY21",
-          "value": 7.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT continuing operations FY20",
-          "value": 7225.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT continuing operations FY21",
-          "value": 8653.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-17",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 27,
-      "printed_page": 27,
-      "kind": "table",
-      "quote": "Operating Income 24,156 1.7% 2.0% Operating Expenses 11,359 3.3% 3.2% Operating Performance 12,797 0.3% 0.9% Loan Impairment Expense 554 (78.0%) (Large) Cash NPAT 8,653 19.8% 23.7%",
-      "numbers": [
-        {
-          "label": "Operating Income FY21",
-          "value": 24156.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Operating Income growth FY21 vs FY20",
-          "value": 1.7,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Operating Expenses FY21",
-          "value": 11359.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Operating Expenses growth FY21 vs FY20",
-          "value": 3.3,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Operating Performance FY21",
-          "value": 12797.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Operating Performance growth FY21 vs FY20",
-          "value": 0.3,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Loan Impairment Expense FY21",
-          "value": 554.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Loan Impairment Expense growth FY21 vs FY20",
-          "value": -78.0,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT FY21",
-          "value": 8653.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT growth FY21 vs FY20",
-          "value": 19.8,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-18",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 30,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Operating expenses increased 3.3%. Excluding remediation costs2, operating expenses increased 2.4%",
-      "numbers": [
-        {
-          "label": "Operating expenses growth",
-          "value": 3.3,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Operating expenses growth ex-remediation",
-          "value": 2.4,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-19",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 20,
-      "printed_page": 2,
-      "kind": "table",
-      "quote": "Net interest income 18,839 1 18,839 18,610 1 9,468 9,371 1",
+      "quote": "Net interest income - \"cash basis\" 18,839 18,610 1",
       "numbers": [
         {
           "label": "Net interest income FY21",
@@ -725,12 +449,35 @@
       "provenance": null
     },
     {
-      "id": "ev-20",
+      "id": "ev-16",
       "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 20,
-      "printed_page": 2,
-      "kind": "table",
-      "quote": "Other banking income 5,265 5 5,007 4,837 4 2,588 2,419 7",
+      "pdf_page": 32,
+      "printed_page": 12,
+      "kind": "text",
+      "quote": "Net interest margin (%) 2. 03 2. 07 (4)bpts",
+      "numbers": [
+        {
+          "label": "Net interest margin FY21",
+          "value": 2.03,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Net interest margin FY20",
+          "value": 2.07,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": 14,
+      "kind": "text",
+      "quote": "Other banking income - \"cash basis\" 5,007 4,837 4",
       "numbers": [
         {
           "label": "Other banking income FY21",
@@ -748,12 +495,81 @@
       "provenance": null
     },
     {
+      "id": "ev-18",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": 14,
+      "kind": "text",
+      "quote": "Lending fees 1,128 986 14",
+      "numbers": [
+        {
+          "label": "Lending fees FY21",
+          "value": 1128.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Lending fees FY20",
+          "value": 986.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": 14,
+      "kind": "text",
+      "quote": "Trading income 852 940 (9)",
+      "numbers": [
+        {
+          "label": "Trading income FY21",
+          "value": 852.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Trading income FY20",
+          "value": 940.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 34,
+      "printed_page": 14,
+      "kind": "text",
+      "quote": "Other income 463 354 31",
+      "numbers": [
+        {
+          "label": "Other income FY21",
+          "value": 463.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other income FY20",
+          "value": 354.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
       "id": "ev-21",
       "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 20,
-      "printed_page": 2,
-      "kind": "table",
-      "quote": "Funds management income 165 (5) 165 173 (5) 85 80 6",
+      "pdf_page": 35,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Funds management income - \"cash basis\" 165 173 (5)",
       "numbers": [
         {
           "label": "Funds management income FY21",
@@ -773,10 +589,10 @@
     {
       "id": "ev-22",
       "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 20,
-      "printed_page": 2,
-      "kind": "table",
-      "quote": "Insurance income 145 3 145 141 3 54 91 (41)",
+      "pdf_page": 35,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Insurance income - \"cash basis\" 145 141 3",
       "numbers": [
         {
           "label": "Insurance income FY21",
@@ -794,52 +610,23 @@
       "provenance": null
     },
     {
-      "id": "ev-23",
-      "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 20,
-      "printed_page": 2,
-      "kind": "table",
-      "quote": "Total operating income 24,414 2 24,156 23,761 2 12,195 11,961 2",
-      "numbers": [
-        {
-          "label": "Total operating income FY21",
-          "value": 24156.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Total operating income FY20",
-          "value": 23761.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
       "id": "ev-24",
       "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 32,
-      "printed_page": 12,
+      "pdf_page": 36,
+      "printed_page": 16,
       "kind": "text",
-      "quote": "Net interest income was $18,839 million, an increase of $229 million or 1% on the prior year. The result was driven by a $32 billion or 4% increase in average interest earning assets to $930 billion, partly offset by a 4 basis point decrease in net interest margin to 2.03%.",
+      "quote": "Operating expenses excluding remediation costs and other - \"cash basis\" 10,784 10,535 2",
       "numbers": [
         {
-          "label": "Net interest income increase",
-          "value": 229.0,
+          "label": "Operating expenses ex-remediation FY21",
+          "value": 10784.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Average interest earning assets increase",
-          "value": 32.0,
-          "unit": "$bn",
-          "basis": null
-        },
-        {
-          "label": "NIM decrease",
-          "value": 4.0,
-          "unit": "bps",
+          "label": "Operating expenses ex-remediation FY20",
+          "value": 10535.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -848,21 +635,21 @@
     {
       "id": "ev-25",
       "doc_id": "CBA/FY21/profit_announcement",
-      "pdf_page": 32,
-      "printed_page": 12,
-      "kind": "table",
-      "quote": "Net interest margin (%) 2. 03 2. 07 (4)bpts 2. 04 2. 01 3 bpts",
+      "pdf_page": 36,
+      "printed_page": 16,
+      "kind": "text",
+      "quote": "Remediation costs and other 2 575 461 25",
       "numbers": [
         {
-          "label": "NIM FY21",
-          "value": 2.03,
-          "unit": "%",
+          "label": "Remediation costs FY21",
+          "value": 575.0,
+          "unit": "$m",
           "basis": null
         },
         {
-          "label": "NIM FY20",
-          "value": 2.07,
-          "unit": "%",
+          "label": "Remediation costs FY20",
+          "value": 461.0,
+          "unit": "$m",
           "basis": null
         }
       ],
@@ -870,34 +657,22 @@
     },
     {
       "id": "ev-26",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 8,
-      "printed_page": 8,
-      "kind": "table",
-      "quote": "Statutory NPAT ($m) 8,843 19.7% Cash NPAT ($m) 8,653 19.8%",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Loan impairment expense - \"cash basis\" 554 2,518 (78)",
       "numbers": [
         {
-          "label": "Statutory NPAT FY21",
-          "value": 8843.0,
+          "label": "Loan impairment expense FY21",
+          "value": 554.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Statutory NPAT growth",
-          "value": 19.7,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT FY21",
-          "value": 8653.0,
+          "label": "Loan impairment expense FY20",
+          "value": 2518.0,
           "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT growth",
-          "value": 19.8,
-          "unit": "%",
           "basis": null
         }
       ],
@@ -905,39 +680,21 @@
     },
     {
       "id": "ev-27",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 30,
-      "printed_page": 30,
-      "kind": "walk_vision",
-      "quote": "[walk chart] Operating expenses: FY20 10996 -> FY21 11359",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Retail Banking Services 134 1,034 (87)",
       "numbers": [
         {
-          "label": "Remediation costs",
-          "value": 114.0,
+          "label": "Retail Banking Services LIE FY21",
+          "value": 134.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Investment Spend",
-          "value": 195.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Volume related costs",
-          "value": 117.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Other",
-          "value": 258.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Business Simplification",
-          "value": -321.0,
+          "label": "Retail Banking Services LIE FY20",
+          "value": 1034.0,
           "unit": "$m",
           "basis": null
         }
@@ -946,57 +703,21 @@
     },
     {
       "id": "ev-28",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 30,
-      "printed_page": 30,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Volume related costs: To support increased loan processing and financial crime assessment volumes, and COVID-19\n• Frontline business bankers and retail lenders",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-29",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 30,
-      "printed_page": 30,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Other³: Wage increases\n• One-off concurrent rent expenses from commercial office space consolidation",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-30",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 30,
-      "printed_page": 30,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Business Simplification: Cumulative cost savings realised:\n• FY21 $869m\n• FY20 $548m",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-31",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 28,
-      "printed_page": 28,
-      "kind": "walk_vision",
-      "quote": "[walk chart] Operating income: FY20 23761 -> FY21 24156",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Business Banking 233 784 (70)",
       "numbers": [
         {
-          "label": "Net Interest Income",
-          "value": 229.0,
+          "label": "Business Banking LIE FY21",
+          "value": 233.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Other Banking Income",
-          "value": 170.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Funds Management & Insurance Income",
-          "value": -4.0,
+          "label": "Business Banking LIE FY20",
+          "value": 784.0,
           "unit": "$m",
           "basis": null
         }
@@ -1004,16 +725,68 @@
       "provenance": null
     },
     {
-      "id": "ev-32",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 28,
-      "printed_page": 28,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Net Interest Income: Core volume growth +3.6",
+      "id": "ev-29",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Institutional Banking and Markets 96 353 (73)",
       "numbers": [
         {
-          "label": "Net Interest Income Core volume growth",
-          "value": 3.6,
+          "label": "Institutional Banking and Markets LIE FY21",
+          "value": 96.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Institutional Banking and Markets LIE FY20",
+          "value": 353.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-30",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 39,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "New Zealand (5) 292 large",
+      "numbers": [
+        {
+          "label": "New Zealand LIE FY21",
+          "value": -5.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "New Zealand LIE FY20",
+          "value": 292.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-31",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 40,
+      "printed_page": 20,
+      "kind": "text",
+      "quote": "Corporate tax expense ($M) 3,590 3,022 19",
+      "numbers": [
+        {
+          "label": "Corporate tax expense FY21",
+          "value": 3590.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Corporate tax expense FY20",
+          "value": 3022.0,
           "unit": "$m",
           "basis": null
         }
@@ -1022,15 +795,108 @@
     },
     {
       "id": "ev-33",
-      "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 28,
-      "printed_page": 28,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Net Interest Income: Lower margin in low-rate environment -4",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 66,
+      "printed_page": 42,
+      "kind": "text",
+      "quote": "Total operating income 11,618 6,840 2,304 2,681 713 24,156 Operating expenses (4,637) (2,649) (983) (1,071) (2,019) (11,359) Loan impairment expense (134) (233) (96) 5 (96) (554) Net profit before tax 6,847 3,958 1,225 1,615 (1,402) 12,243 Corporate tax (expense)/benefit (2,041) (1,200) (303) (456) 410 (3,590) Net profit after tax from continuing operations - \"cash basis\" 4,806 2,758 922 1,159 (992) 8,653",
       "numbers": [
         {
-          "label": "Net Interest Income Lower margin in low-rate environment",
-          "value": -4.0,
+          "label": "Total operating income FY21",
+          "value": 24156.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Total operating expenses FY21",
+          "value": 11359.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Loan impairment expense FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Corporate tax expense FY21",
+          "value": 3590.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Cash NPAT FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-34",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 153,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Net profit after tax - \"cash basis\" 8,653 7,225 4,785 3,868",
+      "numbers": [
+        {
+          "label": "Cash NPAT FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Cash NPAT FY20",
+          "value": 7225.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-36",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "text",
+      "quote": "23,761 24,156 FY20 FY21 Cash NPAT 1 Higher operating income and earnings – investing in the franchise – lower impairment on improved outlook",
+      "numbers": [
+        {
+          "label": "Operating income FY21",
+          "value": 24156.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating income FY20",
+          "value": 23761.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-37",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "text",
+      "quote": "Loan Impairment Expense 2,518 554 FY20 FY21",
+      "numbers": [
+        {
+          "label": "Loan impairment expense FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Loan impairment expense FY20",
+          "value": 2518.0,
           "unit": "$m",
           "basis": null
         }
@@ -1040,14 +906,20 @@
     {
       "id": "ev-38",
       "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 28,
-      "printed_page": 28,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Other Banking Income: Volume-driven growth in retail, business and institutional lending fees and CommSec equities income; Higher one-off net profits from minority investments²; Lower retail FX, deposit and credit card income from lower transaction volumes (COVID-19) +170",
+      "pdf_page": 9,
+      "printed_page": 9,
+      "kind": "text",
+      "quote": "7,225 8,653 FY20 FY21",
       "numbers": [
         {
-          "label": "Other Banking Income Volume-driven growth in retail, business and institutional lending fees and CommSec equities income; Higher one-off net profits from minority investments²; Lower retail FX, deposit and credit card income from lower transaction volumes (COVID-19)",
-          "value": 170.0,
+          "label": "Cash NPAT FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Cash NPAT FY20",
+          "value": 7225.0,
           "unit": "$m",
           "basis": null
         }
@@ -1057,15 +929,143 @@
     {
       "id": "ev-39",
       "doc_id": "CBA/FY21/results_presentation",
-      "pdf_page": 28,
-      "printed_page": 28,
-      "kind": "walk_annotation",
-      "quote": "[chart annotation] Funds Management & Insurance Income: Lower FMI; Higher insurance income -4",
+      "pdf_page": 26,
+      "printed_page": 26,
+      "kind": "text",
+      "quote": "Statutory NPAT – continuing operations 7,388 8,843 Non-cash items: – Gain on disposals net of transaction costs 1 70 183 – Hedging & IFRS volatility2 93 7 Cash NPAT – continuing operations 7,225 8,653",
       "numbers": [
         {
-          "label": "Funds Management & Insurance Income Lower FMI; Higher insurance income",
+          "label": "Statutory NPAT FY21",
+          "value": 8843.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Statutory NPAT FY20",
+          "value": 7388.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Cash NPAT FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Cash NPAT FY20",
+          "value": 7225.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-40",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "text",
+      "quote": "Operating Income 24,156 1.7% 2.0% Operating Expenses 11,359 3.3% 3.2% Operating Performance 12,797 0.3% 0.9% Loan Impairment Expense 554 (78.0%) (Large) Cash NPAT 8,653 19.8% 23.7%",
+      "numbers": [
+        {
+          "label": "Operating income FY21",
+          "value": 24156.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses FY21",
+          "value": 11359.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Loan impairment expense FY21",
+          "value": 554.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Cash NPAT FY21",
+          "value": 8653.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-41",
+      "doc_id": "CBA/FY21/results_presentation",
+      "pdf_page": 28,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "23,761 24,156 229 170 (4) FY20 Net Interest Income Other Banking Income Funds Management & Insurance Income FY21",
+      "numbers": [
+        {
+          "label": "Operating income FY21",
+          "value": 24156.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating income FY20",
+          "value": 23761.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net interest income movement",
+          "value": 229.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Other banking income movement",
+          "value": 170.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Funds management and insurance income movement",
           "value": -4.0,
           "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-42",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 40,
+      "printed_page": 20,
+      "kind": "text",
+      "quote": "Corporate tax expense was $3,590 million, an increase of $568 million or 19% on the prior year, reflecting a 29.3% effective tax rate.",
+      "numbers": [
+        {
+          "label": "Corporate tax expense increase FY21 vs FY20",
+          "value": 568.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-43",
+      "doc_id": "CBA/FY21/profit_announcement",
+      "pdf_page": 40,
+      "printed_page": 20,
+      "kind": "text",
+      "quote": "The 20 basis points decrease in the effective tax rate from 29.5% to 29.3% was primarily due to higher net profits from minority investments.",
+      "numbers": [
+        {
+          "label": "Effective tax rate decrease FY21 vs FY20",
+          "value": 20.0,
+          "unit": "bpts",
           "basis": null
         }
       ],
@@ -1077,14 +1077,15 @@
     "combo": "fast",
     "models": "agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash",
     "documents": "CBA/FY21/profit_announcement (ffdff75173e7), CBA/FY21/results_presentation (b1bbbd626803), CBA/FY20/profit_announcement (2c2179a200a3)",
-    "generated": "2026-09-01T06:57:12+00:00",
-    "seconds": 750.4,
-    "cost_usd": 0.0369,
-    "tokens": "809941 in / 19926 out",
+    "generated": "2026-09-01T18:03:36+00:00",
+    "seconds": 171.0,
+    "cost_usd": 0.0111,
+    "tokens": "636878 in / 27064 out",
+    "latency": "26 calls, 155s in requests (slowest 32s), 0 retries, 0 grace waits, 0s slept",
     "orchestration": "agent",
-    "tool_calls": 63,
-    "pages_read": 23,
-    "charts_read": 3,
+    "tool_calls": 48,
+    "pages_read": 21,
+    "charts_read": 1,
     "budget_exhausted": "no"
   }
 }

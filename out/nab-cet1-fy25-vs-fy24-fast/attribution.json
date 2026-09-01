@@ -10,31 +10,29 @@
     "delta": -65.0,
     "unit": "bps"
   },
-  "movement_source": "row 'CET1 capital ratio (Level 2 Group)', column 30 Sep 24 column -> column 30 Sep 25 column",
-  "headline": "NAB's APRA Level 2 (Group) CET1 ratio fell 65 bps over FY25, from 12.35% at 30 Sep 2024 to 11.70% at 30 Sep 2025 (results book KPI table and capital ratios table). The bank attributes the reduction to lending volume growth, increased long-term investment in the business, and the completion of the on-market share buy-back, which it quantifies at -15 bps for the $0.6 billion of shares bought back in FY25. NAB does not publish a full-year (Sep 24 to Sep 25) capital walk; the only walk disclosed is the half-on-half (Mar 25 to Sep 25) movement, which is a different comparison. Pro forma Group CET1 of 11.81% reflects the sale of the remaining 20% stake in MLC Life (completed 31 Oct 2025).",
+  "movement_source": "row 'CET1 capital ratio', column 30 Sep 24 column -> column 30 Sep 25 column",
+  "headline": "NAB's APRA Level 2 (Group) CET1 ratio fell 65 bps in FY25, from 12.35% at 30 Sep 2024 to 11.70% at 30 Sep 2025 (results book capital table, corroborated by the FY21-FY25 trend chart). The bank's stated full-year drivers are lending volume growth, increased long-term investment in the business, and the impact of $0.6bn of shares bought back in FY25 (-15 bps). NAB publishes only a half-on-half (Mar 25→Sep 25) capital walk, not a full-year walk, so only the buyback is quantified in bpts for this comparison; the remaining ~-50 bps is not broken out for FY25 vs FY24. Pro forma CET1 of 11.81% reflects the post-period MLC Life sale.",
   "headline_evidence": [
-    "ev-6",
-    "ev-15",
-    "ev-8",
-    "ev-12",
     "ev-10",
+    "ev-8",
+    "ev-20",
     "ev-9",
-    "ev-13"
+    "ev-19"
   ],
   "drivers": [
     {
       "canonical": "capital_returns",
-      "bank_label": "On-market share buy-back",
+      "bank_label": "Buy-back of shares",
       "contribution": {
         "value": -15.0,
         "unit": "bps"
       },
-      "columns": "Sep 25 v Sep 24 (bank-stated)",
-      "narrative": "The bank states the impact of $0.6 billion of shares bought back in FY25 was -15 bps. The buy-back of $3 billion announced 15 Aug 2023 (increased 2 May 2024) completed 12 Mar 2025; 16,572,039 shares ($0.6bn or 0.15% of CET1 capital) were bought back in the Sep 2025 full year.",
+      "columns": "FY25 full-year stated impact",
+      "narrative": "The bank states the impact of $0.6 billion of shares bought back in FY25 was -15 bps. The $3.0bn announced on-market ordinary share buy-back completed on 12 March 2025, cancelling 87.8 million shares, of which $0.6bn was bought back in FY25.",
       "confidence": 85,
       "evidence": [
         "ev-8",
-        "ev-10"
+        "ev-9"
       ],
       "checks_passed": [
         "single_source"
@@ -42,30 +40,32 @@
       "checks_failed": []
     },
     {
-      "canonical": "rwa",
-      "bank_label": "Lending volume growth",
+      "canonical": "rwa.credit",
+      "bank_label": "Lending volume growth (credit RWA)",
       "contribution": null,
-      "columns": "not quantified",
-      "narrative": "The bank names lending volume growth as a key driver of the FY25 CET1 reduction but does not quantify its bps impact for the full-year comparison. Credit RWA rose from $350.9bn (Sep 24) to $375.0bn (Sep 25); the half-on-half walk attributes -45 bps to credit RWA over Mar-Sep 25.",
+      "columns": "not quantified for FY25",
+      "narrative": "Lending volume growth is a stated key driver of the full-year reduction but is not quantified in bpts for FY25 vs FY24. For context, the half-on-half (Mar 25→Sep 25) walk shows Credit RWA -45 bps (volume -27, asset quality -5, models & methodology -13), driven by business lending growth and RWA overlays on off-balance-sheet exposures.",
       "confidence": 60,
       "evidence": [
         "ev-8",
         "ev-12",
-        "ev-6"
+        "ev-13",
+        "ev-14",
+        "ev-15",
+        "ev-21"
       ],
       "checks_passed": [],
       "checks_failed": []
     },
     {
-      "canonical": "other_unmapped",
+      "canonical": "earnings_generation",
       "bank_label": "Increased long term investment in the business",
       "contribution": null,
-      "columns": "not quantified",
-      "narrative": "The bank cites increased long-term investment in the business as a key driver of the FY25 CET1 reduction but does not quantify its bps impact for the full-year comparison. Investment spend rose to $1.8bn in FY25 from $1.6bn in FY24.",
+      "columns": "not quantified for FY25",
+      "narrative": "The bank cites increased long-term investment in the business as a key driver of the full-year CET1 reduction, but does not quantify its bpts impact for the FY25 vs FY24 comparison.",
       "confidence": 60,
       "evidence": [
-        "ev-8",
-        "ev-12"
+        "ev-8"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -75,114 +75,28 @@
     "value": -50.0,
     "unit": "bps"
   },
-  "notable_items": [
-    "MLC Life sale (pro forma CET1 11.81%)",
-    "On-market share buy-back -15 bps"
+  "notable_items": [],
+  "disagreements": [
+    {
+      "topic": "CET1 ratio movement basis",
+      "values": [
+        "11.70 (Sep 25) vs 12.35 (Sep 24) = -65 bps (APRA Level 2 Group)"
+      ],
+      "preferred": "APRA Level 2 Group CET1 ratio",
+      "reason": "definitional",
+      "explanation": "The task's metric is the APRA Level 2 (Group) CET1 ratio. The Level 1 ratio (L1: 11.60 at Sep 25) and the internationally comparable ratio are different measures and are quoted only as context, never as the movement."
+    }
   ],
-  "disagreements": [],
   "attribution_confidence": 70,
   "limitations": [
-    "NAB does not publish a full-year (Sep 24 to Sep 25) capital walk. The only walk disclosed is the half-on-half (Mar 25 to Sep 25) movement: 12.01% +0.82 (cash earnings) -0.61 (dividend) -0.45 (credit RWA) +0.01 (other RWA) -0.08 (other) = 11.70%. These bars are a DIFFERENT comparison and were NOT used as this period's driver contributions.",
-    "Only the buy-back (-15 bps) is quantified for the full-year comparison. The remaining -50 bps of the -65 bps movement is unquantified by the bank (lending volume growth and increased long-term investment are stated qualitatively).",
-    "The half-on-half walk's credit RWA bar (-45 bps) is context only; the full-year credit RWA contribution is not separately quantified.",
-    "Pro forma CET1 of 11.81% reflects the MLC Life sale which completed after the balance date (31 Oct 2025); it is a different measure from the reported 11.70%.",
+    "NAB publishes only a half-on-half (Mar 25→Sep 25) capital walk in both the results book (p30) and investor presentation (p29); no full-year (Sep 24→Sep 25) walk exists. Per method, the half-on-half bars (Cash earnings +82, Dividend -61, Credit RWA -45, Other RWA +1, Other -8) are NOT restated as this comparison's contributions; they are described in the narrative as context for the 2H25 span.",
+    "Only the buyback (-15 bps) is quantified in bpts for the FY25 vs FY24 window. Lending volume growth and increased long-term investment are stated as drivers but not quantified in bpts for this comparison, leaving a ~-50 bps residual unquantified.",
+    "The -15 bps buyback figure appears only in the results book (single document), capping its confidence at 85.",
+    "The half-on-half walk's Credit RWA -45 bps and its sub-parts (volume -27, asset quality -5, models -13) belong to the Mar 25→Sep 25 span, not the FY25 vs FY24 comparison.",
+    "Movement endpoints converted from percent (12.35, 11.7) to bps: the unit for this metric is bps.",
     "No published walk covers FY25 vs FY24: the bank's walk for this metric describes another comparison, so the driver split is not walk-verified for this comparison. Confidence is capped at 85."
   ],
   "evidence_records": [
-    {
-      "id": "ev-6",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 30,
-      "printed_page": 28,
-      "kind": "table",
-      "quote": "Capital ratios CET1 11.70 12.01 12.35 (65 bps) (31 bps)",
-      "numbers": [
-        {
-          "label": "CET1 ratio Sep 25",
-          "value": 11.7,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 ratio Mar 25",
-          "value": 12.01,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 ratio Sep 24",
-          "value": 12.35,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 change Sep 25 v Sep 24",
-          "value": -65.0,
-          "unit": "bps",
-          "basis": null
-        },
-        {
-          "label": "CET1 change Sep 25 v Mar 25",
-          "value": -31.0,
-          "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-7",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 30,
-      "printed_page": 28,
-      "kind": "table",
-      "quote": "Movements in CET1 capital ratio (%) 12.01 0.82 (0.61) (0.45) 0.01 (0.08) 11.70 Mar 25 Cash earnings Dividend Credit RWA¹ Other RWA Other Sep 25",
-      "numbers": [
-        {
-          "label": "CET1 ratio Mar 25",
-          "value": 12.01,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Cash earnings contribution",
-          "value": 0.82,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Dividend contribution",
-          "value": -0.61,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Credit RWA contribution",
-          "value": -0.45,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Other RWA contribution",
-          "value": 0.01,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Other contribution",
-          "value": -0.08,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 ratio Sep 25",
-          "value": 11.7,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
     {
       "id": "ev-8",
       "doc_id": "NAB/FY25/results_book",
@@ -198,13 +112,13 @@
           "basis": null
         },
         {
-          "label": "CET1 change Sep 25 v Sep 24",
+          "label": "CET1 reduction from Sep 24",
           "value": -65.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Buy-back impact on CET1",
+          "label": "Buyback impact FY25",
           "value": -15.0,
           "unit": "bps",
           "basis": null
@@ -218,12 +132,12 @@
       "pdf_page": 6,
       "printed_page": 4,
       "kind": "text",
-      "quote": "Proforma Group CET1 ratio of 11.81% reflecting the sale of the Group's remaining 20% stake in MLC Life.",
+      "quote": "The Group completed its $3.0 billion announced on-market ordinary share buy-back on 12 March 2025, resulting in the buy-back and cancellation of 87.8 million ordinary shares. $0.6 billion of those shares were bought back in FY25.",
       "numbers": [
         {
-          "label": "Proforma Group CET1 ratio",
-          "value": 11.81,
-          "unit": "%",
+          "label": "Buy-back amount FY25",
+          "value": 0.6,
+          "unit": "$b",
           "basis": null
         }
       ],
@@ -232,37 +146,32 @@
     {
       "id": "ev-10",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 29,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "On 12 March 2025, the Group completed the on-market buyback that was announced on 15 August 2023 and subsequently increased on 2 May 2024 to $3 billion. Through this buy-back, the Group has bought back and cancelled 87,824,707 ordinary shares, including 16,572,039 ordinary shares ($0.6 billion or 0.15% of CET1 capital) in the September 2025 full year.",
+      "pdf_page": 30,
+      "printed_page": 28,
+      "kind": "table",
+      "quote": "CET1 11.70 12.01 12.35 (65 bps) (31 bps)",
       "numbers": [
         {
-          "label": "Shares bought back in Sep 25 full year",
-          "value": 0.6,
-          "unit": "$b",
+          "label": "CET1 Sep 25",
+          "value": 11.7,
+          "unit": "%",
           "basis": null
         },
         {
-          "label": "Buy-back as % of CET1 capital",
-          "value": 0.15,
+          "label": "CET1 Mar 25",
+          "value": 12.01,
           "unit": "%",
           "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-11",
-      "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 30,
-      "printed_page": 28,
-      "kind": "text",
-      "quote": "cash earnings less the 2025 interim dividend resulting in an increase of 21 basis points.",
-      "numbers": [
+        },
         {
-          "label": "Cash earnings less interim dividend increase",
-          "value": 21.0,
+          "label": "CET1 Sep 24",
+          "value": 12.35,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "CET1 Sep 25 v Sep 24",
+          "value": -65.0,
           "unit": "bps",
           "basis": null
         }
@@ -272,14 +181,14 @@
     {
       "id": "ev-12",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 8,
-      "printed_page": 6,
+      "pdf_page": 30,
+      "printed_page": 28,
       "kind": "text",
-      "quote": "declined 65 bps over the year with key drivers including volume growth, increased long term investment in the business, and completion of the on-market share buy-back",
+      "quote": "an increase in credit RWA decreasing the CET1 capital ratio by 45 basis points",
       "numbers": [
         {
-          "label": "CET1 decline over year",
-          "value": -65.0,
+          "label": "Credit RWA 2H25",
+          "value": -45.0,
           "unit": "bps",
           "basis": null
         }
@@ -288,16 +197,16 @@
     },
     {
       "id": "ev-13",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 7,
-      "printed_page": 7,
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 30,
+      "printed_page": 28,
       "kind": "text",
-      "quote": "Pro forma CET1 ratio of 11.81% reflects sale of 20% of MLC Life which completed on 31 October",
+      "quote": "volume growth contributing to a decrease of 27 basis points",
       "numbers": [
         {
-          "label": "Pro forma CET1 ratio",
-          "value": 11.81,
-          "unit": "%",
+          "label": "Volume growth 2H25",
+          "value": -27.0,
+          "unit": "bps",
           "basis": null
         }
       ],
@@ -305,16 +214,16 @@
     },
     {
       "id": "ev-14",
-      "doc_id": "NAB/FY25/investor_presentation",
-      "pdf_page": 29,
-      "printed_page": 29,
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 30,
+      "printed_page": 28,
       "kind": "text",
-      "quote": "Pro forma CET1 ratio of 11.81% reflects sale of 20% of MLC Life which completed on 31 October3, comfortably above operating target of >11.25%",
+      "quote": "asset quality deterioration contributing to a decrease of 5 basis points",
       "numbers": [
         {
-          "label": "Pro forma CET1 ratio",
-          "value": 11.81,
-          "unit": "%",
+          "label": "Asset quality 2H25",
+          "value": -5.0,
+          "unit": "bps",
           "basis": null
         }
       ],
@@ -323,26 +232,14 @@
     {
       "id": "ev-15",
       "doc_id": "NAB/FY25/results_book",
-      "pdf_page": 15,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "CET1 capital ratio 11.70% 12.35% (65 bps) 11.70% 12.01% (31 bps)",
+      "pdf_page": 30,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "model and methodology changes contributing to a decrease of 13 basis points",
       "numbers": [
         {
-          "label": "CET1 capital ratio Sep 25",
-          "value": 11.7,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 capital ratio Sep 24",
-          "value": 12.35,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "CET1 change Sep 25 v Sep 24",
-          "value": -65.0,
+          "label": "Model and methodology 2H25",
+          "value": -13.0,
           "unit": "bps",
           "basis": null
         }
@@ -350,41 +247,130 @@
       "provenance": null
     },
     {
-      "id": "ev-1",
+      "id": "ev-16",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 30,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "a decrease in other (non-credit) RWA increasing the CET1 capital ratio by 1 basis point",
+      "numbers": [
+        {
+          "label": "Other RWA 2H25",
+          "value": 1.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 30,
+      "printed_page": 28,
+      "kind": "text",
+      "quote": "other items decreasing the CET1 capital ratio by 8 basis points",
+      "numbers": [
+        {
+          "label": "Other items 2H25",
+          "value": -8.0,
+          "unit": "bps",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
       "doc_id": "NAB/FY25/investor_presentation",
       "pdf_page": 29,
       "printed_page": 29,
-      "kind": "walk_vision",
-      "quote": "[walk chart] Group CET1 capital ratio: Mar 25 1201 -> Sep 25 1170",
+      "kind": "text",
+      "quote": "0.82 12.01 Mar 25 Cash earnings (0.61) Dividend (0.45) Credit RWA1 0.01 Other RWA (0.08) Other2 11.70 Sep 25",
       "numbers": [
         {
-          "label": "Cash earnings",
-          "value": 82.0,
+          "label": "CET1 Mar 25",
+          "value": 12.01,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Dividend",
-          "value": -61.0,
+          "label": "CET1 Sep 25",
+          "value": 11.7,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-19",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 7,
+      "printed_page": 7,
+      "kind": "text",
+      "quote": "10.38% 12.01% 11.70% 11.81% Sep 19 Mar 25 Sep 25 Sep 25 Pro forma1",
+      "numbers": [
+        {
+          "label": "CET1 Sep 25",
+          "value": 11.7,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Credit RWA",
-          "value": -45.0,
+          "label": "CET1 Mar 25",
+          "value": 12.01,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-20",
+      "doc_id": "NAB/FY25/results_book",
+      "pdf_page": 6,
+      "printed_page": 4,
+      "kind": "text",
+      "quote": "13.00 11.51 12.22 12.35 11.70 FY21 FY22 FY23 FY24 FY25",
+      "numbers": [
+        {
+          "label": "CET1 FY24",
+          "value": 12.35,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Other RWA",
-          "value": 1.0,
+          "label": "CET1 FY25",
+          "value": 11.7,
           "unit": "%",
           "basis": null
-        },
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-21",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "text",
+      "quote": "Higher CRWA mainly driven by business lending growth and RWA overlays relating to off balance sheet exposures4",
+      "numbers": [],
+      "provenance": null
+    },
+    {
+      "id": "ev-22",
+      "doc_id": "NAB/FY25/investor_presentation",
+      "pdf_page": 29,
+      "printed_page": 29,
+      "kind": "text",
+      "quote": "Other RWA includes an increase in the capital floor adjustment (-3bps)",
+      "numbers": [
         {
-          "label": "Other",
-          "value": -8.0,
-          "unit": "%",
+          "label": "Capital floor adjustment 2H25",
+          "value": -3.0,
+          "unit": "bps",
           "basis": null
         }
       ],
@@ -396,14 +382,15 @@
     "combo": "fast",
     "models": "agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash",
     "documents": "NAB/FY25/results_book (df0445a6cd54), NAB/FY25/investor_presentation (de3a394e6e1a)",
-    "generated": "2026-09-01T06:04:37+00:00",
-    "seconds": 107.3,
-    "cost_usd": 0.0073,
-    "tokens": "271361 in / 8182 out",
+    "generated": "2026-09-01T17:48:55+00:00",
+    "seconds": 104.4,
+    "cost_usd": 0.0058,
+    "tokens": "312961 in / 13705 out",
+    "latency": "21 calls, 103s in requests (slowest 18s), 0 retries, 0 grace waits, 0s slept",
     "orchestration": "agent",
-    "tool_calls": 27,
-    "pages_read": 8,
-    "charts_read": 1,
+    "tool_calls": 28,
+    "pages_read": 9,
+    "charts_read": 2,
     "budget_exhausted": "no"
   }
 }

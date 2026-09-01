@@ -11,31 +11,46 @@
     "unit": "bps"
   },
   "movement_source": "row 'Group net interest margin (%)', column Mar 25 column -> column Mar 26 column",
-  "headline": "NAB's Group net interest margin rose 11 bps in 1H26 (Mar 26) to 1.81% from 1.70% in 1H25 (Mar 25), per the results book KPI table (ev-9). The investor presentation corroborates the levels (1.81% Mar 26, 1.70% Mar 25; ev-16/18). The bank's year-on-year decomposition (results book p26) attributes the +11 bps to: +4 bps M&T, +3 bps lower mix of lower-yielding HQLA, +6 bps higher earnings on deposit and capital replicating portfolios, +1 bp lower short-term wholesale funding costs, +1 bp lower deposit costs and deposit mix, offset by -4 bps lending margin (ev-11/12/13/14/10). These sum to +11 bps with zero residual. The bank's published walk charts (results book p26 and presentation p25) are the half-on-half (Sep 25→Mar 26) walk, a different comparison, and are reported as context only.",
+  "headline": "NAB's Group net interest margin rose 11 bps in 1H26 (Mar 26) to 1.81% from 1.70% in 1H25 (Mar 25), per the results book KPI table (ev-15). The investor presentation corroborates the levels, showing Mar 25 1.70% and Mar 26 1.81% (ev-24, ev-22). The bank's stated decomposition of the +11 bps: +4 bps M&T, +3 bps lower mix of lower-yielding HQLA, +6 bps higher earnings on deposit and capital replicating portfolios, +1 bp lower short-term wholesale funding costs, +1 bp lower deposit costs with deposit mix benefits, offset by -4 bps lending margin (ev-17 to ev-20, ev-16). These sum to +11 bps with no residual. The published walk charts (results book p26 and presentation p25) are the half-on-half (Sep 25 → Mar 26) movement, +3 bps, which is context, not the task comparison.",
   "headline_evidence": [
-    "ev-9",
-    "ev-16",
+    "ev-15",
+    "ev-24",
+    "ev-22",
     "ev-17",
     "ev-18",
-    "ev-11",
-    "ev-12",
-    "ev-13",
-    "ev-14",
-    "ev-10"
+    "ev-19",
+    "ev-20",
+    "ev-16"
   ],
   "drivers": [
     {
-      "canonical": "asset_pricing",
-      "bank_label": "Lending margin",
+      "canonical": "markets_treasury",
+      "bank_label": "M&T",
       "contribution": {
-        "value": -4.0,
+        "value": 4.0,
         "unit": "bps"
       },
-      "columns": "Mar 26 v Mar 25 narrative",
-      "narrative": "Decrease of 4 bps in lending margin, primarily driven by competitive pressures impacting both the business and housing lending portfolios, as well as timing differences between interest-rate movements and pricing changes in home lending in Australia (-1 bp).",
+      "columns": "Mar 25 vs Mar 26 (stated)",
+      "narrative": "The bank states an increase of 4 basis points in M&T, excluded from the underlying margin. The presentation's HoH walk corroborates M&T as a positive contributor (+2 bps Sep 25→Mar 26, context).",
       "confidence": 85,
       "evidence": [
-        "ev-10"
+        "ev-17"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "liquids",
+      "bank_label": "Lower mix of lower yielding HQLA",
+      "contribution": {
+        "value": 3.0,
+        "unit": "bps"
+      },
+      "columns": "Mar 25 vs Mar 26 (stated)",
+      "narrative": "The bank states 3 basis points from a lower mix of lower yielding HQLA (high-quality liquid assets), excluded from the underlying margin. The HoH walk corroborates Liquid Assets +1 bp (context).",
+      "confidence": 85,
+      "evidence": [
+        "ev-17"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -47,43 +62,11 @@
         "value": 6.0,
         "unit": "bps"
       },
-      "columns": "Mar 26 v Mar 25 narrative",
-      "narrative": "Increase of 6 bps primarily driven by higher earnings on deposit and capital replicating portfolios.",
+      "columns": "Mar 25 vs Mar 26 (stated)",
+      "narrative": "The bank states an increase of 6 basis points primarily driven by higher earnings on deposit and capital replicating portfolios. The HoH walk corroborates Replicating Portfolios +3 bps (context).",
       "confidence": 85,
       "evidence": [
-        "ev-12"
-      ],
-      "checks_passed": [],
-      "checks_failed": []
-    },
-    {
-      "canonical": "markets_treasury",
-      "bank_label": "M&T",
-      "contribution": {
-        "value": 4.0,
-        "unit": "bps"
-      },
-      "columns": "Mar 26 v Mar 25 narrative",
-      "narrative": "Increase of 4 bps in Markets and Treasury (M&T), excluded from the underlying 4 bps increase.",
-      "confidence": 85,
-      "evidence": [
-        "ev-11"
-      ],
-      "checks_passed": [],
-      "checks_failed": []
-    },
-    {
-      "canonical": "liquids",
-      "bank_label": "Lower HQLA mix",
-      "contribution": {
-        "value": 3.0,
-        "unit": "bps"
-      },
-      "columns": "Mar 26 v Mar 25 narrative",
-      "narrative": "Increase of 3 bps from a lower mix of lower-yielding high-quality liquid assets (HQLA), excluded from the underlying 4 bps increase.",
-      "confidence": 85,
-      "evidence": [
-        "ev-11"
+        "ev-18"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -95,27 +78,43 @@
         "value": 1.0,
         "unit": "bps"
       },
-      "columns": "Mar 26 v Mar 25 narrative",
-      "narrative": "Increase of 1 bp driven by lower short-term wholesale funding costs.",
+      "columns": "Mar 25 vs Mar 26 (stated)",
+      "narrative": "The bank states an increase of 1 basis point driven by lower short-term wholesale funding costs. The HoH walk corroborates Funding Costs flat (0.00) for the half-on-half (context).",
       "confidence": 85,
       "evidence": [
-        "ev-13"
+        "ev-19"
       ],
       "checks_passed": [],
       "checks_failed": []
     },
     {
       "canonical": "funding.deposits",
-      "bank_label": "Lower deposit costs and deposit mix",
+      "bank_label": "Lower deposit costs and deposit mix benefits",
       "contribution": {
         "value": 1.0,
         "unit": "bps"
       },
-      "columns": "Mar 26 v Mar 25 narrative",
-      "narrative": "Increase of 1 bp mainly driven by lower deposit costs, combined with deposit mix benefits, partially offset by competitive pressures impacting deposits in New Zealand Banking.",
+      "columns": "Mar 25 vs Mar 26 (stated)",
+      "narrative": "The bank states an increase of 1 basis point mainly driven by lower deposit costs, combined with deposit mix benefits, partially offset by competitive pressures impacting deposits in New Zealand Banking. The HoH walk corroborates Deposits +1 bp (context).",
       "confidence": 85,
       "evidence": [
-        "ev-14"
+        "ev-20"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "asset_pricing",
+      "bank_label": "Lending margin",
+      "contribution": {
+        "value": -4.0,
+        "unit": "bps"
+      },
+      "columns": "Mar 25 vs Mar 26 (stated)",
+      "narrative": "The bank states a decrease of 4 basis points in lending margin primarily driven by competitive pressures impacting both the business and housing lending portfolios, as well as timing differences between movements in interest rates and pricing changes in home lending in Australia (-1 basis point). The HoH walk corroborates Lending Margin -4 bps (context).",
+      "confidence": 85,
+      "evidence": [
+        "ev-16"
       ],
       "checks_passed": [],
       "checks_failed": []
@@ -125,18 +124,22 @@
     "value": 0.0,
     "unit": "bps"
   },
-  "notable_items": [],
+  "notable_items": [
+    "NIM ex M&T",
+    "NIM ex M&T and Liquid Assets"
+  ],
   "disagreements": [],
   "attribution_confidence": 40,
   "limitations": [
-    "No year-on-year (Mar 25→Mar 26) walk chart exists in either document. Both published walk charts (results book p26 and investor presentation p25) are the half-on-half (Sep 25→Mar 26) walk: Lending margin -4, Funding costs 0, Deposits +1, Replicating portfolios +3, Liquid assets +1, M&T +2, total +3 bps (ev-1, ev-2, ev-15). These HoH bars are a different comparison and were NOT used as year-on-year contributions; the year-on-year driver table is built from the bank's narrative decomposition on results book p26.",
-    "The year-on-year driver decomposition appears in only one document (results book p26), so each driver is capped at confidence 85 per the single-source rule.",
-    "The investor presentation p25 chart was read by the chart tool as 'primary' (Mar 25→Mar 26) but its title and text ('Net interest margin (HoH)', 'HoH increase 3bps') confirm it is the half-on-half walk; its bars sum to +3 bps (1.78→1.81), not the +11 bps year-on-year movement.",
+    "The published walk charts (results book p26 and investor presentation p25) both describe the HALF-ON-HALF movement (Sep 25 → Mar 26, +3 bps), which is context, not the task comparison (Mar 25 → Mar 26, +11 bps). No primary walk chart exists for the task comparison, so the driver table is built from the bank's stated narrative decomposition of the +11 bps in the results book (ev-17 to ev-20, ev-16), which sums to +11 bps with no residual.",
+    "The investor presentation p25 chart is labelled 'Net interest margin (HoH)' and its bars (Lending Margin -4, Funding Costs 0, Deposits +1, Replicating Portfolios +3, Liquid Assets +1, M&T +2) sum to +3 bps matching Sep 25→Mar 26; the read_chart tool's 'primary' classification with start 170 failed its walk-sum check, confirming it is the HoH walk, not the task comparison.",
+    "The +11 bps movement is corroborated across two documents (results book states +11 bps; presentation shows 1.70%→1.81%), but the driver decomposition appears only in the results book narrative, so each driver is capped at 85 confidence.",
+    "The bank reports a variant 'NIM ex M&T' and 'NIM ex M&T and Liquid Assets'; the underlying margin (ex M&T and HQLA mix) increased 4 bps, per the narrative.",
     "Failed check: walk_sum (start 170 + bars +3.0 = 173.0 != end 181, tol 0.1 %) [NAB/1H26/investor_presentation PDF p25 (ev-2)]"
   ],
   "evidence_records": [
     {
-      "id": "ev-9",
+      "id": "ev-15",
       "doc_id": "NAB/1H26/results_book",
       "pdf_page": 26,
       "printed_page": 22,
@@ -144,31 +147,31 @@
       "quote": "Group net interest margin (%) 1.81 1.78 1.70 3 bps 11 bps",
       "numbers": [
         {
-          "label": "Group NIM Mar 26",
+          "label": "Group net interest margin Mar 26",
           "value": 1.81,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Group NIM Sep 25",
+          "label": "Group net interest margin Sep 25",
           "value": 1.78,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Group NIM Mar 25",
+          "label": "Group net interest margin Mar 25",
           "value": 1.7,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "Group NIM Mar 26 v Sep 25",
+          "label": "Group NIM change Mar 26 v Sep 25",
           "value": 3.0,
           "unit": "bps",
           "basis": null
         },
         {
-          "label": "Group NIM Mar 26 v Mar 25",
+          "label": "Group NIM change Mar 26 v Mar 25",
           "value": 11.0,
           "unit": "bps",
           "basis": null
@@ -177,7 +180,7 @@
       "provenance": null
     },
     {
-      "id": "ev-10",
+      "id": "ev-16",
       "doc_id": "NAB/1H26/results_book",
       "pdf_page": 26,
       "printed_page": 22,
@@ -185,8 +188,14 @@
       "quote": "These increases were partially offset by a decrease of 4 basis points in lending margin primarily driven by competitive pressures impacting both the business and housing lending portfolios, as well as timing differences between movements in interest rates and pricing changes in home lending in Australia (-1 basis point).",
       "numbers": [
         {
-          "label": "Lending margin contribution",
+          "label": "lending margin decrease",
           "value": -4.0,
+          "unit": "bps",
+          "basis": null
+        },
+        {
+          "label": "home lending timing difference",
+          "value": -1.0,
           "unit": "bps",
           "basis": null
         }
@@ -194,7 +203,7 @@
       "provenance": null
     },
     {
-      "id": "ev-11",
+      "id": "ev-17",
       "doc_id": "NAB/1H26/results_book",
       "pdf_page": 26,
       "printed_page": 22,
@@ -214,7 +223,7 @@
           "basis": null
         },
         {
-          "label": "Lower HQLA mix contribution",
+          "label": "lower mix of lower yielding HQLA contribution",
           "value": 3.0,
           "unit": "bps",
           "basis": null
@@ -223,7 +232,7 @@
       "provenance": null
     },
     {
-      "id": "ev-12",
+      "id": "ev-18",
       "doc_id": "NAB/1H26/results_book",
       "pdf_page": 26,
       "printed_page": 22,
@@ -231,7 +240,7 @@
       "quote": "an increase of 6 basis points primarily driven by higher earnings on deposit and capital replicating portfolios,",
       "numbers": [
         {
-          "label": "Deposit and capital replicating portfolios contribution",
+          "label": "deposit and capital replicating portfolios contribution",
           "value": 6.0,
           "unit": "bps",
           "basis": null
@@ -240,7 +249,7 @@
       "provenance": null
     },
     {
-      "id": "ev-13",
+      "id": "ev-19",
       "doc_id": "NAB/1H26/results_book",
       "pdf_page": 26,
       "printed_page": 22,
@@ -248,7 +257,7 @@
       "quote": "an increase of 1 basis point driven by lower short-term wholesale funding costs, and",
       "numbers": [
         {
-          "label": "Lower short-term wholesale funding costs contribution",
+          "label": "lower short-term wholesale funding costs contribution",
           "value": 1.0,
           "unit": "bps",
           "basis": null
@@ -257,7 +266,7 @@
       "provenance": null
     },
     {
-      "id": "ev-14",
+      "id": "ev-20",
       "doc_id": "NAB/1H26/results_book",
       "pdf_page": 26,
       "printed_page": 22,
@@ -265,7 +274,7 @@
       "quote": "an increase of 1 basis point mainly driven by lower deposit costs, combined with deposit mix benefits, partially offset by competitive pressures impacting deposits in New Zealand Banking.",
       "numbers": [
         {
-          "label": "Lower deposit costs and deposit mix contribution",
+          "label": "lower deposit costs and deposit mix benefits contribution",
           "value": 1.0,
           "unit": "bps",
           "basis": null
@@ -274,15 +283,15 @@
       "provenance": null
     },
     {
-      "id": "ev-15",
+      "id": "ev-21",
       "doc_id": "NAB/1H26/investor_presentation",
       "pdf_page": 25,
       "printed_page": 25,
       "kind": "text",
-      "quote": "HoH increase 3bps Flat ex M&T and Liquid Assets",
+      "quote": "HoH increase 3bps",
       "numbers": [
         {
-          "label": "HoH increase",
+          "label": "HoH NIM increase",
           "value": 3.0,
           "unit": "bps",
           "basis": null
@@ -291,7 +300,7 @@
       "provenance": null
     },
     {
-      "id": "ev-16",
+      "id": "ev-22",
       "doc_id": "NAB/1H26/investor_presentation",
       "pdf_page": 25,
       "printed_page": 25,
@@ -308,7 +317,7 @@
       "provenance": null
     },
     {
-      "id": "ev-17",
+      "id": "ev-23",
       "doc_id": "NAB/1H26/investor_presentation",
       "pdf_page": 25,
       "printed_page": 25,
@@ -325,7 +334,7 @@
       "provenance": null
     },
     {
-      "id": "ev-18",
+      "id": "ev-24",
       "doc_id": "NAB/1H26/investor_presentation",
       "pdf_page": 25,
       "printed_page": 25,
@@ -347,12 +356,13 @@
     "combo": "fast",
     "models": "agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash",
     "documents": "NAB/1H26/results_book (4b4984ec002d), NAB/1H26/investor_presentation (520f2a59967e)",
-    "generated": "2026-09-01T07:37:32+00:00",
-    "seconds": 875.1,
-    "cost_usd": 0.0054,
-    "tokens": "179500 in / 9434 out",
+    "generated": "2026-09-01T18:10:11+00:00",
+    "seconds": 91.6,
+    "cost_usd": 0.0038,
+    "tokens": "158992 in / 12323 out",
+    "latency": "15 calls, 91s in requests (slowest 17s), 0 retries, 0 grace waits, 0s slept",
     "orchestration": "agent",
-    "tool_calls": 17,
+    "tool_calls": 16,
     "pages_read": 4,
     "charts_read": 2,
     "budget_exhausted": "no"

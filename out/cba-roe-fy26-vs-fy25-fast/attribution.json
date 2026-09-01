@@ -10,68 +10,52 @@
     "delta": 0.5,
     "unit": "ppt"
   },
-  "movement_source": "row 'ROE – cash basis (%)', column 30 Jun 25 (Full Year Ended) -> column 30 Jun 26 (Full Year Ended)",
-  "headline": "CBA's return on equity (cash basis) increased 50 basis points to 14.0% in FY26 from 13.5% in FY25. The bank states \"The Bank's ROE increased 50bpts to 14.0% and remains peer leading\" (ev-2); the results presentation corroborates \"ROE (cash) 14.0% +50bpts\" (ev-6) and \"Cash ROE 13.5% 14.0% FY25 FY26\" (ev-11). The statutory ROE also moved +0.5 ppt (13.4% to 13.9%), so the two bases show no material difference. The movement decomposes into a positive earnings effect (+0.96 ppt from 7.1% cash NPAT growth at constant equity) and a negative equity effect (−0.46 ppt from average equity growth of 3.3% at constant earnings), both derived, not disclosed.",
+  "movement_source": "row 'Return on equity (ROE) cash basis', column Full Year Ended 30 Jun 25 -> column Full Year Ended 30 Jun 26",
+  "headline": "CBA's cash-basis return on equity rose 50 basis points to 14.0% in FY26 from 13.5% in FY25 (continuing operations). The bank states the increase was driven by higher cash NPAT, partly offset by higher net assets. Cash NPAT from continuing operations rose $730m or 7% to $10,982m, while average net equity grew from $75,710m to $78,238m. The statutory-basis ROE also rose 50 bpts to 13.9% from 13.4%. The FY25 profit announcement corroborates the FY25 cash ROE of 13.5%, and the results presentation shows CBA's FY26 cash ROE of 14.0%.",
   "headline_evidence": [
     "ev-1",
     "ev-2",
+    "ev-3",
+    "ev-4",
     "ev-6",
-    "ev-11",
     "ev-8"
   ],
   "drivers": [
     {
       "canonical": "earnings_effect",
-      "bank_label": "Movement in cash earnings at constant equity",
+      "bank_label": "Higher cash NPAT",
       "contribution": {
-        "value": 0.96,
+        "value": 0.95,
         "unit": "ppt"
       },
-      "columns": "30 Jun 25 vs 30 Jun 26 (Full Year Ended)",
-      "narrative": "Derived, not disclosed. Cash NPAT grew 7.1% (ev-6), from $10,253m to $10,982m (ev-1). At constant equity, prior-period ROE of 13.5% x 0.071 earnings growth lifts ROE by 0.96 ppt. The bank does not disclose this decomposition.",
+      "columns": "Full Year Ended 30 Jun 25 to 30 Jun 26",
+      "narrative": "Derived, not disclosed: prior-period ROE (13.5%) x cash NPAT growth (7%) = +0.95 ppt at constant equity. Cash NPAT from continuing operations rose $730m or 7% to $10,982m, driven by a 6% increase in operating income and a 6% increase in operating expenses, plus a $62m increase in loan impairment expense.",
       "confidence": 80,
       "evidence": [
-        "ev-1",
-        "ev-6"
+        "ev-3",
+        "ev-5",
+        "ev-2"
       ],
       "checks_passed": [],
       "checks_failed": []
     },
     {
       "canonical": "equity_effect",
-      "bank_label": "Movement in average equity at constant earnings",
+      "bank_label": "Higher net assets",
       "contribution": {
-        "value": -0.46,
+        "value": -0.45,
         "unit": "ppt"
       },
-      "columns": "30 Jun 25 vs 30 Jun 26 (Full Year Ended)",
-      "narrative": "Derived, not disclosed. Average equity grew from $75,710m to $78,238m (ev-1), up 3.3%; at constant earnings this lowers ROE by 0.46 ppt (total delta 0.5 minus earnings effect 0.96). Equity grew via retained earnings; the DRP is neutralised by on-market purchase (ev-12) and no share buy-back activity occurred in FY26 (ev-5).",
+      "columns": "Full Year Ended 30 Jun 25 to 30 Jun 26",
+      "narrative": "Derived, not disclosed: total delta (+0.5 ppt) minus earnings effect (+0.95 ppt) = -0.45 ppt. Direction confirmed by the bank: 'higher cash NPAT being partly offset by higher net assets.' Average net equity grew from $75,710m to $78,238m, consistent with retained earnings (cash NPAT ~$11bn less ~$8.5bn dividends).",
       "confidence": 80,
       "evidence": [
-        "ev-1",
-        "ev-5",
-        "ev-12"
+        "ev-4",
+        "ev-2"
       ],
       "checks_passed": [
         "single_source"
       ],
-      "checks_failed": []
-    },
-    {
-      "canonical": "other_unmapped",
-      "bank_label": "Interaction residual",
-      "contribution": {
-        "value": 0.0,
-        "unit": "ppt"
-      },
-      "columns": "30 Jun 25 vs 30 Jun 26 (Full Year Ended)",
-      "narrative": "The two derived contributions sum exactly to the total delta (0.96 − 0.46 = 0.50), so the interaction residual is zero. The bank does not disclose a separate interaction term.",
-      "confidence": 80,
-      "evidence": [
-        "ev-1",
-        "ev-6"
-      ],
-      "checks_passed": [],
       "checks_failed": []
     }
   ],
@@ -80,70 +64,54 @@
     "unit": "ppt"
   },
   "notable_items": [
-    "The bank deployed 72bpts of capital into credit risk weighted assets in FY26 with strong volume growth in commercial portfolios and domestic residential mortgages (ev-3).",
-    "The $1 billion on-market share buy-back, of which $300 million has been completed, expires on 12 August 2026 and will not be extended (ev-3); no buy-back activity was undertaken in FY26 (ev-5)."
+    "Statutory-basis ROE also rose 50 bpts to 13.9% from 13.4% (ev-1)"
   ],
-  "disagreements": [
-    {
-      "topic": "Cash NPAT FY25 level",
-      "values": [
-        "10,253 (profit announcement ratios table, ev-1)",
-        "10,252 (profit announcement Group Performance Summary, ev-4)"
-      ],
-      "preferred": "10,253",
-      "reason": "rounding",
-      "explanation": "The ratios table (ev-1) and the Group Performance Summary (ev-4) differ by $1m on FY25 cash NPAT, a rounding difference. The ROE table's own denominator uses 10,253."
-    }
-  ],
+  "disagreements": [],
   "attribution_confidence": 85,
   "limitations": [
-    "The bank does not publish a ROE walk or bridge chart for this comparison; the earnings and equity effects are derived arithmetically from the ROE endpoints and the bank's stated 7.1% cash NPAT growth, not disclosed by the bank.",
-    "The equity effect is computed as a residual (total delta minus earnings effect) and therefore also absorbs the interaction term; the bank does not disclose a separate interaction decomposition.",
-    "The earnings growth rate used (7.1%) is the bank's stated cash NPAT growth (ev-6); the profit announcement's Group Performance Summary prints 7% (ev-4), a rounding difference that does not change the derived contributions materially."
+    "The earnings_effect and equity_effect contributions are arithmetic derivations (prior-period ROE x earnings growth; total delta minus earnings effect), not figures the bank discloses as a split. The bank discloses only the total +50 bpts movement and its qualitative attribution ('higher cash NPAT being partly offset by higher net assets').",
+    "The earnings growth rate used (7%) is the bank's stated rounded figure from the profit announcement; the results presentation prints 7.1%. Using 7.1% would give earnings_effect of +0.96 ppt and equity_effect of -0.46 ppt, immaterially different.",
+    "No waterfall/bridge chart of the ROE movement was found in either document; the split is derived from the disclosed ROE endpoints and earnings growth rather than read from a bank-published walk.",
+    "The equity_effect direction is supported by the bank's own statement and the disclosed average equity growth, but the bank does not quantify the split between retained earnings, buybacks and DRP treatment.",
+    "The results presentation does not print a full KPI table with the FY26 vs FY25 ROE columns; page 38 corroborates only the FY26 level of 14.0% (ev-8). The FY26 vs FY25 ROE movement is read from the profit announcement KPI table (ev-1)."
   ],
   "evidence_records": [
     {
       "id": "ev-1",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 147,
-      "printed_page": null,
+      "pdf_page": 19,
+      "printed_page": 3,
       "kind": "table",
-      "quote": "Return on Equity – cash basis Average net assets 78,238 75,710 77,968 78,004 Less: Average non-controlling interests – – – – Net average equity 78,238 75,710 77,968 78,004 Net profit after tax – cash basis 10,982 10,253 5,537 5,445 ROE – cash basis (%) 14.0 13.5 14.3 13.8",
+      "quote": "Return on equity (ROE) (%) ¹ Statutory basis 13.9 13.4 50 bpts 14.2 13.8 40 bpts Cash basis 14.0 13.5 50 bpts 14.3 13.8 50 bpts",
       "numbers": [
-        {
-          "label": "Net average equity FY26",
-          "value": 78238.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net average equity FY25",
-          "value": 75710.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net profit after tax cash basis FY26",
-          "value": 10982.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net profit after tax cash basis FY25",
-          "value": 10253.0,
-          "unit": "$m",
-          "basis": null
-        },
         {
           "label": "ROE cash basis FY26",
           "value": 14.0,
-          "unit": "ppt",
+          "unit": "%",
           "basis": null
         },
         {
           "label": "ROE cash basis FY25",
           "value": 13.5,
-          "unit": "ppt",
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "ROE cash basis movement FY26 vs FY25",
+          "value": 50.0,
+          "unit": "bpts",
+          "basis": null
+        },
+        {
+          "label": "ROE statutory basis FY26",
+          "value": 13.9,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "ROE statutory basis FY25",
+          "value": 13.4,
+          "unit": "%",
           "basis": null
         }
       ],
@@ -152,21 +120,45 @@
     {
       "id": "ev-2",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 9,
+      "pdf_page": 146,
       "printed_page": null,
-      "kind": "text",
-      "quote": "The Bank’s ROE increased 50bpts to 14.0% and remains peer leading.",
+      "kind": "table",
+      "quote": "Net average equity 78,238 75,710 77,968 78,004 Net profit after tax – cash basis 10,982 10,252 5,537 5,445 ROE – cash basis (%) 14.0 13.5 14.3 13.8",
       "numbers": [
         {
-          "label": "ROE increase FY26 vs FY25",
-          "value": 50.0,
-          "unit": "bpts",
+          "label": "Net average equity FY26",
+          "value": 78238.0,
+          "unit": "$M",
           "basis": null
         },
         {
-          "label": "ROE FY26",
+          "label": "Net average equity FY25",
+          "value": 75710.0,
+          "unit": "$M",
+          "basis": null
+        },
+        {
+          "label": "Net profit after tax cash basis FY26",
+          "value": 10982.0,
+          "unit": "$M",
+          "basis": null
+        },
+        {
+          "label": "Net profit after tax cash basis FY25",
+          "value": 10252.0,
+          "unit": "$M",
+          "basis": null
+        },
+        {
+          "label": "ROE cash basis FY26",
           "value": 14.0,
-          "unit": "ppt",
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "ROE cash basis FY25",
+          "value": 13.5,
+          "unit": "%",
           "basis": null
         }
       ],
@@ -175,50 +167,21 @@
     {
       "id": "ev-3",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 9,
-      "printed_page": null,
+      "pdf_page": 26,
+      "printed_page": 3,
       "kind": "text",
-      "quote": "Across the year we deployed 72bpts of capital into credit risk weighted assets with strong volume growth particularly in commercial portfolios and domestic residential mortgages. The $1 billion on-market share buy-back, of which $300 million has been completed, expires on 12 August 2026 and will not be extended.",
+      "quote": "Cash net profit after tax (cash NPAT or cash profit) from continuing operations increased $730 million or 7% on the prior year to $10,982 million.",
       "numbers": [
         {
-          "label": "Capital deployed into credit RWA FY26",
-          "value": 72.0,
-          "unit": "bpts",
-          "basis": null
-        },
-        {
-          "label": "On-market share buy-back",
-          "value": 1.0,
-          "unit": "$bn",
-          "basis": null
-        },
-        {
-          "label": "Buy-back completed",
-          "value": 300.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-4",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 16,
-      "printed_page": 2,
-      "kind": "table",
-      "quote": "Net profit after tax from continuing operations 10,911 8 10,982 10,252 7 5,537 5,445 2",
-      "numbers": [
-        {
-          "label": "Cash NPAT from continuing operations FY26",
+          "label": "Cash NPAT FY26",
           "value": 10982.0,
-          "unit": "$m",
+          "unit": "$M",
           "basis": null
         },
         {
-          "label": "Cash NPAT from continuing operations FY25",
-          "value": 10252.0,
-          "unit": "$m",
+          "label": "Cash NPAT increase FY26 vs FY25",
+          "value": 730.0,
+          "unit": "$M",
           "basis": null
         },
         {
@@ -231,43 +194,21 @@
       "provenance": null
     },
     {
-      "id": "ev-5",
+      "id": "ev-4",
       "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 91,
-      "printed_page": null,
+      "pdf_page": 26,
+      "printed_page": 3,
       "kind": "text",
-      "quote": "No share buy-back activity was undertaken during the year ended 30 June 2026. The buy-back expires on 12 August 2026 and will not be extended.",
-      "numbers": [],
-      "provenance": null
-    },
-    {
-      "id": "ev-6",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 54,
-      "printed_page": 54,
-      "kind": "table",
-      "quote": "Cash NPAT ($m) 10,982 +7.1% ROE (cash) 14.0% +50bpts",
+      "quote": "Return on equity (cash basis) increased 50 basis points to 14.0% with higher cash NPAT being partly offset by higher net assets.",
       "numbers": [
         {
-          "label": "Cash NPAT FY26",
-          "value": 10982.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Cash NPAT growth FY26 vs FY25",
-          "value": 7.1,
+          "label": "ROE cash basis FY26",
+          "value": 14.0,
           "unit": "%",
           "basis": null
         },
         {
-          "label": "ROE cash FY26",
-          "value": 14.0,
-          "unit": "ppt",
-          "basis": null
-        },
-        {
-          "label": "ROE cash movement FY26 vs FY25",
+          "label": "ROE cash basis increase FY26 vs FY25",
           "value": 50.0,
           "unit": "bpts",
           "basis": null
@@ -276,17 +217,46 @@
       "provenance": null
     },
     {
-      "id": "ev-7",
+      "id": "ev-5",
       "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 10,
-      "printed_page": 10,
-      "kind": "text",
-      "quote": "Strong capital position & peer-leading return on equity of 14.0%9 supporting franchise growth and sustainable dividends",
+      "pdf_page": 24,
+      "printed_page": 24,
+      "kind": "table",
+      "quote": "Cash NPAT 10,982 7.1% 1.7%",
       "numbers": [
         {
-          "label": "ROE FY26",
-          "value": 14.0,
-          "unit": "ppt",
+          "label": "Cash NPAT FY26",
+          "value": 10982.0,
+          "unit": "$M",
+          "basis": null
+        },
+        {
+          "label": "Cash NPAT growth FY26 vs FY25",
+          "value": 7.1,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-6",
+      "doc_id": "CBA/FY25/profit_announcement",
+      "pdf_page": 19,
+      "printed_page": 3,
+      "kind": "table",
+      "quote": "Return on equity (ROE) (%) ¹ Statutory basis 13.4 13.1 30 bpts 13.1 13.8 (70)bpts Cash basis 13.5 13.6 (10)bpts 13.4 13.7 (30)bpts",
+      "numbers": [
+        {
+          "label": "ROE cash basis FY25",
+          "value": 13.5,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "ROE cash basis FY24",
+          "value": 13.6,
+          "unit": "%",
           "basis": null
         }
       ],
@@ -294,110 +264,19 @@
     },
     {
       "id": "ev-8",
-      "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 146,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on Equity – \"cash basis\" Average net assets 75,710 72,520 77,020 74,176 Less: Average non-controlling interests – (3) – – Net average equity 75,710 72,517 77,020 74,176 Net profit after tax – \"cash basis\" 10,253 9,847 5,120 5,133 ROE – \"cash basis\" (%) 13.5 13.6 13.4 13.7",
-      "numbers": [
-        {
-          "label": "Net average equity FY25",
-          "value": 75710.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net profit after tax cash basis FY25",
-          "value": 10253.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "ROE cash basis FY25",
-          "value": 13.5,
-          "unit": "ppt",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-9",
-      "doc_id": "CBA/FY25/profit_announcement",
-      "pdf_page": 9,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "The Bank’s ROE remained peer leading and broadly stable at 13.5%.",
-      "numbers": [
-        {
-          "label": "ROE FY25",
-          "value": 13.5,
-          "unit": "ppt",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-10",
       "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 34,
-      "printed_page": 34,
-      "kind": "table",
-      "quote": "12.9% 13.5% 14.0% FY21-24 Avg FY25 FY26",
-      "numbers": [
-        {
-          "label": "ROE FY21-24 avg",
-          "value": 12.9,
-          "unit": "ppt",
-          "basis": null
-        },
-        {
-          "label": "ROE FY25",
-          "value": 13.5,
-          "unit": "ppt",
-          "basis": null
-        },
-        {
-          "label": "ROE FY26",
-          "value": 14.0,
-          "unit": "ppt",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-11",
-      "doc_id": "CBA/FY26/results_presentation",
-      "pdf_page": 55,
-      "printed_page": 55,
-      "kind": "table",
-      "quote": "13.5% 14.0% FY25 FY26",
-      "numbers": [
-        {
-          "label": "Cash ROE FY25",
-          "value": 13.5,
-          "unit": "ppt",
-          "basis": null
-        },
-        {
-          "label": "Cash ROE FY26",
-          "value": 14.0,
-          "unit": "ppt",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-12",
-      "doc_id": "CBA/FY26/profit_announcement",
-      "pdf_page": 51,
-      "printed_page": null,
+      "pdf_page": 38,
+      "printed_page": 38,
       "kind": "text",
-      "quote": "The DRP for the 2026 final dividend is anticipated to be satisfied in full by an on-market purchase of shares.",
-      "numbers": [],
+      "quote": "14.0% 9.8% 10.6% 8.5% CBA Peer 3 Peer 1 Peer 2",
+      "numbers": [
+        {
+          "label": "ROE cash basis FY26 CBA",
+          "value": 14.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
       "provenance": null
     }
   ],
@@ -406,13 +285,14 @@
     "combo": "fast",
     "models": "agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash",
     "documents": "CBA/FY26/profit_announcement (438d5975baad), CBA/FY26/results_presentation (289f03457584), CBA/FY26/asx_announcement (83622c320171), CBA/FY26/pre_results_note (fa67eb945987), CBA/FY25/profit_announcement (e2e911ab4fed)",
-    "generated": "2026-09-01T05:34:08+00:00",
-    "seconds": 97.8,
-    "cost_usd": 0.0109,
-    "tokens": "403819 in / 10799 out",
+    "generated": "2026-09-01T17:33:25+00:00",
+    "seconds": 64.2,
+    "cost_usd": 0.0043,
+    "tokens": "228451 in / 10437 out",
+    "latency": "13 calls, 64s in requests (slowest 13s), 0 retries, 0 grace waits, 0s slept",
     "orchestration": "agent",
-    "tool_calls": 42,
-    "pages_read": 13,
+    "tool_calls": 22,
+    "pages_read": 7,
     "charts_read": 0,
     "budget_exhausted": "no"
   }

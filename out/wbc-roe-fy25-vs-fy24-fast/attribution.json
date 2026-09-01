@@ -10,51 +10,51 @@
     "delta": -0.24,
     "unit": "ppt"
   },
-  "movement_source": "row 'ROTE (return on average tangible equity) excluding Notable Items', column Full Year Sept 2024 column -> column Full Year Sept 2025 column",
-  "headline": "WBC's headline ROE measure, ROTE ex Notable Items (return on average tangible equity, excluding Notable Items), fell 24 bps to 10.97% in FY25 from 11.21% in FY24 (ev-1, ev-4, ev-6). The decline was driven almost entirely by lower cash earnings: net profit attributable to owners of WBC (adjusted for RSP dividends) excluding Notable Items fell to $6,966m from $7,106m, a 1.97% decline (ev-3). Average tangible ordinary equity rose slightly to $63,476m from $63,415m (ev-2, ev-5), a small negative equity effect. The bank attributes the earnings fall to higher operating expenses (9% higher, including $273m restructuring costs) more than offsetting higher operating income and lower credit impairment charges (ev-9). Statutory ROTE fell 12 bps to 10.89% and statutory ROE fell 11 bps to 9.66% (ev-1).",
+  "movement_source": "row 'ROTE (return on average tangible equity) ex Notable Items', column Full Year Sept 2024 column -> column Full Year Sept 2025 column",
+  "headline": "WBC's headline ROE measure, ROTE ex Notable Items, fell 24 bps to 10.97% in FY25 from 11.21% in FY24 (delta -0.24 ppt). The movement is driven almost entirely by lower earnings: net profit ex Notable Items (RSP-adjusted) fell about 2% to $6,966m from $7,106m, which at constant equity lowers ROE by roughly 0.22 ppt. Average tangible ordinary equity rose only slightly (to $63,476m from $63,415m), contributing a small negative equity effect of about 0.02 ppt. The bank's FY24-FY25 earnings walk shows the fall driven by higher expenses (UNITE costs, salaries and wages, restructuring charge) partly offset by productivity initiatives, with net interest income up on loan growth. Both contributions are arithmetic derivations, not disclosed figures.",
   "headline_evidence": [
     "ev-1",
-    "ev-4",
-    "ev-6",
     "ev-3",
     "ev-2",
-    "ev-5",
-    "ev-9"
+    "ev-9",
+    "ev-10"
   ],
   "drivers": [
     {
       "canonical": "earnings_effect",
       "bank_label": "Movement in cash earnings at constant equity",
       "contribution": {
-        "value": -0.22,
+        "value": -0.221,
         "unit": "ppt"
       },
-      "columns": "Full Year Sept 2024 to Full Year Sept 2025",
-      "narrative": "Derived, not disclosed: prior-period ROTE (11.21%) x earnings growth (-1.97% as a fraction) = -0.22 ppt. Earnings (net profit attributable to owners of WBC adjusted for RSP dividends ex Notable Items) fell to $6,966m from $7,106m (ev-3). Bank states net profit ex Notable Items fell 2% as higher operating income and lower credit impairment charges were more than offset by higher expenses (ev-8, ev-9).",
+      "columns": "Full Year Sept 2025 minus Full Year Sept 2024",
+      "narrative": "Derived, not disclosed: prior-period ROTE (11.21%) x earnings growth (-1.97%, from $7,106m to $6,966m ex Notable Items, RSP-adjusted) = -0.221 ppt. The bank's FY24-FY25 walk shows expenses -$972m (higher UNITE costs, salaries and wages, restructuring charge, partly offset by productivity initiatives), net interest income +$557m (AIEA up 3% on loan growth, Core NIM down 1bp), non-interest income +$144m, impairment +$113m, tax & NCI +$17m.",
       "confidence": 80,
       "evidence": [
         "ev-3",
+        "ev-1",
+        "ev-5",
+        "ev-6",
+        "ev-7",
         "ev-8",
-        "ev-9"
+        "ev-11"
       ],
-      "checks_passed": [
-        "single_source"
-      ],
+      "checks_passed": [],
       "checks_failed": []
     },
     {
       "canonical": "equity_effect",
       "bank_label": "Movement in average equity at constant earnings",
       "contribution": {
-        "value": -0.02,
+        "value": -0.019,
         "unit": "ppt"
       },
-      "columns": "Full Year Sept 2024 to Full Year Sept 2025",
-      "narrative": "Derived, not disclosed: total delta (-0.24 ppt) minus earnings_effect (-0.22 ppt) = -0.02 ppt. Average tangible ordinary equity rose slightly to $63,476m from $63,415m (+0.1%) (ev-2, ev-5); at constant earnings, higher equity reduces ROE. On-market share buyback reduced equity but was more than offset by retained earnings (ev-2, ev-5).",
+      "columns": "Full Year Sept 2025 minus Full Year Sept 2024",
+      "narrative": "Derived, not disclosed: total delta (-0.24 ppt) minus earnings_effect (-0.221 ppt) = -0.019 ppt. Average tangible ordinary equity rose slightly to $63,476m from $63,415m (+$61m, +0.1%), so at constant earnings the small equity growth marginally lowers ROE. Direction supported by the modest equity increase; the bank does not disclose a separate equity attribution.",
       "confidence": 75,
       "evidence": [
         "ev-2",
-        "ev-5"
+        "ev-1"
       ],
       "checks_passed": [
         "single_source"
@@ -67,15 +67,26 @@
     "unit": "ppt"
   },
   "notable_items": [
-    "Hedging items Notable Items: -$56m FY25 vs -$123m FY24 (ev-12)"
+    "ROTE ex Notable Items is the headline row; statutory ROTE (10.89% FY25, 11.01% FY24, -12bps) and both Return on average ordinary equity rows are named variants"
   ],
-  "disagreements": [],
+  "disagreements": [
+    {
+      "topic": "Net profit ex Notable Items level",
+      "values": [
+        "results announcement: $6,966m FY25 / $7,106m FY24 (RSP-adjusted)",
+        "investor pack: $6,972m FY25 / $7,113m FY24"
+      ],
+      "preferred": "results announcement (RSP-adjusted, matches ROTE numerator)",
+      "reason": "definitional",
+      "explanation": "The results announcement page 58 reports net profit ex Notable Items adjusted for restricted share dividends ($6,966m/$7,106m), which is the numerator used in ROTE. The investor pack page 20/42 reports the unadjusted figure ($6,972m/$7,113m). Both show ~2% decline; the RSP-adjusted figure is used for the ROE attribution."
+    }
+  ],
   "attribution_confidence": 80,
   "limitations": [
-    "The bank does not disclose a ROTE bridge/walk chart decomposing the movement; the earnings_effect and equity_effect are arithmetic derivations per the task method, not bank-disclosed figures.",
-    "The earnings growth rate (-1.97%) is computed from the ROTE-relevant earnings measure (net profit attributable to owners of WBC adjusted for RSP dividends ex Notable Items, $6,966m vs $7,106m), which differs slightly from the group net profit ex Notable Items ($6,972m vs $7,113m, -2%) shown in the performance summary and investor pack.",
-    "The equity_effect direction is inferred from the small rise in average tangible ordinary equity (+$61m) and the on-market share buyback context; the bank does not quantify the equity contribution to ROTE.",
-    "Statutory ROTE (10.89% vs 11.01%, -12 bps) and statutory ROE (9.66% vs 9.77%, -11 bps) are named variants and are reported as context only, not as the headline movement.",
+    "The earnings_effect and equity_effect contributions are arithmetic derivations per the task method, not figures the bank discloses; the bank provides no explicit ROE walk chart for the FY24-FY25 comparison.",
+    "The bank's FY24-FY25 net profit walk (investor pack p40) is the earnings decomposition used to explain the earnings_effect; it is a primary-comparison chart but decomposes profit, not ROE directly.",
+    "The equity_effect is small and its direction is inferred from the modest rise in average tangible ordinary equity; the bank does not disclose a separate equity attribution or buyback/DRP detail for this measure.",
+    "The investor pack reports net profit ex Notable Items unadjusted for RSP dividends ($6,972m/$7,113m) while the results announcement uses the RSP-adjusted figure ($6,966m/$7,106m); the RSP-adjusted figure is used as it matches the ROTE numerator.",
     "Basis normalised from 'cash' to 'ex_notables': no page in evidence prints 'cash' beside the movement, and the registry names ex_notables as the bank's headline basis."
   ],
   "evidence_records": [
@@ -155,45 +166,40 @@
       "provenance": null
     },
     {
-      "id": "ev-4",
-      "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 58,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Return on average tangible ordinary equity (excluding Notable Items) 10.97% 11.21% 10.87% 11.08%",
-      "numbers": [
-        {
-          "label": "ROTE ex Notable Items FY25",
-          "value": 10.97,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "ROTE ex Notable Items FY24",
-          "value": 11.21,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
       "id": "ev-5",
-      "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 58,
-      "printed_page": null,
-      "kind": "table",
-      "quote": "Average tangible ordinary equity 63,476 63,415 64,429 62,519",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 40,
+      "printed_page": 40,
+      "kind": "walk_vision",
+      "quote": "[walk chart] Net profit FY24 – FY25 ($m): FY24 7113 -> FY25 6972",
       "numbers": [
         {
-          "label": "Average tangible ordinary equity FY25",
-          "value": 63476.0,
+          "label": "Net interest income",
+          "value": 557.0,
           "unit": "$m",
           "basis": null
         },
         {
-          "label": "Average tangible ordinary equity FY24",
-          "value": 63415.0,
+          "label": "Non interest income",
+          "value": 144.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Expenses",
+          "value": -972.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Impairment charges",
+          "value": 113.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Tax & NCI",
+          "value": 17.0,
           "unit": "$m",
           "basis": null
         }
@@ -203,9 +209,60 @@
     {
       "id": "ev-6",
       "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 40,
+      "printed_page": 40,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Net interest income: AIEA up 3% due to loan growth, Core NIM down 1bp, Treasury & Markets NIM flat +557",
+      "numbers": [
+        {
+          "label": "Net interest income AIEA up 3% due to loan growth, Core NIM down 1bp, Treasury & Markets NIM flat",
+          "value": 557.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-7",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 40,
+      "printed_page": 40,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Non interest income: Higher card fees, Institutional lending fees, markets and net wealth income +144",
+      "numbers": [
+        {
+          "label": "Non interest income Higher card fees, Institutional lending fees, markets and net wealth income",
+          "value": 144.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-8",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 40,
+      "printed_page": 40,
+      "kind": "walk_annotation",
+      "quote": "[chart annotation] Expenses: Higher UNITE costs, salaries and wages and restructuring charge, partly offset by productivity initiatives -972",
+      "numbers": [
+        {
+          "label": "Expenses Higher UNITE costs, salaries and wages and restructuring charge, partly offset by productivity initiatives",
+          "value": -972.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-9",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
       "pdf_page": 6,
       "printed_page": 6,
-      "kind": "table",
+      "kind": "text",
       "quote": "11.0% ROTE ex Notable Items1 24bps to FY24",
       "numbers": [
         {
@@ -218,81 +275,6 @@
           "label": "ROTE ex Notable Items movement to FY24",
           "value": -24.0,
           "unit": "bps",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-7",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 6,
-      "printed_page": 6,
-      "kind": "table",
-      "quote": "$7.0bn Net profit ex Notable Items1 2% to FY24",
-      "numbers": [
-        {
-          "label": "Net profit ex Notable Items FY25",
-          "value": 7.0,
-          "unit": "$bn",
-          "basis": null
-        },
-        {
-          "label": "Net profit ex Notable Items movement to FY24",
-          "value": 2.0,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-8",
-      "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 9,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Net profit excluding Notable Items 6,972 7,113 (2)",
-      "numbers": [
-        {
-          "label": "Net profit ex Notable Items FY25",
-          "value": 6972.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net profit ex Notable Items FY24",
-          "value": 7113.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net profit ex Notable Items movement",
-          "value": -2.0,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-9",
-      "doc_id": "WBC/FY25/results_announcement",
-      "pdf_page": 9,
-      "printed_page": null,
-      "kind": "text",
-      "quote": "Operating expenses were 9% higher. The increase included restructuring costs of $273 million to support targeted productivity initiatives under our Fit for Growth program.",
-      "numbers": [
-        {
-          "label": "Operating expenses movement FY25-FY24",
-          "value": 9.0,
-          "unit": "%",
-          "basis": null
-        },
-        {
-          "label": "Restructuring costs FY25",
-          "value": 273.0,
-          "unit": "$m",
           "basis": null
         }
       ],
@@ -319,7 +301,7 @@
           "basis": null
         },
         {
-          "label": "Net profit ex Notable Items change",
+          "label": "Net profit ex Notable Items movement FY25-FY24",
           "value": -2.0,
           "unit": "%",
           "basis": null
@@ -330,65 +312,11 @@
     {
       "id": "ev-11",
       "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 20,
-      "printed_page": 20,
-      "kind": "table",
-      "quote": "Expenses ($10.9bn) ($11.9bn) 9%",
-      "numbers": [
-        {
-          "label": "Expenses FY24",
-          "value": 10.9,
-          "unit": "$bn",
-          "basis": null
-        },
-        {
-          "label": "Expenses FY25",
-          "value": 11.9,
-          "unit": "$bn",
-          "basis": null
-        },
-        {
-          "label": "Expenses change",
-          "value": 9.0,
-          "unit": "%",
-          "basis": null
-        }
-      ],
-      "provenance": null
-    },
-    {
-      "id": "ev-12",
-      "doc_id": "WBC/FY25/investor_discussion_pack",
-      "pdf_page": 42,
-      "printed_page": 42,
-      "kind": "table",
-      "quote": "Statutory net profit 6,990 6,916 3,317 3,599 Hedging items (123) (56) (140) 84 Net profit excluding Notable Items 7,113 6,972 3,457 3,515",
-      "numbers": [
-        {
-          "label": "Statutory net profit FY24",
-          "value": 6990.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Statutory net profit FY25",
-          "value": 6916.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net profit ex Notable Items FY24",
-          "value": 7113.0,
-          "unit": "$m",
-          "basis": null
-        },
-        {
-          "label": "Net profit ex Notable Items FY25",
-          "value": 6972.0,
-          "unit": "$m",
-          "basis": null
-        }
-      ],
+      "pdf_page": 40,
+      "printed_page": 40,
+      "kind": "text",
+      "quote": "Higher UNITE costs, salaries and wages and restructuring charge, partly offset by productivity initiatives",
+      "numbers": [],
       "provenance": null
     }
   ],
@@ -397,14 +325,15 @@
     "combo": "fast",
     "models": "agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash",
     "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
-    "generated": "2026-09-01T06:23:30+00:00",
-    "seconds": 653.9,
-    "cost_usd": 0.0084,
-    "tokens": "194618 in / 8958 out",
+    "generated": "2026-09-01T17:54:44+00:00",
+    "seconds": 67.3,
+    "cost_usd": 0.0037,
+    "tokens": "171453 in / 9581 out",
+    "latency": "14 calls, 67s in requests (slowest 14s), 0 retries, 0 grace waits, 0s slept",
     "orchestration": "agent",
-    "tool_calls": 23,
+    "tool_calls": 22,
     "pages_read": 8,
-    "charts_read": 0,
+    "charts_read": 1,
     "budget_exhausted": "no"
   }
 }

@@ -1,80 +1,87 @@
 # CBA — cti — FY21 vs FY20
 
-**Movement (cash basis):** 46.3ppt → 47ppt (+0.7ppt) | **Attribution confidence:** 78/100
+**Movement (cash basis):** 46.3ppt → 47ppt (+0.7ppt) | **Attribution confidence:** 82/100
 
 *Read from: row 'Operating expenses to total operating income (%)', column 30 Jun 20 column (FY20) -> column 30 Jun 21 column (FY21)*
 
-CBA's Group cost-to-income ratio (operating expenses to total operating income, continuing operations, cash basis) rose 70 bpts (+0.7 ppt) from 46.3% in FY20 to 47.0% in FY21. The rise reflects negative jaws: operating income grew only 1.7% (from $23,761m to $24,156m) while operating expenses grew 3.3% (from $10,996m to $11,359m), so expenses outran income and pushed the ratio up. Excluding remediation costs, the ratio rose a smaller 30 bpts (44.3% to 44.6%). Including discontinued operations, the ratio rose 40 bpts from 47.4% to 47.8%. The FY20 comparative was restated in the FY21 report (46.3% vs the 45.9% originally reported in the FY20 announcement).
+CBA's headline cost-to-income ratio (cash basis, "Operating expenses to total operating income (%)") rose 70 bpts from 46.3% in FY20 to 47.0% in FY21 (delta +0.7 ppt). The movement reflects negative jaws: operating income grew 1.7% ($23,761m to $24,156m) while operating expenses grew faster at 3.3% ($10,996m to $11,359m), so expense growth outran income growth and pushed the ratio up. The ex-remediation cost-to-income ratio rose a smaller 30 bpts (44.3% to 44.6%), indicating remediation costs contributed to the headline increase. The FY20 comparator of 46.3% is a restated figure; the FY20 report originally printed 45.9%.
 
-> [ev-9] CBA/FY21/profit_announcement, PDF p22: "Operating expenses to total operating income (%) 47. 0 46. 3 70 bpts 47. 3 46. 7 60 bpts"
-> [ev-10] CBA/FY21/profit_announcement, PDF p22: "Operating expenses to total operating income (%) 47. 8 47. 4 40 bpts 48. 4 47. 2 120 bpts"
-> [ev-7] CBA/FY21/profit_announcement, PDF p31: "Total operating income 24,156 23,761 2 12,195 11,961 2"
-> [ev-8] CBA/FY21/profit_announcement, PDF p31: "Total operating expenses (11,359) (10,996) 3 (5,768) (5,591) 3"
-> [ev-13] CBA/FY21/profit_announcement, PDF p30: "The result was driven by a 1.7% increase in operating income, a 3.3% increase in operating expenses and a $1,964 million decrease in loan impairment expense."
-> [ev-12] CBA/FY21/profit_announcement, printed p16: "Operating expenses to total operating income excluding remediation costs and other (%) 44. 6 44. 3 30 bpts 44. 6 44. 7 (10)bpts"
-> [ev-16] CBA/FY20/profit_announcement, printed p4: "Operating expenses to total operating income (%) 45.9 45.9 – 48.5 43.3 large"
+> [ev-1] CBA/FY21/profit_announcement, printed p16: "Operating expenses to total operating income (%) 47. 0 46. 3 70 bpts"
+> [ev-7] CBA/FY21/profit_announcement, PDF p11: "Cost-to-income ratio Cash basis 47.0% (headline) FY20 46.3%"
+> [ev-8] CBA/FY21/results_presentation, printed p56: "Cost-to-income2 (%) 47.0 +70bpts"
+> [ev-4] CBA/FY21/profit_announcement, PDF p11: "Operating income Cash basis $24,156m FY20 $23,761m ▲1.7%"
+> [ev-5] CBA/FY21/profit_announcement, PDF p11: "Operating expenses Cash basis $11,359m FY20 $10,996m ▲3.3%"
+> [ev-12] CBA/FY21/profit_announcement, printed p16: "Operating expenses to total operating income excluding remediation costs and other (%) 44. 6 44. 3 30 bpts"
+> [ev-13] CBA/FY20/profit_announcement, PDF p10: "The cost-to-income ratio (cash basis) was 45.9%, flat on FY19."
 
 ## Drivers
 
 | Driver | Bank's label | Contribution | Confidence | Sources | Evidence |
 |---|---|---|---|---|---|
-| `income_growth` | Operating income growth (jaws numerator) | -0.76 ppt | 80 | 1 (single_source) | ev-7, ev-13 |
-| `expense_growth` | Operating expense growth (jaws denominator) | +1.53 ppt | 80 | 2 () | ev-8, ev-1, ev-2, ev-3, ev-4, ev-15 |
-| *residual (unexplained)* | — | -0.03 ppt | — | — |
+| `income_growth` | Operating income growth (jaws numerator) | -0.76 ppt | 80 | 2 () | ev-4, ev-9, ev-17, ev-24, ev-26 |
+| `expense_growth` | Operating expense growth (jaws denominator) | +1.53 ppt | 80 | 2 () | ev-5, ev-10, ev-17, ev-18, ev-19, ev-20, ev-21, ev-22 |
+| `other_unmapped` | Interaction/rounding residual | -0.07 ppt | 60 | 1 (single_source) | ev-1 |
+| *residual (unexplained)* | — | -0.07 ppt | — | — | — |
 
 ### income_growth — "Operating income growth (jaws numerator)"
 *-0.76 ppt | confidence 80/100*
 
-Operating income grew 1.7% from $23,761m to $24,156m, driven by net interest income +1.2% (3.6% growth in average interest earning assets, mainly home and business loans) and other banking income +3.5%, partly offset by lower funds management income. Faster income growth would have lowered the ratio; my computed effect is -0.76 ppt.
-> [ev-7] CBA/FY21/profit_announcement, PDF p31: "Total operating income 24,156 23,761 2 12,195 11,961 2"
-> [ev-13] CBA/FY21/profit_announcement, PDF p30: "The result was driven by a 1.7% increase in operating income, a 3.3% increase in operating expenses and a $1,964 million decrease in loan impairment expense."
+Operating income (cash basis) grew 1.7% from $23,761m to $24,156m, driven by above-market volume growth in home and business lending and household deposits, partly offset by a lower net interest margin; other operating income rose 3% on higher lending fees and CommSec income. Income growth alone would have lowered the ratio (computed ~-0.76 ppt).
+> [ev-4] CBA/FY21/profit_announcement, PDF p11: "Operating income Cash basis $24,156m FY20 $23,761m ▲1.7%"
+> [ev-9] CBA/FY21/results_presentation, printed p56: "Op income2 ($m) 24,156 +1.7%"
+> [ev-17] CBA/FY21/profit_announcement, PDF p157: "Total operating income 24,156 23,761 2 12,195 11,961 2 24,918 24,757 1 12,581 12,337 2 Operating expenses (11,359) (10,996) 3 (5,768) (5,591) 3 (11,910) (11,729) 2 (6,084) (5,826) 4"
+> [ev-24] CBA/FY21/profit_announcement, PDF p11: "Net interest income increased 1%. This was driven by above market volume growth in home and business lending, and household deposits, partly offset by a decrease in net interest margin."
+> [ev-26] CBA/FY21/profit_announcement, PDF p11: "Other operating income increased 3%."
 
 ### expense_growth — "Operating expense growth (jaws denominator)"
 *+1.53 ppt | confidence 80/100*
 
-Operating expenses grew 3.3% from $10,996m to $11,359m, outrunning income and raising the ratio. The bank's walk decomposes the increase: Remediation costs +$114m, Investment Spend +$195m, Volume related costs +$117m, Other +$258m (wage increases, one-off concurrent rent), Business Simplification -$321m. My computed effect is +1.53 ppt.
-> [ev-8] CBA/FY21/profit_announcement, PDF p31: "Total operating expenses (11,359) (10,996) 3 (5,768) (5,591) 3"
-> [ev-1] CBA/FY21/results_presentation, printed p30: "[walk chart] Operating expenses: FY20 10996 -> FY21 11359"
-> [ev-2] CBA/FY21/results_presentation, printed p30: "[chart annotation] Volume related costs: To support increased loan processing and financial crime assessment volumes, and COVID-19
-• Frontline business bankers and retail lenders"
-> [ev-3] CBA/FY21/results_presentation, printed p30: "[chart annotation] Other: Wage increases
-• One-off concurrent rent expenses from commercial office space consolidation"
-> [ev-4] CBA/FY21/results_presentation, printed p30: "[chart annotation] Business Simplification: Cumulative cost savings realised:
-• FY21 $869m
-• FY20 $548m"
-> [ev-15] CBA/FY21/results_presentation, printed p30: "Operating expenses1 Up 2.4% (ex remediation), driven by investment in the franchise and higher volumes $m +3.3%"
+Operating expenses (cash basis) grew 3.3% from $10,996m to $11,359m, faster than income (negative jaws), raising the ratio (computed ~+1.53 ppt). Staff expenses rose 4% ($254m) on higher FTE and wage inflation; occupancy +6% on concurrent rent; IT +1%; other expenses fell 6% on simplification. Expense growth outrunning income growth is the dominant driver of the rise.
+> [ev-5] CBA/FY21/profit_announcement, PDF p11: "Operating expenses Cash basis $11,359m FY20 $10,996m ▲3.3%"
+> [ev-10] CBA/FY21/results_presentation, printed p56: "Op expenses2 ($m) 11,359 +3.3%"
+> [ev-17] CBA/FY21/profit_announcement, PDF p157: "Total operating income 24,156 23,761 2 12,195 11,961 2 24,918 24,757 1 12,581 12,337 2 Operating expenses (11,359) (10,996) 3 (5,768) (5,591) 3 (11,910) (11,729) 2 (6,084) (5,826) 4"
+> [ev-18] CBA/FY21/profit_announcement, printed p16: "Staff expenses 5,985 5,731 4 3,022 2,963 2 Occupancy and equipment expenses 1,154 1,087 6 578 576 – Information technology services expenses 2,046 2,020 1 1,037 1,009 3 Other expenses 1,599 1,697 (6) 798 801 –"
+> [ev-19] CBA/FY21/profit_announcement, printed p16: "Staff expenses increased by $254 million or 4% to $5,985 million, mainly driven by increased full-time equivalent staff (FTE) and wage inflation."
+> [ev-20] CBA/FY21/profit_announcement, printed p16: "Occupancy and equipment expenses increased by $67 million or 6% to $1,154 million, primarily driven by concurrent rent expenses in the current year as we vacate commercial office space and consolidate our property footprint, as well as inflation linked to annual rental reviews."
+> [ev-21] CBA/FY21/profit_announcement, printed p16: "Information technology services expenses increased by $26 million or 1% to $2,046 million. This was primarily due to higher IT infrastructure costs including higher cloud computing volumes, and increased investment spend, partly offset by lower amortisation and business simplification initiatives."
+> [ev-22] CBA/FY21/profit_announcement, printed p16: "Other expenses decreased by $98 million or 6% to $1,599 million, primarily driven by business simplification initiatives and lower credit card loyalty redemptions."
 
 ### notable_items — "Remediation costs and other"
-*unquantified | confidence 80/100*
+*unquantified | confidence 60/100*
 
-Remediation costs and other rose 25% from $461m to $575m, embedded within the expense-growth driver (walk bar +$114m). Excluding remediation, operating expenses grew only 2.4% and the cost-to-income ratio rose just 30 bpts (44.3% to 44.6%), so remediation is a material contributor to the 70 bpt rise.
-> [ev-11] CBA/FY21/profit_announcement, printed p16: "Operating expenses excluding remediation costs and other - "cash basis" 10,784 10,535 2 5,435 5,349 2 Remediation costs and other 2 575 461 25 333 242 38 Operating expenses including remediation costs and other - "cash basis" 11,359 10,996 3 5,768 5,591 3"
-> [ev-12] CBA/FY21/profit_announcement, printed p16: "Operating expenses to total operating income excluding remediation costs and other (%) 44. 6 44. 3 30 bpts 44. 6 44. 7 (10)bpts"
-> [ev-14] CBA/FY21/profit_announcement, PDF p30: "Operating expenses increased 3.3%. Excluding remediation costs2, operating expenses increased 2.4%, due to higher investment spend, additional operations and financial assistance staff to support higher loan processing and financial crime assessment volumes, and COVID-19 deferrals, as well as higher occupancy, wage inflation, and volume-driven IT costs, partly offset by lower discretionary spend and business simplification initiatives."
-> [ev-1] CBA/FY21/results_presentation, printed p30: "[walk chart] Operating expenses: FY20 10996 -> FY21 11359"
+Remediation costs and other rose from $461m to $575m (included in the headline ratio), driven by additional provisions for customer payments and program costs, primarily historical Wealth issues. The ex-remediation ratio rose only 30 bpts (44.3% to 44.6%) versus the headline +70 bpts, indicating remediation contributed to the headline increase; the bank does not quantify a separate ppt split.
+> [ev-12] CBA/FY21/profit_announcement, printed p16: "Operating expenses to total operating income excluding remediation costs and other (%) 44. 6 44. 3 30 bpts"
+> [ev-23] CBA/FY21/profit_announcement, printed p16: "Operating expenses to total operating income ratio excluding remediation costs and other increased 30 basis points from 44.3% to 44.6%."
+> [ev-25] CBA/FY21/profit_announcement, PDF p11: "Remediation costs increased due to additional provisions for payments to customers and associated remediation program costs, primarily in relation to historical Wealth related issues."
+> [ev-3] CBA/FY21/profit_announcement, printed p16: "Operating expenses including remediation costs and other - "cash basis" 11,359 10,996 3"
 
-## Notable items
-- Remediation costs and other increased 25% from $461m to $575m (FY21 vs FY20)
+### other_unmapped — "Interaction/rounding residual"
+*-0.07 ppt | confidence 60/100*
+
+Residual reconciles the computed jaws contributions (-0.76 + 1.53 = +0.77 ppt) to the bank's stated +70 bpts delta, capturing the income-expense interaction term and rounding of the one-decimal ratio levels.
+> [ev-1] CBA/FY21/profit_announcement, printed p16: "Operating expenses to total operating income (%) 47. 0 46. 3 70 bpts"
 
 ## Source disagreements
-- **FY20 cost-to-income ratio comparative** (restatement): FY20 announcement: 45.9% vs FY21 announcement (restated): 46.3%
-  Preferred: 46.3% (FY21 restated comparative). The FY21 report restated the FY20 comparative to conform to current-period presentation (note 1 on the KPI page). Per source hierarchy, the restated comparative from the newer document wins. The FY20 income/expense levels were also restated (23,758/10,895 to 23,761/10,996).
+- **FY20 cost-to-income ratio level** (restatement): FY20 report: 45.9% vs FY21 report (restated): 46.3%
+  Preferred: 46.3% (FY21 restated). The FY20 profit announcement printed the FY20 cost-to-income ratio (cash basis) as 45.9%, but the FY21 report restates the FY20 comparator to 46.3% per Note 1.1 (change in accounting policy and prior period restatements). Per source hierarchy the newer document's restated figure wins, so the movement is computed from 46.3% to 47.0%.
 
 ## Limitations
-- The bank does not publish a cost-to-income ratio walk in ppt; the ppt split (income -0.76, expense +1.53, residual -0.03) is my own arithmetic from the disclosed income and expense levels, so confidence is capped at 80.
-- The expense walk (presentation p30) is in $m, not ppt, and is the bank's decomposition of the expense-growth driver only; it is not a ratio bridge.
-- The FY20 comparative was restated in the FY21 report; the FY20 announcement's original figures (45.9%, income 23,758, expenses 10,895) differ from the restated comparatives used here.
+- The bank does not publish a dedicated cost-to-income walk/bridge for the FY21 vs FY20 comparison. The ppt contributions for income growth (-0.76) and expense growth (+1.53) are my own computations from the disclosed income and expense levels, not the bank's stated decomposition, so confidence is capped at 80.
+- The presentation's operating-expense bridge (page 68) is a sequential half-on-half (1H21 to 2H21) movement, not the FY21 vs FY20 task comparison, so it was not used for driver contributions.
+- The remediation contribution is not separately quantified by the bank; the 40 bpts gap between the headline (+70 bpts) and ex-remediation (+30 bpts) movements is inferred, not stated.
+- The FY20 comparator is a restated figure (46.3% vs the originally printed 45.9%), reflecting an accounting policy change; the movement is computed on the restated basis.
 
 ## Provenance
 - combo: fast
 - models: agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash
 - documents: CBA/FY21/profit_announcement (ffdff75173e7), CBA/FY21/results_presentation (b1bbbd626803), CBA/FY20/profit_announcement (2c2179a200a3)
-- generated: 2026-09-01T07:22:57+00:00
-- seconds: 376.4
-- cost_usd: 0.0169
-- tokens: 531518 in / 19451 out
+- generated: 2026-09-01T18:08:39+00:00
+- seconds: 163.3
+- cost_usd: 0.0104
+- tokens: 569699 in / 27781 out
+- latency: 24 calls, 162s in requests (slowest 34s), 0 retries, 0 grace waits, 0s slept
 - orchestration: agent
-- tool_calls: 36
-- pages_read: 12
-- charts_read: 1
+- tool_calls: 39
+- pages_read: 13
+- charts_read: 0
 - budget_exhausted: no
