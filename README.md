@@ -11,7 +11,11 @@ behind each driver.
 ratio, credit impairment charge, cost-to-income ratio. All figures in AUD.
 Periods follow each bank's own financial calendar.
 
-## Results at a glance (dev suite, 25 cases across CBA / NAB / WBC)
+## Results at a glance (open-loop baseline, retired — dev suite, 25 cases across CBA / NAB / WBC)
+
+These numbers measured the retired open-loop pipeline (frozen at the tag
+`pipeline-baseline-final`). The closed-loop agent's final numbers land with
+the holdout and sealed-exam runs and will replace this table.
 
 | Measure | Value |
 |---|---|
@@ -72,15 +76,17 @@ auditable months later without rerunning anything.
 
 ## How it works, in one paragraph
 
-Code owns everything known: manifests, retrieval, page budgets, deterministic
-reference-following (notes and footnotes are followed by code, not by a
-model), walk arithmetic, unit and sign conventions, comparison
-classification, tolerance checks, and confidence caps. Cheap models do three
-narrow jobs — extract facts from a page, read waterfall charts, assemble the
-attribution under never-guess rules — and everything they produce is checked
-by arithmetic against cited evidence. Failed checks surface in the output
-and cap confidence; they are never silently dropped. The full rationale
-lives in the [design doc](docs/design.md) and the ADRs.
+A closed-loop research agent (`research_agent.py`) drives the analysis: one
+tool-calling model navigates the corpus with a small tool set —
+`search_pages`, `read_page`, `read_chart`, `cite`, `follow_references`,
+`bank_language`, `submit` — under never-guess rules. Code owns everything
+known: manifests, retrieval, the verbatim-citation gate at `cite` time, walk
+arithmetic, unit and sign conventions, comparison classification, tolerance
+checks, and confidence caps. Everything the agent produces is checked by
+arithmetic against cited evidence; failed checks surface in the output and
+cap confidence, never silently dropped. Budgets (tool calls, cost, wall
+clock) are runaway rails, not steering. The full rationale lives in the
+[design doc](docs/design.md) and the ADRs.
 
 ## Evals
 
@@ -97,7 +103,7 @@ milestone. `docs/design/eval-review-guide.md` documents every judgment call.
 
 ## Layout
 
-- `src/bank_equity_researcher/` — the agent (~12 files of plain Python)
+- `src/bank_equity_researcher/` — the agent (16 files of plain Python)
 - `docs/design.md` — the design doc: the four owned decisions
 - `docs/adr/` — architecture decision records
 - `docs/design/` — driver taxonomy, frontier benchmarks, eval review guide

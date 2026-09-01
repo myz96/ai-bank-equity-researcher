@@ -1789,7 +1789,11 @@ def settle_ratio_scale(attribution, metric_unit: str | None, records=None) -> st
 # 0 of the 90 saved artifacts, so neither carried evidence under the
 # hardcoded-override policy — and this list was not revisited. Nothing capped
 # the offender afterwards: a driver the check proves wrong shipped at 95 and
-# entered the confidently-wrong population (Codex round-5 repro). The whole
+# entered the confidently-wrong population. EVIDENCE: the repro is synthetic —
+# tests/test_review_round5.py (Codex round-5 finding 2) builds the failing
+# driver and asserts the cap; no saved artifact fires either check, and
+# evals/results/round6-check.md rescores byte-identical to
+# evals/results/pre-cleanup-baseline.md with both names present. The whole
 # table pays because the failure indicts the COLUMN the table was read from —
 # a walk for another comparison, or the prior half's column — and one driver
 # reading the wrong column is evidence its neighbours were read the same way.

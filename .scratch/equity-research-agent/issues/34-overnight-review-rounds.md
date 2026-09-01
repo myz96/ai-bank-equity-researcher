@@ -716,3 +716,38 @@ loosenings, 430 tests. This ticket CLOSES when the round-4 live verification
 suite is green (running this morning). Further review passes fold into
 Tuesday's six cleanup passes (ticket 33), which review the same code with the
 same discipline on the cleaned layout.
+
+## Round 7 — mattpocock code-review skill, cycle 1 (2026-09-01)
+
+Two-axis review of `holdout-freeze-20260831...HEAD` (Standards + Spec
+sub-agents in parallel, per the skill).
+
+Fixed this round (gate: 442 tests green, dev rescore byte-identical to
+`pre-cleanup-baseline.md`):
+- `manifest/mqg.json` doc_types `mda`/`presentation` sat outside the shared
+  vocabulary, so `printed_page_of` skipped slide numbers and `walk_sum_tolerance`
+  used the 1.0 text tolerance on presentation walks. Renamed to
+  `results_announcement`/`results_presentation`; filenames kept (page caches
+  key on the filename stem; data/ is shared with the frozen exam checkout).
+  The frozen checkout keeps the old values — the exam runs handicapped, never
+  flattered; noted for the exam writeup.
+- `WHOLE_TABLE_FAILURES` comment now cites its evidence paths (synthetic repro
+  in tests/test_review_round5.py; round6-check.md == pre-cleanup-baseline.md)
+  per the hardcoded-override policy.
+- Stale-doc falsehoods: README results table retitled as the retired open-loop
+  baseline's; "How it works" rewritten for the closed loop; ADR-0005 no longer
+  claims the pipeline is in the repo; src file count corrected. Full
+  README/design.md rewrite stays Wednesday report work.
+
+Queued for the code-simplifier phase (judgement-call smells, both agents):
+- llm.py: chat/chat_tools duplicate the 35-line retry ladder; extract one.
+- llm.py/research_agent.py: deadline/clock data clump; HARD_STOP_FACTOR
+  computed at 4 sites on two clocks.
+- cli.py repeats "agentic (the only live combo)" x3; evals.py JUDGE_COMBO
+  beside a combo="agentic" default can drift.
+- Test files named by review round (shotgun surgery); fold into the test
+  pruning pass.
+
+Noted, no action: scope-creep list (out-of-time error taxonomy, committed
+overnight scorecards) — all defensible; `validate.py` "lived in author.py"
+comment is accurate history.

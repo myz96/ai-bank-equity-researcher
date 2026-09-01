@@ -50,5 +50,6 @@ optimised.
   are unchanged: they are answerer-agnostic and score the agent exactly as
   they scored the pipeline. The frozen quarantine and sealed sets remain the
   final generalisation test.
-- The open-loop pipeline remains in the repo as the measured baseline and as
-  the bake-off's control arm.
+- The open-loop pipeline was the measured baseline and the bake-off's
+  control arm. Ticket 33 wave 3 froze it at the tag `pipeline-baseline-final`
+  and deleted it from main; git history is the archive.
