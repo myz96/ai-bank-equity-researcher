@@ -578,3 +578,34 @@ def test_the_grader_owns_its_tolerances_by_value():
     assert H.SCORER_BPS_TOL == 0.5
 
 
+
+
+def test_a_complete_alternate_framing_beats_an_incomplete_primary():
+    """Ranking by raw matched count handed a 2/3 primary the win over a 2/2
+    alternate; the fraction ranks first."""
+    gold = gold_case(
+        {"tier": "walk", "drivers": {"liquids": -3.0, "asset_pricing": -5.0, "funding": 2.0}},
+        alt_framings=[{"source": "slide 60",
+                       "drivers": {"liquids": -3.0, "asset_pricing": -5.0}}],
+    )
+    result = score_drivers(
+        gold_framings(gold),
+        [claim("liquids", -3.0, unit="bps"), claim("asset_pricing", -5.0, unit="bps")],
+        "bps",
+    )
+    assert result["framing"] == "alt:slide 60"
+    assert result["recall"] == "2/2"
+
+
+def test_an_invented_child_cannot_fill_a_parent_slot():
+    """Two fabricated rwa.* children summing to the parent scored 2/2 at
+    confidence 99; outside the taxonomy vocabulary they are unscored and the
+    parent slot stays unmatched."""
+    gold = gold_case({"tier": "walk", "drivers": {"rwa": -46.0}})
+    claims = [claim("rwa.fabricated_a", 100.0, unit="bps"),
+              claim("rwa.fabricated_b", -146.0, unit="bps")]
+    result = score_drivers(gold_framings(gold), claims, "bps",
+                           known_canonicals=frozenset({"rwa", "rwa.credit"}))
+    assert result["correct"] == 0
+    assert result["recall_matched"] == 0
+    assert all(entry["label"] == "unscored" for entry in result["claims"])

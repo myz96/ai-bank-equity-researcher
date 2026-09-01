@@ -699,3 +699,45 @@ def test_a_residual_with_no_unit_still_closes_the_bridge():
     )
     attribution.residual = Contribution(value=3.0, unit="")
     assert "drivers_reconcile" in check_drivers_reconcile(attribution)[0]
+
+
+def test_a_bare_note_number_does_not_ground_a_movement():
+    """"See Note 1" prints a 1 — a note number, not a quantity; it laundered
+    a +1 ppt delta under the plain printed-check."""
+    from bank_equity_researcher.validation.schema import (
+        Attribution,
+        EvidenceRecord,
+        Movement,
+    )
+    from bank_equity_researcher.validation.validate import cap_ungrounded_movement
+
+    a = Attribution(
+        bank="B", metric="roe", period="FY26", comparator="FY25", basis="cash",
+        movement=Movement(from_value=13.0, to_value=14.0, delta=1.0, unit="ppt"),
+        headline_evidence=["ev-1"], attribution_confidence=95,
+        evidence_records=[EvidenceRecord(id="ev-1", doc_id="d", pdf_page=1,
+                                         quote="See Note 1 for dividends")],
+    )
+    assert cap_ungrounded_movement(a) is True
+    assert a.attribution_confidence == 20
+
+
+def test_a_movement_stated_in_words_is_not_capped():
+    """"fell three basis points" states the movement; the digit-only scan
+    called it ungrounded and capped it to 20."""
+    from bank_equity_researcher.validation.schema import (
+        Attribution,
+        EvidenceRecord,
+        Movement,
+    )
+    from bank_equity_researcher.validation.validate import cap_ungrounded_movement
+
+    a = Attribution(
+        bank="B", metric="nim", period="FY26", comparator="FY25", basis="cash",
+        movement=Movement(from_value=208.0, to_value=205.0, delta=-3.0, unit="bps"),
+        headline_evidence=["ev-1"], attribution_confidence=90,
+        evidence_records=[EvidenceRecord(id="ev-1", doc_id="d", pdf_page=1,
+                                         quote="the margin fell three basis points")],
+    )
+    assert cap_ungrounded_movement(a) is False
+    assert a.attribution_confidence == 90

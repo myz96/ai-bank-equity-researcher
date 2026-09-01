@@ -307,6 +307,23 @@ def test_a_dollar_row_that_names_no_scale_still_grounds_a_money_claim():
     assert quote_states("Loan impairment expense was $319 million.", 319, "$m") is True
 
 
+def test_a_dollar_header_with_no_scale_word_reads_its_cells_at_face_value():
+    """The two quotes above declare a SCALE ("$m", "million"), so they never
+    reach the unstated-scale arm. A header of a bare "$" is the one that does.
+
+    A row saying only that its cells are money says nothing about the scale
+    within it, so the cell states the claim's own scale at face value: 1,050
+    is 1,050 whether the claim calls it $m or $bn. A ratio claim gets nothing
+    from it — the row named no ratio.
+    """
+    row = "Loan impairment expense ($)    1,050    900"
+    assert quote_states(row, 1050.0, "$m") is True
+    assert quote_states(row, 1050.0, "$bn") is True
+    assert quote_states(row, 900.0, "$m") is True
+    assert quote_states(row, 1050.0, "%") is False
+    assert quote_states(row, 1234.0, "$m") is False
+
+
 # ---------------------------------------------------------------------------
 # 5. The digits of a LABEL are not the numbers a quote prints
 # ---------------------------------------------------------------------------

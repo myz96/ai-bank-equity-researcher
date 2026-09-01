@@ -602,10 +602,11 @@ def test_judge_fact_max_quotes_widens_the_window():
     assert default.quotes_used == 24
     widened = J.judge_fact(FakeLLM(), "a fact", "the note", quotes, ("j1", "j2"), max_quotes=48)
     assert widened.quotes_used == 40
-    # The window dropped quotes; the CHARACTER budget did not. The two counts
-    # are reported side by side on the scorecard, so the flag must stay off
-    # when nothing was cut for length.
-    assert default.quotes_truncated is False
+    # The window dropped 16 quotes: that IS a truncation, and a fail under
+    # it must flag rather than count against the answer — the supporting
+    # quote may be among the dropped.
+    assert default.quotes_truncated is True
+    assert widened.quotes_truncated is False
     assert widened.quotes_truncated is False
     llm = FakeLLM()
     J.judge_fact(llm, "a fact", "the note", quotes, ("j1", "j2"), max_quotes=48)
@@ -660,3 +661,23 @@ def test_quotes_inside_the_budget_are_not_flagged():
     assert verdict.quotes_truncated is False
     assert verdict.quotes_used == 2
 
+
+
+def test_a_fail_under_a_truncated_quote_window_is_flagged():
+    """A fact whose supporting quote sits past the window must flag, not
+    fail: the budget shortfall is the evaluator's, not the answer's."""
+    from bank_equity_researcher.judging import judge as J
+
+    class FakeLLM:
+        def chat_json(self, model, prompt, max_tokens=None):
+            if "does the NOTE state" in prompt or '"stated"' in prompt:
+                return {"stated": "stated", "why": ""}
+            return {"entailed": "not-entailed", "why": "no supporting quote seen"}
+
+    quotes = [f"filler {i}" for i in range(30)]
+    verdict = J.judge_fact(FakeLLM(), "a fact", "the note", quotes, ("j1",))
+    assert verdict.verdict == "flagged_for_human"
+    assert "truncated" in verdict.reason
+
+    short = J.judge_fact(FakeLLM(), "a fact", "the note", ["one quote"], ("j1",))
+    assert short.verdict == "fail"

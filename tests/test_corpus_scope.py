@@ -128,14 +128,6 @@ def test_a_name_with_the_wrong_bank_does_not_resolve():
     assert C.resolve_doc_name("CBA/FY25/results-book", INDEX) is None
 
 
-def test_a_name_with_the_wrong_period_does_not_resolve():
-    """The containment pass agrees on BANK and PERIOD, and the period half of
-    that rule needs its own row: the bank above is right here and only the year
-    is wrong, so a name naming a book no bank filed that year resolves to
-    nothing."""
-    assert C.resolve_doc_name("NAB/FY26/results-book", INDEX) is None
-
-
 def test_an_empty_name_does_not_resolve():
     """The guard before the index lookup. An empty key is inside every alias,
     so without it the containment pass reads a blank name as every document."""
@@ -316,7 +308,15 @@ def test_a_bank_name_alone_does_not_resolve():
     """"NAB" sits inside NAB's alias and its bank token agrees, so ONLY the
     period predicate refuses it — the mutation-sensitive pin for that
     predicate. Without it, a bare bank name resolves
-    to whichever single document that bank filed."""
+    to whichever single document that bank filed.
+
+    This is the ONLY shape that pins the period half. A written name carrying
+    a wrong YEAR ("NAB/FY26/results-book") fails containment first, so it
+    never reaches the predicate and refuses the name for the wrong reason; a
+    name that does reach containment while naming the bank has to be a prefix
+    of the alias, which is this test. The wrong-year row was deleted for
+    saying it tested something it did not.
+    """
     assert C.resolve_doc_name("NAB", INDEX) is None
 
 

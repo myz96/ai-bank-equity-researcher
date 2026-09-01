@@ -13,14 +13,17 @@ import json
 import time
 from dataclasses import dataclass
 
+import numpy as np
 import pytest
 
 from bank_equity_researcher.agent import prompts as PROMPTS
 from bank_equity_researcher.agent import research_agent as RA
 from bank_equity_researcher.agent import toolbox as TB
 from bank_equity_researcher.taxonomy import TAXONOMY
+from bank_equity_researcher.tools import retrieve as RT
 from bank_equity_researcher.validation import quotes as Q
 from bank_equity_researcher.validation.schema import EvidenceRecord
+from bank_equity_researcher.validation.validate import annotate_walks, walks_for_view
 
 CALENDAR = {"fy_end": "30 June", "halves": {"1H": "ends 31 December", "2H": "ends 30 June"}}
 REGISTRY = {
@@ -648,6 +651,139 @@ def test_finalise_caps_drivers_at_85_without_a_primary_walk(docs, case):
     attribution = RA.finalise(attribution, research, case, TAXONOMY["nim"], REGISTRY, None)
     assert attribution.attribution_confidence <= 85
     assert all(driver.confidence <= 85 for driver in attribution.drivers)
+
+
+# The test above holds both caps at once, and neither of them alone: its
+# submission already declares 85, and its driver cites a record that does not
+# state the driver's own number, so `cap_weakly_cited_claims` lowers that
+# driver to CLAIM_CITATION_CAP before the walk rule is reached. Delete either
+# no-primary-walk cap and it still passes. The two tests below separate them.
+
+DRIVER_PAGE = (
+    "Net interest margin drivers\n"
+    "Deposit pricing    3 bps unfavourable\n"
+    "                                                       8"
+)
+
+
+def _walk_case(driver_evidence: list[str], extra_evidence: list[dict], confidence: int):
+    """One walk-metric case whose only published walk covers ANOTHER comparison.
+
+    The chart runs Dec 25 -> Jun 26 while the case asks FY26 vs FY25, so
+    `annotate_walks` calls it context and `finalise` finds no primary walk.
+    """
+    docs = [
+        _Doc("CBA/FY26/profit_announcement",
+             ["cover", *([""] * 10), KPI_PAGE, NOTE_PAGE, CHART_PAGE, DRIVER_PAGE]),
+        _Doc("CBA/FY25/results_presentation", ["cover", KPI_PAGE],
+             "results_presentation", "FY25"),
+    ]
+    case = {"bank": "CBA", "metric": "nim", "period": "FY26", "comparator": "FY25",
+            "description": "CBA net interest margin in FY26 vs FY25"}
+    llm = _LLM([], walk_reply={
+        "title": "NIM movement",
+        "start_label": "Dec 25 Half", "start_bps": 206,
+        "bars": [{"label": "Deposits", "bps": -1}],
+        "end_label": "Jun 26 Half", "end_bps": 205,
+    })
+    research = _research(llm, docs, case)
+    research.read_chart("CBA/FY26/profit_announcement", 14)
+    payload = _submission(
+        evidence=[*_submission()["evidence"], *extra_evidence],
+        drivers=[{
+            "canonical": "funding.deposits", "bank_label": "Deposits",
+            "contribution": {"value": -3, "unit": "bps"},
+            "narrative": "Deposit pricing competition.",
+            "confidence": 90, "evidence": driver_evidence,
+        }],
+    )
+    payload["attribution_confidence"] = confidence
+    attribution, rejections = RA.build_attribution(
+        payload, research, case, TAXONOMY["nim"], REGISTRY
+    )
+    assert rejections == []
+    return RA.finalise(attribution, research, case, TAXONOMY["nim"], REGISTRY, None)
+
+
+def test_a_walk_for_another_comparison_caps_the_ANSWER_at_85():
+    """The answer-level half of the no-primary-walk rule, on its own.
+
+    The submission declares 95, so only this cap can bring it to 85. Nothing
+    else fires: the movement is grounded and no check failed.
+    """
+    attribution = _walk_case(["e1"], [], 95)
+    assert attribution.attribution_confidence == 85
+    assert any("No published walk covers FY26 vs FY25" in limit
+               for limit in attribution.limitations)
+
+
+def test_a_walk_for_another_comparison_caps_every_DRIVER_at_85():
+    """The per-driver half, with the weak-citation cap kept out of the way.
+
+    The driver cites a record whose quote prints its own "3 bps", so
+    `cap_weakly_cited_claims` has nothing to say and the driver arrives at
+    this rule still holding 90. A chart that describes another comparison
+    verified no split, so 90 is not a confidence it earned.
+    """
+    grounding = {
+        "id": "e2", "doc_id": "CBA/FY26/profit_announcement", "pdf_page": 15,
+        "quote": "Deposit pricing    3 bps unfavourable",
+        "numbers": [{"label": "deposits", "value": -3, "unit": "bps"}],
+    }
+    attribution = _walk_case(["e2"], [grounding], 95)
+    driver = attribution.drivers[0]
+    assert "computed_delta_cap_80" not in driver.checks_passed
+    assert driver.confidence == 85
+
+
+# ---------------------------------------------------------------------------
+# Which walk describes which comparison
+#
+# `annotate_walks` stamps the comparison and `walks_for_view` picks the one
+# group whose bars corroborate each other. Two charts that each failed to say
+# what they compare agree on nothing, and two of them shipped stamped
+# corroborated_2_sources.
+# ---------------------------------------------------------------------------
+
+
+def test_a_chart_whose_labels_name_no_period_is_unclassified():
+    """"Opening -> Closing" names no period, so the walk's comparison is
+    unknown. Calling it context instead would let it corroborate a real
+    context walk it may not describe."""
+    walks = [{"title": "CET1 movement", "start_label": "Opening", "end_label": "Closing"}]
+    annotate_walks(walks, CALENDAR, "FY26", "FY25")
+    assert walks[0]["comparison"] == "unclassified"
+    assert walks[0]["comparison_span"] == "? -> ?"
+    assert "name no period" in walks[0]["comparison_note"]
+
+
+def test_two_unknown_spans_do_not_corroborate_each_other():
+    """Each unknown-span walk stands alone in the view.
+
+    Grouping them by their shared "? -> ?" span stamped two charts
+    corroborated_2_sources (executed repro), which is a claim that they agree
+    — and neither of them said what it compares.
+    """
+    walks = [
+        {"title": "CET1 movement", "start_label": "Opening", "end_label": "Closing"},
+        {"title": "NIM movement", "start_label": "Start", "end_label": "End"},
+    ]
+    annotate_walks(walks, CALENDAR, "FY26", "FY25")
+    group, _note = walks_for_view(walks)
+    assert len(group) == 1
+
+
+def test_a_primary_walk_still_wins_the_view():
+    """The isolation above must not cost a real comparison its group."""
+    walks = [
+        {"title": "NIM movement", "start_label": "Jun 25 Full Year",
+         "end_label": "Jun 26 Full Year"},
+        {"title": "CET1 movement", "start_label": "Opening", "end_label": "Closing"},
+    ]
+    annotate_walks(walks, CALENDAR, "FY26", "FY25")
+    group, note = walks_for_view(walks)
+    assert [walk["title"] for walk in group] == ["NIM movement"]
+    assert note.startswith("PRIMARY")
 
 
 # ---------------------------------------------------------------------------
@@ -1694,6 +1830,39 @@ def test_the_callout_layer_is_read_even_when_the_bars_are_not(docs, case):
     assert any("Savings" in (r.quote or "") for r in research.records)
 
 
+def test_a_spent_cost_ceiling_stops_the_callout_layer(docs, case):
+    """One read_chart is one tool call and TWO vision calls, so the loop's
+    per-call ceiling binds the pair and neither call inside it: a $0.50
+    ceiling admitted two $0.60 calls and ended at $1.20. The callouts are the
+    optional half, so they are the half that gives way — and the walk the
+    caller asked for still comes back."""
+    walk = {
+        "title": "NIM movement",
+        "start_label": "Jun 25 Full Year", "start_bps": 208,
+        "bars": [{"label": "Deposits", "bps": -3}],
+        "end_label": "Jun 26 Full Year", "end_bps": 205,
+    }
+
+    class _BothLayersLLM(_LLM):
+        def chat_json(self, model, prompt, image_png=None, max_tokens=None,
+                      deadline_monotonic=None):
+            if "ANNOTATION LAYER" in prompt:
+                return {"annotations": [{"bar": "Deposits", "label": "Savings",
+                                         "value": -2.0}]}
+            return walk
+
+    llm = _BothLayersLLM([])
+    research = TB.Research(llm, _Combo(cost_ceiling_usd=0.5), docs, case,
+                           TAXONOMY["nim"], REGISTRY)
+    # The ceiling is already spent when read_chart starts, so the walk call is
+    # the last one this page may cost.
+    llm.usage.cost_usd = 0.5
+    out = research.read_chart("CBA/FY26/profit_announcement", 14)
+    assert out["walk"]["bars"], "the walk is what the caller asked for"
+    assert out["annotations"] == []
+    assert not any("Savings" in (record.quote or "") for record in research.records)
+
+
 # ---------------------------------------------------------------------------
 # The cost ceiling binds per call
 # ---------------------------------------------------------------------------
@@ -2020,10 +2189,16 @@ def test_bank_language_refuses_a_bank_outside_the_case_scope(docs, case):
 
 def test_numeric_rejects_non_finite_spellings():
     """nan and inf parse as floats but state no quantity; int(nan) raises,
-    so letting them through crashes the confidence and movement paths."""
+    so letting them through crashes the confidence and movement paths.
+
+    Both arms of the guard are here: a string the submission spelt out, and a
+    float the JSON decoder already built (1e400 decodes to inf directly).
+    """
     assert RA._numeric("nan") is None
     assert RA._numeric("inf") is None
     assert RA._numeric(float("nan")) is None
+    assert RA._numeric(float("inf")) is None
+    assert RA._numeric(1e400) is None
     assert RA._numeric("2,050") == 2050.0
 
 
@@ -2075,6 +2250,7 @@ def test_a_movement_with_no_evidence_records_cannot_claim_certainty(docs, case):
     payload = _submission(evidence=[], headline_evidence=[], drivers=[])
     payload["attribution_confidence"] = 95
     attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    attribution = RA.finalise(attribution, research, case, TAXONOMY["nim"], REGISTRY, None)
     assert attribution.evidence_records == []
     assert attribution.attribution_confidence <= 20
     assert any("No cited record states the movement" in item for item in attribution.limitations)
@@ -2122,6 +2298,7 @@ def test_zero_evidence_cap_reaches_the_drivers(docs, case):
     }])
     payload["attribution_confidence"] = 95
     attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    attribution = RA.finalise(attribution, research, case, TAXONOMY["nim"], REGISTRY, None)
     assert attribution.attribution_confidence <= 20
     assert all(d.confidence <= 20 for d in attribution.drivers)
 
@@ -2135,12 +2312,6 @@ def test_the_question_clamp_disclosure_survives(wired, monkeypatch):
     assert any("clamped" in item for item in output["limitations"])
 
 
-def test_direct_infinity_is_rejected():
-    """JSON 1e400 decodes to float('inf') directly, not as a string."""
-    assert RA._numeric(float("inf")) is None
-    assert RA._numeric(1e400) is None
-
-
 def test_the_split_parameter_stays_gone():
     """run_question_suite once took a silently-ignored split parameter; its
     removal is pinned so it cannot drift back half-alive."""
@@ -2151,18 +2322,53 @@ def test_the_split_parameter_stays_gone():
     assert "split" not in inspect.signature(run_question_suite).parameters
 
 
-def test_an_unrelated_record_does_not_ground_the_movement(docs, case):
-    """The cap keys on RESOLVED CITATIONS, not on the evidence pool being
-    non-empty: an unrelated dividend record beside an uncited movement left
-    the answer at 95."""
+def test_an_uncited_record_does_not_ground_the_movement(docs, case):
+    """Grounding reads the CITED records and no others.
+
+    The answer carries two records. The one it cites says nothing about the
+    margin; the one that prints both endpoints is in the evidence list and
+    nothing points at it. A reader following the citations reaches no number,
+    so the answer is a guess and caps at 20.
+
+    The earlier version of this test cited nothing at all, so its "unrelated"
+    record never reached the attribution and it re-tested the empty-pool case
+    above. Delete the cap's `cited_ids` filter and this one goes to 95.
+    """
     research = _research(_LLM([]), docs, case)
-    research.cite("CBA/FY26/profit_announcement", 12,
-                  [{"quote": "Net interest margin    2.05%    2.08%"}])
-    payload = _submission(evidence=[], headline_evidence=[], drivers=[])
+    payload = _submission(
+        evidence=[
+            {
+                "id": "e-cited",
+                "doc_id": "CBA/FY26/profit_announcement",
+                "pdf_page": 13,
+                "quote": "The increase reflects higher collective provisioning.",
+                "numbers": [],
+            },
+            {
+                "id": "e-uncited",
+                "doc_id": "CBA/FY26/profit_announcement",
+                "pdf_page": 12,
+                "quote": "Net interest margin    2.05%    2.08%",
+                "numbers": [{"label": "NIM FY26", "value": 2.05, "unit": "%"}],
+            },
+        ],
+        headline_evidence=["e-cited"],
+        drivers=[],
+    )
     payload["attribution_confidence"] = 95
-    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
-    assert attribution.evidence_records != [] or attribution.attribution_confidence <= 20
-    assert attribution.attribution_confidence <= 20
+    attribution, rejections = RA.build_attribution(
+        payload, research, case, TAXONOMY["nim"], REGISTRY
+    )
+    attribution = RA.finalise(attribution, research, case, TAXONOMY["nim"], REGISTRY, None)
+    assert rejections == []
+    # Both records survive; only one of them is cited.
+    assert [record.id for record in attribution.evidence_records] == [
+        "e-cited", "e-uncited",
+    ]
+    assert attribution.headline_evidence == ["e-cited"]
+    assert attribution.attribution_confidence == 20
+    assert any("No cited record states the movement" in item
+               for item in attribution.limitations)
 
 
 def test_an_unrelated_citation_does_not_ground_the_movement(docs, case):
@@ -2176,43 +2382,160 @@ def test_an_unrelated_citation_does_not_ground_the_movement(docs, case):
     payload["movement"] = {"from_value": 13.0, "to_value": 14.0, "delta": 1.0, "unit": "ppt"}
     payload["attribution_confidence"] = 95
     attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    attribution = RA.finalise(attribution, research, case, TAXONOMY["nim"], REGISTRY, None)
     assert attribution.headline_evidence == ["ev-1"]
     assert attribution.attribution_confidence <= 20
     assert any("No cited record states the movement" in item
                for item in attribution.limitations)
 
 
-def test_pooled_scores_are_globally_comparable(monkeypatch):
-    """Per-document rank fusion gave every document's own top page the same
-    2.0 and lexical tie-breaks dropped the one relevant document from the top
-    eight (executed repro). Pooled ranks order the relevant page first."""
-    import pathlib
+# ---------------------------------------------------------------------------
+# Pooled retrieval
+#
+# One BM25 index and one embedding matrix over the task's WHOLE corpus, so the
+# ranks the fusion reads are global. Per-document fusion gave every document's
+# own top page the same 2.0, lexical tie-breaks on doc_id decided the order,
+# and the one relevant document of thirteen fell out of the top eight
+# (executed repro).
+#
+# These tests drive the real _pool_index and the real _doc_embeddings. Only
+# the sentence-transformers encoder is a stand-in, because loading a model is
+# not what any of this is about.
+# ---------------------------------------------------------------------------
 
-    import numpy as np
+_POOL_QUERY = "net interest margin walk"
+# The page the LEXICAL half names: it prints every query term. It must not be
+# the query string itself, or the stand-in encoder favours it too and the
+# dense half stops being the only thing that lifts _DENSE_PAGE.
+_LEXICAL_PAGE = "the net interest margin walk is on this page"
+# The page the DENSE half names: it shares no term with the query.
+_DENSE_PAGE = "outlook commentary for the year ahead"
 
-    from bank_equity_researcher.tools import retrieve as RT
 
-    class _Poolable:
-        def __init__(self, name):
-            self.path = pathlib.Path(f"/fake/{name}.pdf")
-            self.doc_id = name
+class _PoolDoc:
+    """A corpus Document as retrieve.py reads one: a path and its page texts."""
 
-    docs = [_Poolable("aaa-irrelevant"), _Poolable("zzz-relevant")]
+    def __init__(self, doc_id: str, pages: list[str], root) -> None:
+        self.doc_id = doc_id
+        self.path = root / f"{doc_id}.pdf"
+        self._pages = list(pages)
 
-    def fake_pool_index(paths):
-        pages = [(paths[0], 1), (paths[1], 1)]
+    def page_texts(self) -> list[str]:
+        return list(self._pages)
 
-        class _BM25:
-            def get_scores(self, tokens):
-                return [0.1, 9.0]
 
-        return _BM25(), np.array([[0.0, 1.0], [1.0, 0.0]]), pages
+class _FixedEncoder:
+    """Deterministic unit vectors. The query and one page embed to [1, 0];
+    every other page is orthogonal to the query, so the dense ranking names
+    exactly one winner and the fusion's two halves can be told apart."""
 
-    class _Encoder:
-        def encode(self, texts, **kw):
-            return np.array([[1.0, 0.0]])
+    def encode(self, texts, **_kwargs):
+        return np.array(
+            [[1.0, 0.0] if text in (_DENSE_PAGE, _POOL_QUERY) else [0.0, 1.0]
+             for text in texts]
+        )
 
-    monkeypatch.setattr(RT, "_pool_index", fake_pool_index)
-    monkeypatch.setattr(RT, "_encoder", lambda: _Encoder())
-    ranked = RT.retrieve_pool(docs, "margin walk")
-    assert ranked[0][0].doc_id == "zzz-relevant"
+
+@pytest.fixture
+def pooled(tmp_path, monkeypatch):
+    """retrieve.py with a stand-in encoder and a throwaway embedding cache."""
+    monkeypatch.setattr(RT, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(RT, "_encoder", lambda: _FixedEncoder())
+    for reset in (RT._pool_index.cache_clear, RT._doc_embeddings.cache_clear):
+        reset()
+    RT._DOCS.clear()
+    yield RT
+    for reset in (RT._pool_index.cache_clear, RT._doc_embeddings.cache_clear):
+        reset()
+    RT._DOCS.clear()
+
+
+def _pool(pooled, docs: list[_PoolDoc]):
+    for doc in docs:
+        pooled._DOCS[str(doc.path)] = doc
+    return pooled._pool_index(tuple(str(doc.path) for doc in docs))
+
+
+def test_the_pooled_index_holds_every_page_of_every_document(pooled, tmp_path):
+    """One index over the whole scope, and its rows in page order.
+
+    The embedding matrix is stacked one document at a time while the page list
+    grows page by page, so the two only agree while both walk the scope in the
+    same order. A row that slips names the wrong page, and retrieval then
+    returns a page nobody scored.
+    """
+    docs = [
+        _PoolDoc("aaa", ["alpha one", "alpha two"], tmp_path),
+        _PoolDoc("zzz", ["zeta one", _DENSE_PAGE, "zeta three"], tmp_path),
+    ]
+    _bm25, embeddings, pages = _pool(pooled, docs)
+    assert pages == [
+        (str(docs[0].path), 1), (str(docs[0].path), 2),
+        (str(docs[1].path), 1), (str(docs[1].path), 2), (str(docs[1].path), 3),
+    ]
+    assert embeddings.shape[0] == len(pages)
+    # The one page that embeds to [1, 0] is page 2 of the second document, and
+    # its row is the row the page list puts it at.
+    dense_rows = [i for i, row in enumerate(embeddings) if list(row) == [1.0, 0.0]]
+    assert dense_rows == [pages.index((str(docs[1].path), 2))]
+
+
+def test_the_page_embeddings_come_back_from_the_disk_cache(pooled, tmp_path):
+    """A document is encoded once and the vectors are kept on disk by stem.
+
+    The cache is read with no check that it still has one row per page, so a
+    document re-issued with a different page count would stack rows the page
+    list does not match. This pins the reuse the check would have to guard.
+    """
+    doc = _PoolDoc("cached", ["alpha", "beta"], tmp_path)
+    _pool(pooled, [doc])
+    cache = tmp_path / "cache" / "emb" / "cached.npy"
+    assert cache.exists(), "the first read writes the cache"
+
+    np.save(cache, np.array([[0.25, 0.75], [0.75, 0.25]]))
+    pooled._doc_embeddings.cache_clear()
+    pooled._pool_index.cache_clear()
+    _bm25, embeddings, _pages = _pool(pooled, [doc])
+    assert embeddings.tolist() == [[0.25, 0.75], [0.75, 0.25]]
+
+
+def test_a_scope_of_blank_pages_still_builds_an_index(pooled, tmp_path):
+    """A cover sheet and a divider carry no text at all.
+
+    BM25Okapi divides by the average document length, so a scope whose pages
+    are ALL empty raises ZeroDivisionError before it scores anything. The
+    "empty" placeholder token keeps such a page in the pool at score zero.
+    """
+    docs = [_PoolDoc("blank", ["", "   ", "\n"], tmp_path)]
+    bm25, embeddings, pages = _pool(pooled, docs)
+    assert len(pages) == 3
+    assert embeddings.shape[0] == 3
+    assert list(bm25.get_scores(["margin"])) == [0.0, 0.0, 0.0]
+
+
+def test_pooled_scores_are_globally_comparable(pooled, tmp_path):
+    """The fusion reads one global BM25 score vector, and both halves count.
+
+    Three pages across two documents. The lexical half names the page that
+    prints the query terms; the dense half names a page in the OTHER document
+    that prints none of them. Both must reach the top two, and the page that
+    neither half named must come last. Drop either half of the union and this
+    fails; the top two collapse onto the winner of the half that is left.
+    """
+    docs = [
+        _PoolDoc("aaa", ["quarterly funding filler", _DENSE_PAGE], tmp_path),
+        _PoolDoc("zzz", [_LEXICAL_PAGE], tmp_path),
+    ]
+    bm25, _embeddings, pages = _pool(pooled, docs)
+    scores = list(bm25.get_scores(RT._tokenize(_POOL_QUERY)))
+    # One index over both documents: the query terms score in the document that
+    # prints them and nowhere else, on one shared idf table.
+    assert scores[pages.index((str(docs[1].path), 1))] > 0
+    assert scores[pages.index((str(docs[0].path), 1))] == 0
+    assert scores[pages.index((str(docs[0].path), 2))] == 0
+
+    ranked = [(doc.doc_id, page) for doc, page, _score in pooled.retrieve_pool(docs, _POOL_QUERY)]
+    # The lexical winner and the dense winner sit in different documents, and
+    # both of them beat the page that neither half named.
+    assert set(ranked[:2]) == {("zzz", 1), ("aaa", 2)}
+    assert ranked[2] == ("aaa", 1)
