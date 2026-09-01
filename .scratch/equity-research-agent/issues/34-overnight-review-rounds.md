@@ -1331,3 +1331,11 @@ families, every applied finding pinned, every commit gated (suite green,
 dev rescore byte-identical to pre-cleanup-baseline, ruff clean), every
 behaviour-bearing gate change replayed over the saved-artifact estate with
 receipts.
+
+## User ruling: the two-shells gate question (2026-09-01)
+
+DOCUMENT, not build. Metric cases have a known shape, so code checks the
+numbers hard; free questions are loose prose, and a hard printed-number
+check would be fragile over-engineering. Written into docs/design.md (the
+ruling section before Decision 4) and as the comment above
+gates.enforce_answer_gate. The escalation is closed.

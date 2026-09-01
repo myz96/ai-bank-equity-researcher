@@ -166,6 +166,25 @@ Rejected: a vector store of "learned facts" (unauditable, contamination-prone,
 and the retrieval problem it solves is one we already solve per-case);
 fine-tuning (nothing here needs weights; everything needs provenance).
 
+## Ruling — the two answer shapes hold evidence to different standards (user, 2026-09-01)
+
+A metric case and a free question run the same research loop but face
+different code checks, on purpose.
+
+- A metric case asks for a known shape: one movement and drivers that each
+  carry one number. Because we know the shape, the code can check it hard: a
+  claimed number must appear in the quotes it cites, or its confidence drops
+  to 80.
+- A free question has no fixed shape. A fact is a full sentence; it can hold
+  several numbers or a phrase like "roughly doubled". A hard number check
+  here would be fragile and would punish good answers. So the code checks
+  only that every citation points at a real, word-for-word quote, and the
+  judges check every fact against its quotes during evals.
+
+In short: where we know what the answer must contain, code enforces it.
+Where we do not, we keep the checks loose rather than over-engineer ones
+that break on honest prose.
+
 ## Decision 4 — Evals: calibration first, judges second, holdouts sealed
 
 (Tickets 02, 05, 17, 28-31; `docs/design/eval-review-guide.md`)
