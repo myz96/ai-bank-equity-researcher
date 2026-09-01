@@ -85,6 +85,12 @@ class _Usage:
         self.cost_usd = 0.0
         self.prompt_tokens = 0
         self.completion_tokens = 0
+        self.calls = 0
+        self.request_s = 0.0
+        self.slowest_call_s = 0.0
+        self.retry_attempts = 0
+        self.grace_waits = 0
+        self.slept_s = 0.0
 
 
 class _LLM:

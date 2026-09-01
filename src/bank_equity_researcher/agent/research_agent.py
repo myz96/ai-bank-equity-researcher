@@ -117,6 +117,11 @@ def _provenance(combo, docs, started: float, llm, research, exhausted) -> dict:
         "seconds": round(time.time() - started, 1),
         "cost_usd": round(llm.usage.cost_usd, 4),
         "tokens": f"{llm.usage.prompt_tokens} in / {llm.usage.completion_tokens} out",
+        "latency": (
+            f"{llm.usage.calls} calls, {llm.usage.request_s:.0f}s in requests "
+            f"(slowest {llm.usage.slowest_call_s:.0f}s), {llm.usage.retry_attempts} retries, "
+            f"{llm.usage.grace_waits} grace waits, {llm.usage.slept_s:.0f}s slept"
+        ),
         "orchestration": "agent",
         "tool_calls": research.tool_calls,
         "pages_read": len(research.pages_read),
