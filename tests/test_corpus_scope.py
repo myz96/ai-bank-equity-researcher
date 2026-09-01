@@ -142,6 +142,45 @@ def test_an_empty_name_does_not_resolve():
     assert C.resolve_doc_name("", INDEX) is None
 
 
+class _NamedDoc:
+    """A corpus Document as the alias index reads one."""
+
+    def __init__(self, bank, period, doc_type, filename):
+        self.bank, self.period, self.doc_type, self.filename = bank, period, doc_type, filename
+
+    @property
+    def doc_id(self):
+        return f"{self.bank}/{self.period}/{self.doc_type}"
+
+
+def test_the_alias_index_holds_every_spelling_a_document_answers_to():
+    """The rows above use a hand-written INDEX; this pins the builder itself.
+
+    doc_alias_index is what the eval harness calls, so the three spellings it
+    mints - the doc_id, the full filename stem, and the stem with the
+    bank-period prefix trimmed off - are the reason a gold document name
+    resolves at all.
+    """
+    index = C.doc_alias_index([
+        _NamedDoc("NAB", "FY25", "investor_presentation", "NAB-FY25-investor-presentation.pdf"),
+        _NamedDoc("WBC", "FY25", "investor_discussion_pack", "WBC-FY25-presentation-and-IDP.pdf"),
+        _NamedDoc("CBA", "FY26", "results_presentation", "CBA-FY26-results-presentation.pdf"),
+    ])
+    # The trimmed stem: gold names the file, the corpus knows the doc_type.
+    assert C.resolve_doc_name("NAB/FY25/investor-presentation", index) == (
+        "NAB/FY25/investor_presentation"
+    )
+    assert C.resolve_doc_name("WBC/FY25/presentation-and-IDP", index) == (
+        "WBC/FY25/investor_discussion_pack"
+    )
+    # The doc_id spelling, and the full stem, both land on the same document.
+    assert C.resolve_doc_name("CBA/FY26/results_presentation", index) == (
+        "CBA/FY26/results_presentation"
+    )
+    # A name no document carries resolves to nothing, and never to a guess.
+    assert C.resolve_doc_name("CBA/FY26/transcript", index) is None
+
+
 # ---------------------------------------------------------------------------
 # The gate strips facts, not prose
 # ---------------------------------------------------------------------------

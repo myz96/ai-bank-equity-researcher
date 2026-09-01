@@ -1043,6 +1043,22 @@ def test_a_question_that_never_submits_still_ships_an_artifact(wired, monkeypatc
     assert (out / "answer.md").exists()
 
 
+def test_the_question_budget_forces_a_submission(wired, monkeypatch):
+    """The question path carries its own copy of the stopped-early wiring.
+
+    run_agent_question builds its artifact separately from the movement path,
+    so the exhausted budget has to reach both the provenance line and the
+    limitations list here too, and the last turn must offer submit alone.
+    """
+    combo = _Combo(max_tool_calls=1)
+    search = _assistant(_tool_call("c", "search_pages", {"query": "margin"}))
+    llm = _LLM([search, _assistant(_tool_call("cs", "submit", _answer_submission()))])
+    output, _out = _run_question(llm, monkeypatch, combo)
+    assert output["provenance"]["budget_exhausted"].startswith("the tool-call budget")
+    assert any("Research stopped early" in item for item in output["limitations"])
+    assert llm.turns[-1] == ["submit"]
+
+
 def test_a_chart_read_for_a_question_is_not_classified_against_a_comparison(docs):
     """A question fixes no comparison, so no chart may be called primary."""
     llm = _LLM(
