@@ -1026,3 +1026,20 @@ Five findings; four fixed, one already fixed convergently:
 - Dead Combo fields: already deleted by simplifier round 3 (convergent).
 
 Gate: 371 tests, dev rescore identical to baseline.
+
+## Sol (Codex) round 2 applied (2026-09-01)
+
+- Architecture r2: CONSOLIDATED — full AST scan (function-local imports
+  included) confirms zero package cycles; the tokenizer boundary is public.
+  TASTE applied: tests/test_architecture.py pins the two broken cycles
+  mechanically; routing.py's over-broad docstring corrected.
+- Cleanup audit r2: seven of the eight restored pins verified as genuinely
+  executing their branches; wave 3 loses no constraint; the moved routing and
+  contracts are textually identical. One MUST fixed: the restored
+  wrong-period test was mutation-insensitive (containment failed first), so
+  the period predicate had no real pin — a bare bank name ("NAB") is the
+  sensitive case and now pins it.
+- Sol correctness review r1 DIED on the network gap mid-run (websocket DNS
+  failures); it does not count and is relaunched.
+
+Gate: 374 tests, dev rescore identical to baseline.

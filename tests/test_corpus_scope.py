@@ -293,3 +293,11 @@ def test_every_manifest_bank_has_a_registry_file():
         assert (REGISTRY_DIR / manifest.name).exists(), (
             f"{manifest.name}: manifest exists but registry/{manifest.name} does not"
         )
+
+
+def test_a_bank_name_alone_does_not_resolve():
+    """"NAB" sits inside NAB's alias and its bank token agrees, so ONLY the
+    period predicate refuses it — the mutation-sensitive pin for that
+    predicate (Codex audit round 2). Without it, a bare bank name resolves
+    to whichever single document that bank filed."""
+    assert C.resolve_doc_name("NAB", INDEX) is None

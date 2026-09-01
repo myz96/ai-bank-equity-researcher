@@ -26,8 +26,8 @@ def runner_for(combo_name: str):
 def question_runner_for(combo_name: str):
     """The free-form question runner. The same rule as runner_for, over the
     other task: `ask` and `evals run --suite questions` reach the same closed
-    loop. Both runners take (bank, question, combo, periods) and return
-    (output, out_dir), so no caller needs an adapter or a branch of its own."""
+    loop. Every question caller passes (bank, question, combo, periods) and
+    gets (output, out_dir), so none needs an adapter or a branch of its own."""
     _require_agent(combo_name)
     from .research_agent import run_agent_question
 
