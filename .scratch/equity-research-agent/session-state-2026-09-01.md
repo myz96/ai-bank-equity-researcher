@@ -51,9 +51,14 @@ REMAINING (in order):
 5. improve-codebase-architecture skill — BLOCKED on the user: the skill
    refuses model invocation. The user must type
    /mattpocock-skills:improve-codebase-architecture themselves.
-6. Test pruning LAST (proposal agent running; fold review-round test files
-   into behaviour-named files, keep high-value only), then final proof:
-   full tests + rescore + live spot-check + summary.
+6. Test pruning — DONE (a2f3da4): 443 -> 349 tests in 13 behaviour-named
+   files; review-round files dissolved; receipts kept.
+7. Final proof — IN FLIGHT: live spot-check (CBA nim FY26) running detached
+   on the cleaned code (scratchpad run-spotcheck.sh, log spotcheck.log,
+   marker DONE-spotcheck). When it lands clean: cleanup day closes.
+   Scorecard estate in evals/results/ deliberately NOT thinned: comments
+   cite audit paths, and the README declares "every scorecard" — thinning
+   would break receipts for marginal tidiness.
 
 ## Report obligations (Wednesday, do not lose)
 
