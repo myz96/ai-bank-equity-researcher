@@ -166,26 +166,6 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
                 f"{driver.contribution.value}{driver.contribution.unit} had no evidence reference."
             )
             driver.contribution = None
-    # A movement with NO RESOLVED CITATION anywhere is a guess wearing a
-    # number: the headline cites nothing and no driver cites anything, so no
-    # record grounds it — an unrelated record in the evidence pool changes
-    # nothing (reproduced twice: an empty pool at 95, then an unrelated
-    # dividend record beside a CTI movement at 95). The cap matches the
-    # question shell's nothing-survived cap. Replayed over the 111 saved
-    # artifacts: 0 firings — it binds only in the reproduced defect paths.
-    if (attribution.movement is not None
-            and not attribution.headline_evidence
-            and not any(driver.evidence for driver in attribution.drivers)
-            and attribution.attribution_confidence > ANSWER_GATE_CONFIDENCE_CAP):
-        attribution.attribution_confidence = ANSWER_GATE_CONFIDENCE_CAP
-        # The drivers rest on the same absent evidence, so a narrative driver
-        # must not keep rendering "confidence 95/100" under a capped answer.
-        for driver in attribution.drivers:
-            driver.confidence = min(driver.confidence, ANSWER_GATE_CONFIDENCE_CAP)
-        attribution.limitations.append(
-            "No resolved citation grounds the movement (the headline and every "
-            f"driver cite nothing), so confidence is capped at {ANSWER_GATE_CONFIDENCE_CAP}."
-        )
     return attribution
 
 

@@ -1165,3 +1165,23 @@ validator). Declined by the proposer with reasons: moving the gates to
 validate.py.
 
 Gate: 412 tests, ruff clean, dev rescore identical.
+
+## Sol review round 3 applied, part 1 (2026-09-01)
+
+Three of four MUSTs fixed with pins (413 tests):
+- cap_ungrounded_movement: a movement none of the CITED records states —
+  endpoints or delta, via quote_prints (bare table cells and walk endpoints
+  count) or converted NumberFacts — caps to 20 with drivers. It replaces the
+  weaker any-citation-resolves rule, whose laundering Sol reproduced (an ROE
+  movement citing only a dividend fact at 95). Replay: 113 movements, one
+  firing, a true-positive retired-arm CTI artifact; zero live-arm impact.
+  First draft was falsified by the replay itself (quote_states refused the
+  walk chart's bare "171.0 -> 174.0"); quote_prints is the right bar.
+- Unclassified walks: each unknown-span walk stands alone in walks_for_view
+  (two of them were stamped corroborated_2_sources), and the no-primary-walk
+  cap now fires whenever walks exist without a primary — an "Opening ->
+  Closing" chart no longer ships at 95 with no limitation.
+- The peripheral->fatal escalation is scoped to walk_extraction metrics: one
+  unreadable optional chart dropped a reconciled ROE from 95 to 40.
+Remaining from round 3: the retrieval fusion comparability MUST (next), and
+the arch-round walker bypass.

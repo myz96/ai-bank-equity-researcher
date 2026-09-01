@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import re
 
-from .schema import PRESENTATION_DOC_TYPES, EvidenceRecord
+from .schema import ANSWER_GATE_CONFIDENCE_CAP, PRESENTATION_DOC_TYPES, EvidenceRecord
 
 # PA walk bars are exact, so their sum should reconcile within rounding of the
 # endpoints (each endpoint rounded to 1bp): 1bp.
@@ -364,8 +364,14 @@ def walks_for_view(walks: list[dict]) -> tuple[list[dict], str]:
     if primary:
         return primary, f"PRIMARY - the task comparison ({primary[0].get('comparison_span')})"
     groups: dict[str, list[dict]] = {}
-    for walk in walks:
-        groups.setdefault(walk.get("comparison_span", "?"), []).append(walk)
+    for i, walk in enumerate(walks):
+        span = str(walk.get("comparison_span") or "?")
+        # An unknown span cannot corroborate another unknown one: two charts
+        # that each failed to say what they compare agree on nothing, and two
+        # of them were stamped corroborated_2_sources (executed repro). Each
+        # unknown-span walk stands alone.
+        key = span if "?" not in span else f"?-{i}"
+        groups.setdefault(key, []).append(walk)
     if not groups:
         return [], "no walks extracted"
     span, group = max(groups.items(), key=lambda item: len(item[1]))
@@ -1486,6 +1492,49 @@ def quote_prints(quote: str | None, value: float, unit: str | None = None) -> bo
         if abs(quoted - abs(value)) <= tolerance:
             return True
     return False
+
+
+def cap_ungrounded_movement(attribution) -> bool:
+    """Cap an answer whose CITED evidence never states the movement.
+
+    Resolution is not support: an ROE movement of 13 -> 14 ppt citing only
+    "the final dividend was 135 cents" shipped at 95 (executed repro) because
+    the earlier rule asked whether any citation RESOLVED. A movement is
+    grounded when some cited record states one of its endpoints or its delta,
+    unit-aware, through the same machinery that grounds a driver claim.
+    Replayed over the 113 saved movements: ONE firing, a retired-arm CTI
+    artifact whose citations print neither endpoint nor delta — a true
+    positive; zero firings on any live-arm artifact. Mutates; True if capped.
+    """
+    movement = attribution.movement
+    if movement is None:
+        return False
+    cited_ids = set(attribution.headline_evidence) | {
+        e for driver in attribution.drivers for e in driver.evidence
+    }
+    for record in attribution.evidence_records:
+        if record.id not in cited_ids:
+            continue
+        for value in (movement.from_value, movement.to_value, movement.delta):
+            # quote_prints is the right bar here: a movement row's cells print
+            # bare numbers (a walk chart's endpoints print "171.0 -> 174.0"
+            # with no unit token), and a bare printed magnitude grounds the
+            # endpoint while a unit-named one must convert.
+            if quote_prints(record.quote, value, movement.unit) or any(
+                _converted_prints(abs(number.value), number.unit, abs(value), movement.unit)
+                for number in record.numbers
+            ):
+                return False
+    if attribution.attribution_confidence <= ANSWER_GATE_CONFIDENCE_CAP:
+        return False
+    attribution.attribution_confidence = ANSWER_GATE_CONFIDENCE_CAP
+    for driver in attribution.drivers:
+        driver.confidence = min(driver.confidence, ANSWER_GATE_CONFIDENCE_CAP)
+    attribution.limitations.append(
+        "No cited record states the movement (its endpoints and delta appear in no "
+        f"cited quote or extracted figure), so confidence is capped at {ANSWER_GATE_CONFIDENCE_CAP}."
+    )
+    return True
 
 
 def _cap_drivers(attribution, tag: str, reason: str, applies=None) -> list[str]:

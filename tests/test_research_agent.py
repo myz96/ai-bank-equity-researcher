@@ -773,6 +773,9 @@ def _bridge_submission(drivers: list[dict], delta: float) -> dict:
     """
     return _submission(
         evidence=[
+            {"id": "e0", "doc_id": "CBA/FY26/profit_announcement", "pdf_page": 2,
+             "quote": "Cash net profit after tax  10,982   10,252",
+             "numbers": [{"label": "cash npat", "value": 10982, "unit": "$m"}]},
             {"id": "e1", "doc_id": "CBA/FY26/profit_announcement", "pdf_page": 2,
              "quote": "Operating expenses            400      300",
              "numbers": [{"label": "opex", "value": 400, "unit": "$m"}]},
@@ -781,7 +784,7 @@ def _bridge_submission(drivers: list[dict], delta: float) -> dict:
              "numbers": [{"label": "notables", "value": 330, "unit": "$m"}]},
         ],
         movement={"from_value": 10252, "to_value": 10252 + delta, "delta": delta, "unit": "$m"},
-        headline_evidence=["e1"],
+        headline_evidence=["e0"],
         drivers=drivers,
     )
 
@@ -2068,7 +2071,7 @@ def test_a_movement_with_no_evidence_records_cannot_claim_certainty(docs, case):
     attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
     assert attribution.evidence_records == []
     assert attribution.attribution_confidence <= 20
-    assert any("No resolved citation grounds the movement" in item for item in attribution.limitations)
+    assert any("No cited record states the movement" in item for item in attribution.limitations)
 
 
 def test_a_cut_off_submission_is_retried_not_accepted_empty(wired, monkeypatch):
@@ -2154,3 +2157,20 @@ def test_an_unrelated_record_does_not_ground_the_movement(docs, case):
     attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
     assert attribution.evidence_records != [] or attribution.attribution_confidence <= 20
     assert attribution.attribution_confidence <= 20
+
+
+def test_an_unrelated_citation_does_not_ground_the_movement(docs, case):
+    """Resolution is not support: a movement citing only a dividend fact
+    shipped at 95 because the earlier rule asked whether any citation
+    RESOLVED, not whether it states the movement."""
+    research = _research(_LLM([]), docs, case)
+    research.cite("CBA/FY26/profit_announcement", 12,
+                  [{"quote": "Refer to Note 2.2 for further information."}])
+    payload = _submission(evidence=[], headline_evidence=["ev-1"], drivers=[])
+    payload["movement"] = {"from_value": 13.0, "to_value": 14.0, "delta": 1.0, "unit": "ppt"}
+    payload["attribution_confidence"] = 95
+    attribution, _ = RA.build_attribution(payload, research, case, TAXONOMY["nim"], REGISTRY)
+    assert attribution.headline_evidence == ["ev-1"]
+    assert attribution.attribution_confidence <= 20
+    assert any("No cited record states the movement" in item
+               for item in attribution.limitations)

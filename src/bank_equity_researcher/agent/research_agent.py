@@ -50,6 +50,7 @@ from ..validation.validate import (
     annotate_walks,
     build_period_note,
     cap_drivers_on_failed_walks,
+    cap_ungrounded_movement,
     cap_unreconciled_drivers,
     cap_weakly_cited_claims,
     check_comparison_leak,
@@ -864,7 +865,9 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
         limitations=limitations,
         evidence_records=records,
     )
-    return enforce_evidence_gate(attribution), rejections
+    attribution = enforce_evidence_gate(attribution)
+    cap_ungrounded_movement(attribution)
+    return attribution, rejections
 
 
 def finalise(attribution: Attribution, research: Research, case: dict, metric_cfg: dict,
@@ -962,7 +965,12 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     ):
         fatal = [f for f in fatal if f != "no_quantified_drivers"]
         honest_partial += [f for f in output_failed if f == "no_quantified_drivers"]
-    if peripheral and "walk_sum" not in validation["passed"]:
+    if (peripheral and "walk_sum" not in validation["passed"]
+            and metric_cfg["method"] == "walk_extraction"):
+        # The escalation belongs to metrics whose decomposition IS the walk; a
+        # chart is optional context for the arithmetic methods, and one
+        # unreadable page dropped a reconciled ROE from 95 to 40 (executed
+        # repro).
         fatal += peripheral
         peripheral = []
     peripheral += honest_partial
@@ -973,7 +981,7 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
     if fatal:
         attribution.attribution_confidence = min(attribution.attribution_confidence, 40)
         cap_unreconciled_drivers(attribution, fatal)
-    elif metric_cfg["method"] == "walk_extraction" and classified and not primary_walks:
+    elif metric_cfg["method"] == "walk_extraction" and walks and not primary_walks:
         attribution.limitations.append(
             f"No published walk covers {period} vs {comparator}: the bank's walk for this "
             "metric describes another comparison, so the driver split is not walk-verified "
@@ -981,11 +989,11 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
         )
         attribution.attribution_confidence = min(attribution.attribution_confidence, 85)
     # The elif above implies this condition, so its per-driver cap lives here
-    # once: no primary walk covers the comparison, whether the walks classify
-    # elsewhere or no walk exists at all.
-    if metric_cfg["method"] == "walk_extraction" and not primary_walks and (
-        classified or not walks
-    ):
+    # once: no primary walk covers the comparison — classified elsewhere,
+    # unclassified (a chart that never said what it compares is not
+    # verification; one shipped 95 with no limitation, executed repro), or no
+    # walk at all.
+    if metric_cfg["method"] == "walk_extraction" and not primary_walks:
         for driver in attribution.drivers:
             driver.confidence = min(driver.confidence, 85)
     return attribution
