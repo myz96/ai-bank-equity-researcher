@@ -151,12 +151,16 @@ def _stopped_early_note(exhausted: str) -> str:
     )
 
 
+def _as_ids(value) -> list:
+    """One id is ONE id: a bare string must never be iterated into characters."""
+    return [value] if isinstance(value, str) else list(value or [])
+
+
 def _recover_minted(cited_ids, minted_by_id, present, id_map, records) -> None:
     """A cited id the tools minted but the reply dropped from its records list
     is restored from the tool's own record — never from the model's text. Both
     shells recover the same way, or one would ground facts the other drops."""
-    cited_ids = [cited_ids] if isinstance(cited_ids, str) else cited_ids
-    for cited in cited_ids:
+    for cited in _as_ids(cited_ids):
         key = str(cited)
         if key in minted_by_id and key not in present and key not in id_map:
             records.append(minted_by_id[key])
@@ -715,8 +719,7 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     reply = dict(payload)
 
     def remap(ids) -> list[str]:
-        ids = [ids] if isinstance(ids, str) else ids
-        return [id_map.get(str(e), str(e)) for e in ids or [] if isinstance(e, (str, int))]
+        return [id_map.get(str(e), str(e)) for e in _as_ids(ids) if isinstance(e, (str, int))]
 
     # A citation to a record a tool already verified is a citation, whether or
     # not the submission repeated it in the evidence list. The record is
@@ -730,17 +733,13 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
     # list, so a recovery running after it leaves a NIM movement whose only
     # evidence arrived through `headline_evidence` on its percent scale
     # ("2.08 -> 2.05, -0.03 bps").
-    def _ids(value) -> list:
-        # A bare string is ONE id; spreading it would split it into characters.
-        return [value] if isinstance(value, str) else list(value or [])
-
     minted_by_id = {record.id: record for record in research.records}
     present = {record.id for record in records}
     _recover_minted(
         [
-            *_ids(reply.get("headline_evidence")),
+            *_as_ids(reply.get("headline_evidence")),
             *(e for driver in reply.get("drivers") or []
-              if isinstance(driver, dict) for e in _ids(driver.get("evidence"))),
+              if isinstance(driver, dict) for e in _as_ids(driver.get("evidence"))),
         ],
         minted_by_id, present, id_map, records,
     )
@@ -837,13 +836,7 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
             residual = {**residual, "value": residual_value,
                         "unit": str(residual.get("unit") or "").strip()}
 
-    raw_confidence = _numeric(reply.get("attribution_confidence"))
-    confidence = 0 if raw_confidence is None else int(raw_confidence)
-    if not 0 <= confidence <= 100:
-        reply.setdefault("limitations", []).append(
-            f"attribution_confidence clamped from {confidence} into 0-100."
-        )
-        confidence = min(100, max(0, confidence))
+    confidence = _clamped_confidence(reply, "attribution_confidence")
 
     # _settle_basis records its own substitution in reply["limitations"], so it
     # runs before the limitations list is read out of the reply.
@@ -987,8 +980,9 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
             "for this comparison. Confidence is capped at 85."
         )
         attribution.attribution_confidence = min(attribution.attribution_confidence, 85)
-        for driver in attribution.drivers:
-            driver.confidence = min(driver.confidence, 85)
+    # The elif above implies this condition, so its per-driver cap lives here
+    # once: no primary walk covers the comparison, whether the walks classify
+    # elsewhere or no walk exists at all.
     if metric_cfg["method"] == "walk_extraction" and not primary_walks and (
         classified or not walks
     ):
@@ -1334,8 +1328,7 @@ def build_answer(payload: dict, research: Research, question: str, docs: list[Do
                         minted_by_id, present, id_map, records)
 
     def remap(fact: dict) -> dict:
-        cited = fact.get("citations", fact.get("evidence")) or []
-        cited = [cited] if isinstance(cited, str) else list(cited)
+        cited = _as_ids(fact.get("citations", fact.get("evidence")))
         return {
             "fact": str(fact.get("fact", "")),
             "citations": [id_map.get(str(e), str(e)) for e in cited],

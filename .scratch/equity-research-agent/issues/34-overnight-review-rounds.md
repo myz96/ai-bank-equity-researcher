@@ -1150,3 +1150,18 @@ all 111 saved out/*/attribution.json artifacts replayed through the new
 movement cap and the tightened _states — 0 new firings on either. The
 changes bind only in the reproduced defect paths; receipts stamped beside
 both overrides.
+
+## Fable simplifier round 5 applied (2026-09-01)
+
+Five proposals, all applied: one clamp (the case shell now calls
+_clamped_confidence); _states deleted — cap_weakly_cited_claims calls
+_converted_prints directly (the proposer executed a 300,000-triple
+equivalence; the artifact replay re-run after the change: 113 artifacts, 0
+new firings); the walk-cap elif's subsumed per-driver loop deleted with the
+implication named; one _as_ids helper replaces four string-wrapping copies;
+schema tidy (vocabulary below imports, the shared cap constant above its
+first use with a both-gates comment, DriverClaim fields above the
+validator). Declined by the proposer with reasons: moving the gates to
+validate.py.
+
+Gate: 412 tests, ruff clean, dev rescore identical.

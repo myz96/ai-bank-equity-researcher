@@ -1,0 +1,444 @@
+{
+  "bank": "WBC",
+  "metric": "cti",
+  "period": "FY25",
+  "comparator": "FY24",
+  "basis": "ex_notables",
+  "movement": {
+    "from_value": 50.29,
+    "to_value": 53.04,
+    "delta": 2.75,
+    "unit": "ppt"
+  },
+  "movement_source": "row 'Expense to income ratio (excluding Notable Items)', column Full Year Sept 2024 -> column Full Year Sept 2025",
+  "headline": "Westpac's headline cost-to-income measure — Expense to income ratio ex Notable Items — rose from 50.29% in FY24 to 53.04% in FY25, a +2.75 ppt deterioration (the KPI page rounds this to \"3ppts to FY24\"). The ratio rose because operating expenses grew faster than income (negative jaws): net operating income ex Notable Items rose 3.2% ($21,763m to $22,464m) while operating expenses ex Notable Items rose 8.9% ($10,944m to $11,916m). Expense growth was the dominant driver, driven by staff costs, UNITE investment spend and a $273m restructuring charge, partly offset by productivity. Income growth partially offset the rise. The ratio is ex Notable Items, so notable items are excluded from both sides.",
+  "headline_evidence": [
+    "ev-11",
+    "ev-14",
+    "ev-10",
+    "ev-13",
+    "ev-12"
+  ],
+  "drivers": [
+    {
+      "canonical": "income_growth",
+      "bank_label": "Net operating income ex Notable Items",
+      "contribution": {
+        "value": -1.57,
+        "unit": "ppt"
+      },
+      "columns": "Full Year Sept 2024 to Full Year Sept 2025",
+      "narrative": "Net operating income ex Notable Items rose 3.2% from $21,763m to $22,464m. Net interest income +$557m (AIEA up 3% on loan growth, Core NIM down 1bp, Treasury & Markets NIM flat) and non-interest income +$144m (higher card fees, Institutional lending fees, markets and net wealth income). Income growth alone would have lowered the ratio.",
+      "confidence": 80,
+      "evidence": [
+        "ev-10",
+        "ev-13",
+        "ev-17"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "expense_growth",
+      "bank_label": "Operating expenses ex Notable Items",
+      "contribution": {
+        "value": 4.46,
+        "unit": "ppt"
+      },
+      "columns": "Full Year Sept 2024 to Full Year Sept 2025",
+      "narrative": "Operating expenses ex Notable Items rose 8.9% from $10,944m to $11,916m, outrunning income growth (negative jaws). Walk: staff costs +$397m, technology +$146m, volume & other +$199m, investments +$359m, restructuring charge +$273m, partly offset by productivity -$402m. Ex restructuring, expenses +6%.",
+      "confidence": 80,
+      "evidence": [
+        "ev-9",
+        "ev-13",
+        "ev-15",
+        "ev-16",
+        "ev-12"
+      ],
+      "checks_passed": [],
+      "checks_failed": []
+    },
+    {
+      "canonical": "notable_items",
+      "bank_label": "Notable Items",
+      "contribution": {
+        "value": 0.0,
+        "unit": "ppt"
+      },
+      "columns": "Full Year Sept 2024 to Full Year Sept 2025",
+      "narrative": "The ratio is ex Notable Items; income-side notable items (FY25 net +$80m, FY24 net +$175m) are excluded from both numerator and denominator, so they do not drive this ratio's movement.",
+      "confidence": 80,
+      "evidence": [
+        "ev-10"
+      ],
+      "checks_passed": [
+        "single_source",
+        "computed_delta_cap_80"
+      ],
+      "checks_failed": []
+    }
+  ],
+  "residual": {
+    "value": -0.14,
+    "unit": "ppt"
+  },
+  "notable_items": [
+    "Restructuring charge of $273m (Fit for Growth) included in expenses; income-side notable items excluded from the ex-Notable ratio"
+  ],
+  "disagreements": [
+    {
+      "topic": "Cost-to-income ratio movement magnitude",
+      "values": [
+        "3ppts to FY24 (investor pack KPI)",
+        "+2.75 ppt (computed from results announcement levels 53.04% vs 50.29%)"
+      ],
+      "preferred": "+2.75 ppt",
+      "reason": "rounding",
+      "explanation": "The investor pack KPI page rounds the movement to '3ppts to FY24'; the precise delta from the stated levels on results announcement page 58 is +2.75 ppt."
+    }
+  ],
+  "attribution_confidence": 85,
+  "limitations": [
+    "The bank does not publish a dedicated cost-to-income ratio walk chart; the ppt contributions for income growth (-1.57) and expense growth (+4.46) are computed by holding the other side at its FY24 level using disclosed levels, so they are my arithmetic (confidence capped at 80) rather than a bank-stated decomposition.",
+    "The residual of -0.14 ppt reflects the interaction between simultaneous income and expense growth; the bank does not disclose this split.",
+    "The delta of +2.75 ppt is computed by subtracting two stated period levels; the bank's own KPI page rounds it to '3ppts'.",
+    "Capped at 80: notable_items +0 ppt. The records these claims cite do not state those numbers, so each one is arithmetic over the evidence rather than a figure read from it."
+  ],
+  "evidence_records": [
+    {
+      "id": "ev-9",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 58,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Expense to income ratio (excluding Notable Items) $m Full Year Sept 2025 Full Year Sept 2024 Half Year Sept 2025 Half Year March 2025 Operating expenses 11,916 10,944 6,218 5,698",
+      "numbers": [
+        {
+          "label": "Operating expenses FY25",
+          "value": 11916.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses FY24",
+          "value": 10944.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-10",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 58,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net operating income 22,384 21,588 11,591 10,793 Add/(less): Notable Items (net interest income) 93 163 (125) 218 Add/(less): Notable Items (non-interest income) (13) 12 5 (18) Net operating income excluding Notable Items 22,464 21,763 11,471 10,993",
+      "numbers": [
+        {
+          "label": "Net operating income ex Notable Items FY25",
+          "value": 22464.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net operating income ex Notable Items FY24",
+          "value": 21763.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-11",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 58,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Expense to income ratio (excluding Notable Items) 53.04% 50.29% 54.21% 51.83%",
+      "numbers": [
+        {
+          "label": "Expense to income ratio ex Notable Items FY25",
+          "value": 53.04,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Expense to income ratio ex Notable Items FY24",
+          "value": 50.29,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-12",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "text",
+      "quote": "Operating expenses were 9% higher. The increase included restructuring costs of $273 million to support targeted productivity initiatives under our Fit for Growth program. Excluding these costs, operating expenses increased 6% mainly due to higher staff costs and the step up in UNITE investment spend. Productivity provided a partial offset.",
+      "numbers": [
+        {
+          "label": "Operating expenses increase FY25 vs FY24",
+          "value": 9.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Restructuring costs",
+          "value": 273.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses increase ex restructuring",
+          "value": 6.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-13",
+      "doc_id": "WBC/FY25/results_announcement",
+      "pdf_page": 9,
+      "printed_page": null,
+      "kind": "table",
+      "quote": "Net operating income 22,464 21,763 3 11,471 10,993 4 Operating expenses (11,916) (10,944) 9 (6,218) (5,698) 9",
+      "numbers": [
+        {
+          "label": "Net operating income FY25",
+          "value": 22464.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Net operating income FY24",
+          "value": 21763.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses FY25",
+          "value": -11916.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Operating expenses FY24",
+          "value": -10944.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-14",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 6,
+      "printed_page": 6,
+      "kind": "text",
+      "quote": "53.0% Cost to income ratio ex Notable Items1 3ppts to FY24",
+      "numbers": [
+        {
+          "label": "Cost to income ratio ex Notable Items FY25",
+          "value": 53.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Cost to income ratio change to FY24",
+          "value": 3.0,
+          "unit": "ppt",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-15",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "table",
+      "quote": "10,944 397 146 199 359 273 11,916 (402) FY24 Staff costs Technology Volume and other Productivity Investments Restructuring charge FY25 FY25 EXPENSES ($M)",
+      "numbers": [
+        {
+          "label": "FY24 expenses",
+          "value": 10944.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Staff costs increase",
+          "value": 397.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Technology increase",
+          "value": 146.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Volume and other increase",
+          "value": 199.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Productivity decrease",
+          "value": -402.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Investments increase",
+          "value": 359.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Restructuring charge increase",
+          "value": 273.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "FY25 expenses",
+          "value": 11916.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-16",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 27,
+      "printed_page": 27,
+      "kind": "text",
+      "quote": "9% INCREASE Simpler operating model Reduced property footprint Digitisation UNITE investment $399m Amortisation up $106m Lower investment ex UNITE 6% increase ex restructuring",
+      "numbers": [
+        {
+          "label": "Expenses increase FY25 vs FY24",
+          "value": 9.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Expenses increase ex restructuring",
+          "value": 6.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-17",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 40,
+      "printed_page": 40,
+      "kind": "table",
+      "quote": "7,113 557 144 113 17 6,972 (972) FY24 Net interest income Non interest income Expenses Impairment charges Tax & NCI FY25 FY25 NET PROFIT",
+      "numbers": [
+        {
+          "label": "Net interest income increase",
+          "value": 557.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Non interest income increase",
+          "value": 144.0,
+          "unit": "$m",
+          "basis": null
+        },
+        {
+          "label": "Expenses increase",
+          "value": -972.0,
+          "unit": "$m",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    },
+    {
+      "id": "ev-18",
+      "doc_id": "WBC/FY25/investor_discussion_pack",
+      "pdf_page": 20,
+      "printed_page": 20,
+      "kind": "table",
+      "quote": "Revenue $21.8bn $22.5bn 3% Expenses ($10.9bn) ($11.9bn) 9% Expenses excluding restructuring charge ($10.9bn) ($11.6bn) 6%",
+      "numbers": [
+        {
+          "label": "Revenue FY25",
+          "value": 22.5,
+          "unit": "$bn",
+          "basis": null
+        },
+        {
+          "label": "Revenue FY24",
+          "value": 21.8,
+          "unit": "$bn",
+          "basis": null
+        },
+        {
+          "label": "Revenue change",
+          "value": 3.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Expenses FY25",
+          "value": 11.9,
+          "unit": "$bn",
+          "basis": null
+        },
+        {
+          "label": "Expenses FY24",
+          "value": 10.9,
+          "unit": "$bn",
+          "basis": null
+        },
+        {
+          "label": "Expenses change",
+          "value": 9.0,
+          "unit": "%",
+          "basis": null
+        },
+        {
+          "label": "Expenses ex restructuring change",
+          "value": 6.0,
+          "unit": "%",
+          "basis": null
+        }
+      ],
+      "provenance": null
+    }
+  ],
+  "suggested_registry_patches": [],
+  "provenance": {
+    "combo": "fast",
+    "models": "agent=deepseek/deepseek-v4-flash-0731, vision=qwen/qwen3.7-flash",
+    "documents": "WBC/FY25/results_announcement (a4cd05cf44f4), WBC/FY25/investor_discussion_pack (61645f94df85)",
+    "generated": "2026-09-01T06:30:23+00:00",
+    "seconds": 413.2,
+    "cost_usd": 0.0065,
+    "tokens": "144394 in / 9796 out",
+    "orchestration": "agent",
+    "tool_calls": 21,
+    "pages_read": 8,
+    "charts_read": 2,
+    "budget_exhausted": "no"
+  }
+}

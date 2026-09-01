@@ -4,6 +4,11 @@ evidence references does not survive validation.
 
 from __future__ import annotations
 
+import re
+from enum import Enum
+
+from pydantic import BaseModel, Field, field_validator
+
 # The manifest doc_type vocabulary. Two consumers dispatch on these strings —
 # printed-page mapping (extract.printed_page_of) and the walk-sum tolerance
 # (validate.walk_sum_tolerance) — so a manifest value outside this set
@@ -25,12 +30,6 @@ DOC_TYPES = frozenset({
 # The doc types whose pages are numbered by slide, and whose published walks
 # earn the endpoint-rounding tolerance lift (WALK_SUM_TOL_PRESENTATION).
 PRESENTATION_DOC_TYPES = ("results_presentation", "investor_presentation", "investor_discussion_pack")
-
-
-import re
-from enum import Enum
-
-from pydantic import BaseModel, Field, field_validator
 
 
 class NumberFact(BaseModel):
@@ -74,14 +73,14 @@ class DriverClaim(BaseModel):
     # floor, so such a claim can never read as confident. The validator covers
     # the other form of an unstated field, an explicit JSON null.
     confidence: int = Field(default=40, ge=0, le=100)
+    evidence: list[str] = []
+    checks_passed: list[str] = []
+    checks_failed: list[str] = []
 
     @field_validator("confidence", mode="before")
     @classmethod
     def _null_confidence_is_low(cls, value):
         return 40 if value is None else value
-    evidence: list[str] = []
-    checks_passed: list[str] = []
-    checks_failed: list[str] = []
 
 
 class DisagreementReason(str, Enum):
@@ -138,6 +137,12 @@ class Attribution(BaseModel):
     provenance: dict = {}
 
 
+# The nothing-supported confidence ceiling, shared by BOTH gates: the answer
+# gate applies it when no kept fact is grounded, and the evidence gate when no
+# resolved citation grounds a movement.
+ANSWER_GATE_CONFIDENCE_CAP = 20
+
+
 def enforce_evidence_gate(attribution: Attribution) -> Attribution:
     """Structural never-guess rule: strip any quantified contribution that has
     no resolvable evidence reference. The strip is logged, never silent.
@@ -183,11 +188,6 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
         )
     return attribution
 
-
-# A free-form answer carries key facts instead of driver claims, so the same
-# structural rule needs a second shape to act on. Every shell that answers a
-# question calls this one function, so a question is gated exactly once.
-ANSWER_GATE_CONFIDENCE_CAP = 20
 
 
 # A quantity spelt in words is a quantity: "NIM fell three basis points"
