@@ -98,6 +98,7 @@ class _LLM:
 
     def chat_tools(self, model, messages, tools, max_tokens=None, deadline_monotonic=None):
         self.turns.append([t["function"]["name"] for t in tools])
+        self.last_messages = list(messages)
         if not self.script:
             return {"role": "assistant", "content": "I have no more moves."}
         return self.script.pop(0)
@@ -1328,8 +1329,8 @@ def test_the_tool_surface_is_the_documented_one():
     """
     names = [spec["function"]["name"] for spec in RA.TOOL_SPECS]
     assert names == [
-        "search_pages", "read_page", "read_chart", "cite", "follow_references",
-        "bank_language",
+        "plan_research", "search_pages", "read_page", "read_chart", "cite",
+        "follow_references", "bank_language",
     ]
     assert RA.SUBMIT_SPEC["function"]["name"] == "submit"
     for spec in [*RA.TOOL_SPECS, RA.SUBMIT_SPEC]:
@@ -2596,3 +2597,44 @@ def test_discover_clears_the_corpus_caches_after_writing(monkeypatch, tmp_path):
                         lambda: cleared.append("stems"))
     D.discover("ZZU", ["FY26"], "https://x", "2026-09-01")
     assert set(cleared) == {"docs", "stems"}
+
+
+def test_search_pages_fans_the_query_variants(docs, case, monkeypatch):
+    """One call, several phrasings, merged by best score: a weak model
+    under-queries, so the fan makes wide search the cheap default."""
+    calls = []
+
+    def fake_pool(docs_, query, top_k=8):
+        calls.append(query)
+        if "bank words" in query:
+            return [(docs_[0], 12, 2.0)]
+        return [(docs_[0], 13, 1.0)]
+
+    monkeypatch.setattr(TB, "retrieve_pool", fake_pool)
+    research = _research(_LLM([]), docs, case)
+    out = research.search_pages("margin walk", variants=["bank words phrasing"])
+    assert calls == ["margin walk", "bank words phrasing"]
+    pages = [r["pdf_page"] for r in out["results"]]
+    assert pages[:2] == [12, 13]
+
+
+def test_the_plan_is_read_back_once_before_the_answer_ships(wired, monkeypatch):
+    """The model wrote the plan; the loop holds it to it exactly once — a
+    rail, not a gate: the second submission is judged on citations alone."""
+    llm = _LLM([
+        _assistant(_tool_call("c0", "plan_research",
+                              {"items": ["walk in the results book",
+                                         "dividend slide in the presentation"]})),
+        _assistant(_tool_call("c1", "submit", _submission())),
+        _assistant(_tool_call("c2", "submit", _submission())),
+    ])
+    attribution, _out = _run(llm, monkeypatch)
+    assert attribution.movement.delta == -3
+    # The first submit bounced with the plan; the transcript carries it.
+    assert any("YOUR OWN" in str(m) for m in llm.last_messages)
+
+
+def test_no_plan_means_no_bounce(wired, monkeypatch):
+    llm = _LLM([_assistant(_tool_call("c1", "submit", _submission()))])
+    attribution, _out = _run(llm, monkeypatch)
+    assert attribution.movement.delta == -3

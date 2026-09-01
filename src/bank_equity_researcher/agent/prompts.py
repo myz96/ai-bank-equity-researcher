@@ -7,8 +7,12 @@ them."""
 from __future__ import annotations
 
 HOW_TO_RESEARCH = """HOW TO RESEARCH
-- search_pages finds candidate pages by keyword and by meaning. Search with
-  the words the BANK would print, not the words of the question.
+- plan_research comes FIRST: list where the answer's pieces should live
+  (results book AND presentation both cover most topics - plan to check
+  both). You will be held to the plan at submit time.
+- search_pages finds candidate pages by keyword and by meaning. ALWAYS pass
+  variants: the words the BANK would print AND your own phrasing - each
+  ranks different pages.
 - read_page returns one page's text. Read before you cite.
 - read_chart reads a waterfall or bridge chart off the page IMAGE. The text
   layer of a chart page prints the numbers and the labels as separate blocks,
@@ -270,6 +274,28 @@ TOOL_SPECS: list[dict] = [
     {
         "type": "function",
         "function": {
+            "name": "plan_research",
+            "description": (
+                "FIRST CALL of every case: list where the answer's pieces should "
+                "live (which document, which section or chart). At submit, every "
+                "item must be cited or its absence explained in limitations."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "3-10 expected evidence locations or topics",
+                    },
+                },
+                "required": ["items"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "search_pages",
             "description": (
                 "Search the case's documents for pages matching a query, by keyword and "
@@ -280,6 +306,15 @@ TOOL_SPECS: list[dict] = [
                 "type": "object",
                 "properties": {
                     "query": {"type": "string", "description": "the search query"},
+                    "variants": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": (
+                            "1-3 different phrasings of the same search - the bank's "
+                            "printed vocabulary AND your own words. Always send them: "
+                            "each phrasing ranks different pages."
+                        ),
+                    },
                     "doc_id": {
                         "type": "string",
                         "description": "optional: restrict the search to one document",

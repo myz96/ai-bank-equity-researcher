@@ -53,6 +53,8 @@ class Research:
         self.validation: dict = {"passed": [], "failed": []}
         self.pages_read: set[tuple[str, int]] = set()
         self.tool_calls = 0
+        self.plan: list[str] = []
+        self.plan_reviewed = False
         self._counter = 0
 
     # -- helpers ----------------------------------------------------------
@@ -84,22 +86,47 @@ class Research:
 
     # -- tools ------------------------------------------------------------
 
-    def search_pages(self, query: str, doc_id: str | None = None) -> dict:
+    def search_pages(self, query: str, doc_id: str | None = None,
+                     variants: list | None = None) -> dict:
+        """One search, optionally fanned over query VARIANTS.
+
+        A weak model under-queries: one phrasing, one hit list, stop. The fan
+        runs each phrasing through the same pooled retrieval and merges by
+        best score, so two or three wordings cost one tool call and the model
+        is prompted to always send them (the bank's printed vocabulary and
+        the question's own words rank different pages).
+        """
         docs = [self._doc(doc_id)] if doc_id else self.docs
-        pooled = retrieve_pool(docs, str(query), top_k=MAX_SEARCH_HITS)
+        queries = [str(query)] + [str(v) for v in variants or [] if str(v).strip()][:3]
+        best: dict[tuple, tuple] = {}
+        for q in queries:
+            for doc, page, score in retrieve_pool(docs, q, top_k=MAX_SEARCH_HITS):
+                key = (doc.doc_id, page)
+                if key not in best or score > best[key][0]:
+                    best[key] = (score, doc, q)
+        ranked = sorted(best.items(), key=lambda kv: -kv[1][0])[:MAX_SEARCH_HITS]
         results = []
-        for doc, page, score in pooled[:MAX_SEARCH_HITS]:
-            did = doc.doc_id
+        for (did, page), (score, doc, q) in ranked:
             text = self._page_text(doc, page)
             results.append(
                 {
                     "doc_id": did,
                     "pdf_page": page,
                     "score": round(score, 3),
-                    "snippet": _snippet(text, str(query)),
+                    "snippet": _snippet(text, q),
                 }
             )
-        return {"query": query, "results": results}
+        return {"query": query, "variants": queries[1:], "results": results}
+
+    def plan_research(self, items: list) -> dict:
+        """Record the model's own coverage plan: where the answer's pieces
+        should live. Free text, no matching by code — at submit time the loop
+        reads the plan back once and asks for each item to be cited or
+        written off, which turns thoroughness into bookkeeping."""
+        self.plan = [str(item)[:200] for item in items or [] if str(item).strip()][:12]
+        return {"recorded": self.plan,
+                "instruction": "Research each item. At submit, every item must be "
+                               "cited or its absence explained in limitations."}
 
     def read_page(self, doc_id: str, pdf_page: int) -> dict:
         doc = self._doc(doc_id)
@@ -362,6 +389,7 @@ class Research:
     def dispatch(self, name: str, arguments: dict) -> dict:
         handlers = {
             "search_pages": self.search_pages,
+            "plan_research": self.plan_research,
             "read_page": self.read_page,
             "read_chart": self.read_chart,
             "cite": self.cite,

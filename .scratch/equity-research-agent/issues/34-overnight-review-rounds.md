@@ -1339,3 +1339,17 @@ numbers hard; free questions are loose prose, and a hard printed-number
 check would be fragile over-engineering. Written into docs/design.md (the
 ruling section before Decision 4) and as the comment above
 gates.enforce_answer_gate. The escalation is closed.
+
+## Scoped iteration reopening: depth mechanisms (user, 2026-09-01 evening)
+
+The Fable probes priced the crossref gap as retrieval depth. The user
+approved two GENERAL mechanisms and rejected the hardcoded second-source
+rule:
+- plan_research: the model's first call lists where the answer's pieces
+  should live; at the first submit the loop reads the plan back ONCE and
+  asks each item be cited, researched, or written off in limitations. A
+  rail, not a gate — the second submission is judged on citations alone.
+- search_pages variants: 1-3 phrasings per call, pooled and merged by best
+  score, prompted as the default ("the bank's printed vocabulary AND your
+  own words"). Under-querying becomes over-querying at cent cost.
+Both land before the exam re-sit so it runs the best agent.

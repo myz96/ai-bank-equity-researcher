@@ -697,6 +697,23 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                 messages.append(_tool_result(call_id, research.dispatch(name, arguments or {})))
                 continue
             submit_attempts += 1
+            if (research.plan and not research.plan_reviewed
+                    and submit_attempts < MAX_SUBMIT_ATTEMPTS):
+                # One reflection bounce, a rail not a gate: the model wrote
+                # this plan; before the answer ships it re-reads it once.
+                # The next submission is judged on citations alone.
+                research.plan_reviewed = True
+                messages.append(_tool_result(call_id, {
+                    "accepted": False,
+                    "your_plan": research.plan,
+                    "instruction": (
+                        "Before this answer is accepted, check it against YOUR OWN "
+                        "plan above. For every item: either the answer already cites "
+                        "it, or research it now, or state in limitations why it is "
+                        "not needed. Then submit again."
+                    ),
+                }))
+                continue
             if arguments is None:
                 # A cut-off submission is a rejection, never an empty accept;
                 # if the retries run out, the no-submit path ships the declared
