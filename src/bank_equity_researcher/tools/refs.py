@@ -1,4 +1,4 @@
-"""Deterministic reference-following, between page selection and extraction.
+"""Deterministic reference-following, behind the follow_references tool.
 
 Retrieval ranks a page by how much the page looks like the question. The
 why-layer of a bank result does not look like the question: it sits in appendix
@@ -8,10 +8,9 @@ REFERENCE — reading "refer Note 2.2" beside the income statement line and
 turning to it.
 
 This module is that turn, written as code. No model is involved and no page is
-scored by a model: one regex pass builds a notes index per document, a second
-pass finds reference markers on the pages the budget already chose, and each
-resolved target page joins the extraction set with a provenance tag. A case
-therefore replays identically.
+scored by a model: one regex pass builds a notes index per document, and a
+second pass resolves the reference markers on one named page to their target
+pages. A case therefore replays identically.
 
 Three marker kinds are followed, in this priority order:
 
@@ -21,8 +20,6 @@ a. a note reference — "Note 2.2", "refer to Appendix 6.2", or the note heading
 b. a page reference — "refer to page 21", "(page 106)", "Refer to slide 64",
    resolved through the document's own printed-page numbering;
 c. a footnote reference — a footnote line that names another note by its title.
-
-The expansion is capped, so the extraction budget stays bounded.
 """
 
 from __future__ import annotations

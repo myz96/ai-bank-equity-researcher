@@ -1,4 +1,4 @@
-"""The eval harness: runs gold cases through the pipeline and produces a
+"""The eval harness: runs gold cases through the research shell and produces a
 scorecard — driver precision/recall, calibration, per-stage extraction
 accuracy — never one blended number.
 
@@ -74,7 +74,7 @@ def load_gold(suite: str, bank: str | None = None) -> list[dict]:
                 continue
             if "movement" not in case:
                 # Cross-reference consolidation cases run through the ask entry
-                # point, not the metric pipeline; skip here.
+                # point, not the metric suite; skip here.
                 continue
             cases.append({**case, "bank": gold_file["bank"], "period": gold_file["period"],
                           "comparator": gold_file["comparator"], "basis": gold_file["basis"]})
@@ -709,8 +709,7 @@ def walk_endpoints(record) -> tuple[float, float] | None:
 
 
 def _record_canonicals(record, label_map: dict[str, str]) -> list[tuple[str, float]]:
-    """Bar labels mapped to canonical ids with the registry's verbatim label map
-    (the same mapping the pipeline shows the author)."""
+    """Bar labels mapped to canonical ids with the registry's verbatim label map."""
     walk = {
         "source": record.id,
         "bars": [{"label": n.label, "bps": n.value} for n in record.numbers],
@@ -1015,9 +1014,9 @@ def artifact_dir(gold: dict, combo: str) -> Path:
 def judge_case_checklist(llm, gold: dict, combo: str, judges: tuple[str, ...]) -> dict:
     """Grade one case's narrative_checklist against its SAVED artifact.
 
-    No pipeline stage runs and no document is fetched. The report's own prose
-    answers "does the note say it"; the quotes its drivers cite answer "does
-    the source support it".
+    No research runs and no document is fetched. The report's own prose answers
+    "does the note say it"; the quotes its drivers cite answer "does the source
+    support it".
     """
     case = f"{gold['bank']}-{gold['metric']}-{gold['period']}"
     row = {"case": case, "metric": gold["metric"], "period": gold["period"]}

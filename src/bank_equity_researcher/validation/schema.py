@@ -25,10 +25,9 @@ class EvidenceRecord(BaseModel):
     kind: str = "text"  # text | table | walk_vision
     quote: str = Field(max_length=600)  # verbatim, <=50 words by prompt contract
     numbers: list[NumberFact] = []
-    # How the page reached the evidence pool when retrieval did not rank it
-    # there on its own: "reference_follow:<doc> p<source> -> <target>" for a
-    # page the deterministic follower turned to. None means the page came from
-    # the ordinary page budget.
+    # The weaker test this quote matched its page under, when it did not match
+    # the page's characters as printed (research_agent.MARKER_RELAXATION). None
+    # means the strict test passed.
     provenance: str | None = None
 
 
@@ -103,7 +102,7 @@ class Attribution(BaseModel):
     # states it, the statutory-versus-cash framing, the summary measures the
     # bank leads with. A reader checks a claim against the records the answer
     # cites, and so does the grounding judge, so a headline fact with no
-    # citation can never be graded however well the pipeline sourced it.
+    # citation can never be graded however well the answer sourced it.
     headline_evidence: list[str] = []
     drivers: list[DriverClaim] = []
     residual: Contribution | None = None

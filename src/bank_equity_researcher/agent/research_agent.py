@@ -1,15 +1,11 @@
-"""Orchestration shell B: the closed-loop research agent (ADR-0005).
+"""The closed-loop research agent (ADR-0005), the estate's only shell.
 
-The pipeline assembles a fixed context and asks one author to explain it. This
-shell inverts that: the model reads, reasons, and chooses what to read next,
-through tools that wrap the SAME deterministic estate the pipeline uses —
-retrieval, page text, the vision walk reader, reference following, the bank
-registry. Nothing here is a new capability; the loop is the new thing.
+The model reads, reasons, and chooses what to read next, through tools that
+wrap the deterministic estate — retrieval, page text, the vision walk reader,
+reference following, the bank registry.
 
-The artifact contract does not change. A submission becomes the same
-Attribution the pipeline emits, and the same validators and the same
-confidence caps then run over it, so the eval harness scores the agent exactly
-as it scores the pipeline.
+A submission becomes an Attribution, and the same validators and confidence
+caps then run over it, so the eval harness scores one artifact contract.
 
 Two gates keep the loop honest and bounded:
 
@@ -874,9 +870,9 @@ def quote_key(text: str) -> str:
 class Research:
     """The tools, and the evidence they mint.
 
-    Provenance is stamped by code here exactly as it is in the pipeline: the
-    agent names a document and a page, and the record's ids, page numbers and
-    kinds are filled in from the corpus, never from the model's reply.
+    Provenance is stamped by code: the agent names a document and a page, and
+    the record's ids, page numbers and kinds are filled in from the corpus,
+    never from the model's reply.
     """
 
     def __init__(self, llm: LLM, combo, docs: list[Document], case: dict, metric_cfg: dict,
@@ -992,11 +988,10 @@ class Research:
             )
         except Exception as exc:  # noqa: BLE001 - an unreadable chart is a gap, not a crash
             self.validation["failed"].append(f"walk_extraction_error p{page}: {exc}")
-            # The ANNOTATION layer is a separate read of the same page, and the
-            # open-loop pipeline attempts it whether or not the walk read
-            # succeeded. Returning here instead would cost the agent callout
-            # evidence the pipeline still has, exactly where a page is hardest
-            # to read. The bar labels are simply unknown.
+            # The ANNOTATION layer is a separate read of the same page, so it is
+            # attempted whether or not the walk read succeeded: returning here
+            # would cost the agent its callout evidence exactly where a page is
+            # hardest to read. The bar labels are simply unknown.
             return {
                 "error": f"the chart on {doc.doc_id} p{page} could not be read: {exc}",
                 "annotations": self._read_annotations(doc, page, case_desc, unit, ()),
@@ -1009,9 +1004,9 @@ class Research:
         self.validation["passed"] += passed
         self.validation["failed"] += walk["checks_failed"]
         # Classify the chart against the task comparison before the agent reads
-        # it, with the same code the pipeline uses on the author's behalf. A
-        # free-form question fixes no single comparison, so there is nothing to
-        # classify against: the agent reads the span off the chart's own labels.
+        # it. A free-form question fixes no single comparison, so there is
+        # nothing to classify against: the agent reads the span off the chart's
+        # own labels.
         if self.case.get("period") and self.case.get("comparator"):
             annotate_walks([walk], self.calendar, self.case["period"], self.case["comparator"])
         else:
@@ -1024,12 +1019,9 @@ class Research:
         self.walks.append(walk)
         self.records.append(record)
         self.pages_read.add((doc.doc_id, page))
-        # The chart's ANNOTATION layer, exactly as the open-loop pipeline reads
-        # it. Without it the two shells are not evidence-comparable: the
-        # pipeline's author sees the bank's own sub-split of each bar and the
-        # agent never could, so a difference in their answers would measure the
-        # tools, not the orchestration. One extra vision call per chart, and it
-        # degrades to nothing on any failure.
+        # The chart's ANNOTATION layer: the bank's own sub-split of each bar.
+        # One extra vision call per chart, and it degrades to nothing on any
+        # failure.
         bar_labels = tuple(str(bar.get("label", "")) for bar in walk.get("bars", []))
         return {
             "doc_id": doc.doc_id,
@@ -1465,10 +1457,8 @@ def finalise(attribution: Attribution, research: Research, case: dict, metric_cf
              registry: dict, headline_label: str | None) -> Attribution:
     """Run the estate's validators and confidence caps over a submission.
 
-    These are the pipeline's own output-level checks and caps, applied to the
-    agent's answer unchanged: the same functions, the same thresholds, the same
-    grading of which failure is fatal. An answer is scored by what it can
-    prove, whoever assembled it.
+    An answer is scored by what it can prove: the checks, the thresholds and
+    the grading of which failure is fatal do not read who assembled it.
     """
     calendar = research.calendar
     period, comparator = case["period"], case["comparator"]

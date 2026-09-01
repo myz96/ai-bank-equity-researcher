@@ -109,9 +109,7 @@ def main() -> int:
         print(json.dumps(manifest, indent=2))
         return 0
 
-    # Every case runner is reached through config.runner_for (ADR-0005). The
-    # closed-loop research agent is the only shell; the open-loop pipeline is
-    # frozen at the tag `pipeline-baseline-final`.
+    # Every case runner is reached through config.runner_for (ADR-0005).
     from .config import runner_for
 
     run_case = runner_for(args.combo)

@@ -228,8 +228,8 @@ def documents_for_question(
     answered out of the FY25 documents that publish it.
 
     A silent substitution would read as though the answer came from the period
-    the reader asked about. `notes` collects one line per substitution, and
-    both shells put those lines in the answer's limitations.
+    the reader asked about. `notes` collects one line per substitution, and the
+    caller puts those lines in the answer's limitations.
     """
     banks = [bank.upper()] if bank else banks_named(question)
     if not banks:

@@ -1,5 +1,5 @@
 """Paths, model combos, and pricing. Model roles are configured here, never
-hardcoded in pipeline code."""
+hardcoded at the call sites."""
 
 from __future__ import annotations
 

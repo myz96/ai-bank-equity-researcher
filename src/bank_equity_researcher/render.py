@@ -110,9 +110,6 @@ def render_report(attribution: Attribution) -> str:
 
 # --------------------------------------------------------------------------
 # The free-form ANSWER artifact
-#
-# A reader, a scorer and a judge must not be able to tell which shell wrote
-# an answer, so the answer's slug and its markdown have one implementation.
 # --------------------------------------------------------------------------
 
 
