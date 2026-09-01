@@ -38,19 +38,53 @@ QUANTITY_RE = re.compile(
 )
 
 # A movement stated in WORDS is still stated ("fell three basis points",
-# "grew two billion dollars"); the grounding cap stands down rather than call
-# a worded statement ungrounded. The same noun list as QUANTITY_RE's worded
-# branch — one standard, not two.
+# "grew two billion dollars"). The parser below reads the VALUE and the
+# noun, so a worded statement grounds only the number it actually states —
+# "rose ten basis points" must not stand in for a three-point fall.
 WORDED_QUANTITY_RE = re.compile(
-    rf"\b(?:{NUMBER_WORDS})\s+(?:{WORDED_NOUNS})\b",
+    rf"\b(?P<word>{NUMBER_WORDS})\s+(?P<noun>{WORDED_NOUNS})\b",
     re.IGNORECASE,
 )
+
+_WORD_VALUES = {
+    "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+    "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11,
+    "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15,
+    "sixteen": 16, "seventeen": 17, "eighteen": 18, "nineteen": 19,
+    "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60,
+    "seventy": 70, "eighty": 80, "ninety": 90, "hundred": 100,
+}
+
+_NOUN_UNITS = (
+    ("basis", "bps"), ("bps", "bps"), ("percentage", "ppt"), ("ppt", "ppt"),
+    ("per", "%"), ("percent", "%"), ("point", "ppt"),
+    ("million", "$m"), ("billion", "$bn"), ("dollar", "$m"),
+)
+
+
+def worded_quantities(text: str) -> list[tuple[float, str]]:
+    """Every (value, unit) a quote states in words: "fell three basis
+    points" -> (3.0, "bps"). Single number words only — compounds are rarer
+    than the movements this serves and a miss errs conservative."""
+    found = []
+    for match in WORDED_QUANTITY_RE.finditer(text or ""):
+        value = _WORD_VALUES.get(match.group("word").lower())
+        noun = match.group("noun").lower()
+        unit = next((u for prefix, u in _NOUN_UNITS if noun.startswith(prefix)), None)
+        if value is not None and unit is not None:
+            found.append((float(value), unit))
+    return found
 
 # A bare one- or two-digit token with no decimal, no thousands run and no
 # unit word beside it is as likely a label index or a note number as a
 # quantity ("See Note 1" printed the 1 that laundered a +1 ppt delta).
 # Stripping those tokens before a printed-check holds the grounding bar at
 # QUANTITY_RE's digit standard.
+# A digit BESIDE another number is a table-row run, not an index: "13 14"
+# is two ratio cells, "Stage 2 4,504" is an index and its figure. Stripping
+# the run capped a valid "Return on equity (%) 13 14" movement (Sol audit
+# round 6, executed repro), so a bare token survives when a number adjoins
+# it on either side.
 BARE_INDEX_RE = re.compile(
-    rf"(?<![\d.,$])\b\d{{1,2}}\b(?![.,]\d)(?!\s*(?:{UNIT_TOKENS}))"
+    rf"(?<![\d.,$])(?<!\d )\b\d{{1,2}}\b(?![.,]\d)(?!\s*(?:{UNIT_TOKENS}))(?! \d)"
 )

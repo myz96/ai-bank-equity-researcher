@@ -1095,6 +1095,7 @@ def judge_scorecard_lines(
     passed = sum(r["passed"] for r in judged)
     flagged = sum(r["flagged"] for r in judged)
     flagged_split = sum(r["flagged_split"] for r in judged)
+    flagged_truncated = sum(r.get("flagged_truncated", 0) for r in judged)
     flagged_unreadable = sum(r["flagged_unreadable"] for r in judged)
 
     lines = [f"# Narrative checklist scorecard — suite {suite}, combo {combo}", ""]
@@ -1112,7 +1113,9 @@ def judge_scorecard_lines(
         f"- checklist items judged: {items}",
         (
             f"- items flagged: {flagged} — {flagged_split} judge split (a human must read "
-            f"the fact), {flagged_unreadable} unreadable or unreachable judge (repeat the run)"
+            f"the fact), {flagged_truncated} truncated quote window (a human must read "
+            f"the dropped quotes), {flagged_unreadable} unreadable or unreachable judge "
+            "(repeat the run)"
         ),
         "",
         "## What a column means",

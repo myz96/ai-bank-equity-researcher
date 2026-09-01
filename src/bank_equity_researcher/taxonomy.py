@@ -232,6 +232,11 @@ TAXONOMY: dict[str, dict] = {
         ),
         "drivers": {
             "individual_provisions": "Individually assessed / single-name provisions",
+            "collective": (
+                "Total collective provision movement (parent of collective.volume, "
+                "collective.asset_quality; claim this for an undivided net-collective "
+                "row — a total is not one causal child)"
+            ),
             "collective.volume": "Collective provisions: portfolio growth",
             "collective.asset_quality": "Collective provisions: risk migration",
             "overlays_fla": "Forward-looking adjustments and overlays",

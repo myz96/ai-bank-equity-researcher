@@ -27,7 +27,7 @@ from __future__ import annotations
 import re
 
 from .gates import NOTHING_SUPPORTED_CAP
-from .quantities import BARE_INDEX_RE, WORDED_QUANTITY_RE
+from .quantities import BARE_INDEX_RE, worded_quantities
 from .schema import PRESENTATION_DOC_TYPES, EvidenceRecord
 
 # PA walk bars are exact, so their sum should reconcile within rounding of the
@@ -1518,16 +1518,23 @@ def cap_ungrounded_movement(attribution) -> bool:
     for record in attribution.evidence_records:
         if record.id not in cited_ids:
             continue
-        if WORDED_QUANTITY_RE.search(record.quote or ""):
-            return False
         quantity_text = BARE_INDEX_RE.sub(" ", record.quote or "")
+        worded = worded_quantities(record.quote or "")
         for value in (movement.from_value, movement.to_value, movement.delta):
             # quote_prints over the bare-index-stripped text: decimals,
             # thousands runs and unit-adjacent digits ground; "Note 1" does
-            # not. NumberFacts stay label-blind by design — the same standard
-            # every driver claim is grounded under.
-            if quote_prints(quantity_text, value, movement.unit) or any(
+            # not. A worded statement grounds only the VALUE it states —
+            # "rose ten basis points" is not a three-point fall. A NumberFact
+            # whose value survives only as a bare index is the mint gate's
+            # blind spot, so it is held to the same stripped-text standard.
+            if quote_prints(quantity_text, value, movement.unit):
+                return False
+            if any(_converted_prints(word_value, word_unit, abs(value), movement.unit)
+                   for word_value, word_unit in worded):
+                return False
+            if any(
                 _converted_prints(abs(number.value), number.unit, abs(value), movement.unit)
+                and quote_prints(quantity_text, number.value, number.unit)
                 for number in record.numbers
             ):
                 return False

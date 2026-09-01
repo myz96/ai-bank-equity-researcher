@@ -16,6 +16,11 @@ def _quote_line(ev_id: str, doc_id: str, pdf_page, printed_page, quote: str, ind
     for the note's own words. `indent` stays a parameter because that judge
     rule strips on lstrip() while render_answer nests quotes two spaces in."""
     page = f"printed p{printed_page}" if printed_page else f"PDF p{pdf_page}"
+    # One physical line, always: a newline inside a quote (chart annotations
+    # keep the model's bullet layout) would put source text on an unprefixed
+    # line, and answer_prose would then judge it as the analyst's own words
+    # (live repro in a saved fast-arm report).
+    quote = " ".join(str(quote).split())
     return f'{indent}> [{ev_id}] {doc_id}, {page}: "{quote}"'
 
 

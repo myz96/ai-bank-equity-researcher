@@ -322,8 +322,9 @@ HEADLINE_ATTRIBUTION = {
 
 def test_cited_quotes_includes_headline_citations():
     # The equality is exact, so it also holds out the record that HEADLINE_
-    # ATTRIBUTION carries and neither list cites.
-    assert cited_quotes(HEADLINE_ATTRIBUTION) == ["driver quote", "headline quote"]
+    # ATTRIBUTION carries and neither list cites. The headline's share leads
+    # so a later window truncation drops it last.
+    assert cited_quotes(HEADLINE_ATTRIBUTION) == ["headline quote", "driver quote"]
 
 
 def _many(driver_count: int, headline_count: int) -> dict:
@@ -345,20 +346,27 @@ def test_cited_quotes_never_starves_the_headline_when_the_cap_binds():
     window — the new citations were the first thing the cap threw away.
     """
     quotes = cited_quotes(_many(21, 5))
-    assert len(quotes) == judge_module.MAX_QUOTES
-    assert quotes[-5:] == [f"headline {i}" for i in range(5)]
+    # The adapter no longer truncates — judge_fact owns the window and FLAGS
+    # what it drops. The share property lives in the ORDER: every headline
+    # quote sits inside the first MAX_QUOTES entries.
+    assert len(quotes) == 26
+    window = quotes[: judge_module.MAX_QUOTES]
+    assert sum(1 for q in window if q.startswith("headline")) == 5
 
 
 def test_cited_quotes_splits_the_window_when_both_lists_are_long():
     quotes = cited_quotes(_many(30, 30))
-    assert len(quotes) == judge_module.MAX_QUOTES
-    assert sum(1 for q in quotes if q.startswith("headline")) == judge_module.MAX_QUOTES // 2
+    assert len(quotes) == 60
+    window = quotes[: judge_module.MAX_QUOTES]
+    assert sum(1 for q in window if q.startswith("headline")) == judge_module.MAX_QUOTES // 2
 
 
 def test_cited_quotes_gives_the_drivers_the_whole_window_when_alone():
-    """An answer with no headline citations reads exactly as it did before."""
+    """An answer with no headline citations gives drivers the whole window."""
     quotes = cited_quotes(_many(30, 0))
-    assert quotes == [f"driver {i}" for i in range(judge_module.MAX_QUOTES)]
+    assert quotes[: judge_module.MAX_QUOTES] == [
+        f"driver {i}" for i in range(judge_module.MAX_QUOTES)
+    ]
 
 
 def test_cited_quotes_lists_a_shared_record_once():
@@ -720,3 +728,73 @@ def test_the_residual_table_row_matches_the_header_width():
     header = [l for l in render_report(a).splitlines() if l.startswith("| Driver |")]
     assert lines and header
     assert lines[0].count("|") == header[0].count("|")
+
+
+def test_the_production_path_sees_its_own_truncation():
+    """cited_quotes no longer pre-cuts the list, so a fail whose supporting
+    quote sits past the window FLAGS in the real path too (pre-cut, the
+    judge saw exactly 24 and reported no truncation)."""
+    from bank_equity_researcher.judging import judge as J
+
+    class FakeLLM:
+        def chat_json(self, model, prompt, max_tokens=None):
+            if "does the NOTE state" in prompt or '"stated"' in prompt:
+                return {"stated": "stated", "why": ""}
+            return {"entailed": "not-entailed", "why": ""}
+
+    quotes = cited_quotes(_many(30, 0))
+    assert len(quotes) == 30
+    verdict = J.judge_fact(FakeLLM(), "a fact", "the note", quotes, ("j1",))
+    assert verdict.verdict == "flagged_for_human"
+    assert verdict.quotes_truncated is True
+
+
+def test_a_fact_the_note_never_states_fails_even_under_truncation():
+    """Truncation cannot explain absence from the note: unanimous absent
+    stays a FAIL and counts under not_stated."""
+    from bank_equity_researcher.judging import judge as J
+
+    class FakeLLM:
+        def chat_json(self, model, prompt, max_tokens=None):
+            if "does the NOTE state" in prompt or '"stated"' in prompt:
+                return {"stated": "absent", "why": ""}
+            return {"entailed": "not-entailed", "why": ""}
+
+    quotes = [f"filler {i}" for i in range(30)]
+    verdict = J.judge_fact(FakeLLM(), "a fact", "the note", quotes, ("j1",))
+    assert verdict.verdict == "fail"
+
+
+def test_truncation_flags_are_their_own_scorecard_category():
+    """A deterministic truncation flag must not read as an unreadable judge
+    ("repeat the run") — it needs a human on the dropped quotes."""
+    from bank_equity_researcher.judging import judge as J
+
+    class FakeLLM:
+        def chat_json(self, model, prompt, max_tokens=None):
+            if "does the NOTE state" in prompt or '"stated"' in prompt:
+                return {"stated": "stated", "why": ""}
+            return {"entailed": "not-entailed", "why": ""}
+
+    quotes = [f"filler {i}" for i in range(30)]
+    summary = J.judge_facts(FakeLLM(), ["a fact"], "the note", quotes, ("j1",))
+    assert summary["flagged_truncated"] == 1
+    assert summary["flagged_unreadable"] == 0
+
+
+def test_a_multiline_quote_cannot_leak_into_judged_prose():
+    """Chart-annotation quotes keep the model's bullet layout; every quote
+    renders on ONE prefixed line or answer_prose judges source text as the
+    analyst's own words (live repro in a saved fast-arm report)."""
+    from bank_equity_researcher.judging.judge import answer_prose
+    from bank_equity_researcher.render import render_report
+    from bank_equity_researcher.validation.schema import Attribution, EvidenceRecord
+
+    a = Attribution(bank="B", metric="nim", period="FY26", comparator="FY25", basis="cash",
+                    headline="Margin fell.", attribution_confidence=50,
+                    drivers=[], headline_evidence=["ev-1"],
+                    evidence_records=[EvidenceRecord(
+                        id="ev-1", doc_id="d", pdf_page=1,
+                        quote="[chart annotation] Volume costs:\n• Frontline bankers\n• Lenders")])
+    prose = answer_prose(render_report(a))
+    assert "Frontline bankers" not in prose

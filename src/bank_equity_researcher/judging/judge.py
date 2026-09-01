@@ -337,10 +337,11 @@ def _combine(
     if stated == STATED and entailed == ENTAILED:
         return build(PASS, stated, entailed,
                      f"the answer states the fact and the cited quotes entail it{detail}")
-    if quotes_truncated and entailed != ENTAILED and has_quotes:
+    if quotes_truncated and entailed != ENTAILED and has_quotes and stated == STATED:
         # The quote window was cut, so the supporting quote may be among the
         # dropped: an entailment fail under truncation is indeterminate and
-        # goes to a human, never into the failed population.
+        # goes to a human. A fact the note does not even STATE fails
+        # regardless — truncation cannot explain absence from the note.
         return build(FLAGGED, stated, entailed,
                      f"entailment failed under a truncated quote window{detail}")
     return build(FAIL, stated, entailed, f"stated={stated}; entailed={entailed}{detail}")
@@ -370,7 +371,8 @@ def judge_facts(
     # the fact; an unreadable or unreachable judge needs the run repeating.
     # One count for both hides which.
     flagged_split = sum(1 for v in flagged if v.reason.startswith("judges disagree"))
-    flagged_unreadable = len(flagged) - flagged_split
+    flagged_truncated = sum(1 for v in flagged if "truncated quote window" in v.reason)
+    flagged_unreadable = len(flagged) - flagged_split - flagged_truncated
     flagged = len(flagged)
     stated_not_entailed = sum(
         1 for v in verdicts if v.verdict == FAIL and v.stated == STATED and v.entailed == NOT_ENTAILED
@@ -379,6 +381,7 @@ def judge_facts(
     total = len(verdicts)
     return {
         "status": "judged",
+        "flagged_truncated": flagged_truncated,
         "judges": list(judges),
         "total": total,
         "passed": passed,
@@ -450,10 +453,11 @@ def cited_quotes(attribution: dict) -> list[str]:
     Records the answer never cited are not the answer's grounding, so they are
     not evidence for it here.
 
-    MAX_QUOTES bounds the window, and the two lists share it: neither may
-    starve the other. Drivers cite many records and a headline cites few, so
-    the drivers take every slot the headline does not need, and never fewer
-    than half.
+    The list is ORDERED so the judge's window shares fairly: the headline's
+    quotes come inside the first half, the drivers fill the rest. The window
+    itself is judge_fact's — it truncates and FLAGS what it drops; an adapter
+    that pre-cut the list hid the truncation from the flag (Sol review round
+    5, executed repro).
     """
     driver_ids = {e for driver in attribution.get("drivers", []) for e in driver.get("evidence", [])}
     headline_ids = {e for e in (attribution.get("headline_evidence") or [])} - driver_ids
@@ -463,9 +467,11 @@ def cited_quotes(attribution: dict) -> list[str]:
         return [r["quote"] for r in records if r.get("id") in wanted and r.get("quote")]
 
     driver_quotes, headline_quotes = quotes_of(driver_ids), quotes_of(headline_ids)
-    driver_room = MAX_QUOTES - min(len(headline_quotes), MAX_QUOTES // 2)
-    kept = driver_quotes[:driver_room]
-    return kept + headline_quotes[: MAX_QUOTES - len(kept)]
+    head_share = headline_quotes[: MAX_QUOTES // 2]
+    driver_room = MAX_QUOTES - len(head_share)
+    window = head_share + driver_quotes[:driver_room]
+    tail = driver_quotes[driver_room:] + headline_quotes[len(head_share):]
+    return window + tail
 
 
 __all__ = [
@@ -481,6 +487,7 @@ __all__ = [
     "Verdict",
     "answer_prose",
     "cited_quotes",
+    "crossref_answer_prose",
     "judge_fact",
     "judge_facts",
 ]

@@ -54,7 +54,7 @@ _CONTINUED = re.compile(r"\s*\((?:continued|cont\.?|cont'd)\)\s*$", re.IGNORECAS
 
 # "Note 2.2" / "refer to Appendix 6.2". "Notes" and "Appendices" are the plural
 # headings banks print above a reference COLUMN, so they are matched too.
-_REF_NOTE = re.compile(rf"(?i)\b(?:notes?|appendix|appendices)\s+({_NOTE_ID})\b")
+_REF_NOTE = re.compile(rf"(?i)\b(?:notes?|sections?|appendix|appendices)\s+({_NOTE_ID})\b")
 # "refer to page 21", "(page 106)", "Refer to slide 64", "pages 33-34".
 _REF_PAGE = re.compile(r"(?i)\b(?:pages?|slides?)\s+(\d{1,3})(?:\s*[-–]\s*(\d{1,3}))?\b")
 # A page number only counts as a REFERENCE when a referring word introduces it;

@@ -1257,3 +1257,32 @@ Gate: 415 tests, ruff clean, CLI runs, dev rescore identical.
   ordering via source order, both residual render branches, stale embedding
   rebuild, discover cache clears, the already-capped early return).
   Suite 428 -> 435.
+
+## Sol review r5 + audit r6 + arch r5 applied (2026-09-01)
+
+The three rounds convergently dismantled the afternoon grounding/truncation
+work; every finding fixed with probes and pins (suite 439):
+- The grounding cap is value-aware on all three branches:
+  quantities.worded_quantities parses worded statements to (value, unit)
+  ("rose ten basis points" no longer grounds a -3 fall; money-worded
+  movements ground); BARE_INDEX_RE spares digits with numeric neighbours
+  ("(%) 13 14" table rows survive; "See Note 1" still strips); NumberFacts
+  are held to the stripped-text standard (the mint-gate blind spot closed).
+  All seven Sol repros verified; replay 119 movements -> 5 firings, every
+  one a retired-arm artifact with a genuinely uncited movement, zero
+  live-arm.
+- The truncation flag works in the PRODUCTION path: cited_quotes orders
+  (headline share first) and no longer pre-cuts, judge_fact owns the window
+  and flags; a fact the note never states FAILS regardless (truncation
+  cannot explain absence); flagged_truncated is its own scorecard category
+  ("a human must read the dropped quotes", not "repeat the run").
+- The multiline-quote leak was NOT fixed by the earlier commit (the edit
+  silently failed to match) — Sol caught it live; the one-line collapse now
+  lands in _quote_line with a pin against the leaking artifact shape.
+- taxonomy: impairment gains the representable `collective` parent (an
+  undivided net-collective row is a total, not one causal child).
+- refs recognises "Section 1.1" pointers (the MQG MDA's house style); the
+  mid-page heading index gap stays noted, not fixed.
+- crossref_answer_prose exported properly. Arch r5 TASTE deferred with
+  reasons: the harness scorer split and the validate comparison-cluster
+  split go to the next architecture application round.
