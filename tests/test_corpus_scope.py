@@ -218,3 +218,29 @@ def test_distinct_stems_are_accepted(monkeypatch):
 def test_the_real_corpus_holds_the_invariant():
     """The committed manifests must keep their stems distinct."""
     C.all_documents()
+
+
+# ---------------------------------------------------------------------------
+# Review round 7: every manifest doc_type is in the shared vocabulary
+# ---------------------------------------------------------------------------
+
+
+def test_every_manifest_doc_type_is_in_the_vocabulary():
+    """A doc_type outside corpus.DOC_TYPES degrades handling in silence.
+
+    printed_page_of and walk_sum_tolerance both dispatch on the doc_type
+    string. The hand-built MQG manifest shipped "mda"/"presentation", so its
+    slides lost slide-page numbering and its walks were held to the 1.0 text
+    tolerance instead of the presentation lift (review round 7, 2026-09-01).
+    discover.py's prompt names the vocabulary, but a hand-built manifest
+    bypasses the prompt; this test does not.
+    """
+    for doc in C.all_documents():
+        assert doc.doc_type in C.DOC_TYPES, (
+            f"{doc.doc_id}: doc_type {doc.doc_type!r} is not in corpus.DOC_TYPES; "
+            "either use an existing term or add it there WITH its consumers checked"
+        )
+
+
+def test_presentation_doc_types_are_vocabulary_terms():
+    assert set(C.PRESENTATION_DOC_TYPES) <= C.DOC_TYPES

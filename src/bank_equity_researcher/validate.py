@@ -26,6 +26,8 @@ from __future__ import annotations
 
 import re
 
+from .corpus import PRESENTATION_DOC_TYPES
+
 # Profit Announcement walks label bars to two decimals of a percent (0.01% =
 # 1bp), so extraction should be exact; +-0.5bp absorbs float noise only.
 WALK_BAR_TOL_PA = 0.5
@@ -389,9 +391,7 @@ def walk_sum_tolerance(doc_type: str, unit: str = "bps") -> float:
     entered here a ppt walk was measured against 1.0 or 10.0, and no such walk
     could fail its own sum check.
     """
-    if normalize_unit(unit) in PRESENTATION_LIFT_UNITS and doc_type in (
-        "results_presentation", "investor_discussion_pack", "investor_presentation"
-    ):
+    if normalize_unit(unit) in PRESENTATION_LIFT_UNITS and doc_type in PRESENTATION_DOC_TYPES:
         return WALK_SUM_TOL_PRESENTATION
     return _tolerance_for(RECONCILE_TOL, unit, RECONCILE_TOL_DEFAULT)
 
@@ -1791,9 +1791,10 @@ def settle_ratio_scale(attribution, metric_unit: str | None, records=None) -> st
 # the offender afterwards: a driver the check proves wrong shipped at 95 and
 # entered the confidently-wrong population. EVIDENCE: the repro is synthetic —
 # tests/test_review_round5.py (Codex round-5 finding 2) builds the failing
-# driver and asserts the cap; no saved artifact fires either check, and
-# evals/results/round6-check.md rescores byte-identical to
-# evals/results/pre-cleanup-baseline.md with both names present. The whole
+# driver and asserts the cap; no saved artifact fires either check, and with
+# both names present evals/results/round6-check.jsonl is byte-identical to
+# evals/results/pre-cleanup-baseline.jsonl (the .md pair differs only in the
+# run-timestamp title). The whole
 # table pays because the failure indicts the COLUMN the table was read from —
 # a walk for another comparison, or the prior half's column — and one driver
 # reading the wrong column is evidence its neighbours were read the same way.

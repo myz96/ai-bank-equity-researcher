@@ -1,4 +1,5 @@
-"""Vision reads of a walk chart: its bars, and its callout layer (ADR-0002).
+"""Vision reads of a walk chart — its bars and its callout layer (ADR-0002) —
+plus the printed-page mapping every citation stamps (printed_page_of).
 Provenance is stamped by code, never by the model.
 
 The page-text extractor that used to sit here went with the open-loop shell:
@@ -10,7 +11,7 @@ from __future__ import annotations
 
 import re
 
-from .corpus import Document
+from .corpus import PRESENTATION_DOC_TYPES, Document
 from .llm import LLM
 from .schema import EvidenceRecord, NumberFact
 from .validate import walk_sum_tolerance
@@ -64,8 +65,6 @@ Rules:
 # the slide rather than reading it. The cap also bounds what one page can cost
 # in the author's context window.
 MAX_ANNOTATION_RECORDS = 12
-
-PRESENTATION_DOC_TYPES = ("results_presentation", "investor_presentation", "investor_discussion_pack")
 
 
 def _label_key(label) -> str:

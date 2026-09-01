@@ -3,6 +3,12 @@
 Status: DRAFT 2026-08-30. All bake-off rounds are measured and committed;
 final polish before submission.
 
+> STALE SECTIONS (2026-09-01): parts of this draft still describe the
+> open-loop pipeline as the current shell. That shell is retired — frozen at
+> the tag `pipeline-baseline-final` and deleted from main; the closed-loop
+> research agent (`research_agent.py`, ADR-0005) is the product. The rewrite
+> ships with the final report.
+
 This document records the four design decisions the project owns end-to-end:
 tools, context management, memory, and evals. Each section states the
 decision, the evidence behind it, and the alternatives that lost. The ADRs in

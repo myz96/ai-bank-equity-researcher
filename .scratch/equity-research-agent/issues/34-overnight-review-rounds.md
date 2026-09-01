@@ -751,3 +751,24 @@ Queued for the code-simplifier phase (judgement-call smells, both agents):
 Noted, no action: scope-creep list (out-of-time error taxonomy, committed
 overnight scorecards) — all defensible; `validate.py` "lived in author.py"
 comment is accurate history.
+
+## Round 8 — code-review skill, cycle 2 (2026-09-01)
+
+Both axes verified every cycle-1 fix. Six new findings, all doc-truth or
+drift-prevention, none behavioural; all fixed this cycle (gate: 444 tests,
+dev rescore identical to baseline, ruff delta zero):
+- corpus.py now owns the manifest doc_type vocabulary: DOC_TYPES + the shared
+  PRESENTATION_DOC_TYPES (extract.py and walk_sum_tolerance both import it —
+  their two hand-kept copies had already drifted apart in order). New tests
+  hold every committed manifest to the vocabulary, so the MQG class of drift
+  cannot recur silently.
+- validate.py evidence comment now states the match exactly (jsonl pair
+  byte-identical; md pair differs in the timestamp title). The stray
+  rescore jsonl committed in 94a987a is deleted.
+- design.md carries a STALE SECTIONS banner pointing at ADR-0005 until the
+  Wednesday rewrite; README's rotting counts ("32 stems", "32 tickets")
+  replaced with count-free wording; extract.py docstring now names both of
+  the module's jobs (vision walk reads + printed-page mapping).
+
+Convergence: cycle 1 found 2 hard + ~6 judgement; cycle 2 found 0 hard
+behavioural, 6 doc/count nits. Cycle 3 is the convergence check.

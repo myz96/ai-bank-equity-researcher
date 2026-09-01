@@ -115,4 +115,4 @@ milestone. `docs/design/eval-review-guide.md` documents every judgment call.
 - `out/` — case artifacts, including the frontier benchmark arms
   (`out/baseline-*`)
 - `.scratch/equity-research-agent/` — the wayfinder map and the full
-  decision history (32 tickets)
+  decision history, one ticket per decision
