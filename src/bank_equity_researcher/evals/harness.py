@@ -381,9 +381,9 @@ def run_question_suite(combo: str, bank: str | None = None, split: str = "dev",
 
 
 # ---------------------------------------------------------------------------
-# One typed tolerance. The constants live in validate.py with the reason
-# they have their value; this is the single place that applies them to
-# a comparison, so the harness and the deterministic checks cannot disagree.
+# One typed tolerance, applied here to every comparison. The SCORER_*
+# constants above are the grader's own — see their block for why they are
+# deliberately not shared with validate.py.
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)

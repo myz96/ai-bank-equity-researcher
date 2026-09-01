@@ -56,3 +56,15 @@ or as comments appended to ticket 26.
 - NAB/WBC iteration deferred by the depth-first decision.
 - An external senior review by Codex runs alongside yours; its findings will
   be triaged into tickets like everything else.
+
+## Vision-read quote strings in the entailment judge (2026-09-01)
+
+A walk-bar or chart-annotation record carries a quote string BUILT BY CODE
+from the extracted values ("[walk chart] ... -3", "[chart annotation] ..."),
+not page text; the verbatim gate (validation/quotes.py) never sees it, and
+its fidelity discipline is the walk sum checks instead. `cited_quotes` hands
+these strings to the entailment judge alongside true page quotes, under a
+prompt that calls them verbatim source quotes. Judgment call, kept: the
+strings state code-verified numbers, so entailment against them tests the
+right thing; relabelling them in the judge prompt would change eval
+semantics and belongs to a measured change, not a cleanup.

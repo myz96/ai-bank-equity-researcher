@@ -1056,3 +1056,23 @@ both prompts print. DECLINED: flattening build_answer's per-fact
 _recover_minted loop — touches citation recovery, needs a replay first.
 
 Gate: 374 tests, dev rescore identical, ruff 13.
+
+## Fable architecture round 2 applied (2026-09-01)
+
+Round-1 landings verified (prompts pure data; SCORER split clean). Applied:
+- quotes.py docstring narrowed to the truth — the gate covers TEXT quotes;
+  vision-read records carry code-built quote strings whose discipline is the
+  walk checks. The entailment-judge nuance (those strings enter the judge as
+  "verbatim source quotes") is a documented judgment call in
+  docs/design/eval-review-guide.md, kept as-is: relabelling changes eval
+  semantics and is not cleanup.
+- harness's stale "constants live in validate.py" comment now points at the
+  SCORER block.
+- research_agent's unused quote_key import and re-export deleted (one import
+  path to the gate).
+DEFERRED with reasons: moving finalise into validation (arguable seam, churn
+risk); splitting harness at the scorer boundary (noted as the natural seam);
+question_scope's synthetic metric shape (third noting — bundled into the
+escalation list for the user).
+
+Gate: 374 tests, dev rescore identical, ruff 13.

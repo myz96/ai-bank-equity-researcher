@@ -33,7 +33,7 @@ from ..tools.corpus import Document, documents_for_period, documents_for_questio
 from ..tools.extract import extract_walk, extract_walk_annotations, printed_page_of
 from ..tools.refs import relevance_terms, scan_page
 from ..tools.retrieve import retrieve
-from ..validation.quotes import match_quote, quote_key
+from ..validation.quotes import match_quote
 from ..validation.schema import (
     Attribution,
     Disagreement,
@@ -1404,7 +1404,6 @@ __all__ = [
     "build_attribution",
     "finalise",
     "question_scope",
-    "quote_key",
     "research_loop",
     "run_agent_case",
     "run_agent_question",

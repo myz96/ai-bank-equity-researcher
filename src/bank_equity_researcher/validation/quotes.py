@@ -1,7 +1,9 @@
-"""The verbatim-quote fidelity gate: is this quote on this page, and under
-which test? Applied twice — when `cite` mints a record and again when a
-submission's evidence list is resolved — and every minter of an
-EvidenceRecord shares it, so no producer can hold quotes to a laxer rule.
+"""The verbatim-quote fidelity gate for TEXT quotes: is this quote on this
+page, and under which test? Applied twice — when `cite` mints a record and
+again when a submission's evidence list is resolved. Vision-read records
+(walk bars, chart annotations) do not pass here: their quote strings are
+built by code from the extracted values, so their fidelity discipline is the
+walk checks, not a page-text match.
 """
 
 from __future__ import annotations
