@@ -1,8 +1,8 @@
-"""The package layering, pinned mechanically (Codex architecture round 2).
+"""The package layering, pinned mechanically.
 
-Two dependency cycles were broken on 2026-09-01 and must stay broken:
-validation importing tools (which dragged pymupdf into the contracts layer),
-and config importing agent (which made configuration a routing participant).
+Two dependency cycles are broken and must stay broken: validation importing
+tools (which dragged pymupdf into the contracts layer), and config importing
+agent (which made configuration a routing participant).
 """
 
 from __future__ import annotations

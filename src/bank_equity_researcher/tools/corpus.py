@@ -57,12 +57,8 @@ class Document:
 def _assert_distinct_stems() -> None:
     """Refuse a stem collision on EVERY load path, not only doc_alias_index.
 
-    The page-text and embedding caches key on the filename stem, so two
-    documents sharing one stem would serve one bank's pages for another's.
-    The all_documents() guard only ran when an alias index was built; cli
-    analyse/ask and evals run reach load_documents directly (Fable review
-    cycle 6, finding 3). Reads the manifests, not Document objects, so it
-    cannot recurse into load_documents.
+    Reads the manifests, not Document objects, so it cannot recurse into
+    load_documents.
     """
     stems: dict[str, str] = {}
     for bank in manifest_banks():

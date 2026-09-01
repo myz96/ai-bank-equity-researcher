@@ -76,9 +76,6 @@ def match_quote(quote: str, text: str) -> tuple[bool, str]:
     while still refusing a quote that STATES a number the page does not.
     Relaxing both sides would erase every one- and two-digit number from the
     comparison, so "the margin fell 5 basis points" would match a page saying 3.
-
-    One function, because the gate is applied twice - when `cite` mints a
-    record, and again when a submission's evidence list is resolved.
     """
     key = quote_key(quote)
     if key in quote_key(text):

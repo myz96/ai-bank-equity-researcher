@@ -182,15 +182,6 @@ Begin by searching. Submit only when you have the movement, the bank's own
 decomposition of it, and the reason behind each driver."""
 
 
-# --------------------------------------------------------------------------
-# The second task the same loop serves: a free-form research question.
-#
-# A question has no movement, no taxonomy and no single comparison, so its
-# submission is smaller: the note, the facts it rests on, a confidence and the
-# gaps.
-# --------------------------------------------------------------------------
-
-
 QUESTION_SYSTEM_PROMPT = f"""You are a first-pass banking-sector equity research analyst.
 
 You answer ONE question against the banks' own published documents, then you
@@ -260,11 +251,6 @@ before the note ships.
 Begin by searching. Submit when every clause of the question is answered or
 declared unanswerable."""
 
-
-# --------------------------------------------------------------------------
-# The tool surface. Each tool is a thin adapter over a function the estate
-# already calls.
-# --------------------------------------------------------------------------
 
 _NUMBER_SCHEMA = {
     "type": "object",

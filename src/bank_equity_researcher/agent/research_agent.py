@@ -1097,10 +1097,6 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                 )
                 continue
             if name != "submit":
-                # Budgets bind per CALL, not per turn. They were read once at
-                # the top of a turn, so a turn that began one call inside the
-                # budget dispatched every call it carried — measured at 25
-                # calls against a budget of 2.
                 # Cost binds per CALL as well. It was read once a turn, and
                 # one read_chart now costs TWO vision calls (the bars and
                 # the annotation layer) while counting as one tool call, so
@@ -1375,8 +1371,6 @@ def run_agent_question(bank: str | None, question: str, combo_name: str = LIVE_C
         deadline_monotonic=deadline,
     )
     if payload is None:
-        # An artifact still ships: it carries what was read and says plainly
-        # that nothing was concluded.
         payload = {
             "evidence": [{"id": record.id} for record in research.records],
             "answer": "",

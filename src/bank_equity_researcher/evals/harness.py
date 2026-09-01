@@ -45,8 +45,7 @@ from ..validation.validate import cross_source_view, normalize_unit
 # The GRADER'S OWN tolerances, deliberately not imported from the product's
 # validation constants although the values agree today: a loosened product
 # tolerance must show up as eval failures, and a grader that inherits the
-# loosening cannot see it (Fable architecture round 1, finding 1).
-# tests/test_scoring.py pins these numbers by literal value.
+# loosening cannot see it.
 SCORER_MONEY_ABS_TOL_M = 10.0
 SCORER_MONEY_REL_TOL = 0.01
 SCORER_RATIO_TOL_PPT = 0.1

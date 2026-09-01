@@ -1,8 +1,7 @@
 """The routing seams: every caller that answers a case or a question passes
 through here (ADR-0005), so no caller can measure one shell while wearing
 another's label. Routing lives beside the agent it routes to; config stays
-data only (Codex architecture round 1: the lazy imports in config made it a
-participant in a dependency cycle)."""
+data only."""
 
 from __future__ import annotations
 
@@ -14,8 +13,7 @@ def runner_for(combo_name: str):
 
     Every caller that answers a case — the CLI and the eval harness — goes
     through this one function, or `evals run --combo agentic` silently measures
-    one shell while wearing the other's label. The closed loop is the only
-    shell left, and the function stays as the seam that keeps a caller honest.
+    one shell while wearing the other's label.
     """
     _require_agent(combo_name)
     from .research_agent import run_agent_case
@@ -24,10 +22,10 @@ def runner_for(combo_name: str):
 
 
 def question_runner_for(combo_name: str):
-    """The free-form question runner. The same rule as runner_for, over the
-    other task: `ask` and `evals run --suite questions` reach the same closed
-    loop. Every question caller passes (bank, question, combo, periods) and
-    gets (output, out_dir), so none needs an adapter or a branch of its own."""
+    """The free-form question runner: `ask` and `evals run --suite questions`
+    reach the same closed loop. Every question caller passes (bank, question,
+    combo, periods) and gets (output, out_dir), so none needs an adapter or a
+    branch of its own."""
     _require_agent(combo_name)
     from .research_agent import run_agent_question
 

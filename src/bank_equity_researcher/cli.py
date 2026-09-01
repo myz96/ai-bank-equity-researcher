@@ -49,7 +49,6 @@ def main() -> int:
                            help="run: subset filter for fast loops, comma-separated matches "
                                 "against BANK-metric-PERIOD (e.g. 'cash_earnings' or 'nim-1H26')")
     evals_cmd.add_argument("--bank", default=None)
-    # rescore: score saved out/*/attribution.json artifacts again, no model calls.
     evals_cmd.add_argument("--since", default=None,
                            help="rescore: skip artifacts generated before this ISO timestamp")
     evals_cmd.add_argument("--until", default=None,
@@ -66,7 +65,6 @@ def main() -> int:
 
             card = run_crossref_suite(args.combo, args.bank)
         elif args.action == "judge":
-            # The judge grades SAVED out/*/ artifacts and runs no research.
             from .evals.harness import run_judge_suite
 
             card = run_judge_suite(args.suite, args.combo, args.bank)
