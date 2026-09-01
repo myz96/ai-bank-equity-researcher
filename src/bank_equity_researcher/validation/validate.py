@@ -1747,7 +1747,7 @@ def settle_ratio_scale(attribution, metric_unit: str | None, records=None) -> st
 # hardcoded-override policy. Without these two names nothing caps the offender
 # at all — a driver the check proves wrong shipped at 95 and entered the
 # confidently-wrong population. EVIDENCE: the repro is synthetic —
-# tests/test_review_round5.py (Codex round-5 finding 2) builds the failing
+# tests/test_confidence_caps.py (Codex round-5 finding 2) builds the failing
 # driver and asserts the cap; no saved artifact fires either check, and with
 # both names present evals/results/round6-check.jsonl is byte-identical to
 # evals/results/pre-cleanup-baseline.jsonl (the .md pair differs only in the

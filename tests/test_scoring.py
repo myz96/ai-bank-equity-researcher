@@ -167,10 +167,8 @@ TOLERANCE_TABLE = [
     ("sign_flip_inside_the_money_floor", "$m", 5.0, -5.0, False),
     ("sign_flip_gold_plus_one", "$m", 1.0, -9.0, False),
     ("sign_flip_inside_the_bps_floor", "bps", 0.3, -0.2, False),
-    ("sign_flip_inside_the_ppt_floor", "ppt", 0.05, -0.05, False),
     # A zero endpoint has no sign to flip, so the distance rule still decides.
     ("zero_target_still_matches_by_distance", "$m", 0.0, -5.0, True),
-    ("zero_value_still_matches_by_distance", "$m", -5.0, 0.0, True),
 ]
 
 
@@ -187,8 +185,7 @@ def test_money_tolerance_is_max_of_relative_and_absolute():
 
 @pytest.mark.parametrize(
     "raw,expected",
-    [("bps", "bps"), ("bpts", "bps"), ("bps of average GLAA", "bps"), ("$m", "$m"),
-     ("$ m", "$m"), ("ppt", "ppt"), ("%", "%"), (None, "")],
+    [("bpts", "bps"), ("bps of average GLAA", "bps"), ("$ m", "$m"), (None, "")],
 )
 def test_normalize_unit(raw, expected):
     assert normalize_unit(raw) == expected

@@ -154,11 +154,6 @@ def test_notes_index_groups_a_note_with_its_continuation_page():
     assert index["2.2"].title == "Provisions for Impairment and Asset Quality"
 
 
-def test_notes_index_never_points_a_note_at_the_contents_page():
-    index = refs.notes_index(_book())
-    assert all(2 not in note.pages for note in index.values())
-
-
 def test_notes_index_ignores_a_number_printed_deep_in_a_page():
     # PDF page 9 prints "2.2" below thirty filler rows: a table value, not a
     # heading.
@@ -195,11 +190,6 @@ def test_printed_page_map_resolves_the_offset():
     assert mapping[1] == 3
     assert mapping[4] == 6
     assert mapping[8] == 10
-
-
-def test_printed_page_map_ignores_a_lone_number_without_neighbours():
-    # PDF page 9 opens with "1  Segment note"; printed page 1 is page 3.
-    assert refs.printed_page_map(_book())[1] == 3
 
 
 # --- the marker scanner ------------------------------------------------------

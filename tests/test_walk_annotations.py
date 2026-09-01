@@ -75,23 +75,11 @@ def test_annotation_records_pair_each_label_with_its_own_value():
     assert records[1].numbers[0].value == -1.0
 
 
-def test_annotation_records_keep_the_label_verbatim_in_the_quote():
-    records = annotation_records(GOOD, _Doc(), 63, 61, _ids(), "bps")
-    assert records[0].quote == "[chart annotation] Asset Pricing: Home loans: Pricing +9"
-
-
 def test_annotation_records_keep_a_callout_that_carries_no_number():
     """A qualifying phrase beside a bar is evidence too; it just has no value."""
     records = annotation_records(GOOD, _Doc(), 63, 61, _ids(), "bps")
     assert records[2].numbers == []
     assert "Minimal impact on NII" in records[2].quote
-
-
-def test_annotation_records_stamp_provenance_in_code():
-    records = annotation_records(GOOD, _Doc(), 63, 61, _ids(), "bps")
-    assert [(r.doc_id, r.pdf_page, r.printed_page) for r in records] == [
-        ("BANK/FY21/results_presentation", 63, 61)
-    ] * 3
 
 
 @pytest.mark.parametrize(
@@ -100,7 +88,6 @@ def test_annotation_records_stamp_provenance_in_code():
         ("not an object", "a list reply is the wrong shape", [1, 2, 3]),
         ("no annotations key", "the key the prompt asked for is missing", {"bars": []}),
         ("annotations not a list", "a string is not a list of callouts", {"annotations": "none"}),
-        ("empty", "a chart with no callouts is a valid answer", {"annotations": []}),
         ("item not an object", "a bare string cannot carry a label", {"annotations": ["+9"]}),
         ("no label", "a number with no label is the defect, not the fix",
          {"annotations": [{"bar": "Liquids", "value": 9}]}),

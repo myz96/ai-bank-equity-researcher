@@ -36,6 +36,8 @@ from bank_equity_researcher.validation.validate import (
     check_drivers_reconcile,
     check_movement,
     check_walk,
+    movement_arithmetic_tolerance,
+    normalize_unit,
     reconcile_tolerance,
     walk_sum_tolerance,
 )
@@ -84,11 +86,6 @@ def test_ppt_drivers_that_sum_to_zero_fail_a_ppt_movement():
     passed, failed = check_drivers_reconcile(attribution)
     assert passed == []
     assert any(f.startswith("drivers_reconcile") for f in failed)
-
-
-def test_ppt_drivers_that_do_reconcile_still_pass():
-    attribution = _attribution("ppt", -0.2, [-0.15, -0.05])
-    assert check_drivers_reconcile(attribution)[0] == ["drivers_reconcile"]
 
 
 @pytest.mark.parametrize("unit,expected", [("bps", 1.0), ("ppt", RATIO_TOL_PPT), ("$m", 1.0)])
@@ -155,12 +152,6 @@ def test_a_ppt_walk_can_fail_its_sum_check():
     assert check_walk(bps_walk, "results_presentation", "bps")[0] == ["walk_sum"]
 
 
-def test_walk_sum_tolerance_keeps_its_bps_default():
-    """check_walk's callers pass the metric unit; the default stays bps."""
-    assert walk_sum_tolerance("profit_announcement") == 1.0
-    assert walk_sum_tolerance("results_presentation") == WALK_SUM_TOL_PRESENTATION
-
-
 # --------------------------------------------------------------------------
 # check_movement's flat 0.51 (item 1, the author normaliser's share)
 # --------------------------------------------------------------------------
@@ -175,6 +166,27 @@ def test_movement_arithmetic_is_unit_typed():
     # Basis points keep the tolerance they were calibrated with.
     bps = Movement(from_value=205.0, to_value=202.0, delta=-3.0, unit="bps")
     assert check_movement(bps)[0] == ["movement_arithmetic"]
+
+
+# --------------------------------------------------------------------------
+# One spelling per unit, everywhere a tolerance is keyed
+# --------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "raw,canonical",
+    [("PPT", "ppt"), ("bpts", "bps"), (" $ m", "$m"), ("$b", "$bn"), (None, "")],
+)
+def test_unit_spellings_canonicalise(raw, canonical):
+    assert normalize_unit(raw) == canonical
+
+
+def test_an_uppercase_unit_gets_its_own_tolerance():
+    """`unit="PPT"` took the default 1.0, so drivers totalling +0.6 passed a
+    -0.2 movement despite a 0.8 ppt gap."""
+    attribution = _attribution("PPT", -0.2, [])
+    assert reconcile_tolerance(attribution) == 0.1
+    assert movement_arithmetic_tolerance("PPT") == 0.1
 
 
 # --------------------------------------------------------------------------

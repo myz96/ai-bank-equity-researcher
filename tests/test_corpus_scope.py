@@ -30,17 +30,22 @@ def test_a_bank_named_in_full_is_recognised():
     assert C.banks_named("What drove National Australia Bank's FY25 margin?") == ["NAB"]
 
 
-def test_the_ticker_and_the_full_name_agree():
-    assert C.banks_named("NAB's FY25 result") == ["NAB"]
-    both = C.banks_named("National Australia Bank (NAB) FY25")
-    assert both == ["NAB"], "one bank named twice is still one bank"
-
-
 def test_a_full_name_does_not_swallow_its_neighbours():
     named = C.banks_named(
         "Compare National Australia Bank with Westpac and Commonwealth Bank of Australia."
     )
     assert named == ["NAB", "WBC", "CBA"]
+
+
+def test_a_question_names_its_own_periods():
+    assert C.periods_named("Across CBA, NAB and Westpac in FY25, who converted best?") == ["FY25"]
+    assert C.periods_named("from FY25 to FY26, and the 1H26 half") == ["FY25", "FY26", "1H26"]
+
+
+def test_the_newest_period_sorts_last():
+    assert sorted(["1H26", "FY25", "FY26", "2H25"], key=C.period_sort_key) == [
+        "FY25", "2H25", "1H26", "FY26"
+    ]
 
 
 def test_generic_words_alone_still_name_no_bank():
@@ -85,11 +90,6 @@ def test_a_period_the_corpus_holds_is_not_declared(only_fy25):
     assert notes == []
 
 
-def test_the_note_is_optional(only_fy25):
-    """Callers that do not ask for notes keep the old signature."""
-    assert C.documents_for_question("CBA FY26 margin", "CBA", ["FY26"])
-
-
 # ---------------------------------------------------------------------------
 # Item 15: a document name must identify its bank
 # ---------------------------------------------------------------------------
@@ -127,14 +127,6 @@ def test_a_name_with_the_wrong_bank_does_not_resolve():
     assert C.resolve_doc_name("CBA/FY25/results-book", INDEX) is None
 
 
-def test_a_name_with_the_wrong_period_does_not_resolve():
-    assert C.resolve_doc_name("NAB/FY26/results-book", INDEX) is None
-
-
-def test_an_empty_name_does_not_resolve():
-    assert C.resolve_doc_name("", INDEX) is None
-
-
 # ---------------------------------------------------------------------------
 # Item 16: the gate strips facts, not prose
 # ---------------------------------------------------------------------------
@@ -160,12 +152,6 @@ def test_stripping_a_fact_warns_that_the_prose_still_states_it():
     # One surviving fact means the answer is still an answer, so the
     # nothing-survived cap does not fire.
     assert confidence == 85
-
-
-def test_no_warning_when_nothing_is_stripped():
-    facts = [{"fact": "CET1 was 12.3%.", "citations": ["ev-1"]}]
-    _kept, limitations, _confidence = enforce_answer_gate(facts, [], 85, {"ev-1"})
-    assert not any("prose was NOT rewritten" in x for x in limitations)
 
 
 # ---------------------------------------------------------------------------
@@ -196,22 +182,6 @@ def test_two_documents_sharing_a_filename_stem_are_refused(monkeypatch):
     )
     with pytest.raises(RuntimeError, match="share the filename stem"):
         C.all_documents()
-
-
-def test_distinct_stems_are_accepted(monkeypatch):
-    class _Stemmed:
-        def __init__(self, bank, filename):
-            self.bank = bank
-            self.filename = filename
-            self.period = "FY25"
-            self.doc_id = f"{bank}/FY25/results_announcement"
-
-    monkeypatch.setattr(C, "manifest_banks", lambda: ["CBA", "NAB"])
-    monkeypatch.setattr(
-        C, "load_documents",
-        lambda bank: [_Stemmed(bank, f"{bank}-FY25-results-announcement.pdf")],
-    )
-    assert len(C.all_documents()) == 2
 
 
 def test_the_real_corpus_holds_the_invariant():

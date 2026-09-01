@@ -26,16 +26,20 @@ from bank_equity_researcher.validation.schema import (
     DriverClaim,
     EvidenceRecord,
     Movement,
+    NumberFact,
 )
 from bank_equity_researcher.validation.validate import (
+    RATIO_LEVEL_CEILING,
     _settle_basis,
     check_drivers_reconcile,
     check_movement_basis,
     check_movement_variant,
+    check_ratio_level,
     drop_off_unit_contributions,
     primary_basis,
     settle_charge_sign,
     settle_identity_scale,
+    settle_ratio_scale,
 )
 
 IMPAIRMENT = TAXONOMY["impairment"]
@@ -65,13 +69,6 @@ CASH_EARNINGS = TAXONOMY["cash_earnings"]
             IMPAIRMENT,
             {"from_value": 320.0, "to_value": -40.0, "delta": -360.0},
             (320.0, -40.0, -360.0),
-        ),
-        (
-            "benefit then charge",
-            "the comparator being a benefit is equally real",
-            IMPAIRMENT,
-            {"from_value": -40.0, "to_value": 320.0, "delta": 360.0},
-            (-40.0, 320.0, 360.0),
         ),
         (
             "metric with no charge convention",
@@ -178,15 +175,6 @@ def _movement(metric, source, basis="cash"):
             True,
         ),
         (
-            "cash basis named in a CBA row",
-            "CBA labels its own headline rows 'cash basis'",
-            "roe",
-            "row 'ROE - cash basis (%)', column FY25 -> column FY26",
-            "cash",
-            "Return on equity (cash basis)",
-            False,
-        ),
-        (
             "CET1 is skipped",
             "a regulatory capital ratio has no cash / statutory / ex-Notables basis",
             "cet1",
@@ -263,14 +251,6 @@ WBC_CTI_LABEL = "Expense to income ratio, ex Notable Items (excluding Notable It
             "the author wrote ROTE ex-notables; the registry spells it ex Notable Items",
             "roe",
             "row 'ROTE ex-notables', column FY24 -> column FY25",
-            WBC_ROE_LABEL,
-            False,
-        ),
-        (
-            "underscore in the citation",
-            "the extractor's own label spelling reaches the citation as ex_notables",
-            "roe",
-            "row 'ROTE ex_notables', column FY24 -> column FY25",
             WBC_ROE_LABEL,
             False,
         ),
@@ -374,18 +354,6 @@ def test_identity_scale_restates_the_wbc_roe_split():
     assert note in attribution.limitations
 
 
-def test_identity_scale_restates_the_cba_roe_split():
-    """The same defect on the other side of zero, with a zero residual."""
-    attribution = _identity(
-        "roe", 10.2, 11.5,
-        [("earnings_effect", 146.0, "ppt"), ("equity_effect", -16.0, "ppt")],
-        residual=0.0,
-    )
-    assert settle_identity_scale(attribution, TAXONOMY["roe"]["method"]) is not None
-    assert [d.contribution.value for d in attribution.drivers] == [1.46, -0.16]
-    assert not check_drivers_reconcile(attribution)[1]
-
-
 def test_identity_scale_rescales_a_residual_written_on_the_same_scale():
     """The residual is part of the identity, so it moves with it — but only
     when the identity closes that way."""
@@ -449,16 +417,6 @@ def test_identity_scale_ignores_a_split_stated_in_another_unit():
         [("earnings_effect", -442.0, "$m"), ("equity_effect", 0.56, "ppt")],
         residual=0.0,
     )
-    assert settle_identity_scale(attribution, TAXONOMY["roe"]["method"]) is None
-
-
-def test_identity_scale_is_silent_without_a_movement():
-    attribution = _identity(
-        "roe", 11.21, 10.97,
-        [("earnings_effect", -23.76, "ppt")],
-        residual=0.0,
-    )
-    attribution.movement = None
     assert settle_identity_scale(attribution, TAXONOMY["roe"]["method"]) is None
 
 
@@ -549,3 +507,177 @@ def test_a_measures_block_naming_no_basis_word_still_defaults_cash():
     """The surviving default: under a measures block every committed registry
     is an Australian major, where cash earnings is the headline convention."""
     assert primary_basis({"measures": {"core_profit": "profit"}}) == "cash"
+
+
+# ---------------------------------------------------------------------------
+# A ratio's LEVEL must be ratio-sized, and the corrector keys on the METRIC
+#
+# Nothing validated that a ratio's LEVEL is ratio-sized, so an ROE submitted as
+# 1160 -> 1140 "ppt" passed movement arithmetic, reconciliation and the scale
+# normaliser at once: 1160 + -20 = 1140 is self-consistent, the drivers
+# reconciled at the same wrong scale, and settle_identity_scale needs a
+# contribution larger than the level, which nothing was.
+# ---------------------------------------------------------------------------
+
+
+def _ratio(unit, movement, metric, records=(), drivers=()):
+    return Attribution(
+        bank="CBA",
+        metric=metric,
+        period="1H26",
+        comparator="1H25",
+        basis="cash",
+        movement=Movement(
+            from_value=movement[0], to_value=movement[1], delta=movement[2], unit=unit
+        ),
+        drivers=[
+            DriverClaim(
+                canonical=canonical,
+                contribution=Contribution(value=value, unit=driver_unit or unit),
+                confidence=85,
+                evidence=[],
+            )
+            for canonical, value, driver_unit in drivers
+        ],
+        evidence_records=list(records),
+    )
+
+
+def _percent_record(quote, numbers):
+    return EvidenceRecord(
+        id="ev-1",
+        doc_id="CBA/1H26/profit_announcement",
+        pdf_page=34,
+        kind="table",
+        quote=quote,
+        numbers=[NumberFact(label=label, value=value, unit=unit) for label, value, unit in numbers],
+    )
+
+
+ROE_RECORD_NUMBERS = [("ROE FY25", 11.4, "%"), ("ROE FY24", 11.6, "%")]
+ROE_QUOTE = "Cash return on equity 11.4% 11.6% (20 bps)"
+
+
+def test_the_largest_real_ratio_in_the_saved_set_passes():
+    """Westpac's FY25 cost-to-income ratio of 53.04 is the largest legitimate
+    level the eval corpus holds; the ceiling sits 3.8x above it."""
+    assert check_ratio_level(
+        Movement(from_value=53.04, to_value=51.8, delta=-1.24, unit="ppt")
+    )[1] == []
+    assert RATIO_LEVEL_CEILING == 200.0
+
+
+def test_a_money_movement_is_never_asked_to_be_ratio_sized():
+    assert check_ratio_level(
+        Movement(from_value=5132.0, to_value=5445.0, delta=313.0, unit="$m")
+    ) == ([], [])
+
+
+def test_the_ratio_level_check_keys_on_the_metric_unit():
+    """The check read the model's own label, so a ppt metric submitted as
+    "1160 bps" was never asked to be ratio-sized."""
+    movement = Movement(from_value=1160.0, to_value=1140.0, delta=-20.0, unit="bps")
+    assert check_ratio_level(movement, "ppt")[1] != []
+    assert check_ratio_level(movement, "ppt")[1][0].startswith("movement_level_not_ratio_sized")
+    # A metric whose own unit IS basis points keeps its basis-point levels.
+    assert check_ratio_level(movement, "bps") == ([], [])
+
+
+def test_the_ratio_corrector_settles_the_movement_unit():
+    """Reviewer round-4 finding 2, verbatim.
+
+    The NAB FY25 ROE submission carried the metric's numbers in basis points
+    AND the label "bps". The corrector divided the numbers by 100 and left the
+    label, so the artifact shipped "11.6 -> 11.4, -0.2 bps" — the gold movement
+    written in a unit 100x out.
+    """
+    attribution = _ratio(
+        "bps", (1160.0, 1140.0, -20.0), "roe",
+        records=[_percent_record(ROE_QUOTE, ROE_RECORD_NUMBERS)],
+    )
+    note = settle_ratio_scale(attribution, "ppt")
+    assert note is not None
+    assert (attribution.movement.from_value, attribution.movement.to_value) == (11.6, 11.4)
+    assert attribution.movement.delta == -0.2
+    assert attribution.movement.unit == "ppt"
+    assert "bps" in note and "ppt" in note
+    assert check_ratio_level(attribution.movement, "ppt")[1] == []
+
+
+def test_the_ratio_corrector_does_not_reverse_the_percent_to_bps_lift():
+    """Reviewer C finding 2, verbatim.
+
+    CET1's taxonomy unit is bps. The model labels the movement "%", the lift
+    multiplies the endpoints by 100, and `settle_ratio_scale` — keying on the
+    model's own label rather than the METRIC's unit, which the taxonomy fixes —
+    divided them straight back. No check then fires, and the artifact ships
+    +0.1 % against a gold of +10 bps, carrying two limitations that contradict
+    each other.
+    """
+    record = _percent_record(
+        "Common Equity Tier 1 ratio 12.20% 12.30%",
+        [("CET1 Sep 24", 12.20, "%"), ("CET1 Sep 25", 12.30, "%")],
+    )
+    attribution = _ratio("%", (1220.0, 1230.0, 10.0), "cet1", records=[record])
+    assert settle_ratio_scale(attribution, "bps") is None
+    assert (attribution.movement.from_value, attribution.movement.to_value) == (1220.0, 1230.0)
+    assert attribution.movement.delta == 10.0
+
+
+def test_the_ratio_corrector_stays_silent_without_percent_evidence():
+    """A movement already in points cannot pass the test: no page prints an
+    ROE of 0.116 per cent."""
+    record = _percent_record("Return on equity 11.6%", [("ROE", 11.6, "%")])
+    attribution = _ratio("ppt", (11.6, 11.4, -0.2), "roe", records=[record])
+    assert settle_ratio_scale(attribution, "ppt") is None
+    assert attribution.movement.from_value == 11.6
+
+
+def test_a_money_metric_never_reaches_the_ratio_corrector():
+    assert settle_ratio_scale(_ratio("$m", (5132.0, 5445.0, 313.0), "cash_earnings"), "$m") is None
+
+
+# ---------------------------------------------------------------------------
+# The reconciliation SUM is unit-typed, for contributions AND for the residual
+# ---------------------------------------------------------------------------
+
+
+def test_a_basis_point_bar_no_longer_reconciles_a_dollar_bridge():
+    """Round 1 made the tolerance unit-typed and left the addition unit-blind."""
+    attribution = _ratio(
+        "$m", (5132.0, 5445.0, 313.0), "cash_earnings",
+        drivers=[("nii", 310.0, None), ("mix", 3.0, "bps")],
+    )
+    passed, failed = check_drivers_reconcile(attribution)
+    assert passed == []
+    assert any(f.startswith("drivers_unit_mismatch") for f in failed)
+    assert any(f.startswith("drivers_reconcile") for f in failed)
+
+
+def test_three_basis_points_do_not_close_a_dollar_bridge():
+    """Reviewer C finding 4 and Codex finding 5, verbatim.
+
+    The unit-typed sum covered the CONTRIBUTIONS and left the RESIDUAL
+    unfiltered, so `drivers_reconcile` PASSED beside its own
+    `drivers_unit_mismatch` failure.
+    """
+    attribution = _ratio(
+        "$m", (5132.0, 5445.0, 313.0), "cash_earnings",
+        drivers=[("net_interest_income", 310.0, None)],
+    )
+    attribution.residual = Contribution(value=3.0, unit="bps")
+    passed, failed = check_drivers_reconcile(attribution)
+    assert "drivers_reconcile" not in passed
+    assert any(f.startswith("drivers_reconcile") for f in failed)
+    assert any(f.startswith("drivers_unit_mismatch") for f in failed)
+
+
+def test_a_residual_with_no_unit_still_closes_the_bridge():
+    """An unlabelled residual makes no competing unit claim, so it is read in
+    the movement's unit, exactly as the contribution filter reads it."""
+    attribution = _ratio(
+        "$m", (5132.0, 5445.0, 313.0), "cash_earnings",
+        drivers=[("net_interest_income", 310.0, None)],
+    )
+    attribution.residual = Contribution(value=3.0, unit="")
+    assert "drivers_reconcile" in check_drivers_reconcile(attribution)[0]

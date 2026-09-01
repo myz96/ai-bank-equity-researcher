@@ -913,3 +913,18 @@ Imports rewritten in src/tests/scripts; ruff --fix sorted the shuffled
 blocks and cleared 6 pre-existing I001s (src+tests lint 21 -> 15).
 
 Gate: 443 tests, CLI --help runs, dev rescore identical to baseline.
+
+## Test pruning (2026-09-01) — LAST cleanup phase before final proof
+
+443 tests / 15 files -> 349 tests / 13 files. The four review-round files
+are gone; their keepers moved with their docstring receipts into
+behaviour-named homes, plus two new files: test_quote_grounding.py (the
+quote-numbers/prints/states matrix, rounds 2-4 merged and deduped) and
+test_confidence_caps.py (cap_* rules, WHOLE_TABLE_FAILURES, null
+confidence). Deletions were near-duplicates, subsumed parametrize rows, and
+re-assertions of pins held elsewhere. Three proposal deviations, each a
+sole-pin keep (walk_extraction_error surfacing, bank_language label
+positive pin, residual/ratio branch pairs). validate.py's evidence citation
+now points at test_confidence_caps.py.
+
+Gate: 349 passed, ruff 15 (all pre-existing), dev rescore identical.

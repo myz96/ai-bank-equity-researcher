@@ -7,8 +7,12 @@ the rule that a provider's own price for a call beats the per-token table.
 
 from __future__ import annotations
 
+import time
+
+import httpx
 import pytest
 
+from bank_equity_researcher import llm as L
 from bank_equity_researcher.llm import Usage, with_cache_breakpoint
 
 
@@ -56,25 +60,77 @@ def test_usage_falls_back_to_the_table_when_no_price_is_reported():
     assert usage.cost_usd == 30.0
 
 
-def test_network_gaps_are_waited_out_not_charged(monkeypatch):
-    """A dead network (DNS gone on a hotspot) is waited out through the grace
-    ladder without consuming attempts; a genuine error still fails fast."""
-    from bank_equity_researcher import llm as L
+# ---------------------------------------------------------------------------
+# The grace ladder classifies by exception TYPE
+#
+# The ladder classified a dead network by the ENGLISH of its message, so the
+# timeout shape of a hotspot gap — the gap the ladder exists for — burned the
+# five ordinary attempts instead.
+# ---------------------------------------------------------------------------
 
-    monkeypatch.setattr(L.time, "sleep", lambda s: None)
+
+@pytest.mark.parametrize(
+    "exc,grace",
+    [
+        # Fable's executed shapes. The first already passed on its message; the
+        # next three are the hotspot gap the ladder exists for and every one of
+        # them returned False.
+        (httpx.ConnectError("[Errno 8] nodename nor servname provided, or not known"), True),
+        (httpx.ConnectTimeout("timed out"), True),
+        (httpx.ConnectTimeout(""), True),
+        (httpx.ConnectError("[Errno 60] Operation timed out"), True),
+        # A read-phase timeout stays fail-fast: a stall mid-body is one stuck
+        # provider route, and retrying on another route beats waiting.
+        (httpx.ReadTimeout("timed out"), False),
+        # The response-body budget is a read-phase abort as well.
+        (L.ResponseDeadline("response abandoned after 320s and 12 bytes"), False),
+        # A genuine request error never earns grace.
+        (RuntimeError("HTTP 500: server exploded"), False),
+    ],
+)
+def test_the_grace_ladder_reads_the_exception_type(exc, grace):
+    assert L._network_error(exc) is grace
+
+
+def test_a_wrapped_connection_failure_still_earns_grace():
+    """A transport error the client re-raises inside another error is the same
+    dead network. The chain is walked, so the wrapper cannot hide it."""
+    try:
+        try:
+            raise httpx.ConnectError("[Errno 60] Operation timed out")
+        except httpx.ConnectError as cause:
+            raise RuntimeError("request failed") from cause
+    except RuntimeError as exc:
+        assert L._network_error(exc) is True
+
+
+def test_a_plain_message_mark_still_earns_grace():
+    """The message marks stay as the fallback for a shape httpx does not
+    raise: the OSError a socket layer hands up unwrapped."""
+    assert L._network_error(OSError(8, "nodename nor servname provided, or not known")) is True
+
+
+# ---------------------------------------------------------------------------
+# The ladder is bounded by the case deadline and sleeps once per retry
+#
+# No call carried the case's own deadline, so one `chat_tools` call could hold
+# ~9 minutes of grace sleeps after the budget was already spent.
+# ---------------------------------------------------------------------------
+
+
+def _sleepless(monkeypatch) -> list[float]:
+    slept: list[float] = []
+    monkeypatch.setattr(L.time, "sleep", slept.append)
+    return slept
+
+
+def test_five_server_errors_sleep_the_original_ladder_and_not_after_the_last(monkeypatch):
+    """Finding 7's repro: the while-loop conversion slept [2, 4, 8, 16, 32] —
+    62 seconds, 32 of them after no attempt remained. The loop before it slept
+    [1, 2, 4, 8, 16], and the last of those was wasted too."""
+    slept = _sleepless(monkeypatch)
     client = L.LLM()
     calls = {"n": 0}
-
-    def flaky_post(payload, deadline):
-        calls["n"] += 1
-        if calls["n"] <= 8:  # more failures than the 5 normal attempts
-            raise OSError(8, "nodename nor servname provided, or not known")
-        return 200, '{"choices":[{"message":{"content":"OK"}}],"usage":{}}'
-
-    monkeypatch.setattr(client, "_post", flaky_post)
-    assert client.chat("m", "p") == "OK"
-
-    calls["n"] = 0
 
     def broken_post(payload, deadline):
         calls["n"] += 1
@@ -83,4 +139,94 @@ def test_network_gaps_are_waited_out_not_charged(monkeypatch):
     monkeypatch.setattr(client, "_post", broken_post)
     with pytest.raises(RuntimeError):
         client.chat("m", "p")
-    assert calls["n"] == 5  # normal attempts only, no grace for real errors
+    assert calls["n"] == 5
+    assert slept == [1, 2, 4, 8]
+
+
+def test_a_deadline_already_past_stops_the_call_before_it_posts(monkeypatch):
+    """The case is over, so a new attempt is a call made after the budget."""
+    slept = _sleepless(monkeypatch)
+    client = L.LLM()
+    calls = {"n": 0}
+
+    def counting_post(payload, deadline):
+        calls["n"] += 1
+        return 200, b'{"choices":[{"message":{"content":"OK"}}],"usage":{}}'
+
+    monkeypatch.setattr(client, "_post", counting_post)
+    with pytest.raises(RuntimeError, match="deadline"):
+        client.chat("m", "p", deadline_monotonic=time.monotonic() - 1)
+    assert calls["n"] == 0
+    assert slept == []
+
+
+def test_a_grace_wait_that_would_outlive_the_case_is_not_taken(monkeypatch):
+    """Finding 4's repro, in the shape that costs the most: one call could hold
+    twelve 45-second grace waits, roughly nine minutes, after the case's own
+    wall clock had already run out."""
+    slept = _sleepless(monkeypatch)
+    client = L.LLM()
+    calls = {"n": 0}
+
+    def dead_network(payload, deadline):
+        calls["n"] += 1
+        raise httpx.ConnectTimeout("timed out")
+
+    monkeypatch.setattr(client, "_post", dead_network)
+    with pytest.raises(RuntimeError, match="deadline"):
+        # Ten seconds left, and one grace wait is 45.
+        client.chat("m", "p", deadline_monotonic=time.monotonic() + 10)
+    assert calls["n"] == 1
+    assert slept == []
+
+
+def test_the_request_budget_never_outlives_the_case(monkeypatch):
+    """A single request may not be given more time than the case has left."""
+    client = L.LLM()
+    seen: list[float] = []
+
+    def recording_post(payload, deadline):
+        seen.append(deadline)
+        return 200, b'{"choices":[{"message":{"content":"OK"}}],"usage":{}}'
+
+    monkeypatch.setattr(client, "_post", recording_post)
+    assert client.chat("m", "p", deadline_monotonic=time.monotonic() + 30) == "OK"
+    assert seen and seen[0] <= 30
+
+
+def test_a_call_with_no_deadline_keeps_the_full_ladder(monkeypatch):
+    """The deadline is OPTIONAL: a caller that sets none is unchanged, and a
+    dead network is waited out through the grace ladder without consuming the
+    five ordinary attempts."""
+    monkeypatch.setattr(L, "NETWORK_GRACE_SLEEP", 0)
+    _sleepless(monkeypatch)
+    client = L.LLM()
+    calls = {"n": 0}
+
+    def flaky_post(payload, deadline):
+        calls["n"] += 1
+        if calls["n"] <= 8:  # more failures than the 5 normal attempts
+            raise httpx.ConnectTimeout("timed out")
+        return 200, b'{"choices":[{"message":{"content":"OK"}}],"usage":{}}'
+
+    monkeypatch.setattr(client, "_post", flaky_post)
+    assert client.chat("m", "p") == "OK"
+
+
+def test_chat_tools_carries_the_same_deadline_discipline(monkeypatch):
+    """The tool loop is where the nine minutes were spent, so it needs the
+    bound more than chat() does."""
+    slept = _sleepless(monkeypatch)
+    client = L.LLM()
+    calls = {"n": 0}
+
+    def dead_network(payload, deadline):
+        calls["n"] += 1
+        raise httpx.ConnectError("[Errno 61] Connection refused")
+
+    monkeypatch.setattr(client, "_post", dead_network)
+    with pytest.raises(RuntimeError, match="deadline"):
+        client.chat_tools("m", [{"role": "user", "content": "p"}], [],
+                          deadline_monotonic=time.monotonic() + 10)
+    assert calls["n"] == 1
+    assert slept == []
