@@ -1372,7 +1372,7 @@ def build_attribution(payload: dict, research: Research, case: dict, metric_cfg:
 
     # _settle_basis records its own substitution in reply["limitations"], so it
     # runs before the limitations list is read out of the reply.
-    basis = _settle_basis(reply.get("basis", "cash"), registry, records, reply)
+    basis = _settle_basis(reply.get("basis"), registry, records, reply)
     limitations = [str(item) for item in reply.get("limitations") or []] + dropped
     if rejections:
         limitations.append(

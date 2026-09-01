@@ -28,11 +28,13 @@ from bank_equity_researcher.schema import (
 )
 from bank_equity_researcher.taxonomy import TAXONOMY
 from bank_equity_researcher.validate import (
+    _settle_basis,
     check_drivers_reconcile,
     check_movement,
     check_movement_basis,
     check_movement_variant,
     drop_off_unit_contributions,
+    primary_basis,
     settle_charge_sign,
     settle_identity_scale,
 )
@@ -90,7 +92,7 @@ def test_settle_charge_sign(name, why, taxonomy, movement, expected):
 
 
 def test_impairment_carries_the_charge_convention():
-    """The flag lives in the taxonomy, so author.py stays bank-agnostic."""
+    """The flag lives in the taxonomy, so the normalisers stay bank-agnostic."""
     assert IMPAIRMENT["sign_convention"] == "positive_charge"
     assert "sign_convention" not in CASH_EARNINGS
 
@@ -508,8 +510,6 @@ def test_a_measures_less_registry_settles_no_basis():
     limitation claimed "the registry names cash as the bank's headline basis"
     — a false claim. MQG (statutory NPAT, skeleton registry) hit exactly this.
     """
-    from bank_equity_researcher.validate import _settle_basis, primary_basis
-
     assert primary_basis({}) is None
     assert primary_basis({"measures": {}}) is None
     reply: dict = {}
@@ -518,9 +518,35 @@ def test_a_measures_less_registry_settles_no_basis():
 
 
 def test_a_registry_with_measures_still_normalises_an_unprinted_basis():
-    from bank_equity_researcher.validate import _settle_basis
-
     registry = {"measures": {"core_profit": "cash earnings"}}
     reply: dict = {}
     assert _settle_basis("statutory", registry, [], reply) == "cash"
     assert any("Basis normalised" in x for x in reply["limitations"])
+
+
+def test_no_declared_basis_and_no_registry_knowledge_says_as_reported():
+    """An empty declaration used to fall to a hardcoded "cash".
+
+    MQG reports statutory NPAT and its skeleton registry names no basis, so
+    "cash" was invented knowledge shipped without a limitation. "as reported"
+    states what is actually known: nothing was declared, nothing overrode it.
+    """
+    reply: dict = {}
+    assert _settle_basis(None, {}, [], reply) == "as reported"
+    assert _settle_basis("  ", {}, [], reply) == "as reported"
+    assert "limitations" not in reply
+
+
+def test_no_declared_basis_takes_the_registry_headline():
+    reply: dict = {}
+    cash_bank = {"measures": {"core_profit": "cash earnings"}}
+    assert _settle_basis(None, cash_bank, [], reply) == "cash"
+    wbc_like = {"measures": {"core_profit": "net profit excluding Notable Items"}}
+    assert _settle_basis(None, wbc_like, [], reply) == "ex_notables"
+    assert "limitations" not in reply
+
+
+def test_a_measures_block_naming_no_basis_word_still_defaults_cash():
+    """The surviving default: under a measures block every committed registry
+    is an Australian major, where cash earnings is the headline convention."""
+    assert primary_basis({"measures": {"core_profit": "profit"}}) == "cash"

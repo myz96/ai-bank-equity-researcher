@@ -7,6 +7,8 @@ the rule that a provider's own price for a call beats the per-token table.
 
 from __future__ import annotations
 
+import pytest
+
 from bank_equity_researcher.llm import Usage, with_cache_breakpoint
 
 
@@ -59,7 +61,7 @@ def test_network_gaps_are_waited_out_not_charged(monkeypatch):
     ladder without consuming attempts; a genuine error still fails fast."""
     from bank_equity_researcher import llm as L
 
-    monkeypatch.setattr(L, "NETWORK_GRACE_SLEEP", 0)
+    monkeypatch.setattr(L.time, "sleep", lambda s: None)
     client = L.LLM()
     calls = {"n": 0}
 
@@ -79,9 +81,6 @@ def test_network_gaps_are_waited_out_not_charged(monkeypatch):
         raise RuntimeError("HTTP 500: server exploded")
 
     monkeypatch.setattr(client, "_post", broken_post)
-    monkeypatch.setattr(L.time, "sleep", lambda s: None)
-    try:
+    with pytest.raises(RuntimeError):
         client.chat("m", "p")
-        raise AssertionError("should have failed")
-    except RuntimeError:
-        assert calls["n"] == 5  # normal attempts only, no grace for real errors
+    assert calls["n"] == 5  # normal attempts only, no grace for real errors

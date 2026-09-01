@@ -1105,14 +1105,24 @@ def _settle_basis(basis: str, registry: dict, records: list[EvidenceRecord], rep
     was scored wrong on its basis alone. When the claimed basis appears nowhere
     in the cited quotes, fall back to the bank's headline basis from the
     registry and record the substitution.
+
+    This function owns the no-declaration default too. It used to be a
+    hardcoded "cash" (here and at the caller), which shipped an invented basis
+    for a bank whose registry names none — MQG reports statutory NPAT and its
+    skeleton registry knows no basis, so "cash" was fabricated knowledge
+    (review round 11). Now: the registry's headline basis stands in when it
+    knows one, and "as reported" says plainly that nothing was declared or
+    known. Never "cash" without a registry behind it.
     """
-    basis = str(basis or "").strip().lower() or "cash"
+    declared = str(basis or "").strip().lower()
     primary = primary_basis(registry)
-    if primary is None or basis == primary or _basis_printed(basis, records):
-        return basis
+    if not declared:
+        return primary or "as reported"
+    if primary is None or declared == primary or _basis_printed(declared, records):
+        return declared
     reply.setdefault("limitations", []).append(
-        f"Basis normalised from '{basis}' to '{primary}': no page in evidence prints "
-        f"'{basis}' beside the movement, and the registry names {primary} as the bank's "
+        f"Basis normalised from '{declared}' to '{primary}': no page in evidence prints "
+        f"'{declared}' beside the movement, and the registry names {primary} as the bank's "
         "headline basis."
     )
     return primary

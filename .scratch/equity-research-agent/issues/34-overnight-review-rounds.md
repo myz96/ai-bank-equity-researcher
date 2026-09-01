@@ -814,3 +814,23 @@ Both axes verified every cycle-3 fix. Three new findings, all fixed:
 
 Gate: 450 tests, dev rescore identical to baseline, ruff steady at 26
 (all pre-existing, queued).
+
+## Round 11 — code-review skill, cycle 5 (2026-09-01) — CONVERGED
+
+Both axes verified every cycle-4 fix. Findings this cycle:
+- Spec (minor, fixed): the no-declaration path still invented "cash" — at
+  research_agent's reply.get("basis", "cash") and _settle_basis's `or "cash"`.
+  _settle_basis now owns the whole default: registry headline when known,
+  "as reported" when nothing is declared and nothing is known, never "cash"
+  without a registry behind it. Three new tests pin the paths; the surviving
+  cash default (measures block naming no basis word) is documented and tested.
+- Standards (cosmetic, fixed): stale author.py mention in a test docstring;
+  in-body imports moved to the top block; try/except-AssertionError converted
+  to pytest.raises and the double sleep-skip collapsed to one patch.
+
+Gate: 453 tests, dev rescore identical to baseline, ruff steady at 26.
+
+CONVERGENCE CALL: cycle 1 found 2 hard + judgement backlog; cycle 2 six
+doc-truth nits; cycles 3-5 found only consequences of in-review fixes plus
+cosmetics, and every verification passed. The code-review skill phase closes
+here. The queued judgement-call smells hand over to the code-simplifier phase.
