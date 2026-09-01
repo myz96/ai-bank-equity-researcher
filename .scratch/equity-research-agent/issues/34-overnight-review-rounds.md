@@ -928,3 +928,20 @@ positive pin, residual/ratio branch pairs). validate.py's evidence citation
 now points at test_confidence_caps.py.
 
 Gate: 349 passed, ruff 15 (all pre-existing), dev rescore identical.
+
+## FINAL PROOF (2026-09-01 ~12:00) — cleanup day CLOSED
+
+Live spot-check on the fully cleaned code (post review-convergence,
+simplifier, comment sweeps, restructure, test pruning): CBA NIM FY26,
+fresh end-to-end run. Result: movement OK (208 -> 205 bps), recall 7/7,
+precision 7/7, extraction 7/7, all 7 claims correct at confidence 93,
+Brier 0.007, confidently-wrong 0.0, $0.0148, 366s, 19 tool calls, no
+budget touched, zero failed checks. Scorecard:
+evals/results/spotcheck-postcleanup.md.
+
+Static gates held through every commit: suite green at each step
+(443 -> 349 by design), dev rescore byte-identical to
+pre-cleanup-baseline at every commit, lint 29 -> 15 with zero new hits.
+
+Open (not cleanup): the user-invoked architecture skill (blocked on
+their keystroke); exam + holdout runs; Wednesday report.
