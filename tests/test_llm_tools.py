@@ -249,3 +249,29 @@ def test_the_usage_trace_books_request_time_and_sleeps(monkeypatch):
     assert client.usage.slept_s == 1
     assert client.usage.request_s >= 0
     assert client.usage.slowest_call_s >= 0
+
+
+def test_an_empty_reply_reroutes_and_widens_the_budget(monkeypatch):
+    """An empty reply is a MODEL-side failure the blind retry re-hit five
+    times (the frozen exam lost 2 of 10 questions to one broken provider).
+    The retry ignores the provider that served it and widens max_tokens —
+    reasoning may have eaten the whole budget."""
+    monkeypatch.setattr(L.time, "sleep", lambda s: None)
+    client = L.LLM()
+    seen: list[dict] = []
+
+    def flaky_post(payload, deadline):
+        seen.append({"provider": payload.get("provider"),
+                     "max_tokens": payload["max_tokens"]})
+        if len(seen) == 1:
+            return 200, b'{"provider":"BadRoute","choices":[{"message":{"content":null}}],"usage":{}}'
+        return 200, b'{"choices":[{"message":{"content":"OK","tool_calls":null}}],"usage":{}}'
+
+    monkeypatch.setattr(client, "_post", flaky_post)
+    message = client.chat_tools("m", [{"role": "user", "content": "p"}], [],
+                                max_tokens=4000)
+    assert message["content"] == "OK"
+    assert seen[0]["provider"] is None
+    assert seen[1]["provider"] == {"ignore": ["BadRoute"]}
+    assert seen[1]["max_tokens"] == 6000
+    assert client.usage.empty_replies == 1

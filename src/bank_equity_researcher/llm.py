@@ -90,6 +90,7 @@ class Usage:
     retry_attempts: int = 0
     grace_waits: int = 0
     slept_s: float = 0.0
+    empty_replies: int = 0
     by_model: dict = field(default_factory=dict)
 
     def add(self, model: str, prompt: int, completion: int, cost_usd: float | None = None) -> None:
@@ -341,16 +342,25 @@ class LLM:
         if payload["model"] not in ALWAYS_REASONS:
             payload["reasoning"] = {"enabled": False}
         retries = RETRIES
-        deadline_s = max(DEADLINE_FLOOR_S, max_tokens * DEADLINE_SECONDS_PER_TOKEN)
         last_error: Exception | None = None
         attempt = 0
         grace = 0
         out_of_time = False
+        # Providers that served an EMPTY reply this call. Retrying the same
+        # request often re-routes to the same broken provider, so five
+        # attempts hit one wall (the frozen exam lost 2 of 10 questions to
+        # exactly this). The retry ignores the offender and widens
+        # max_tokens: glm's reasoning can eat the whole budget, leaving no
+        # room for the tool call — more room is the other honest fix.
+        empty_from: list[str] = []
         while attempt < retries:
             left = _time_left(deadline_monotonic)
             if left is not None and left <= 0:
                 out_of_time = True
                 break
+            deadline_s = max(
+                DEADLINE_FLOOR_S, payload["max_tokens"] * DEADLINE_SECONDS_PER_TOKEN
+            )
             try:
                 _t0 = time.monotonic()
                 status, body = self._post(payload, _request_budget(deadline_s, deadline_monotonic))
@@ -378,7 +388,17 @@ class LLM:
                 data = json.loads(body)
                 if "choices" not in data:
                     raise RuntimeError(f"no choices: {str(data)[:300]}")
-                return parse(data)
+                try:
+                    return parse(data)
+                except RuntimeError as parse_exc:
+                    if "empty" in str(parse_exc).lower():
+                        self.usage.empty_replies += 1
+                        served_by = str(data.get("provider") or "")
+                        if served_by and served_by not in empty_from:
+                            empty_from.append(served_by)
+                            payload["provider"] = {"ignore": list(empty_from)}
+                        payload["max_tokens"] = int(payload["max_tokens"] * 1.5)
+                    raise
             except Exception as exc:  # noqa: BLE001
                 last_error = exc
                 if _network_error(exc) and grace < NETWORK_GRACE:
