@@ -8,11 +8,8 @@ Two defects the WBC FY25 cases exposed:
 - The shell read "Return on average ordinary equity" when Westpac headlines
   ROTE ex Notable Items one line below. The registry already named the row.
 
-These normalisers lived in author.py until ticket 33 wave 3 froze the open-loop
-arm at the tag `pipeline-baseline-final`. They now live in validate.py beside
-the checks that read their output, and the closed loop calls every one of them.
-The tests that reached them through the deleted author shell now call them
-directly or run through research_agent.build_attribution.
+The normalisers live in validation/validate.py beside the checks that read
+their output; the closed loop calls every one of them.
 """
 
 from __future__ import annotations

@@ -26,10 +26,10 @@ or as comments appended to ticket 26.
 
 ## 3. The scoring code (20 min)
 
-- `src/bank_equity_researcher/evals.py` — `score_case` (P/R semantics,
+- `src/bank_equity_researcher/evals/harness.py` — `score_case` (P/R semantics,
   alt_framings, `_match` tolerances), `calibration` (Brier, confidently-wrong,
   bucket edges), `score_crossref` (location coverage).
-- `src/bank_equity_researcher/validate.py` — every tolerance constant and its
+- `src/bank_equity_researcher/validation/validate.py` — every tolerance constant and its
   justifying comment.
 - Challenge: find a way a wrong answer scores right (tolerance too loose,
   alt_framings too generous, parent/child id matching) or a right answer
