@@ -68,3 +68,22 @@ prompt that calls them verbatim source quotes. Judgment call, kept: the
 strings state code-verified numbers, so entailment against them tests the
 right thing; relabelling them in the judge prompt would change eval
 semantics and belongs to a measured change, not a cleanup.
+
+## NAB 1H26 NIM: no YoY walk exists (2026-09-01)
+
+The bank's 1H26 walk charts both describe Sep 25 -> Mar 26 (half on half);
+no published walk covers 1H26 vs 1H25. Two consequences, both judgment
+calls, kept:
+- The gold labels the case tier "walk" while its own provenance cites the
+  results book TABLE. The extraction column therefore prints 0/6 where
+  "n/a (bank publishes no walk for this comparison)" is the truer reading;
+  the driver columns carry the real result (6/6 recall and precision).
+- Two correct YoY values coincide numerically with half-on-half bars, so
+  comparison_leak fired and the whole-table cap took confidence to 40 — the
+  designed conservative direction (a right answer under-claimed, never a
+  wrong one certified). Exempting claims whose citations never touch the
+  offending chart would be a measured gate change, deliberately not made
+  during cleanup.
+Also noted: the presentation-chart record for this case carries a
+percent-to-bps slip (1.78% read as 1780 bps) in a context-only record the
+agent itself excluded.
