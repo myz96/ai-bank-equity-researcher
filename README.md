@@ -32,7 +32,8 @@ guarantee on dev (0.026 vs the flagship's 0.0) — the trade is documented in
 evals/results/fast-*-finalcode.md.
 
 Scorecards: `evals/results/` (dev baseline, `agentic-holdout-final.md`,
-`mqg-exam-frozen-20260902.md`, `mqg-exam-resit-20260902.md`).
+`mqg-exam-frozen-20260902.md`, `mqg-exam-resit-20260902.md`). Artifacts are
+generated locally per run under `out/` (gitignored).
 
 ## Quick start
 
@@ -137,6 +138,5 @@ built, so the current system stays simple and measured.
   gitignored and rebuilt from the manifests
 - `registry/` — per-bank disclosure-language maps (labels, never numbers)
 - `evals/gold/` + `evals/results/` — gold cases and every scorecard
-- `out/` — saved case artifacts; `evals rescore` regenerates every numeric
-  scorecard from them with no model calls
+- `out/` — case artifacts, generated locally per run (gitignored)
 - `tests/` — the executable specification (450 tests, offline)
