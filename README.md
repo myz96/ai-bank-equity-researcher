@@ -89,8 +89,7 @@ arithmetic, unit and sign conventions, comparison classification, tolerance
 checks, and confidence caps. Everything the agent produces is checked by
 arithmetic against cited evidence; failed checks surface in the output and
 cap confidence, never silently dropped. Budgets (tool calls, cost, wall
-clock) are runaway rails, not steering. The full rationale lives in the
-[design doc](docs/design.md) and the ADRs.
+clock) are runaway rails, not steering. The full rationale lives in [DESIGN.md](DESIGN.md).
 
 ## Evals
 
@@ -103,7 +102,7 @@ only if the note states it AND the cited quotes entail it; judge
 disagreement flags a human. The holdout estate is layered — dev cases,
 a frozen in-repo quarantine slate designed by an independent model, and a
 sealed case set held outside the repository, administered once at the final
-milestone. `docs/design/eval-review-guide.md` documents every judgment call.
+milestone. DESIGN.md's appendix records the judgment calls.
 
 ## Next steps (designed, not built)
 
@@ -121,7 +120,7 @@ built, so the current system stays simple and measured.
 - **A quote-completeness bounce for questions.** At submit, list any stated
   number that no cited quote prints and ask once for the quote or a
   limitation. A bounce-and-retry, never a strip — the hard version was
-  ruled out as fragile for free prose (see docs/design.md, "the two answer
+  ruled out as fragile for free prose (see DESIGN.md, "the two answer
   shapes").
 - **A cheap verifier pass.** A second cheap-model call that reads only the
   draft answer and names unquoted claims and unopened documents, feeding
@@ -133,15 +132,11 @@ built, so the current system stays simple and measured.
   `tools/` (corpus, retrieval, references, chart reads, discovery),
   `validation/` (the contract and checks), `judging/`, `evals/`, and
   cross-cutting top-level modules (cli, config, llm, render, taxonomy)
-- `docs/design.md` — the design doc: the four owned decisions
-- `docs/adr/` — architecture decision records
-- `docs/design/` — driver taxonomy, frontier benchmarks, eval review guide
-- `CONTEXT.md` — the domain glossary (walk vs bridge, bases, conventions)
+- `DESIGN.md` — the design doc: the four owned decisions
 - `manifest/` + `scripts/fetch_corpus.py` — document sources; `data/` is
   gitignored and rebuilt from the manifests
 - `registry/` — per-bank disclosure-language maps (labels, never numbers)
 - `evals/gold/` + `evals/results/` — gold cases and every scorecard
-- `out/` — case artifacts, including the frontier benchmark arms
-  (`out/baseline-*`)
-- `.scratch/equity-research-agent/` — the wayfinder map and the full
-  decision history, one ticket per decision
+- `out/` — saved case artifacts; `evals rescore` regenerates every numeric
+  scorecard from them with no model calls
+- `tests/` — the executable specification (450 tests, offline)

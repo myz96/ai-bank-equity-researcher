@@ -5,9 +5,7 @@ Status: FINAL 2026-09-02. All suites run and committed; scorecards under
 
 This document records the four design decisions the project owns end-to-end:
 tools, context management, memory, and evals. Each section states the
-decision, the evidence behind it, and the alternatives that lost. The ADRs in
-`docs/adr/` hold the point-in-time rationale; the wayfinder tickets in
-`.scratch/equity-research-agent/issues/` hold the full decision history.
+decision, the evidence behind it, and the alternatives that lost.
 
 ## The task
 
@@ -22,8 +20,6 @@ solved cheap-model problem; the "why" layer is a context problem, not a
 model-size problem.** The four decisions below all serve that split.
 
 ## Decision 1 — Tools: a closed loop over a deterministic estate
-
-(ADR-0002, ADR-0004, ADR-0005)
 
 The product is one tool-calling model researching in a closed loop
 (`agent/research_agent.py` + `agent/toolbox.py`). The tool surface is small
@@ -67,8 +63,6 @@ catching it when it slips); agent frameworks (the estate is plain Python in
 five small packages; a framework would hide exactly the layer we control).
 
 ## Decision 2 — Context management: let the model choose pages, hold it to evidence
-
-(ADR-0002, ADR-0005)
 
 Documents are 100-200 page PDFs; six can be in scope for one case. Nothing
 fits in one window and most pages are irrelevant. Version one assembled
@@ -119,8 +113,6 @@ evaluators who need the machine to move.
 
 ## Decision 3 — Memory: a versioned registry, not a vector store
 
-(ADR-0003)
-
 What the system remembers between runs is exactly what a sector analyst
 carries between reporting seasons: how each bank talks. The registry
 (`registry/*.json`) maps each bank's verbatim disclosure labels to a
@@ -165,8 +157,6 @@ Where we do not, we keep the checks loose rather than over-engineer ones
 that break on honest prose.
 
 ## Decision 4 — Evals: calibration first, judges second, holdouts sealed
-
-(`docs/design/eval-review-guide.md`)
 
 The eval harness answers three questions in order of importance:
 
@@ -220,3 +210,22 @@ $0.01-0.13 in 6-30 minutes (flagship) or ~$0.01 in ~4 minutes (fast). The
 frontier ceiling stays ~100x the flagship's price per case; the system's
 job was to close the insight gap without paying that gap in price, and the
 sealed exam measures how much of it closed.
+
+
+## Appendix — judgment calls and probes worth knowing
+
+- **NAB 1H26 NIM**: the bank publishes no year-on-year walk (both charts are
+  half-on-half). The agent read them, refused their bars for the wrong
+  comparison, built the split from the driver table, and got all six drivers
+  right — then capped itself to 40 because two correct values coincide with
+  the wrong chart's bars and the leak check cannot prove innocence. The
+  designed direction: under-claim a right answer, never certify a wrong one.
+- **Vision quote strings**: walk-bar records carry code-built quote strings,
+  not page text; their fidelity discipline is the walk sum checks, and the
+  entailment judge receives them as quotes. Kept deliberately: the strings
+  state code-verified numbers.
+- **Frontier probes on the hardest misses**: three frontier-model subagents
+  answered the worst-missed questions under the benchmark protocol. They
+  found most of the pages the loop missed — the residual gap is retrieval
+  depth, priced at roughly 100x per case. The README's next-steps section
+  holds the designed (unbuilt) responses.
