@@ -252,3 +252,25 @@ def test_an_empty_reply_reroutes_and_widens_the_budget(monkeypatch):
     assert seen[0]["provider"] is None
     assert seen[1]["provider"] == {"ignore": ["BadRoute"]}
     assert seen[1]["max_tokens"] == 6000
+
+
+def test_a_token_limit_400_after_widening_restores_the_budget(monkeypatch):
+    """The empty-reply widening can outgrow a provider's ceiling; a 400 then
+    repeated the oversized request four times and failed the call."""
+    monkeypatch.setattr(L.time, "sleep", lambda s: None)
+    client = L.LLM()
+    seen = []
+
+    def post(payload, deadline):
+        seen.append(payload["max_tokens"])
+        if len(seen) == 1:
+            return 200, b'{"provider":"Bad","choices":[{"message":{"content":null}}],"usage":{}}'
+        if payload["max_tokens"] > 4000:
+            return 400, b'maximum output tokens exceeded'
+        return 200, b'{"choices":[{"message":{"content":"OK","tool_calls":null}}],"usage":{}}'
+
+    monkeypatch.setattr(client, "_post", post)
+    message = client.chat_tools("m", [{"role": "user", "content": "p"}], [],
+                                max_tokens=4000)
+    assert message["content"] == "OK"
+    assert seen == [4000, 6000, 4000]

@@ -286,7 +286,8 @@ TOOL_SPECS: list[dict] = [
                     "items": {
                         "type": "array",
                         "items": {"type": "string"},
-                        "description": "3-10 expected evidence locations or topics",
+                        "description": "3-12 expected evidence locations or topics",
+                        "minItems": 1,
                     },
                 },
                 "required": ["items"],

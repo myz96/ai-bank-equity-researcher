@@ -353,8 +353,16 @@ class LLM:
             )
             try:
                 status, body = self._post(payload, _request_budget(deadline_s, deadline_monotonic))
-                if status == 400 and "reasoning" in payload:
-                    payload.pop("reasoning")
+                if status == 400 and (
+                    "reasoning" in payload or payload["max_tokens"] > max_tokens
+                ):
+                    # Two recoverable 400s, fixed together in one retry: a
+                    # provider that rejects the reasoning flag, and a request
+                    # the empty-reply widening pushed past the provider's
+                    # output ceiling (restore the caller's own budget rather
+                    # than repeat an oversized request).
+                    payload.pop("reasoning", None)
+                    payload["max_tokens"] = min(payload["max_tokens"], max_tokens)
                     continue
                 if status == 429:
                     attempt += 1

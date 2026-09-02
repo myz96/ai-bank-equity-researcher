@@ -382,4 +382,5 @@ def test_a_period_range_names_every_year_inside_it():
 
 def test_a_decade_range_expands_and_a_century_wrap_does_not():
     assert "FY20" in C.periods_named("from FY15 to FY25")
-    assert C.periods_named("from FY99 to FY01") == ["FY99", "FY01"]
+    assert C.periods_named("from FY99 to FY01") == ["FY99", "FY01", "FY00"]
+    assert "FY23" in C.periods_named("FY21—FY26 study")

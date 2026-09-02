@@ -187,7 +187,7 @@ def banks_named(text: str) -> list[str]:
 # "and" separates a range only under "between": "compare FY21 and FY26"
 # names two years, not six.
 _PERIOD_RANGE_RE = re.compile(
-    r"\bFY\s?(?:20)?(\d{2})\s*(?:-|–|to|through)\s*FY\s?(?:20)?(\d{2})\b"
+    r"\bFY\s?(?:20)?(\d{2})\s*(?:-|–|—|to|through)\s*FY\s?(?:20)?(\d{2})\b"
     r"|\bbetween\s+FY\s?(?:20)?(\d{2})\s+and\s+FY\s?(?:20)?(\d{2})\b",
     re.IGNORECASE,
 )
@@ -203,12 +203,15 @@ def periods_named(text: str) -> list[str]:
             seen.append(period)
     for a, b, c_, d in _PERIOD_RANGE_RE.findall(text or ""):
         start, end = (a, b) if a else (c_, d)
-        lo, hi = sorted((int(start), int(end)))
-        # A span wider than 15 years is a century wrap ("FY99 to FY01") or a
+        lo, hi = int(start), int(end)
+        # "FY99 to FY01" crosses the century: read it modulo 100 so the
+        # interior year still expands. A span wider than 15 years is a
         # misparse, never a real question; a decade-long study is real.
+        if hi < lo:
+            hi += 100
         if hi - lo <= 15:
             for year in range(lo, hi + 1):
-                period = f"FY{year:02d}"
+                period = f"FY{year % 100:02d}"
                 if period not in seen:
                     seen.append(period)
     return seen
