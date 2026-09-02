@@ -229,28 +229,6 @@ def test_chat_tools_carries_the_same_deadline_discipline(monkeypatch):
     assert calls["n"] == 1
     assert slept == []
 
-
-def test_the_usage_trace_books_request_time_and_sleeps(monkeypatch):
-    """Where a slow case's time went is measured, not inferred: request wall
-    time, the slowest call, retry counts, and ladder sleeps all book."""
-    monkeypatch.setattr(L.time, "sleep", lambda s: None)
-    client = L.LLM()
-    calls = {"n": 0}
-
-    def flaky_post(payload, deadline):
-        calls["n"] += 1
-        if calls["n"] == 1:
-            raise RuntimeError("HTTP 500: server exploded")
-        return 200, b'{"choices":[{"message":{"content":"OK"}}],"usage":{}}'
-
-    monkeypatch.setattr(client, "_post", flaky_post)
-    assert client.chat("m", "p") == "OK"
-    assert client.usage.retry_attempts == 1
-    assert client.usage.slept_s == 1
-    assert client.usage.request_s >= 0
-    assert client.usage.slowest_call_s >= 0
-
-
 def test_an_empty_reply_reroutes_and_widens_the_budget(monkeypatch):
     """An empty reply is a MODEL-side failure the blind retry re-hit five
     times (the frozen exam lost 2 of 10 questions to one broken provider).
@@ -274,4 +252,3 @@ def test_an_empty_reply_reroutes_and_widens_the_budget(monkeypatch):
     assert seen[0]["provider"] is None
     assert seen[1]["provider"] == {"ignore": ["BadRoute"]}
     assert seen[1]["max_tokens"] == 6000
-    assert client.usage.empty_replies == 1

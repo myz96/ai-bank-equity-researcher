@@ -86,11 +86,6 @@ class _Usage:
         self.prompt_tokens = 0
         self.completion_tokens = 0
         self.calls = 0
-        self.request_s = 0.0
-        self.slowest_call_s = 0.0
-        self.retry_attempts = 0
-        self.grace_waits = 0
-        self.slept_s = 0.0
 
 
 class _LLM:
@@ -2644,3 +2639,25 @@ def test_no_plan_means_no_bounce(wired, monkeypatch):
     llm = _LLM([_assistant(_tool_call("c1", "submit", _submission()))])
     attribution, _out = _run(llm, monkeypatch)
     assert attribution.movement.delta == -3
+
+
+def test_a_cut_off_submit_gets_the_cut_off_instruction_not_the_plan(wired, monkeypatch):
+    """The truncated-submit check runs BEFORE the plan bounce: a cut-off
+    payload needs "shorten and resend", not "check your plan" (which burned
+    the one bounce on a non-submission)."""
+    truncated = {"role": "assistant", "content": None, "tool_calls": [{
+        "id": "c0", "type": "function",
+        "function": {"name": "plan_research", "arguments": '{"items": ["the walk"]}'},
+    }]}
+    cut = {"role": "assistant", "content": None, "tool_calls": [{
+        "id": "c1", "type": "function",
+        "function": {"name": "submit", "arguments": '{"movement": {"from_value": 2.0'},
+    }]}
+    llm = _LLM([truncated, cut,
+                _assistant(_tool_call("c2", "submit", _submission())),
+                _assistant(_tool_call("c3", "submit", _submission()))])
+    attribution, _out = _run(llm, monkeypatch)
+    assert attribution.movement.delta == -3
+    joined = str(llm.last_messages)
+    assert "cut off" in joined
+    assert joined.index("cut off") < joined.index("YOUR OWN")

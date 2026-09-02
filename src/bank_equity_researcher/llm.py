@@ -81,16 +81,6 @@ class Usage:
     calls: int = 0
     json_retries: int = 0
     deadline_aborts: int = 0
-    # The latency trace: where a slow case's time actually went. request_s is
-    # wall time inside _post (the model thinking + the wire); slept_s is the
-    # ladder's own waiting (backoff, 429, grace); retry_attempts and
-    # grace_waits count the failures that caused it.
-    request_s: float = 0.0
-    slowest_call_s: float = 0.0
-    retry_attempts: int = 0
-    grace_waits: int = 0
-    slept_s: float = 0.0
-    empty_replies: int = 0
     by_model: dict = field(default_factory=dict)
 
     def add(self, model: str, prompt: int, completion: int, cost_usd: float | None = None) -> None:
@@ -362,17 +352,12 @@ class LLM:
                 DEADLINE_FLOOR_S, payload["max_tokens"] * DEADLINE_SECONDS_PER_TOKEN
             )
             try:
-                _t0 = time.monotonic()
                 status, body = self._post(payload, _request_budget(deadline_s, deadline_monotonic))
-                _dt = time.monotonic() - _t0
-                self.usage.request_s += _dt
-                self.usage.slowest_call_s = max(self.usage.slowest_call_s, _dt)
                 if status == 400 and "reasoning" in payload:
                     payload.pop("reasoning")
                     continue
                 if status == 429:
                     attempt += 1
-                    self.usage.retry_attempts += 1
                     last_error = RuntimeError("429 Too Many Requests")
                     # The sleep belongs to the NEXT attempt, so the last 429
                     # must not buy a wait for a retry that never comes.
@@ -381,7 +366,6 @@ class LLM:
                     if not _sleep_within(15 * attempt, deadline_monotonic):
                         out_of_time = True
                         break
-                    self.usage.slept_s += 15 * attempt
                     continue
                 if status >= 400:
                     raise RuntimeError(f"HTTP {status}: {body[:300]!r}")
@@ -392,26 +376,26 @@ class LLM:
                     return parse(data)
                 except RuntimeError as parse_exc:
                     if "empty" in str(parse_exc).lower():
-                        self.usage.empty_replies += 1
                         served_by = str(data.get("provider") or "")
                         if served_by and served_by not in empty_from:
                             empty_from.append(served_by)
                             payload["provider"] = {"ignore": list(empty_from)}
-                        payload["max_tokens"] = int(payload["max_tokens"] * 1.5)
+                        # Reasoning may have eaten the budget; widen, capped at
+                        # 3x so five empties cannot balloon the request.
+                        payload["max_tokens"] = min(
+                            int(payload["max_tokens"] * 1.5), max_tokens * 3
+                        )
                     raise
             except Exception as exc:  # noqa: BLE001
                 last_error = exc
                 if _network_error(exc) and grace < NETWORK_GRACE:
                     # A dead network is waited out, never charged as an attempt.
                     grace += 1
-                    self.usage.grace_waits += 1
                     if _sleep_within(NETWORK_GRACE_SLEEP, deadline_monotonic):
-                        self.usage.slept_s += NETWORK_GRACE_SLEEP
                         continue
                     out_of_time = True
                     break
                 attempt += 1
-                self.usage.retry_attempts += 1
                 # The ladder is 1, 2, 4, 8, 16 seconds and it belongs to the
                 # attempt that FOLLOWS.
                 if attempt >= retries:
@@ -419,7 +403,6 @@ class LLM:
                 if not _sleep_within(2 ** (attempt - 1), deadline_monotonic):
                     out_of_time = True
                     break
-                self.usage.slept_s += 2 ** (attempt - 1)
         raise _give_up(what, payload["model"], attempt, retries, out_of_time, last_error)
 
     def chat_json(self, model: str, prompt: str, **kwargs):

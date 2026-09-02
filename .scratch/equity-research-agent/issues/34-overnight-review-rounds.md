@@ -1353,3 +1353,15 @@ rule:
   score, prompted as the default ("the bank's printed vocabulary AND your
   own words"). Under-querying becomes over-querying at cent cost.
 Both land before the exam re-sit so it runs the best agent.
+
+## Post-floor round 1 (Fable) applied + tracer removal (2026-09-02)
+
+User decisions: the latency tracer comes OUT of the final product (the 97%
+measurement stands in the design doc as a development finding); the
+empty-reply reroute STAYS (behaviour fix, not tracing). Fable round-1
+findings applied: the truncated-submit check now runs BEFORE the plan
+bounce (a cut-off payload got "check your plan" and re-sent itself); the
+bounce no longer consumes a submit attempt (citation repair keeps both
+retries); the token widening is capped at 3x; the query fan dedupes; a
+decade range expands and a century wrap does not; the range docstring tells
+the truth. Comments axis judged clean.

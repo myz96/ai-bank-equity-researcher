@@ -194,7 +194,8 @@ _PERIOD_RANGE_RE = re.compile(
 
 
 def periods_named(text: str) -> list[str]:
-    """The reporting periods a question names, ranges expanded, in order."""
+    """The reporting periods a question names; a range's endpoints come in
+    the question's own order, then the expanded years between them."""
     seen: list[str] = []
     for prefix, year in _PERIOD_RE.findall(text or ""):
         period = f"{prefix.upper()}{year}"
@@ -203,7 +204,9 @@ def periods_named(text: str) -> list[str]:
     for a, b, c_, d in _PERIOD_RANGE_RE.findall(text or ""):
         start, end = (a, b) if a else (c_, d)
         lo, hi = sorted((int(start), int(end)))
-        if hi - lo < 10:
+        # A span wider than 15 years is a century wrap ("FY99 to FY01") or a
+        # misparse, never a real question; a decade-long study is real.
+        if hi - lo <= 15:
             for year in range(lo, hi + 1):
                 period = f"FY{year:02d}"
                 if period not in seen:

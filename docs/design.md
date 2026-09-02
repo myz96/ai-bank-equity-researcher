@@ -111,8 +111,8 @@ the model steers itself; code holds it to its own commitments). On the
 sealed exam they lifted location coverage 73% -> 82%, strongest on the two
 weakest answers.
 
-Cost of the trade: the loop is slow. The latency tracer (in every
-artifact's provenance) shows ~97% of wall time inside model requests —
+Cost of the trade: the loop is slow. A per-call latency measurement run
+during development showed ~97% of wall time inside model requests —
 glm-flash thinks for 20-300 seconds per call across 25-80 calls. That is
 the accuracy flagship's price; the `fast` combo answers in ~4 minutes for
 evaluators who need the machine to move.
@@ -137,7 +137,7 @@ balance dates. Two properties are load-bearing:
    addition is a diff a reviewer can read.
 
 Session memory lives in the artifacts: every answer carries provenance
-(models, document hashes, cost, seconds, the latency trace) and its full
+(models, document hashes, cost, seconds) and its full
 evidence records, so any claim is auditable months later without rerunning
 anything. Process memory is the wayfinder map plus tickets.
 

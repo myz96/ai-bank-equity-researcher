@@ -117,11 +117,6 @@ def _provenance(combo, docs, started: float, llm, research, exhausted) -> dict:
         "seconds": round(time.time() - started, 1),
         "cost_usd": round(llm.usage.cost_usd, 4),
         "tokens": f"{llm.usage.prompt_tokens} in / {llm.usage.completion_tokens} out",
-        "latency": (
-            f"{llm.usage.calls} calls, {llm.usage.request_s:.0f}s in requests "
-            f"(slowest {llm.usage.slowest_call_s:.0f}s), {llm.usage.retry_attempts} retries, "
-            f"{llm.usage.grace_waits} grace waits, {llm.usage.slept_s:.0f}s slept"
-        ),
         "orchestration": "agent",
         "tool_calls": research.tool_calls,
         "pages_read": len(research.pages_read),
@@ -702,23 +697,6 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                 messages.append(_tool_result(call_id, research.dispatch(name, arguments or {})))
                 continue
             submit_attempts += 1
-            if (research.plan and not research.plan_reviewed
-                    and submit_attempts < MAX_SUBMIT_ATTEMPTS):
-                # One reflection bounce, a rail not a gate: the model wrote
-                # this plan; before the answer ships it re-reads it once.
-                # The next submission is judged on citations alone.
-                research.plan_reviewed = True
-                messages.append(_tool_result(call_id, {
-                    "accepted": False,
-                    "your_plan": research.plan,
-                    "instruction": (
-                        "Before this answer is accepted, check it against YOUR OWN "
-                        "plan above. For every item: either the answer already cites "
-                        "it, or research it now, or state in limitations why it is "
-                        "not needed. Then submit again."
-                    ),
-                }))
-                continue
             if arguments is None:
                 # A cut-off submission is a rejection, never an empty accept;
                 # if the retries run out, the no-submit path ships the declared
@@ -729,6 +707,25 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                         "The submission's JSON did not parse - it was likely cut off "
                         "by the reply length limit. Submit again, shortening the "
                         "narratives if needed."
+                    ),
+                }))
+                continue
+            if research.plan and not research.plan_reviewed:
+                # One reflection bounce, a rail not a gate: the model wrote
+                # this plan; before the answer ships it re-reads it once. The
+                # bounce sits BELOW the cut-off check (a truncated submit is
+                # not a submission) and costs no submit attempt, so the
+                # citation-repair budget stays whole.
+                research.plan_reviewed = True
+                submit_attempts -= 1
+                messages.append(_tool_result(call_id, {
+                    "accepted": False,
+                    "your_plan": research.plan,
+                    "instruction": (
+                        "Before this answer is accepted, check it against YOUR OWN "
+                        "plan above. For every item: either the answer already cites "
+                        "it, or research it now, or state in limitations why it is "
+                        "not needed. Then submit again."
                     ),
                 }))
                 continue

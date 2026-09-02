@@ -378,3 +378,8 @@ def test_a_period_range_names_every_year_inside_it():
     assert C.periods_named("in FY25 and FY26") == ["FY25", "FY26"]
     # A bare "and" is a comparison, not a range: two years, never six.
     assert C.periods_named("compare FY21 and FY26") == ["FY21", "FY26"]
+
+
+def test_a_decade_range_expands_and_a_century_wrap_does_not():
+    assert "FY20" in C.periods_named("from FY15 to FY25")
+    assert C.periods_named("from FY99 to FY01") == ["FY99", "FY01"]

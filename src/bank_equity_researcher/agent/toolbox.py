@@ -97,7 +97,11 @@ class Research:
         the question's own words rank different pages).
         """
         docs = [self._doc(doc_id)] if doc_id else self.docs
-        queries = [str(query)] + [str(v) for v in variants or [] if str(v).strip()][:3]
+        queries = [str(query)]
+        for v in variants or []:
+            v = str(v).strip()
+            if v and v.lower() not in (q.lower() for q in queries) and len(queries) < 4:
+                queries.append(v)
         best: dict[tuple, tuple] = {}
         for q in queries:
             for doc, page, score in retrieve_pool(docs, q, top_k=MAX_SEARCH_HITS):
