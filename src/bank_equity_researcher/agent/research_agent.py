@@ -725,8 +725,8 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                     "instruction": (
                         "Before this answer is accepted, check it against YOUR OWN "
                         "plan above. For every item: either the answer already cites "
-                        "it, or research it now, or state in limitations why it is "
-                        "not needed. Then submit again."
+                        "it, or research it now (budget permitting), or state in "
+                        "limitations why it is not needed. Then submit again."
                     ),
                 }))
                 continue
