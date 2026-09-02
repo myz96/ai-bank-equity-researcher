@@ -47,7 +47,7 @@ def enforce_evidence_gate(attribution: Attribution) -> Attribution:
 # like "roughly doubled" — so a hard printed-number check would be fragile.
 # The metric-case shell checks hard because its claims have a known one-value
 # shape. The judges verify fact-vs-quote entailment at eval time. See
-# docs/design.md, "the two answer shapes".
+# DESIGN.md, "the two answer shapes".
 def enforce_answer_gate(
     key_facts: list, limitations: list[str], confidence: int, known_ids: set[str]
 ) -> tuple[list[dict], list[str], int]:

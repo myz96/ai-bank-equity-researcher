@@ -698,9 +698,10 @@ def research_loop(llm: LLM, combo, research: Research, messages: list[dict],
                 continue
             submit_attempts += 1
             if arguments is None:
-                # A cut-off submission is a rejection, never an empty accept;
-                # if the retries run out, the no-submit path ships the declared
-                # artifact instead of a silent zero.
+                # A cut-off submission is a rejection, never an empty accept —
+                # and not a submission either, so it costs no attempt (the
+                # turn caps bound a model stuck emitting truncated JSON).
+                submit_attempts -= 1
                 messages.append(_tool_result(call_id, {
                     "accepted": False,
                     "instruction": (

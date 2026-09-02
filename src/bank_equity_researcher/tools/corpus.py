@@ -204,11 +204,14 @@ def periods_named(text: str) -> list[str]:
     for a, b, c_, d in _PERIOD_RANGE_RE.findall(text or ""):
         start, end = (a, b) if a else (c_, d)
         lo, hi = int(start), int(end)
-        # "FY99 to FY01" crosses the century: read it modulo 100 so the
-        # interior year still expands. A span wider than 15 years is a
-        # misparse, never a real question; a decade-long study is real.
+        # A descending range ("decline from FY26 to FY21") reads backwards;
+        # a huge descent ("FY99 to FY01") is a century wrap read modulo 100.
+        # A span wider than 15 years is a misparse, never a real question.
         if hi < lo:
-            hi += 100
+            if lo - hi > 50:
+                hi += 100
+            else:
+                lo, hi = hi, lo
         if hi - lo <= 15:
             for year in range(lo, hi + 1):
                 period = f"FY{year % 100:02d}"
