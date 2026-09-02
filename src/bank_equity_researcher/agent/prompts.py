@@ -182,7 +182,7 @@ Never mix units inside the movement object.
 DOCUMENTS IN THE CORPUS for this case (doc_id, period, pages):
 {documents}
 
-Begin by searching. Submit only when you have the movement, the bank's own
+Begin by calling plan_research, then search. Submit only when you have the movement, the bank's own
 decomposition of it, and the reason behind each driver."""
 
 
@@ -252,7 +252,7 @@ KEY FACTS: one entry for each load-bearing fact the note states, with the ids
 of the records that print it. A fact carrying a number and no id is deleted
 before the note ships.
 
-Begin by searching. Submit when every clause of the question is answered or
+Begin by calling plan_research, then search. Submit when every clause of the question is answered or
 declared unanswerable."""
 
 
@@ -286,7 +286,7 @@ TOOL_SPECS: list[dict] = [
                     "items": {
                         "type": "array",
                         "items": {"type": "string"},
-                        "description": "3-12 expected evidence locations or topics",
+                        "description": "Expected evidence locations or topics, usually 3-12",
                         "minItems": 1,
                     },
                 },
