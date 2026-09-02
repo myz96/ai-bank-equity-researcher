@@ -27,6 +27,16 @@ claims as their own number so they can never hide inside an average.
 Across every suite above, no wrong claim ever shipped at confidence 85 or
 higher — both wrong movements gave themselves confidence 0.
 
+The narrative layer has its own graded numbers, from the two-judge
+protocol over the same runs: the reports state 57 of 84 (68%) of the gold
+explanations across dev and holdout, and 19 of 84 (23%) clear the strictest
+bar — both judges agree the note states the fact AND every load-bearing
+number appears in the cited quotes. 25 items were flagged to human review
+on judge disagreement rather than force-scored. The sealed exam showed the
+same shape (78% stated, 32% fully grounded). Quote-completeness is the
+system's weakest column and the first target in Next steps. Scorecards:
+`evals/results/*-judge.md`.
+
 There is also a speed option (`--combo fast`): about 4 minutes a case. Its
 movement numbers hold, but it let one wrong claim ship at high confidence
 on the dev suite (rate 0.026 vs the default's 0.0). That trade is written
